@@ -6,7 +6,7 @@
     <aside class="app-sidebar sidebar-scroll">
         <div class="main-sidebar-header active">
             <a class="desktop-logo logo-light active" href="{{ route('user.home') }}">
-               <h3 class="text-uppercase font-weight-bolder">Quiz</h3>
+               <h4 class="text-uppercase font-weight-bolder">Quiz Application</h4>
             </a>
         </div>
         <div class="main-sidemenu">
