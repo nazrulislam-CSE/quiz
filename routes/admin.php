@@ -32,5 +32,17 @@ Route::middleware('admin')->group(function () {
         Route::get('/password/change', [SettingController::class, 'passwordChange'])->name('password.change');   
         Route::post('/password/update', [SettingController::class, 'passwordUpdate'])->name('password.update');   
     });
+
+    /* ============> Admission <=========== */
+    Route::prefix('admission')->group(function () {
+        Route::get('/index', [AdmissionController::class, 'index'])->name('admission.index');
+        Route::get('/create', [AdmissionController::class, 'create'])->name('admission.create');
+        Route::post('/store', [AdmissionController::class, 'store'])->name('admission.store');
+        Route::get('/edit/{id}', [AdmissionController::class, 'edit'])->name('admission.edit');
+        Route::post('/update/{id}', [AdmissionController::class, 'update'])->name('admission.update');
+        Route::get('/delete/{id}', [AdmissionController::class, 'destroy'])->name('admission.delete');
+        Route::get('/show/{id}', [AdmissionController::class,'show'])->name('admission.show');
+
+    });
     
 });
