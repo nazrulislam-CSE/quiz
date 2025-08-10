@@ -58,6 +58,66 @@
                 <li class="slide {{ Request::is('admin/settings*') ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                         <i class="side-menu__icon fas fa-cog"></i>
+                        <span class="side-menu__label">Admission</span>
+                        <span class="badge bg-success side-badge">{{ count($settings ??'0')}}</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Admission</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/settings/index') ? 'active' : '' }}" href="{{ route('admin.settings.index')}}">Manage Admission</a></li>
+                    </ul>
+                </li>
+                <li class="slide {{ Request::is('admin/settings*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-cog"></i>
+                        <span class="side-menu__label">Department</span>
+                        <span class="badge bg-success side-badge">{{ count($settings ??'0')}}</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Department</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/settings/index') ? 'active' : '' }}" href="{{ route('admin.settings.index')}}">Manage Department</a></li>
+                    </ul>
+                </li>
+                <li class="slide {{ Request::is('admin/settings*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-cog"></i>
+                        <span class="side-menu__label">Subject</span>
+                        <span class="badge bg-success side-badge">{{ count($settings ??'0')}}</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Subject</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/settings/index') ? 'active' : '' }}" href="{{ route('admin.settings.index')}}">Manage Subject</a></li>
+                    </ul>
+                </li>
+                <li class="slide {{ Request::is('admin/settings*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-cog"></i>
+                        <span class="side-menu__label">Topics</span>
+                        <span class="badge bg-success side-badge">{{ count($settings ??'0')}}</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Topics</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/settings/index') ? 'active' : '' }}" href="{{ route('admin.settings.index')}}">Manage Topics</a></li>
+                    </ul>
+                </li>
+                  <li class="slide {{ Request::is('admin/settings*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-cog"></i>
+                        <span class="side-menu__label">MCQ</span>
+                        <span class="badge bg-success side-badge">{{ count($settings ??'0')}}</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">MCQ</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/settings/index') ? 'active' : '' }}" href="{{ route('admin.settings.index')}}">Manage MCQ</a></li>
+                    </ul>
+                </li>
+                <li class="slide {{ Request::is('admin/settings*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-cog"></i>
                         <span class="side-menu__label">Advance Settings</span>
                         <span class="badge bg-success side-badge">{{ count($settings ??'0')}}</span>
                         <i class="angle fe fe-chevron-down hor-angle"></i>
