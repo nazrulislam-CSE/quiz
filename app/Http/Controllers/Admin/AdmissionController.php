@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Admission;
 use Illuminate\Support\Carbon;
 use Session;
+use Auth;
 
 class AdmissionController extends Controller
 {
@@ -48,6 +49,7 @@ class AdmissionController extends Controller
       
         $admission->status = $admission->status;
         $admission->name = $admission->name;
+        $admission->created_by = Auth::user()->id;
         $admission->created_at = Carbon::now();
         $admission->save();
 
@@ -101,6 +103,7 @@ class AdmissionController extends Controller
         $admission->status = $request->status;
         $admission->name = $request->name;
 
+        $admission->updated_by = Auth::user()->id;
         $admission->updated_at = Carbon::now();
         $admission->save();
 

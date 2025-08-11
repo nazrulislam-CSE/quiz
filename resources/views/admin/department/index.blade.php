@@ -51,8 +51,8 @@
                             <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}} <span class="badge bg-danger side-badge" style="font-size:17px;">{{ count($partners) }}</span> </p>
 
                             <div class="d-flex">
-                                <a href="{{ route('admin.admission.create')}}" class="btn btn-success me-2">
-                                    <i class="fas fa-plus d-inline"></i> Add Now Admission
+                                <a href="{{ route('admin.department.create')}}" class="btn btn-success me-2">
+                                    <i class="fas fa-plus d-inline"></i> Add Now Department
                                 </a>
                             </div>
                         </div>
@@ -64,31 +64,35 @@
                                             <th class="border-bottom-0">SL</th>
                                             <th class="border-bottom-0">ICON</th>
                                             <th class="border-bottom-0">Name</th>
+                                            <th class="border-bottom-0">Admission</th>
                                             <th class="border-bottom-0">Status</th>
                                             <th class="border-bottom-0">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($admissions as $key=> $admission)
+                                        @foreach ($departments as $key=> $department)
                                         <tr>
                                             <td class="col-1">{{ $key+1 }}</td>
                                             <td>
-                                                <img src="{{ (!empty($admission->image)) ? url('upload/admission/'.$admission->image):url('upload/no_image.jpg') }}" width="50" alt="image" class="img-fluid">
+                                                <img src="{{ (!empty($department->image)) ? url('upload/department/'.$department->image):url('upload/no_image.jpg') }}" width="50" alt="image" class="img-fluid">
                                             </td>
                                             <td>
-                                                {{ $admission->name ?? '' }}
+                                                {{ $department->name ?? '' }}
                                             </td>
                                             <td>
-                                                @if($admission->status == 1)
+                                                {{ $department->admission->name ?? '' }}
+                                            </td>
+                                            <td>
+                                                @if($department->status == 1)
                                                     <a href="#" class="badge bg-pill bg-success">Active</a>
                                                 @else
                                                     <a href="#" class="badge bg-pill bg-danger">Disable</a>
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('admin.admission.show',$admission->id)}}" class="btn btn-success btn-sm mr-2"><i class="fas fa-eye"></i></a>
-                                                <a href="{{ route('admin.admission.edit',$admission->id)}}" class="btn btn-primary btn-sm mr-2"><i class="fas fa-edit"></i></a>
-                                                <a href="{{ route('admin.admission.delete',$admission->id)}}" class="btn btn-danger btn-sm" title="Delete Data" id="delete"><i class="fa fa-trash"></i></a>
+                                                <a href="{{ route('admin.department.show',$department->id)}}" class="btn btn-success btn-sm mr-2"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ route('admin.department.edit',$department->id)}}" class="btn btn-primary btn-sm mr-2"><i class="fas fa-edit"></i></a>
+                                                <a href="{{ route('admin.department.delete',$department->id)}}" class="btn btn-danger btn-sm" title="Delete Data" id="delete"><i class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
                                         @endforeach

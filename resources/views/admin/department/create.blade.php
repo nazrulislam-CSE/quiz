@@ -49,16 +49,40 @@
         <div class="card-header border-bottom d-flex justify-content-between align-items-center">
             <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}}</p>
             <div class="d-flex">
-                <a href="{{ route('admin.admission.index')}}" class="btn btn-danger me-2">
-                    <i class="fas fa-list d-inline"></i> Admission List
+                <a href="{{ route('admin.department.index')}}" class="btn btn-danger me-2">
+                    <i class="fas fa-list d-inline"></i> Department List
                 </a>
             </div>
         </div>
         <div class="card-body">
-            <form action="{{ route('admin.admission.update',$admission->id)}}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('admin.department.store')}}" method="post" enctype="multipart/form-data">
                 @csrf
-              <div class="row">
-                
+                <div class="row">
+                    {{-- select admission --}}
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                        <label for="admission_id">Admission: <span class="text-danger">*</span></label>
+                        @error('admission_id') <span class="text-danger">{{ $message }}</span> @enderror
+                        <div class="input-group">
+                            <span class="input-group-text" title="Admission" id="basic-addon1"><i class="fas fa-user-tie" title="Admission"></i></span>
+                            <select name="admission_id" class="form-control">
+                                <option value="">Select Admission</option>
+                                @foreach ($admissions as $admission)
+                                    <option value="{{ $admission->id }}">{{ $admission->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                     <div class="form-group">
+                       <label for="name">Name: <span class="text-danger">*</span></label>
+                        <input type="text" name="name" value="{{ old('name') }}" id="name" class="form-control" placeholder="Enter name">
+                        @error('name')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                     </div>
+                    </div>
+
                     <div class="form-group col-xl-6 col-lg-6 col-md-6">
                         <label for="image">ICON <span class="text-danger font-weight-bolder">(Size:128,50px)</span>:</label>
                         @error('image') <span class="text-danger">{{ $message }}</span> @enderror
@@ -66,21 +90,12 @@
                             <span class="input-group-text" title="Photo" id="basic-addon1"><i class="fas fa-photo-video"></i></span>
                             <input type="file" name="image" id="image" class="form-control bg-white">
                         </div>
-                   </div>
+                    </div>
 
                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
-                       <img id="showImage" src="{{ (!empty($admission->image)) ? url('upload/admission/'.$admission->image):url('upload/no_image.jpg') }}" alt="Admin" style="width:100px; height: 100px;"  >
+                       <img id="showImage" src="{{ (!empty($department->image)) ? url('upload/department/'.$department->image):url('upload/no_image.jpg') }}" alt="Admin" style="width:100px; height: 100px;"  >
                    </div>
 
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
-                     <div class="form-group">
-                       <label for="name">Name: <span class="text-danger">*</span></label>
-                        <input type="text" name="name" value="{{ $admission->name }}" id="name" class="form-control" placeholder="Enter name">
-                        @error('name')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                     </div>
-                    </div>
 
                     <div class="form-group col-xl-12 col-lg-6 col-md-6">
                        <label for="status">Status:</label>
@@ -89,14 +104,14 @@
                             <span class="input-group-text" title="Name" id="basic-addon1"><i class="fas fa-user-tie" title="Name"></i></span>
                             <select  name="status" class=" form-control">
                              <option value="">Select Status</option>
-                                <option value="1" @if($admission->status == 1) selected @endif>Active</option>
-                                <option value="0" @if($admission->status == 0) selected @endif>Deactive</option>
+                                <option value="1">Active</option>
+                                <option value="0">Deactive</option>
                             </select>
                         </div>
                     </div>
   
                     <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12 mt-3">
-                        <button type="submit" class="add-to-cart btn btn-success btn-block"><i class="fas fa-paper-plane"></i> Update Admission</button>
+                        <button type="submit" class="add-to-cart btn btn-success btn-block"><i class="fas fa-plus"></i> Add Department</button>
                     </div>
                 </div>
             </form>

@@ -66,7 +66,7 @@
                         <li><a class="slide-item {{ Request::is('admin/admission/index') ? 'active' : '' }}" href="{{ route('admin.admission.index')}}">Manage Admission</a></li>
                     </ul>
                 </li>
-                <li class="slide {{ Request::is('admin/settings*') ? 'is-expanded' : '' }}">
+                <li class="slide {{ Request::is('admin/department*') ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                         <i class="side-menu__icon fas fa-cog"></i>
                         <span class="side-menu__label">Department</span>
@@ -75,7 +75,7 @@
                     </a>
                     <ul class="slide-menu">
                         <li class="side-menu__label1"><a href="javascript:void(0);">Department</a></li>
-                        <li><a class="slide-item {{ Request::is('admin/settings/index') ? 'active' : '' }}" href="{{ route('admin.settings.index')}}">Manage Department</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/department/index') ? 'active' : '' }}" href="{{ route('admin.department.index')}}">Manage Department</a></li>
                     </ul>
                 </li>
                 <li class="slide {{ Request::is('admin/settings*') ? 'is-expanded' : '' }}">

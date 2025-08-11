@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\AdmissionController;
+use App\Http\Controllers\Admin\DepartmentController;
 
 
 Route::get('login', [AdminLoginController::class, 'viewLogin'])->name('login.view');
@@ -42,6 +44,18 @@ Route::middleware('admin')->group(function () {
         Route::post('/update/{id}', [AdmissionController::class, 'update'])->name('admission.update');
         Route::get('/delete/{id}', [AdmissionController::class, 'destroy'])->name('admission.delete');
         Route::get('/show/{id}', [AdmissionController::class,'show'])->name('admission.show');
+
+    });
+
+    /* ============> Department <=========== */
+    Route::prefix('department')->group(function () {
+        Route::get('/index', [DepartmentController::class, 'index'])->name('department.index');
+        Route::get('/create', [DepartmentController::class, 'create'])->name('department.create');
+        Route::post('/store', [DepartmentController::class, 'store'])->name('department.store');
+        Route::get('/edit/{id}', [DepartmentController::class, 'edit'])->name('department.edit');
+        Route::post('/update/{id}', [DepartmentController::class, 'update'])->name('department.update');
+        Route::get('/delete/{id}', [DepartmentController::class, 'destroy'])->name('department.delete');
+        Route::get('/show/{id}', [DepartmentController::class,'show'])->name('department.show');
 
     });
     

@@ -49,22 +49,26 @@
     <div class="card-header border-bottom d-flex justify-content-between align-items-center">
        <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}}</p>
        <div class="d-flex">
-           <a href="{{ route('admin.admission.index')}}" class="btn btn-danger me-2">
-               <i class="fas fa-list d-inline"></i> Admission List
+           <a href="{{ route('admin.department.index')}}" class="btn btn-danger me-2">
+               <i class="fas fa-list d-inline"></i> Department List
            </a>
        </div>
    </div>
     <div class="card-body">
        <div class="table-responsive">
           <table class="table table-bordered">
+             <tr>
+                <td>Admission</td>
+                <td>{{ $department->admission->name ?? '' }}</td>
+             </tr>
               <tr>
                 <td>Name</td>
-                <td>{{ $admission->name ?? '' }}</td>
+                <td>{{ $department->name ?? '' }}</td>
              </tr>
              <tr>
                 <td>Status</td>
                 <td>
-                    @if ($admission->status == 1)
+                    @if ($department->status == 1)
                     <span class="badge bg-pill bg-success">Active</span>
                     @else
                     <span class="badge bg-pill bg-success">Disable</span>
@@ -75,7 +79,7 @@
              <tr>
                 <td>ICON</td>
                 <td>
-                    <img src="{{ (!empty($admission->image)) ? url('upload/admission/'.$admission->image):url('upload/no_image.jpg') }}" width="80" alt="image" class="img-fluid">
+                    <img src="{{ (!empty($department->image)) ? url('upload/department/'.$department->image):url('upload/no_image.jpg') }}" width="80" alt="image" class="img-fluid">
                 </td>
              </tr>
           </table>
