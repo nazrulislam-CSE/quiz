@@ -58,21 +58,8 @@
             <form action="{{ route('admin.admission.update',$admission->id)}}" method="post" enctype="multipart/form-data">
                 @csrf
               <div class="row">
-                
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
-                        <label for="image">ICON <span class="text-danger font-weight-bolder">(Size:128,50px)</span>:</label>
-                        @error('image') <span class="text-danger">{{ $message }}</span> @enderror
-                        <div class="input-group">
-                            <span class="input-group-text" title="Photo" id="basic-addon1"><i class="fas fa-photo-video"></i></span>
-                            <input type="file" name="image" id="image" class="form-control bg-white">
-                        </div>
-                   </div>
 
-                   <div class="form-group col-xl-6 col-lg-6 col-md-6">
-                       <img id="showImage" src="{{ (!empty($admission->image)) ? url('upload/admission/'.$admission->image):url('upload/no_image.jpg') }}" alt="Admin" style="width:100px; height: 100px;"  >
-                   </div>
-
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                 <div class="form-group col-xl-6 col-lg-6 col-md-6">
                      <div class="form-group">
                        <label for="name">Name: <span class="text-danger">*</span></label>
                         <input type="text" name="name" value="{{ $admission->name }}" id="name" class="form-control" placeholder="Enter name">
@@ -81,6 +68,19 @@
                         @enderror
                      </div>
                     </div>
+                
+                    <div class="form-group col-xl-5 col-lg-5 col-md-5">
+                        <label for="image">ICON <span class="text-danger font-weight-bolder">(Size:128,50px)</span>:</label>
+                        @error('image') <span class="text-danger">{{ $message }}</span> @enderror
+                        <div class="input-group">
+                            <span class="input-group-text" title="Photo" id="basic-addon1"><i class="fas fa-photo-video"></i></span>
+                            <input type="file" name="image" id="image" class="form-control bg-white">
+                        </div>
+                   </div>
+
+                   <div class="form-group col-xl-1 col-lg-1 col-md-1">
+                       <img id="showImage" src="{{ (!empty($admission->image)) ? url('upload/admission/'.$admission->image):url('upload/mcq.png') }}" alt="No ICON" style="width:100px; height: 100px;"  >
+                   </div>
 
                     <div class="form-group col-xl-12 col-lg-6 col-md-6">
                        <label for="status">Status:</label>

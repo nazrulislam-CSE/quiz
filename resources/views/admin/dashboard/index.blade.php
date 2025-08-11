@@ -57,7 +57,7 @@
                                     <ul>
                                         <li>
                                             <strong class="d-inline-flex mb-0" style="font-size: 15px !important;">Total:</strong>
-                                            <span><strong style="font-size: 15px !important;">0</strong></span>
+                                            <span><strong style="font-size: 15px !important;">{{ count($admissions ?? '0') }}</strong></span>
                                         </li>
                                     </ul>
                                 </div>
@@ -79,7 +79,7 @@
                                     <ul>
                                         <li>
                                             <strong class="d-inline-flex mb-0" style="font-size: 15px !important;">Total:</strong>
-                                            <span><strong style="font-size: 15px !important;">0</strong></span>
+                                            <span><strong style="font-size: 15px !important;">{{ count($departments ?? '0') }}</strong></span>
                                         </li>
                                     </ul>
                                 </div>

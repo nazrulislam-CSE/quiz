@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Setting;    
 use App\Models\User;  
 use App\Models\Admin;  
+use App\Models\Admission;  
+use App\Models\Department;  
 use Auth;
  
 
@@ -16,6 +18,8 @@ class DashboardController extends Controller
     {
         $pageTitle    = 'Dashboard';  
         $settings     = Setting::latest()->get();     
-        return view('admin.dashboard.index', compact('pageTitle','settings'));
+        $admissions     = Admission::where('status',1)->latest()->get();     
+        $departments     = Department::where('status',1)->latest()->get();     
+        return view('admin.dashboard.index', compact('pageTitle','settings','admissions','departments'));
     }
 }

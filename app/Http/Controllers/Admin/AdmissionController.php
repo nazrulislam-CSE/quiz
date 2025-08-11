@@ -17,7 +17,7 @@ class AdmissionController extends Controller
     public function index()
     {
         $pageTitle = 'Admission List';
-        $admissions = Admission::where('status',1)->latest()->get();
+        $admissions = Admission::latest()->get();
         return view('admin.admission.index',compact('admissions','pageTitle'));
     }
 
@@ -47,9 +47,9 @@ class AdmissionController extends Controller
             $request->status = 0;
         }
       
-        $admission->status = $admission->status;
-        $admission->name = $admission->name;
-        $admission->created_by = Auth::user()->id;
+        $admission->status = $request->status;
+        $admission->name = $request->name;
+        $admission->created_by = Auth::user()->id ?? '1';
         $admission->created_at = Carbon::now();
         $admission->save();
 
@@ -65,7 +65,7 @@ class AdmissionController extends Controller
         $admission->save();
 
         flash()->addSuccess("Admission Created Successfully.");
-        $url = '/admin/admissions/index';
+        $url = '/admin/admission/index';
         return redirect($url);
     }
 
@@ -103,7 +103,7 @@ class AdmissionController extends Controller
         $admission->status = $request->status;
         $admission->name = $request->name;
 
-        $admission->updated_by = Auth::user()->id;
+        $admission->updated_by = Auth::user()->id ?? '1';
         $admission->updated_at = Carbon::now();
         $admission->save();
 
@@ -119,7 +119,7 @@ class AdmissionController extends Controller
 
 
         flash()->addSuccess("Admission Updated Successfully.");
-        $url = '/admin/admissions/index';
+        $url = '/admin/admission/index';
         return redirect($url);
     }
 

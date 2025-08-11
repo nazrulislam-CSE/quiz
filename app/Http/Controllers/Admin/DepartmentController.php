@@ -50,7 +50,7 @@ class DepartmentController extends Controller
         $department->status = $request->status;
         $department->name = $request->name;
         $department->admission_id = $request->admission_id;
-        $department->created_by = Auth::user()->id;
+        $department->created_by = Auth::user()->id ?? '1';
         $department->created_at = Carbon::now();
         $department->save();
 
@@ -109,7 +109,7 @@ class DepartmentController extends Controller
         $department->status = $request->status;
         $department->name = $request->name;
         $department->admission_id = $request->admission_id;
-        $department->updated_by = Auth::user()->id;
+        $department->updated_by = Auth::user()->id ?? '1';
         $department->updated_at = Carbon::now();
         $department->save();
 

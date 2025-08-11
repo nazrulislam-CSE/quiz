@@ -15,20 +15,20 @@ class AdmissionSeeder extends Seeder
     public function run(): void
     {
         $data = [
-            ['name' => 'ভর্তি', 'image' => 'default.png'],
-            ['name' => 'মেডিকেল', 'image' => 'default.png'],
-            ['name' => 'নার্সিং', 'image' => 'default.png'],
-            ['name' => 'জাতীয় বিশ্ববিদ্যালয়', 'image' => 'default.png'],
-            ['name' => 'ডিপ্লোমা ইঞ্জিনিয়ার', 'image' => 'default.png'],
-            ['name' => 'পেপার ফাইনাল পরীক্ষা', 'image' => 'default.png'],
-            ['name' => 'ফাইনাল মডেল টেস্ট পরীক্ষা', 'image' => 'default.png'],
-            ['name' => 'চার্ব স্পেশাল মডেল টেস্ট', 'image' => 'default.png'],
-            ['name' => 'রবি স্পেশাল মডেল টেস্ট', 'image' => 'default.png'],
-            ['name' => 'GST স্পেশাল মডেল টেস্ট', 'image' => 'default.png'],
-            ['name' => 'ডিপ্লোমা ফাইনাল মডেল টেস্ট', 'image' => 'default.png'],
-            ['name' => 'মেডিকেল ফাইনাল মডেল টেস্ট', 'image' => 'default.png'],
-            ['name' => 'নার্সিং ফাইনাল মডেল টেস্ট', 'image' => 'default.png'],
-            ['name' => 'NU ফাইনাল মডেল টেস্ট', 'image' => 'default.png'],
+            ['name' => 'ভর্তি', 'image' => 'mcq.png'],
+            ['name' => 'মেডিকেল', 'image' => 'mcq.png'],
+            ['name' => 'নার্সিং', 'image' => 'mcq.png'],
+            ['name' => 'জাতীয় বিশ্ববিদ্যালয়', 'image' => 'mcq.png'],
+            ['name' => 'ডিপ্লোমা ইঞ্জিনিয়ার', 'image' => 'mcq.png'],
+            ['name' => 'পেপার ফাইনাল পরীক্ষা', 'image' => 'mcq.png'],
+            ['name' => 'ফাইনাল মডেল টেস্ট পরীক্ষা', 'image' => 'mcq.png'],
+            ['name' => 'চার্ব স্পেশাল মডেল টেস্ট', 'image' => 'mcq.png'],
+            ['name' => 'রবি স্পেশাল মডেল টেস্ট', 'image' => 'mcq.png'],
+            ['name' => 'GST স্পেশাল মডেল টেস্ট', 'image' => 'mcq.png'],
+            ['name' => 'ডিপ্লোমা ফাইনাল মডেল টেস্ট', 'image' => 'mcq.png'],
+            ['name' => 'মেডিকেল ফাইনাল মডেল টেস্ট', 'image' => 'mcq.png'],
+            ['name' => 'নার্সিং ফাইনাল মডেল টেস্ট', 'image' => 'mcq.png'],
+            ['name' => 'NU ফাইনাল মডেল টেস্ট', 'image' => 'mcq.png'],
         ];
 
         foreach ($data as $item) {

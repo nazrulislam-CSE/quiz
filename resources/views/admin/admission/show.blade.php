@@ -75,7 +75,7 @@
              <tr>
                 <td>ICON</td>
                 <td>
-                    <img src="{{ (!empty($admission->image)) ? url('upload/admission/'.$admission->image):url('upload/no_image.jpg') }}" width="80" alt="image" class="img-fluid">
+                    <img src="{{ (!empty($admission->image)) ? url('upload/admission/'.$admission->image):url('upload/mcq.png') }}" width="80" alt="No ICON" class="img-fluid">
                 </td>
              </tr>
           </table>

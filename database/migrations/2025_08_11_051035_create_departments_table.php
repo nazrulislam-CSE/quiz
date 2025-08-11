@@ -18,10 +18,8 @@ return new class extends Migration
             $table->foreign('admission_id')->references('id')->on('admissions')->onDelete('cascade');
             $table->string('image')->nullable();
             $table->tinyInteger('status')->default(1)->comment('1=active, 0=inactive');
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->nullable();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

@@ -62,15 +62,12 @@
                     <div class="form-group col-xl-6 col-lg-6 col-md-6">
                         <label for="admission_id">Admission: <span class="text-danger">*</span></label>
                         @error('admission_id') <span class="text-danger">{{ $message }}</span> @enderror
-                        <div class="input-group">
-                            <span class="input-group-text" title="Admission" id="basic-addon1"><i class="fas fa-user-graduate"></i></span>
-                            <select name="admission_id" class="form-control select2">
-                                <option value="">Select Admission</option>
-                                @foreach ($admissions as $admission)
-                                    <option value="{{ $admission->id }}" {{ ($department->admission_id == $admission->id) ? 'selected' : '' }}>{{ $admission->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                        <select name="admission_id" class="form-control select2">
+                            <option value="">Select Admission</option>
+                            @foreach ($admissions as $admission)
+                                <option value="{{ $admission->id }}" {{ ($department->admission_id == $admission->id) ? 'selected' : '' }}>{{ $admission->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 
                     <div class="form-group col-xl-6 col-lg-6 col-md-6">
@@ -83,7 +80,7 @@
                      </div>
                     </div>
 
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                    <div class="form-group col-xl-5 col-lg-5 col-md-5">
                         <label for="image">ICON <span class="text-danger font-weight-bolder">(Size:128,50px)</span>:</label>
                         @error('image') <span class="text-danger">{{ $message }}</span> @enderror
                         <div class="input-group">
@@ -92,11 +89,11 @@
                         </div>
                    </div>
 
-                   <div class="form-group col-xl-6 col-lg-6 col-md-6">
-                       <img id="showImage" src="{{ (!empty($department->image)) ? url('upload/department/'.$department->image):url('upload/no_image.jpg') }}" alt="Admin" style="width:100px; height: 100px;"  >
+                   <div class="form-group col-xl-1 col-lg-1 col-md-1">
+                       <img id="showImage" src="{{ (!empty($department->image)) ? url('upload/department/'.$department->image):url('upload/mcq.png') }}" alt="No ICON" style="width:100px; height: 100px;"  >
                    </div>
 
-                    <div class="form-group col-xl-12 col-lg-6 col-md-6">
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
                        <label for="status">Status:</label>
                        @error('status') <span class="text-danger">{{ $message }}</span> @enderror
                         <div class="input-group">

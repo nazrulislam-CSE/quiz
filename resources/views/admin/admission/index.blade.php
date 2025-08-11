@@ -48,7 +48,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header border-bottom d-flex justify-content-between align-items-center">
-                            <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}} <span class="badge bg-danger side-badge" style="font-size:17px;">{{ count($partners) }}</span> </p>
+                            <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}} <span class="badge bg-danger side-badge" style="font-size:17px;">{{ count($admissions) }}</span> </p>
 
                             <div class="d-flex">
                                 <a href="{{ route('admin.admission.create')}}" class="btn btn-success me-2">
@@ -73,7 +73,7 @@
                                         <tr>
                                             <td class="col-1">{{ $key+1 }}</td>
                                             <td>
-                                                <img src="{{ (!empty($admission->image)) ? url('upload/admission/'.$admission->image):url('upload/no_image.jpg') }}" width="50" alt="image" class="img-fluid">
+                                                <img src="{{ (!empty($admission->image)) ? url('upload/admission/'.$admission->image):url('upload/mcq.png') }}" width="30" height="20" alt="No ICON" class="img-fluid">
                                             </td>
                                             <td>
                                                 {{ $admission->name ?? '' }}

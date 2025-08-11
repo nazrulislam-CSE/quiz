@@ -11,7 +11,7 @@
         </nav>
     </div>
     <div class="d-flex my-auto">
-        {{-- <div class=" d-flex right-page">
+        <div class=" d-flex right-page">
             <div class="d-flex justify-content-center me-5">
                 <div class="">
                     <span class="d-block">
@@ -38,7 +38,7 @@
                     <span class="sparkline_bar31"></span>
                 </div>
             </div>
-        </div> --}}
+        </div>
     </div>
 </div>
 
@@ -58,8 +58,16 @@
             <form action="{{ route('admin.admission.store')}}" method="post" enctype="multipart/form-data">
                 @csrf
               <div class="row">
-                
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                 <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                     <div class="form-group">
+                       <label for="name">Name: <span class="text-danger">*</span></label>
+                        @error('name')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                        <input type="text" name="name" value="{{ old('name') }}" id="name" class="form-control" placeholder="Enter name">
+                     </div>
+                    </div>
+                    <div class="form-group col-xl-5 col-lg-5 col-md-5">
                         <label for="image">ICON <span class="text-danger font-weight-bolder">(Size:128,50px)</span>:</label>
                         @error('image') <span class="text-danger">{{ $message }}</span> @enderror
                         <div class="input-group">
@@ -68,19 +76,9 @@
                         </div>
                    </div>
 
-                   <div class="form-group col-xl-6 col-lg-6 col-md-6">
-                       <img id="showImage" src="{{ (!empty($admission->image)) ? url('upload/admission/'.$admission->image):url('upload/no_image.jpg') }}" alt="Admin" style="width:100px; height: 100px;"  >
+                   <div class="form-group col-xl-1 col-lg-1 col-md-1">
+                       <img id="showImage" src="{{ (!empty($admission->image)) ? url('upload/admission/'.$admission->image):url('upload/mcq.png') }}" alt="No ICON" style="width:100px; height: 100px;"  >
                    </div>
-
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
-                     <div class="form-group">
-                       <label for="name">Name: <span class="text-danger">*</span></label>
-                        <input type="text" name="name" value="{{ old('name') }}" id="name" class="form-control" placeholder="Enter name">
-                        @error('name')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                     </div>
-                    </div>
 
                     <div class="form-group col-xl-12 col-lg-6 col-md-6">
                        <label for="status">Status:</label>
@@ -89,7 +87,7 @@
                             <span class="input-group-text" title="Name" id="basic-addon1"><i class="fas fa-user-tie" title="Name"></i></span>
                             <select  name="status" class=" form-control">
                              <option value="">Select Status</option>
-                                <option value="1">Active</option>
+                                <option value="1" selected>Active</option>
                                 <option value="0">Deactive</option>
                             </select>
                         </div>
