@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\AdmissionController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\SubjectController;
+use App\Http\Controllers\Admin\TopicController;
 
 
 
@@ -71,8 +72,19 @@ Route::middleware('admin')->group(function () {
         Route::get('/delete/{id}', [SubjectController::class, 'destroy'])->name('subject.delete');
         Route::get('/show/{id}', [SubjectController::class,'show'])->name('subject.show');
         Route::get('/get-departments/{admission_id}', [SubjectController::class, 'getDepartments'])->name('get.departments');
+    });
 
-
+    /* ============> Topics <=========== */
+    Route::prefix('topic')->group(function () {
+        Route::get('/index', [TopicController::class, 'index'])->name('topic.index');
+        Route::get('/create', [TopicController::class, 'create'])->name('topic.create');
+        Route::post('/store', [TopicController::class, 'store'])->name('topic.store');
+        Route::get('/edit/{id}', [TopicController::class, 'edit'])->name('topic.edit');
+        Route::post('/update/{id}', [TopicController::class, 'update'])->name('topic.update');
+        Route::get('/delete/{id}', [TopicController::class, 'destroy'])->name('topic.delete');
+        Route::get('/show/{id}', [TopicController::class,'show'])->name('topic.show');
+        Route::get('/get-departments/{admission_id}', [TopicController::class, 'getDepartments'])->name('get.departments');
+        Route::get('/get-subjects/{department_id}', [TopicController::class, 'getSubjects']);
     });
     
 });

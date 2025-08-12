@@ -19,4 +19,9 @@ class Subject extends Model
     {
         return $this->belongsTo(Department::class, 'department_id', 'id');
     }
+
+    public function topics()
+    {
+        return $this->hasMany(Topic::class);
+    }
 }
