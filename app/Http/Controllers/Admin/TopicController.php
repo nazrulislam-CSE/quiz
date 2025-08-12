@@ -19,7 +19,7 @@ class TopicController extends Controller
     public function index()
     {
         $pageTitle = 'Topic List';
-        $topics = Topic::all();
+        $topics = Topic::latest()->get();
         return view('admin.topic.index', compact('topics', 'pageTitle'));
     }
 
@@ -48,10 +48,19 @@ class TopicController extends Controller
             'fee' => 'required|numeric',
         ]);
 
-        Topic::create([
+        $slug = Str::slug($request->name);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while (Topic::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
+        $topic = Topic::create([
             'subject_id' => $request->subject_id,
             'name' => $request->name,
-            'slug' => Str::slug($request->name),
+            'slug' => $slug,
             'description' => $request->description,
             'exam_duration' => $request->exam_duration,
             'exam_mark' => $request->exam_mark,
@@ -66,7 +75,8 @@ class TopicController extends Controller
             $file = $request->file('image');
             $filename = date('YmdHi').$file->getClientOriginalName();
             $file->move(public_path('upload/topic'), $filename);
-            Topic::where('id', $topic->id)->update(['topic' => $filename]);
+            $topic->image = $filename;
+            $topic->save();
         }
 
         flash()->addSuccess("Topic created successfully.");
@@ -110,10 +120,20 @@ class TopicController extends Controller
         ]);
 
         $topic = Topic::findOrFail($id);
+
+        $slug = Str::slug($request->name);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while (Topic::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
         $topic->update([
             'subject_id' => $request->subject_id,
             'name' => $request->name,
-            'slug' => Str::slug($request->name),
+            'slug' => $slug,
             'description' => $request->description,
             'exam_duration' => $request->exam_duration,
             'exam_mark' => $request->exam_mark,

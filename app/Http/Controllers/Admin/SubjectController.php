@@ -45,7 +45,7 @@ class SubjectController extends Controller
         ]);
 
         
-        Subject::create([
+        $subject = Subject::create([
             'name' => $request->name,
             'admission_id' => $request->admission_id,
             'department_id' => $request->department_id,
@@ -56,7 +56,8 @@ class SubjectController extends Controller
             $file = $request->file('image');
             $filename = date('YmdHi').$file->getClientOriginalName();
             $file->move(public_path('upload/subject'), $filename);
-            Subject::where('id', $subject->id)->update(['subject' => $filename]);
+            $subject->image = $filename;
+            $subject->save();
         }
 
         flash()->addSuccess("Subject created successfully.");

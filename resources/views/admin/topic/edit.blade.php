@@ -64,8 +64,12 @@
                         @error('admission_id') <span class="text-danger">{{ $message }}</span> @enderror
                         <select name="admission_id" id="admission_id" class="form-control">
                             <option value="">Select Admission</option>
+                            @foreach ($admissions as $admission)
+                                <option value="{{ $admission->id }}">{{ $admission->name }}</option>
+                            @endforeach
                         </select>
                     </div>
+
 
                     {{-- select department --}}
                     <div class="form-group col-xl-4 col-lg-4 col-md-4">

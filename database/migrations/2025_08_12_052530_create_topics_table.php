@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('subject_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('slug')->nullable()->unique();
+            $table->string('image')->nullable();
             $table->text('description')->nullable();
             $table->integer('exam_duration');
             $table->integer('exam_mark');
@@ -23,6 +24,8 @@ return new class extends Migration
             $table->decimal('fee', 8, 2)->default(0.00);
             $table->unsignedTinyInteger('status')->default(1)->comment('1=>Active, 0=>Inactive');
             $table->integer('order')->default(0);
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }
