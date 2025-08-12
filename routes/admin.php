@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\AdmissionController;
 use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\SubjectController;
+
 
 
 Route::get('login', [AdminLoginController::class, 'viewLogin'])->name('login.view');
@@ -56,6 +58,20 @@ Route::middleware('admin')->group(function () {
         Route::post('/update/{id}', [DepartmentController::class, 'update'])->name('department.update');
         Route::get('/delete/{id}', [DepartmentController::class, 'destroy'])->name('department.delete');
         Route::get('/show/{id}', [DepartmentController::class,'show'])->name('department.show');
+
+    });
+
+    /* ============> Subject <=========== */
+    Route::prefix('subject')->group(function () {
+        Route::get('/index', [SubjectController::class, 'index'])->name('subject.index');
+        Route::get('/create', [SubjectController::class, 'create'])->name('subject.create');
+        Route::post('/store', [SubjectController::class, 'store'])->name('subject.store');
+        Route::get('/edit/{id}', [SubjectController::class, 'edit'])->name('subject.edit');
+        Route::post('/update/{id}', [SubjectController::class, 'update'])->name('subject.update');
+        Route::get('/delete/{id}', [SubjectController::class, 'destroy'])->name('subject.delete');
+        Route::get('/show/{id}', [SubjectController::class,'show'])->name('subject.show');
+        Route::get('/get-departments/{admission_id}', [SubjectController::class, 'getDepartments'])->name('get.departments');
+
 
     });
     

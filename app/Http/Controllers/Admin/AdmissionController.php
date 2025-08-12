@@ -44,7 +44,7 @@ class AdmissionController extends Controller
         $admission = new Admission;
 
         if($request->status == Null){
-            $request->status = 0;
+            $request->status = 1;
         }
       
         $admission->status = $request->status;
@@ -97,7 +97,7 @@ class AdmissionController extends Controller
         $admission = Admission::find($id);
 
         if($request->status == Null){
-            $request->status = 0;
+            $request->status = 1;
         }
        
         $admission->status = $request->status;

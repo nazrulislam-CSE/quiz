@@ -44,7 +44,7 @@ class DepartmentController extends Controller
         $department = new Department;
 
         if ($request->status == Null) {
-            $request->status = 0;
+            $request->status = 1;
         }
 
         $department->status = $request->status;
@@ -98,7 +98,7 @@ class DepartmentController extends Controller
         $department = Department::findOrFail($id);
 
         if ($request->status == Null) {
-            $request->status = 0;
+            $request->status = 1;
         }
 
         $this->validate($request, [
