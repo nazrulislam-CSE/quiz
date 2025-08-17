@@ -100,6 +100,7 @@ Route::middleware('admin')->group(function () {
         Route::get('/get-departments/{admission_id}', [McqController::class, 'getDepartments'])->name('get.departments');
         Route::get('/get-subjects/{department_id}', [McqController::class, 'getSubjects']);
         Route::get('/get-topics/{subject_id}', [McqController::class, 'getTopics']);
+        Route::post('/mcq/delete-question', [McqController::class, 'deleteQuestion'])->name('mcq.delete-question');
     });
     
 });

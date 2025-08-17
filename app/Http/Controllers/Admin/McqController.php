@@ -203,4 +203,17 @@ class McqController extends Controller
         $topics = Topic::where('subject_id', $subject_id)->get();
         return response()->json($topics);
     }
+
+    public function deleteQuestion(Request $request)
+    {
+        $question = McqQuestion::findOrFail($request->question_id);
+        
+        // Delete associated answers first
+        $question->answers()->delete();
+        
+        // Then delete the question
+        $question->delete();
+        
+        return response()->json(['success' => true]);
+    }
 }
