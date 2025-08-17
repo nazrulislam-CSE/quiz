@@ -77,6 +77,7 @@
                                             <td class="col-3">
                                                 <div class="text-wrap">
                                                     Question: {{ $mcq->question }}
+                                                    <br>
                                                     Correct Answer:
                                                     @foreach ($mcq->answers as $answer)
                                                         @if ($answer->is_correct)

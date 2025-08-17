@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Admission;
 use App\Models\Topic;
+use Illuminate\Support\Facades\DB;
 
 class McqController extends Controller
 {
@@ -43,7 +44,6 @@ class McqController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'admission_id' => 'required|exists:admissions,id',
             'department_id' => 'required|exists:departments,id',
@@ -51,37 +51,41 @@ class McqController extends Controller
             'topic_id' => 'required|exists:topics,id',
             'questions' => 'required|array|min:1',
             'questions.*.text' => 'required|string',
-            'questions.*.answers' => 'required|array|min:2',
-            'questions.*.answers.*' => 'required|string',
-            'questions.*.correct_answer' => 'required|integer',
+            'questions.*.answers' => 'required|array|min:4', // Ensure exactly 4 answers
+            'questions.*.answers.*.answer' => 'required|string', // Changed to match your input structure
+            'questions.*.correct_answer' => 'required|integer|between:0,3', // Must be 0-3 (for 4 options)
         ]);
 
+        try {
+            DB::beginTransaction();
 
+            foreach ($request->questions as $qData) {
+                // Create MCQ
+                $mcq = Mcq::create([
+                    'admission_id' => $request->admission_id,
+                    'department_id' => $request->department_id,
+                    'subject_id' => $request->subject_id,
+                    'topic_id' => $request->topic_id,
+                    'question' => $qData['text'],
+                    'created_by' => Auth::id(),
+                ]);
 
-        foreach ($request->questions as $qIndex => $qData) {
-
-            // Create MCQ
-            $mcq = Mcq::create([
-                'admission_id' => $request->admission_id,
-                'department_id' => $request->department_id,
-                'subject_id' => $request->subject_id,
-                'topic_id' => $request->topic_id,
-                'question' => $qData['text'],
-                'created_by' => Auth::user()->id ?? '1',
-            ]);
-
-            // Save options
-            if(isset($qData['answers']) && is_array($qData['answers'])) {
-                foreach ($qData['answers'] as $aIndex => $answerText) {
+                // Save options
+                foreach ($qData['answers'] as $aIndex => $answerData) {
                     $mcq->answers()->create([
-                        'answer' => $answerText,
-                        'is_correct' => ((int)$qData['correct_answer'] === $aIndex) ? 1 : 0,
+                        'answer' => $answerData['answer'],
+                        'is_correct' => ((int)$qData['correct_answer'] == $aIndex) ? 1 : 0,
                     ]);
                 }
             }
-        }
 
-        return redirect()->route('admin.mcq.index')->with('success', 'MCQs saved successfully!');
+            DB::commit();
+            return redirect()->route('admin.mcq.index')->with('success', 'MCQs saved successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->with('error', 'Failed to save MCQs: ' . $e->getMessage());
+        }
     }
 
     
@@ -101,11 +105,19 @@ class McqController extends Controller
     public function edit(string $id)
     {
         $mcq = Mcq::with(['answers'])->findOrFail($id);
+        
         $admissions = Admission::where('status', '1')->get();
-        $departments = Department::where('status', '1')->get();
-        $subjects = Subject::where('status', '1')->get();
-        $topics = Topic::where('status', '1')->get();
-        $pageTitle = 'MCQ Edit';
+        $departments = Department::where('status', '1')
+            ->where('admission_id', $mcq->admission_id)
+            ->get();
+        $subjects = Subject::where('status', '1')
+            ->where('department_id', $mcq->department_id)
+            ->get();
+        $topics = Topic::where('status', '1')
+            ->where('subject_id', $mcq->subject_id)
+            ->get();
+        
+        $pageTitle = 'Edit MCQ';
 
         return view('admin.mcq.edit', compact('mcq', 'admissions', 'departments', 'subjects', 'topics', 'pageTitle'));
     }
@@ -114,43 +126,54 @@ class McqController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'admission_id' => 'required|exists:admissions,id',
-            'department_id' => 'required|exists:departments,id',
-            'subject_id' => 'required|exists:subjects,id',
-            'topic_id' => 'required|exists:topics,id',
-            'questions' => 'required|array|min:1',
-            'questions.*.text' => 'required|string',
-            'questions.*.answers' => 'required|array|min:2',
-            'questions.*.answers.*' => 'required|string',
-            'questions.*.correct_answer' => 'required|integer',
-        ]);
+{
+    $validated = $request->validate([
+        'admission_id' => 'required|exists:admissions,id',
+        'department_id' => 'required|exists:departments,id',
+        'subject_id' => 'required|exists:subjects,id',
+        'topic_id' => 'required|exists:topics,id',
+        'questions' => 'required|array|min:1',
+        'questions.*.text' => 'required|string|max:1000',
+        'questions.*.answers' => 'required|array|min:2|max:6',
+        'questions.*.answers.*' => 'required|string|max:255',
+        'questions.*.correct_answer' => 'required|integer|min:0',
+    ]);
 
+    DB::beginTransaction();
+    try {
         $mcq = Mcq::findOrFail($id);
+        
         $mcq->update([
-            'admission_id' => $request->admission_id,
-            'department_id' => $request->department_id,
-            'subject_id' => $request->subject_id,
-            'topic_id' => $request->topic_id,
-            'question' => $request->questions[0]['text'],
-            'updated_by' => Auth::user()->id ?? '1',
+            'admission_id' => $validated['admission_id'],
+            'department_id' => $validated['department_id'],
+            'subject_id' => $validated['subject_id'],
+            'topic_id' => $validated['topic_id'],
+            'question' => $validated['questions'][0]['text'],
+            'updated_by' => Auth::id(),
         ]);
 
-        // Update options
-        foreach ($mcq->answers as $answer) {
-            $answer->delete();
-        }
+        // Delete existing answers
+        $mcq->answers()->delete();
 
-        foreach ($request->questions[0]['answers'] as $aIndex => $answerText) {
+        // Add new answers
+        foreach ($validated['questions'][0]['answers'] as $index => $answerText) {
             $mcq->answers()->create([
                 'answer' => $answerText,
-                'is_correct' => ((int)$request->questions[0]['correct_answer'] === $aIndex) ? 1 : 0,
+                'is_correct' => $validated['questions'][0]['correct_answer'] == $index ? 1 : 0,
             ]);
         }
 
-        return redirect()->route('admin.mcq.index')->with('success', 'MCQ updated successfully!');
+        DB::commit();
+        
+        return redirect()->route('admin.mcq.index')
+            ->with('success', 'MCQ updated successfully!');
+            
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->withInput()
+            ->with('error', 'Error updating MCQ: ' . $e->getMessage());
     }
+}
 
     /**
      * Remove the specified resource from storage.
