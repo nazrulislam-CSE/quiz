@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AdmissionController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\TopicController;
+use App\Http\Controllers\Admin\McqController;
 
 
 
@@ -85,6 +86,20 @@ Route::middleware('admin')->group(function () {
         Route::get('/show/{id}', [TopicController::class,'show'])->name('topic.show');
         Route::get('/get-departments/{admission_id}', [TopicController::class, 'getDepartments'])->name('get.departments');
         Route::get('/get-subjects/{department_id}', [TopicController::class, 'getSubjects']);
+    });
+
+    /* ============> MCQ <=========== */
+    Route::prefix('mcq')->group(function () {
+        Route::get('/index', [McqController::class, 'index'])->name('mcq.index');
+        Route::get('/create', [McqController::class, 'create'])->name('mcq.create');
+        Route::post('/store', [McqController::class, 'store'])->name('mcq.store');
+        Route::get('/edit/{id}', [McqController::class, 'edit'])->name('mcq.edit');
+        Route::post('/update/{id}', [McqController::class, 'update'])->name('mcq.update');
+        Route::get('/delete/{id}', [McqController::class, 'destroy'])->name('mcq.delete');
+        Route::get('/show/{id}', [McqController::class,'show'])->name('mcq.show');
+        Route::get('/get-departments/{admission_id}', [McqController::class, 'getDepartments'])->name('get.departments');
+        Route::get('/get-subjects/{department_id}', [McqController::class, 'getSubjects']);
+        Route::get('/get-topics/{subject_id}', [McqController::class, 'getTopics']);
     });
     
 });
