@@ -26,7 +26,7 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="#"><img src="{{ asset('upload/MCQ Logo.png') }}" height="40"> MCQ Admission</a>
+    <a class="navbar-brand fw-bold" href="#"><img src="{{ asset('upload/MCQ Logo.png') }}" height="40"> </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -272,7 +272,6 @@
     <div class="row">
       <div class="col-md-4 text-center text-md-start mb-4">
         <img src="{{ asset('upload/MCQ Logo.png') }}" height="50"><br>
-        <p class="mt-2">MCQ Admission</p>
         <div>
           <a href="#" class="text-dark mx-2"><i class="fab fa-facebook fa-lg"></i></a>
           <a href="#" class="text-dark mx-2"><i class="fab fa-instagram fa-lg"></i></a>
