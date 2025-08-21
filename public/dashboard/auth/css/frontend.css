@@ -1,0 +1,145 @@
+
+body {
+font-family: 'Hind Siliguri', sans-serif;
+overflow-x: hidden;
+}
+/* Hero Section */
+.hero {
+background: #f8faff;
+padding: 80px 0;
+}
+.hero h1 {
+font-size: 38px;
+font-weight: 700;
+line-height: 1.4;
+opacity: 0;
+transform: translateY(40px);
+animation: fadeSlide 1s ease forwards;
+animation-delay: 0.2s;
+}
+.hero p {
+opacity: 0;
+transform: translateY(40px);
+animation: fadeSlide 1s ease forwards;
+animation-delay: 0.4s;
+}
+.hero img {
+opacity: 0;
+transform: translateY(40px);
+animation: fadeSlide 1s ease forwards;
+animation-delay: 0.6s;
+}
+@keyframes fadeSlide {
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+/* Gradient Button with Glow */
+.btn-gradient {
+background: linear-gradient(to right, #007bff, #6f42c1);
+color: #fff;
+border: none;
+position: relative;
+overflow: hidden;
+z-index: 1;
+}
+.btn-gradient:hover {
+color: #fff;
+}
+.btn-gradient::after {
+content: "";
+position: absolute;
+top: -50%;
+left: -50%;
+width: 200%;
+height: 200%;
+background: radial-gradient(circle, rgba(255,255,255,0.4) 20%, transparent 70%);
+transform: scale(0);
+transition: transform 0.5s ease;
+z-index: -1;
+}
+.btn-gradient:hover::after {
+transform: scale(1);
+}
+
+/* Category Cards */
+.category-card {
+transition: all 0.3s ease;
+}
+.category-card:hover {
+transform: translateY(-8px) scale(1.05);
+box-shadow: 0px 10px 25px rgba(0,0,0,0.15);
+}
+
+/* Newsletter Background Animation */
+.newsletter {
+background: linear-gradient(-45deg, #0b2545, #1d3557, #457b9d, #0b2545);
+background-size: 400% 400%;
+color: white;
+padding: 50px 20px;
+border-radius: 20px;
+margin-top: 40px;
+animation: gradientBG 10s ease infinite;
+}
+@keyframes gradientBG {
+0% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+100% { background-position: 0% 50%; }
+}
+.newsletter input {
+border-radius: 30px 0 0 30px;
+padding: 12px 15px;
+border: none;
+}
+.newsletter button {
+border-radius: 0 30px 30px 0;
+padding: 12px 20px;
+}
+
+/* Footer */
+.footer {
+background: #f1f5f9;
+padding: 50px 0;
+}
+.footer h5 {
+font-weight: 700;
+margin-bottom: 20px;
+}
+.footer ul {
+list-style: none;
+padding: 0;
+}
+.footer ul li {
+margin-bottom: 10px;
+}
+.footer ul li a {
+color: #000;
+text-decoration: none;
+}
+.footer ul li a:hover {
+color: #007bff;
+}
+
+/* Scroll Reveal */
+.reveal { 
+opacity: 0; 
+transform: translateY(40px); 
+transition: all 1s ease; 
+}
+.reveal.active { 
+opacity: 1; 
+transform: translateY(0); 
+}
+#scrollTopBtn {
+position: fixed;
+bottom: 40px;
+right: 40px;
+z-index: 99;
+display: none;
+border-radius: 50%;
+width: 50px;
+height: 50px;
+font-size: 20px;
+}
