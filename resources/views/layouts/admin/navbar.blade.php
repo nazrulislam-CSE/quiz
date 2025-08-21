@@ -213,7 +213,7 @@
                             </div>
                         </div>
                         <div class="dropdown main-profile-menu nav nav-item nav-link">
-                            <a class="profile-user d-flex" href=""><img src="{{ (!empty( Auth::guard('admin')->user()->image)) ? url('upload/admin_images/'.Auth::guard('admin')->user()->image):url('upload/no_image.jpg') }}" alt="user-img" class="rounded-circle"><span></span></a>
+                            <a class="profile-user d-flex" href=""><img src="{{ (!empty( Auth::guard('admin')->user()->image)) ? url('upload/admin_images/'.Auth::guard('admin')->user()->image):url('upload/avater.png') }}" alt="user-img" class="rounded-circle"><span></span></a>
 
                             <div class="dropdown-menu">
                                 <div class="main-header-profile header-img">

@@ -14,11 +14,10 @@
                 <div class="app-sidebar__user">
                     <div class="dropdown user-pro-body text-center">
                         <div class="user-pic">
-                            <img src="{{ (!empty( Auth::guard('admin')->user()->image)) ? url('upload/admin_images/'.Auth::guard('admin')->user()->image):url('upload/no_image.jpg') }}" alt="user-img" class="rounded-circle mCS_img_loaded">
+                            <img src="{{ (!empty( Auth::guard('admin')->user()->image)) ? url('upload/admin_images/'.Auth::guard('admin')->user()->image):url('upload/avater.png') }}" alt="user-img" class="rounded-circle mCS_img_loaded">
                         </div>
                         <div class="user-info">
                             <h6 class=" mb-0 text-dark">{{ Auth::guard('admin')->user()->name }}</h6>
-                            <span class="text-muted app-sidebar__user-name text-sm">{{ Auth::guard('admin')->user()->username }}</span>
                         </div>
                     </div>
                 </div>

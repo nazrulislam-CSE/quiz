@@ -12,7 +12,7 @@ class FrontendController extends Controller
     public function index()
     {
        
-        $pageTitle = 'Home Page';
+        $pageTitle = 'Home';
         return view('frontend.index',compact('pageTitle'));
     }
 

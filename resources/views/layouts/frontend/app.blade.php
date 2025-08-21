@@ -140,6 +140,17 @@
       opacity: 1; 
       transform: translateY(0); 
     }
+     #scrollTopBtn {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    z-index: 99;
+    display: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
   </style>
 </head>
 <body>
@@ -436,6 +447,12 @@
   </div>
 </footer>
 
+<!-- Scroll to Top Button -->
+<button id="scrollTopBtn" class="btn btn-primary" title="Go to top">
+  <i class="fas fa-chevron-up"></i>
+</button>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- Scroll Reveal Script -->
@@ -471,6 +488,26 @@ counters.forEach(counter => {
   updateCounter();
 });
 </script>
+
+<script>
+  // Get the button
+  const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+  // Show the button when user scrolls down 100px
+  window.onscroll = function() {
+    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+      scrollTopBtn.style.display = "block";
+    } else {
+      scrollTopBtn.style.display = "none";
+    }
+  };
+
+  // When button is clicked, scroll to top smoothly
+  scrollTopBtn.addEventListener("click", function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
 
 @stack('frontend-js')
 </body>

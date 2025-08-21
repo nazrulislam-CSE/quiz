@@ -1,5 +1,7 @@
-<div class="main-footer ht-45">
-    <div class="container-fluid pd-t-0-f ht-100p">
-        <span> Copyright © {{ date('Y') }} <a href="javascript:void(0);" class="text-primary"> Speak Up BD</a>. All Rights Reserved.</span>
+<!-- Footer -->
+<footer class="bg-dark text-white py-3 mt-4">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <p class="mb-2 mb-md-0">© {{ date('Y') }} User Dashboard. All rights reserved.</p>
+        <p class="mb-0">Developed by <a href="#" class="text-white">Nazrul Islam Suzon</a></p>
     </div>
-</div>
+</footer>
