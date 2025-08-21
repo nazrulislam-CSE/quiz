@@ -1,165 +1,527 @@
-@extends('layouts.user.auth')
-<style>
-    .border-radius-20 {
-        border-radius: 20px;
-    }
-    .box-color{
-        background: #833AB4;
-        background: linear-gradient(90deg, rgba(131, 58, 180, 1) 0%, rgba(253, 29, 29, 1) 50%, rgba(252, 176, 69, 1) 100%);
-    }
-   .box-color form label,
-    .box-color form input {
-        color: white;
-    }
-
-</style>
-@section('content')
-<div class="col-md-10 px-0 shadow d-flex border-radius-20 border border-white overflow-hidden bg-white">
-    <div class="wd-md-50p login d-none d-md-flex page-signin-style p-0 text-white border-radius-20 overflow-hidden">
-        <div class="my-auto authentication-pages">
-            <img src="{{ asset(get_setting('site_company_logo')->value ?? 'dashboard/img/template.png') }}" class="w-100 h-100" alt="logo">
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ env('APP_NAME') }} | {{ $pageTitle ?? 'Register Account' }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+        
+        body {
+            background: linear-gradient(-45deg, #e3f2fd, #bbdefb, #90caf9, #64b5f6);
+            background-size: 400% 400%;
+            animation: gradient 12s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 40px 0;
+            font-family: 'Segoe UI', sans-serif;
+            position: relative;
+        }
+        
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #6a89cc;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a69bd;
+        }
+        
+        /* Animated background elements */
+        .bg-bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-bubbles li {
+            position: absolute;
+            list-style: none;
+            display: block;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.15);
+            bottom: -160px;
+            animation: square 25s infinite;
+            transition-timing-function: linear;
+            border-radius: 50%;
+        }
+        
+        .bg-bubbles li:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+            width: 80px;
+            height: 80px;
+        }
+        
+        .bg-bubbles li:nth-child(2) {
+            left: 20%;
+            animation-delay: 2s;
+            animation-duration: 17s;
+            width: 60px;
+            height: 60px;
+        }
+        
+        .bg-bubbles li:nth-child(3) {
+            left: 25%;
+            animation-delay: 4s;
+        }
+        
+        .bg-bubbles li:nth-child(4) {
+            left: 40%;
+            animation-delay: 0s;
+            animation-duration: 22s;
+            width: 70px;
+            height: 70px;
+        }
+        
+        .bg-bubbles li:nth-child(5) {
+            left: 70%;
+            animation-delay: 3s;
+        }
+        
+        .bg-bubbles li:nth-child(6) {
+            left: 80%;
+            animation-delay: 2s;
+            width: 90px;
+            height: 90px;
+        }
+        
+        .bg-bubbles li:nth-child(7) {
+            left: 32%;
+            animation-delay: 6s;
+            width: 50px;
+            height: 50px;
+        }
+        
+        .bg-bubbles li:nth-child(8) {
+            left: 55%;
+            animation-delay: 8s;
+            animation-duration: 18s;
+            width: 65px;
+            height: 65px;
+        }
+        
+        .bg-bubbles li:nth-child(9) {
+            left: 25%;
+            animation-delay: 9s;
+            animation-duration: 20s;
+            width: 75px;
+            height: 75px;
+        }
+        
+        .bg-bubbles li:nth-child(10) {
+            left: 90%;
+            animation-delay: 11s;
+            width: 45px;
+            height: 45px;
+        }
+        
+        @keyframes square {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+                border-radius: 50%;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 10%;
+            }
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .register-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .register-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .register-header {
+            background: linear-gradient(to right, #6a89cc, #4a69bd);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .register-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            transform: rotate(30deg);
+            animation: shine 6s infinite linear;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+        
+        .register-body {
+            padding: 30px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        /* Custom scrollbar for register body */
+        .register-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .register-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .register-body::-webkit-scrollbar-thumb {
+            background: #a5b1e6;
+            border-radius: 10px;
+        }
+        
+        .register-body::-webkit-scrollbar-thumb:hover {
+            background: #6a89cc;
+        }
+        
+        .form-control {
+            padding: 12px 20px 12px 45px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(74, 105, 189, 0.2);
+            border-color: #4a69bd;
+        }
+        
+        .input-icon {
+            position: relative;
+        }
+        
+        .input-icon i {
+            position: absolute;
+            left: 15px;
+            top: 13px;
+            color: #4a69bd;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus + i {
+            color: #1e3799;
+            transform: scale(1.1);
+        }
+        
+        .btn-register {
+            background: linear-gradient(to right, #6a89cc, #4a69bd);
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-register::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn-register:hover::before {
+            left: 100%;
+        }
+        
+        .btn-register:hover {
+            background: linear-gradient(to right, #5a79bc, #3a59ad);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(74, 105, 189, 0.4);
+        }
+        
+        .terms-check {
+            margin: 20px 0;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ddd, transparent);
+            margin: 30px 0;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo i {
+            background: white;
+            color: #4a69bd;
+            border-radius: 50%;
+            padding: 10px;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .form-section-title {
+            border-left: 4px solid #4a69bd;
+            padding-left: 10px;
+            margin-bottom: 20px;
+            color: #4a69bd;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .form-section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #4a69bd, transparent);
+            transform: translateX(-100%);
+            animation: slideIn 1.5s forwards;
+            animation-delay: 0.5s;
+        }
+        
+        @keyframes slideIn {
+            to {
+                transform: translateX(0);
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+                align-items: flex-start;
+            }
+            
+            .register-container {
+                margin: 20px auto;
+            }
+            
+            .register-body {
+                max-height: none;
+                overflow-y: visible;
+                padding: 20px;
+            }
+            
+            .register-header {
+                padding: 20px;
+            }
+            
+            .form-control {
+                padding: 10px 15px 10px 40px;
+            }
+            
+            .input-icon i {
+                left: 12px;
+                top: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-bubbles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
     </div>
-    <div class="p-lg-5 p-3 wd-md-70p row justify-content-center align-items-center box-color">
-        <div>
-            <div class="main-signin-header">
-                <a href="{{ route('frontend.home')}}">
-                    <div class="d-flex justify-content-center align-items-center flex-column">
-                        <img width="200" src="{{ asset(get_setting('site_logo')->value ?? '/frontend/img/logos/logo.png')}}" class="mb-4" alt="logo">
-                        <h3 class="text-center text-light  animate-charcter">Welcome To {{ get_setting('site_name')->value ?? 'null'}}</h3>
-                    </div>
-                </a>
-               
-                <h4 class="text-center text-light">{{ __('Please sign up to continue') }}</h4>
+    
+    <div class="container">
+        <div class="register-container">
+            <div class="register-header">
+                <div class="logo">
+                    <i class="fas fa-user-graduate"></i>MCQ Admission
+                </div>
+                <h2>Create an Account</h2>
+                <p class="mb-0">Join our learning community today</p>
+            </div>
+            
+            <div class="register-body">
                 <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                     @csrf
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="font-weight-bolder">{{ __('Company Name') }}</label>
-                                <input id="company_name" type="text" class="form-control @error('company_name') is-invalid @enderror" name="company_name" value="{{ old('company_name') }}" required autofocus placeholder="Enter Company Name">
-                                @error('company_name')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                    <div class="form-section">
+                        <h4 class="form-section-title">Personal Information</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-icon">
+                                    <input type="text" name="full_name" value="{{ old('full_name') }}"  class="form-control" placeholder="Full Name">
+                                    <i class="fas fa-user"></i>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="font-weight-bolder">{{ __('Company Owener Name') }}</label>
-                                <input id="owner_name" type="text" class="form-control @error('owner_name') is-invalid @enderror" name="owner_name" value="{{ old('owner_name') }}" required autofocus placeholder="Enter Company Owner Name">
-                                @error('owner_name')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </div>
-                        {{-- <div class="col-md-6">
-                            <div class="form-group">
-                                <label>{{ __('Username') }}</label>
-                                <input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required placeholder="Enter username">
-                                @error('username')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </div> --}}
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="font-weight-bolder">{{ __('Email') }}</label>
-                                <input id="email" type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required placeholder="Enter email">
-                                @error('email')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="font-weight-bolder">{{ __('Phone') }}</label>
-                                <input id="phone" type="number" min="0" step="any" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required placeholder="Enter phone">
-                                @error('phone')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="font-weight-bolder">{{ __('City Name') }}</label>
-                                <input id="city_name" type="text" class="form-control @error('city_name') is-invalid @enderror" name="city_name" value="{{ old('city_name') }}" required autofocus placeholder="Enter City Name">
-                                @error('city_name')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="font-weight-bolder">{{ __('Established Year') }}</label>
-                                <input id="established_year" type="number" min="0" class="form-control @error('established_year') is-invalid @enderror" name="established_year" value="{{ old('established_year') }}" required autofocus placeholder="Enter Established Year">
-                                @error('established_year')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </div>
-                        {{-- <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="font-weight-bolder">{{ __('Nid Number') }}</label>
-                                <input id="nid_number" type="text" class="form-control @error('nid_number') is-invalid @enderror" name="nid_number" value="{{ old('nid_number') }}" required autofocus placeholder="Enter Nid Number">
-                                @error('nid_number')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </div> --}}
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="font-weight-bolder">{{ __('Designation') }}</label>
-                                <input id="designation" type="text" class="form-control @error('designation') is-invalid @enderror" name="designation" value="{{ old('designation') }}" required autofocus placeholder="Enter Designation">
-                                @error('designation')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>{{ __('Password') }}</label>
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" placeholder="Choose strong password">
-                                @error('password')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>{{ __('Confirm Password') }}</label>
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" placeholder="Re type password">
-                                @error('password_confirmation')
-                                <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                            <div class="col-md-6">
+                                <div class="input-icon">
+                                    <input type="text" name="username" value="{{ old('username') }}" class="form-control" placeholder="Username">
+                                    <i class="fas fa-at"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-primary btn-block">{{ __('Sign In') }}</button>
+                    
+                    <div class="form-section">
+                        <h4 class="form-section-title">Institute Details</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-icon">
+                                    <input type="text" class="form-control" placeholder="Institute name">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-icon">
+                                    <select name="division" class="form-control">
+                                        <option selected disabled>Select division</option>
+                                        <option>Science & Technology</option>
+                                        <option>Business & Management</option>
+                                        <option>Arts & Humanities</option>
+                                        <option>Health Sciences</option>
+                                    </select>
+                                    <i class="fas fa-layer-group"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h4 class="form-section-title">Contact Information</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-icon">
+                                    <input type="text" name="referral" value="{{ old('referral') }}" class="form-control" placeholder="Referral Code (Optional)">
+                                    <i class="fas fa-user-friends"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-icon">
+                                    <input type="tel"  name="phone" value="{{ old('phone') }}" class="form-control" placeholder="Phone">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h4 class="form-section-title">Security</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-icon">
+                                    <input type="password"  name="password" value="{{ old('password') }}" class="form-control" placeholder="Type Password">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-icon">
+                                    <input type="password"  name="password_confirmation" value="{{ old('password_confirmation') }}" class="form-control" placeholder="Type Confirm Password">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="terms-check form-check">
+                        <input class="form-check-input" type="checkbox" id="termsCheck">
+                        <label class="form-check-label" for="termsCheck">
+                            I accept the <a href="#" class="text-decoration-none">Terms and Conditions</a>
+                        </label>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mx-auto">
+                            <button type="submit" class="btn btn-register">
+                                <i class="fas fa-user-plus me-2"></i> REGISTER
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <p>Already have an account? <a href="{{ route('login') }}" class="text-decoration-none">Login here</a></p>
+                    </div>
                 </form>
-            </div>
-            <div class="main-signin-footer mt-3 mg-t-5">
-                <p class="text-light font-weight-bolder">{{ __('Already have an account?') }} <a class="text-light font-weight-bolder" href="{{ route('login') }}">{{ __('Signin to account!') }}</a></p>
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#userType').change(function () {
-            var userType = $(this).val();
-
-            // Hide all fields initially
-            $('.agentFields, .userFields').hide();
-
-            // Show fields based on the selected type
-            if (userType === '2') {
-                $('.agentFields').show();
-            } else if (userType === '1') {
-                $('.userFields').show();
-            }
-        });
-    });
-</script>
-@endsection
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
