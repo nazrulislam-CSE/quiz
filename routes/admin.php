@@ -10,6 +10,12 @@ use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\McqController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\MenuBuilderController;
+use App\Http\Controllers\Admin\PageController;
+use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\CounterController;
+use App\Http\Controllers\Admin\AboutController;
 
 
 
@@ -37,6 +43,79 @@ Route::middleware('admin')->group(function () {
         Route::post('/profile/update', [SettingController::class, 'profileUpdate'])->name('profile.update');     
         Route::get('/password/change', [SettingController::class, 'passwordChange'])->name('password.change');   
         Route::post('/password/update', [SettingController::class, 'passwordUpdate'])->name('password.update');   
+    });
+
+    /* ============> Categories <=========== */
+    Route::prefix('categories')->group(function () {
+        Route::get('/index', [CategoryController::class, 'index'])->name('category.index');
+        Route::get('/create', [CategoryController::class, 'create'])->name('category.create');
+        Route::post('/store', [CategoryController::class, 'store'])->name('category.store');
+        Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('category.edit');
+        Route::post('/update/{id}', [CategoryController::class, 'update'])->name('category.update');
+        Route::get('/delete/{id}', [CategoryController::class, 'destroy'])->name('category.delete');
+        Route::get('/show/{id}', [CategoryController::class,'show'])->name('category.show');
+
+    });
+
+    /* ===========> Manage Menu Builder <========== */
+    Route::group(['prefix'=>'menus'], function(){        
+        // Route::get('/menu/builder', MenuBuilder::class)->name('menu.builder.create')
+        Route::get('/manage/menus/{id?}', [MenuBuilderController::class, 'index'])->name('menuBuilder');
+        Route::post('store/menu', [MenuBuilderController::class, 'store'])->name('menu.store');
+        Route::get('delete/menuitem/{id}', [MenuBuilderController::class, 'deleteMenuItem'])->name('deleteMenuItem');
+        Route::get('create/menu', [MenuBuilderController::class, 'createMenu'])->name('createMenu');
+        Route::get('update/menu', [MenuBuilderController::class, 'updateMenu'])->name('updateMenu');
+        Route::get('add/item/menu', [MenuBuilderController::class, 'addItemToMenu'])->name('addItemToMenu');
+        Route::post('update/menuitem/{id}', [MenuBuilderController::class, 'updateMenuItem'])->name('updateMenuItem');
+        Route::get('delete/menu/{id}', [MenuBuilderController::class, 'destroy'])->name('deleteMenu');
+    });
+
+    /* ============> Pages <=========== */
+    Route::prefix('pages')->group(function () {
+        Route::get('/index', [PageController::class, 'index'])->name('page.index');
+        Route::get('/create', [PageController::class, 'create'])->name('page.create');
+        Route::post('/store', [PageController::class, 'store'])->name('page.store');
+        Route::get('/edit/{id}', [PageController::class, 'edit'])->name('page.edit');
+        Route::post('/update/{id}', [PageController::class, 'update'])->name('page.update');
+        Route::get('/delete/{id}', [PageController::class, 'destroy'])->name('page.delete');
+        Route::get('/show/{id}', [PageController::class,'show'])->name('page.show');
+
+    });
+
+    /* ============> Manage Slider   <=========== */
+    Route::prefix('slider')->group(function () {
+        Route::get('/index', [SliderController::class, 'index'])->name('slider.index');
+        Route::get('/create', [SliderController::class, 'create'])->name('slider.create');
+        Route::post('/store', [SliderController::class, 'store'])->name('slider.store');
+        Route::get('/edit/{id}', [SliderController::class, 'edit'])->name('slider.edit');
+        Route::post('/update/{id}', [SliderController::class, 'update'])->name('slider.update');
+        Route::get('/delete/{id}', [SliderController::class, 'destroy'])->name('slider.delete');
+        Route::get('/show/{id}', [SliderController::class,'show'])->name('slider.show');
+
+    });
+
+    /* ============> Manage Counter   <=========== */
+    Route::prefix('counters')->group(function () {
+        Route::get('/index', [CounterController::class, 'index'])->name('counter.index');
+        Route::get('/create', [CounterController::class, 'create'])->name('counter.create');
+        Route::post('/store', [CounterController::class, 'store'])->name('counter.store');
+        Route::get('/edit/{id}', [CounterController::class, 'edit'])->name('counter.edit');
+        Route::post('/update/{id}', [CounterController::class, 'update'])->name('counter.update');
+        Route::get('/delete/{id}', [CounterController::class, 'destroy'])->name('counter.delete');
+        Route::get('/show/{id}', [CounterController::class,'show'])->name('counter.show');
+
+    });
+
+    /* ============> About <=========== */
+    Route::group(['prefix'=>'abouts'], function(){   
+        Route::get('/index', [AboutController::class, 'index'])->name('about.index');
+        // Route::get('/create', [AboutController::class, 'create'])->name('about.create');
+        // Route::post('/store', [AboutController::class, 'store'])->name('about.store');
+        Route::get('/edit/{id}', [AboutController::class, 'edit'])->name('about.edit');
+        Route::post('/update/{id}', [AboutController::class, 'update'])->name('about.update');
+        Route::get('/delete/{id}', [AboutController::class, 'destroy'])->name('about.delete');
+        Route::get('/show/{id}', [AboutController::class,'show'])->name('about.show');
+
     });
 
     /* ============> Admission <=========== */

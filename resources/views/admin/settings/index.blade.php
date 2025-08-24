@@ -68,7 +68,7 @@
                                     <div class="col-sm-6 mb-3">
                                         <label for="site_name" class="col-form-label" style="font-weight: bold;">Site Name :</label>
                                         <input type="hidden" name="types[]" value="site_name">
-                                        <input class="form-control" type="text" name="site_name" id="site_name" placeholder="Write Site name" value="{{ get_setting('site_name')->value ?? 'null'}}">
+                                        <input class="form-control" type="text" name="site_name" id="site_name" placeholder="Write Site name" value="{{ get_setting('site_name')->value ?? ''}}">
                                         @error('site_name')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -77,7 +77,7 @@
                                     <div class="col-sm-6 mb-3">
                                         <label for="business_name" class="col-form-label" style="font-weight: bold;">Business Name :</label>
                                         <input type="hidden" name="types[]" value="business_name">
-                                        <input class="form-control" type="text" name="business_name" id="business_name" placeholder="Write Site name" value="{{ get_setting('business_name')->value ?? 'null'}}">
+                                        <input class="form-control" type="text" name="business_name" id="business_name" placeholder="Write Site name" value="{{ get_setting('business_name')->value ?? ''}}">
                                         @error('business_name')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -86,7 +86,7 @@
                                     <div class="col-sm-6 mb-3">
                                         <label for="phone" class="col-form-label" style="font-weight: bold;">Phone :</label>
                                         <input type="hidden" name="types[]" value="phone">
-                                        <input class="form-control" type="text" name="phone" id="phone" placeholder="Write phone" value="{{ get_setting('phone')->value ?? 'null'}}">
+                                        <input class="form-control" type="text" name="phone" id="phone" placeholder="Write phone" value="{{ get_setting('phone')->value ?? ''}}">
                                         @error('phone')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -95,7 +95,7 @@
                                     <div class="col-sm-6 mb-3">
                                         <label for="email" class="col-form-label" style="font-weight: bold;">Email :</label>
                                         <input type="hidden" name="types[]" value="email">
-                                        <input class="form-control" type="text" name="email" id="email" placeholder="Write email" value="{{ get_setting('email')->value ?? 'null'}}">
+                                        <input class="form-control" type="text" name="email" id="email" placeholder="Write email" value="{{ get_setting('email')->value ?? ''}}">
                                         @error('email')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -106,7 +106,7 @@
                                     <div class="col-sm-6 mb-3">
                                         <label for="business_hours" class="col-form-label" style="font-weight: bold;">Business Hours</label>
                                         <input type="hidden" name="types[]" value="business_hours">
-                                        <input class="form-control" type="text" name="business_hours" placeholder="business hours" value="{{ get_setting('business_hours')->value ?? 'null'}}">
+                                        <input class="form-control" type="text" name="business_hours" placeholder="business hours" value="{{ get_setting('business_hours')->value ?? ''}}">
                                         @error('business_hours')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -115,7 +115,7 @@
                                     <div class="col-sm-6 mb-3">
                                         <label for="copy_right" class="col-form-label" style="font-weight: bold;">Copy Right</label>
                                         <input type="hidden" name="types[]" value="copy_right">
-                                        <input class="form-control" type="text" name="copy_right" placeholder="copy right" value="{{ get_setting('copy_right')->value ?? 'null'}}">
+                                        <input class="form-control" type="text" name="copy_right" placeholder="copy right" value="{{ get_setting('copy_right')->value ?? ''}}">
                                         @error('copy_right')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -124,7 +124,7 @@
                                     <div class="col-sm-12 mb-3">
                                         <label for="business_address" class="col-form-label" style="font-weight: bold;">Head office Address</label>
                                         <input type="hidden" name="types[]" value="business_address">
-                                        <textarea class="form-control" id="business_address" cols="2" name="business_address" placeholder="Write address here">{{ get_setting('business_address')->value ?? 'null'}}</textarea>
+                                        <textarea class="form-control" id="business_address" cols="2" name="business_address" placeholder="Write address here">{{ get_setting('business_address')->value ?? ''}}</textarea>
                                         @error('business_address')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -133,7 +133,7 @@
                                     <div class="col-sm-12 mb-3">
                                         <label for="about" class="col-form-label" style="font-weight: bold;">About</label>
                                         <input type="hidden" name="types[]" value="about">
-                                        <textarea class="form-control" id="about" cols="2" name="about" placeholder="Write about here">{{ get_setting('about')->value ?? 'null'}}</textarea>
+                                        <textarea class="form-control" id="about" cols="2" name="about" placeholder="Write about here">{{ get_setting('about')->value ?? ''}}</textarea>
                                         @error('about')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -163,7 +163,7 @@
                                     <div class="col-sm-6 mb-3">
                                         <label for="facebook_url" class="col-form-label" style="font-weight: bold;">Facebook link :</label>
                                         <input type="hidden" name="types[]" value="facebook_url">
-                                        <input class="form-control" type="text" name="facebook_url" id="facebook_url" placeholder="Write facebook url" value="{{ get_setting('facebook_url')->value ?? 'null'}}">
+                                        <input class="form-control" type="text" name="facebook_url" id="facebook_url" placeholder="Write facebook url" value="{{ get_setting('facebook_url')->value ?? ''}}">
                                         @error('facebook_url')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -172,7 +172,7 @@
                                     <div class="col-sm-6 mb-3">
                                         <label for="twitter_url" class="col-form-label" style="font-weight: bold;">Twitter link :</label>
                                         <input type="hidden" name="types[]" value="twitter_url">
-                                        <input class="form-control" type="text" name="twitter_url" id="twitter_url" placeholder="Write twitter url" value="{{ get_setting('twitter_url')->value ?? 'null'}}">
+                                        <input class="form-control" type="text" name="twitter_url" id="twitter_url" placeholder="Write twitter url" value="{{ get_setting('twitter_url')->value ?? ''}}">
                                         @error('twitter_url')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -180,7 +180,7 @@
                                     <div class="col-sm-6 mb-3">
                                         <label for="linkedin_url" class="col-form-label" style="font-weight: bold;">Linkedin Link :</label>
                                         <input type="hidden" name="types[]" value="linkedin_url">
-                                        <input class="form-control" type="text" name="linkedin_url" id="linkedin_url" placeholder="Write linkedin url" value="{{ get_setting('linkedin_url')->value ?? 'null'}}">
+                                        <input class="form-control" type="text" name="linkedin_url" id="linkedin_url" placeholder="Write linkedin url" value="{{ get_setting('linkedin_url')->value ?? ''}}">
                                         @error('linkedin_url')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -189,7 +189,7 @@
                                     <div class="col-sm-6 mb-3">
                                         <label for="youtube_url" class="col-form-label" style="font-weight: bold;">Youtube Link :</label>
                                         <input type="hidden" name="types[]" value="youtube_url">
-                                        <input class="form-control" type="text" name="youtube_url" id="youtube_url" placeholder="Write youtube url" value="{{ get_setting('youtube_url')->value ?? 'null'}}">
+                                        <input class="form-control" type="text" name="youtube_url" id="youtube_url" placeholder="Write youtube url" value="{{ get_setting('youtube_url')->value ?? ''}}">
                                         @error('youtube_url')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -198,7 +198,7 @@
                                     <div class="col-sm-6 mb-3">
                                         <label for="instagram_url" class="col-form-label" style="font-weight: bold;">Instagram Link :</label>
                                         <input type="hidden" name="types[]" value="instagram_url">
-                                        <input class="form-control" type="text" name="instagram_url" id="instagram_url" placeholder="Write instagram url" value="{{ get_setting('instagram_url')->value ?? 'null'}}">
+                                        <input class="form-control" type="text" name="instagram_url" id="instagram_url" placeholder="Write instagram url" value="{{ get_setting('instagram_url')->value ?? ''}}">
                                         @error('instagram_url')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -207,7 +207,7 @@
                                     <div class="col-sm-6 mb-3">
                                         <label for="pinterest_url" class="col-form-label" style="font-weight: bold;">Pinterest Link :</label>
                                         <input type="hidden" name="types[]" value="pinterest_url">
-                                        <input class="form-control" type="text" name="pinterest_url" id="pinterest_url" placeholder="Write pinterest url" value="{{ get_setting('pinterest_url')->value ?? 'null'}}">
+                                        <input class="form-control" type="text" name="pinterest_url" id="pinterest_url" placeholder="Write pinterest url" value="{{ get_setting('pinterest_url')->value ?? ''}}">
                                         @error('pinterest_url')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -216,7 +216,7 @@
                                     <div class="col-sm-6 mb-3">
                                         <label for="whatsapp_url" class="col-form-label" style="font-weight: bold;">Whatsapp Link :</label>
                                         <input type="hidden" name="types[]" value="whatsapp_url">
-                                        <input class="form-control" type="text" name="whatsapp_url" id="whatsapp_url" placeholder="Write Whatsapp url" value="{{ get_setting('whatsapp_url')->value ?? 'null'}}">
+                                        <input class="form-control" type="text" name="whatsapp_url" id="whatsapp_url" placeholder="Write Whatsapp url" value="{{ get_setting('whatsapp_url')->value ?? ''}}">
                                         @error('whatsapp_url')
                                             <p class="text-danger">{{$message}}</p>
                                         @enderror
@@ -238,7 +238,7 @@
                                 <div class="row">
                                     <div class="col-sm-12 mb-3">
                                         <div class="mb-2">
-                                            <img id="showFavicon" class="rounded avatar-lg" src="{{ asset(get_setting('site_favicon')->value ?? 'Null') }}" alt="No Image" width="100" height="">
+                                            <img id="showFavicon" class="rounded avatar-lg" src="{{ asset(optional(get_setting('site_favicon'))->value ?? 'upload/MCQ Logo.png') }}" alt="No Image" width="100" height="">
                                         </div>
                                         <div class="mb-2">
                                             <label for="site_favicon" class="col-form-label" style="font-weight: bold;">Site Favicon <span class="text-danger">(Size:32,32px):</span></label>
@@ -251,10 +251,10 @@
 
                                     <div class="col-sm-12 mb-3">
                                         <div class="mb-2">
-                                            <img id="showsitelogo" class="rounded avatar-lg" src="{{ asset(get_setting('site_logo')->value ?? 'Null') }}" alt="No Image" width="100" height="">
+                                            <img id="showsitelogo" class="rounded avatar-lg" src="{{ asset(get_setting('site_logo')->value ?? 'upload/MCQ Logo.png') }}" alt="No Image" width="100" height="">
                                         </div>
                                         <div class="mb-2">
-                                            <label for="image" class="col-form-label" style="font-weight: bold;">Site Logo <span class="text-danger">(Size:380,106px):</span></label>
+                                            <label for="image" class="col-form-label" style="font-weight: bold;">Site Logo <span class="text-danger">(Size:1026,538px):</span></label>
 
                                             <input name="site_logo" class="form-control" type="file" id="sitelogo">
                                             @error('site_logo')
@@ -265,10 +265,10 @@
 
                                     <div class="col-sm-12 mb-3">
                                         <div class="mb-2">
-                                            <img id="showFooter" class="rounded avatar-lg" src="{{ asset(get_setting('site_footer_logo')->value ?? 'Null') }}" alt="No Image" width="100" height="">
+                                            <img id="showFooter" class="rounded avatar-lg" src="{{ asset(get_setting('site_footer_logo')->value ?? 'upload/MCQ Logo.png') }}" alt="No Image" width="100" height="">
                                         </div>
                                         <div class="mb-2">
-                                            <label for="site_footer_logo" class="col-form-label" style="font-weight: bold;">Site Footer Logo <span class="text-danger">(Size:380,106px):</label>
+                                            <label for="site_footer_logo" class="col-form-label" style="font-weight: bold;">Site Footer Logo <span class="text-danger">(Size:1026,538px):</label>
 
                                             <input name="site_footer_logo" class="form-control" type="file" id="site_footer_logo">
                                             @error('site_footer_logo')
@@ -277,7 +277,7 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="col-sm-12 mb-3">
+                                    {{-- <div class="col-sm-12 mb-3">
                                         <div class="mb-2">
                                             <img id="showContact" class="rounded avatar-lg" src="{{ asset(get_setting('site_contact_logo')->value ?? 'Null') }}" alt="No Image" width="100" height="">
                                         </div>
@@ -289,9 +289,9 @@
                                                 <p class="text-danger">{{$message}}</p>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
 
-                                    <div class="col-sm-12 mb-3">
+                                    {{-- <div class="col-sm-12 mb-3">
                                         <div class="mb-2">
                                             <img id="showCompany" class="rounded avatar-lg" src="{{ asset(get_setting('site_company_logo')->value ?? 'Null') }}" alt="No Image" width="100%" height="">
                                         </div>
@@ -303,7 +303,7 @@
                                                 <p class="text-danger">{{$message}}</p>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                 </div>
                                 <!-- row //-->
@@ -349,7 +349,7 @@
                         </div> --}}
                         <!-- card //-->
                     </div>
-                    <div class="col-sm-6 mb-3">
+                    {{-- <div class="col-sm-6 mb-3">
                         <div class="mb-2">
                             <img id="showCompany1" class="rounded avatar-lg" src="{{ asset(get_setting('top_banner')->value ?? '') }}" alt="No Image" width="100%" height="">
                         </div>
@@ -372,8 +372,8 @@
                                 <p class="text-danger">{{$message}}</p>
                             @enderror
                         </div>
-                    </div>
-                    <div class="col-sm-6 mb-3">
+                    </div> --}}
+                    {{-- <div class="col-sm-6 mb-3">
                         <div class="mb-2">
                             <img id="showCompany3" class="rounded avatar-lg" src="{{ asset(get_setting('middle_banner')->value ?? '') }}" alt="No Image" width="100%" height="">
                         </div>
@@ -384,8 +384,8 @@
                                 <p class="text-danger">{{$message}}</p>
                             @enderror
                         </div>
-                    </div>
-                    <div class="col-sm-6 mb-3">
+                    </div> --}}
+                    {{-- <div class="col-sm-6 mb-3">
                         <div class="mb-2">
                             <img id="showCompany4" class="rounded avatar-lg" src="{{ asset(get_setting('middle_banner1')->value ?? '') }}" alt="No Image" width="100%" height="">
                         </div>
@@ -396,7 +396,7 @@
                                 <p class="text-danger">{{$message}}</p>
                             @enderror
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="input-group mb-1">

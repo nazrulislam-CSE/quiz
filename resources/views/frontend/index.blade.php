@@ -1,49 +1,328 @@
 @extends('layouts.frontend.app')
 @section('content')
+<!-- Hero Image Slider -->
+<section id="heroSlider" class="carousel slide" data-bs-ride="carousel">
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            
-            <!-- Animated Quiz Title -->
-            <h2 class="mb-4 animate__animated animate__bounceIn text-center bg-success text-light p-3 rounded">Speakup Quiz</h2>
+  <!-- Indicators -->
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
 
-            <!-- Quiz Card -->
-            <div class="card shadow-lg quiz-card animate__animated animate__fadeInUp">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0 text-light">Quiz Question</h4>
-                </div>
-                <div class="card-body">
-                    <p class="card-text">What is the capital of France?</p>
-
-                    <div class="list-group">
-                        <button class="list-group-item list-group-item-action">A. Berlin</button>
-                        <button class="list-group-item list-group-item-action">B. Madrid</button>
-                        <button class="list-group-item list-group-item-action">C. Paris</button>
-                        <button class="list-group-item list-group-item-action">D. Rome</button>
-                    </div>
-                </div>
-                <div class="card-footer text-end">
-                    <button class="btn btn-success">Submit</button>
-                </div>
-            </div>
-
-        </div>
+  <!-- Slides -->
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="https://picsum.photos/id/1011/1200/500" class="d-block w-100 img-fluid" alt="Slide 1">
     </div>
-</div>
+    <div class="carousel-item">
+      <img src="https://picsum.photos/id/1012/1200/500" class="d-block w-100 img-fluid" alt="Slide 2">
+    </div>
+    <div class="carousel-item">
+      <img src="https://picsum.photos/id/1013/1200/500" class="d-block w-100 img-fluid" alt="Slide 3">
+    </div>
+  </div>
 
-<!-- Animate.css CDN -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <!-- Controls -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroSlider" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroSlider" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</section>
 
-<!-- Optional: Custom Style -->
-<style>
-    .quiz-card {
-        transition: transform 0.3s ease-in-out;
-    }
+<!-- About Section -->
+<section class="py-5 bg-light" id="about">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+      <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" 
+     alt="Company Team" class="img-fluid rounded shadow">
 
-    .quiz-card:hover {
-        transform: scale(1.02);
-    }
-</style>
+      </div>
+      <div class="col-md-6 mt-3">
+        <h2>আমাদের সম্পর্কে</h2>
+        <p class="mt-3">MCQ Admission হলো একটি স্মার্ট অনলাইন প্ল্যাটফর্ম যেখানে ভর্তি পরীক্ষার জন্য প্রয়োজনীয় সকল উপকরণ একসাথে পাওয়া যায়। এখানে রয়েছে বিশাল প্রশ্ন ব্যাংক, রিয়েল টাইম মডেল টেস্ট, অভিজ্ঞ শিক্ষকের তৈরি কনটেন্ট এবং বিস্তারিত রেজাল্ট অ্যানালাইসিস।</p>
+        <ul class="list-unstyled mt-3">
+          <li>✔ বিশ্ববিদ্যালয় ভর্তি প্রস্তুতি</li>
+          <li>✔ মেডিকেল ও নার্সিং কোচিং</li>
+          <li>✔ ডিপ্লোমা ও অন্যান্য টেকনিক্যাল পরীক্ষা</li>
+        </ul>
+        <a href="#" class="btn btn-gradient mt-3">আরও জানুন</a>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- MCQ Admission Section -->
+<section class="py-5 bg-light">
+  <div class="container text-center">
+    <h4 class="mb-4 fw-bold reveal">MCQ এডমিশন এক প্লাটফর্মে</h4>
+    <div class="row g-4">
+      
+      <!-- Card Item -->
+      <div class="col-md-3 col-sm-6">
+        <div class="p-4 rounded shadow-sm h-100 text-white bg-primary reveal">
+          <h5 class="mb-0">বিসিএস প্রিলি</h5>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <div class="p-4 rounded shadow-sm h-100 text-white bg-success reveal">
+          <h5 class="mb-0">প্রাইমারি</h5>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <div class="p-4 rounded shadow-sm h-100 text-white bg-danger reveal">
+          <h5 class="mb-0">শিক্ষক নিবন্ধন</h5>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <div class="p-4 rounded shadow-sm h-100 text-dark bg-warning reveal">
+          <h5 class="mb-0">ব্যাংক জব</h5>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <div class="p-4 rounded shadow-sm h-100 text-dark bg-info reveal">
+          <h5 class="mb-0">ভার্সিটি এডমিশন</h5>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <div class="p-4 rounded shadow-sm h-100 text-white bg-secondary reveal">
+          <h5 class="mb-0">মেডিকেল এডমিশন</h5>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <div class="p-4 rounded shadow-sm h-100 text-white bg-dark reveal">
+          <h5 class="mb-0">নার্সিং এডমিশন</h5>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <div class="p-4 rounded shadow-sm h-100 text-dark bg-light border reveal">
+          <h5 class="mb-0">জাতীয় বিশ্ববিদ্যালয়</h5>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <div class="p-4 rounded shadow-sm h-100 text-white bg-primary reveal">
+          <h5 class="mb-0">ডিপ্লোমা ইঞ্জিনিয়া</h5>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Teacher Section -->
+<section class="py-5 bg-light">
+  <div class="container text-center">
+    <h4 class="mb-4 fw-bold">আমাদের মেন্টর</h4>
+
+    <div id="teacherCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+          <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+              <div class="card shadow-sm border-0 h-100">
+                <img src="https://picsum.photos/300/300" class="card-img-top" alt="Teacher">
+                <div class="card-body">
+                  <h5 class="card-title mb-1">মোঃ রাকিব হাসান</h5>
+                  <p class="text-muted mb-1">Assistant Professor</p>
+                  <p class="fw-bold text-primary">পদার্থবিজ্ঞান</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="card shadow-sm border-0 h-100">
+                <img src="https://picsum.photos/301/300" class="card-img-top" alt="Teacher">
+                <div class="card-body">
+                  <h5 class="card-title mb-1">সুমাইয়া আক্তার</h5>
+                  <p class="text-muted mb-1">Lecturer</p>
+                  <p class="fw-bold text-success">রসায়ন</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="card shadow-sm border-0 h-100">
+                <img src="https://picsum.photos/302/300" class="card-img-top" alt="Teacher">
+                <div class="card-body">
+                  <h5 class="card-title mb-1">আব্দুল কাদের</h5>
+                  <p class="text-muted mb-1">Senior Lecturer</p>
+                  <p class="fw-bold text-danger">জীববিজ্ঞান</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="card shadow-sm border-0 h-100">
+                <img src="https://picsum.photos/303/300" class="card-img-top" alt="Teacher">
+                <div class="card-body">
+                  <h5 class="card-title mb-1">মেহেদী হাসান</h5>
+                  <p class="text-muted mb-1">Assistant Teacher</p>
+                  <p class="fw-bold text-warning">গণিত</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-item">
+          <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+              <div class="card shadow-sm border-0 h-100">
+                <img src="https://picsum.photos/304/300" class="card-img-top" alt="Teacher">
+                <div class="card-body">
+                  <h5 class="card-title mb-1">তানজিলা আক্তার</h5>
+                  <p class="text-muted mb-1">Lecturer</p>
+                  <p class="fw-bold text-info">ইংরেজি</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="card shadow-sm border-0 h-100">
+                <img src="https://picsum.photos/305/300" class="card-img-top" alt="Teacher">
+                <div class="card-body">
+                  <h5 class="card-title mb-1">আরিফুল ইসলাম</h5>
+                  <p class="text-muted mb-1">Professor</p>
+                  <p class="fw-bold text-dark">বাংলা</p>
+                </div>
+              </div>
+            </div>
+            <!-- প্রয়োজনে আরও teacher add করুন -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Carousel Controls -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#teacherCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#teacherCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+  <div class="container text-center">
+    <h2 class="mb-4 reveal">কেন MCQ Admission বেছে নিবেন?</h2>
+    <div class="row g-4">
+      <div class="col-md-3">
+        <div class="p-4 border rounded shadow-sm h-100 reveal">
+          <i class="fa-solid fa-book-open fa-2x text-primary mb-3"></i>
+          <h5>অসংখ্য প্রশ্ন ব্যাংক</h5>
+          <p>ভার্সিটি, মেডিকেল ও নার্সিং ভর্তি পরীক্ষার বিশাল প্রশ্ন ব্যাংক।</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="p-4 border rounded shadow-sm h-100 reveal">
+          <i class="fa-solid fa-laptop-code fa-2x text-success mb-3"></i>
+          <h5>স্মার্ট অনলাইন পরীক্ষা</h5>
+          <p>বাসায় বসেই রিয়েল টাইম মডেল টেস্ট দেওয়ার সুবিধা।</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="p-4 border rounded shadow-sm h-100 reveal">
+          <i class="fa-solid fa-users fa-2x text-warning mb-3"></i>
+          <h5>অভিজ্ঞ শিক্ষক</h5>
+          <p>শীর্ষস্থানীয় শিক্ষকদের তৈরি কনটেন্ট ও প্রশ্ন সেট।</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="p-4 border rounded shadow-sm h-100 reveal">
+          <i class="fa-solid fa-award fa-2x text-danger mb-3"></i>
+          <h5>রেজাল্ট অ্যানালাইসিস</h5>
+          <p>প্রতিটি পরীক্ষার পর বিস্তারিত পারফরম্যান্স রিপোর্ট।</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Counter Section -->
+<section class="py-5 text-white" style="background:#1d3557;">
+  <div class="container text-center">
+    <div class="row g-4">
+      <div class="col-md-3 reveal">
+        <h2 class="counter" data-target="50000">0</h2>
+        <p>মোট শিক্ষার্থী</p>
+      </div>
+      <div class="col-md-3 reveal">
+        <h2 class="counter" data-target="2000">0</h2>
+        <p>মডেল টেস্ট</p>
+      </div>
+      <div class="col-md-3 reveal">
+        <h2 class="counter" data-target="150">0</h2>
+        <p>অভিজ্ঞ শিক্ষক</p>
+      </div>
+      <div class="col-md-3 reveal">
+        <h2 class="counter" data-target="95">0%</h2>
+        <p>সাফল্যের হার</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-5 bg-light">
+  <div class="container text-center">
+    <h2 class="mb-5 reveal">শিক্ষার্থীদের মতামত</h2>
+    <div class="row g-4">
+      <div class="col-md-4 reveal">
+        <div class="p-4 border rounded shadow-sm h-100">
+          <p>"MCQ Admission এর প্রশ্নব্যাংক ব্যবহার করে আমি মেডিকেলে চান্স পেয়েছি। অসাধারণ প্লাটফর্ম।"</p>
+          <h6 class="mt-3">- রাহুল ইসলাম, মেডিকেল</h6>
+        </div>
+      </div>
+      <div class="col-md-4 reveal">
+        <div class="p-4 border rounded shadow-sm h-100">
+          <p>"অনলাইন মডেল টেস্ট ফিচার আমাকে আসল পরীক্ষার মতো অনুশীলন করতে সাহায্য করেছে।"</p>
+          <h6 class="mt-3">- নুসরাত জাহান, ভার্সিটি</h6>
+        </div>
+      </div>
+      <div class="col-md-4 reveal">
+        <div class="p-4 border rounded shadow-sm h-100">
+          <p>"রেজাল্ট অ্যানালাইসিস দেখে আমি আমার দুর্বলতা চিহ্নিত করে উন্নতি করতে পেরেছি।"</p>
+          <h6 class="mt-3">- ফারহান হোসেন, নার্সিং</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Call to Action -->
+<section class="py-5 text-center text-white" style="background: linear-gradient(135deg, #6f42c1, #007bff);">
+  <div class="container reveal">
+    <h2>তোমার ভর্তি পরীক্ষার যাত্রা শুরু করো আজই</h2>
+    <p class="mb-4">সেরা শিক্ষকদের গাইডলাইন ও স্মার্ট প্র্যাকটিস টুলস একসাথে।</p>
+    <a href="#" class="btn btn-gradient btn-lg">এখনই রেজিস্ট্রেশন করুন</a>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="newsletter container text-center reveal">
+  <h3>Subscribe Our Newsletter</h3>
+  <p>Subscribed to our newsletter to get regular update about our courses.</p>
+  <form class="d-flex justify-content-center mt-3">
+    <input type="email" class="form-control w-50" placeholder="Your email here...">
+    <button type="submit" class="btn btn-gradient">Subscribe</button>
+  </form>
+</section>
 @endsection

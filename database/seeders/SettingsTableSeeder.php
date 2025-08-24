@@ -20,23 +20,23 @@ class SettingsTableSeeder extends Seeder
             ],
             [
                 'name'  => 'site_logo',
-                'value' => 'uploads/setting/logo/1702302389images (1).jpg',
+                'value' => '',
             ],
             [
                 'name'  => 'site_favicon',
-                'value' => 'uploads/setting/favicon/1702302437images.jpg',
+                'value' => '',
             ],
             [
                 'name'  => 'site_footer_logo',
-                'value' => 'uploads/setting/logo/1702302389template.png',
+                'value' => '',
             ],
             [
                 'name'  => 'site_contact_logo',
-                'value' => 'uploads/setting/contact/17023023891701841454logo.png',
+                'value' => '',
             ],
             [
                 'name'  => 'site_company_logo',
-                'value' => 'uploads/setting/company/17023023891701841454logo.png',
+                'value' => '',
             ],
             [
                 'name'  => 'phone',
@@ -44,11 +44,11 @@ class SettingsTableSeeder extends Seeder
             ],
             [
                 'name'  => 'email',
-                'value' => 'speakupbd@gmail.com',
+                'value' => 'mcq@gmail.com',
             ],
             [
                 'name'  => 'business_name',
-                'value' => 'Speak Up Bd Company',
+                'value' => 'MCQ',
             ],
             [
                 'name'  => 'business_address',
@@ -60,11 +60,11 @@ class SettingsTableSeeder extends Seeder
             ],
             [
                 'name'  => 'copy_right',
-                'value' => 'Copy Right Speak Up Bd 2024',
+                'value' => 'Copy Right MCQ 2025',
             ],
             [
                 'name'  => 'developed_by',
-                'value' => 'Speak Up Bd',
+                'value' => 'Nazrul Islam Suzon',
             ],
             [
                 'name'  => 'developer_link',
@@ -72,7 +72,7 @@ class SettingsTableSeeder extends Seeder
             ],
             [
                 'name'  => 'about',
-                'value' => 'Speak Up BD is a provider of IT consulting and software development services.
+                'value' => 'MCQ Admission হলো একটি স্মার্ট অনলাইন প্ল্যাটফর্ম যেখানে ভর্তি পরীক্ষার জন্য প্রয়োজনীয় সকল উপকরণ একসাথে পাওয়া যায়। এখানে রয়েছে বিশাল প্রশ্ন ব্যাংক, রিয়েল টাইম মডেল টেস্ট, অভিজ্ঞ শিক্ষকের তৈরি কনটেন্ট এবং বিস্তারিত রেজাল্ট অ্যানালাইসিস।
                 .',
             ],
             [
@@ -109,15 +109,15 @@ class SettingsTableSeeder extends Seeder
             ],
             [
                 'name'  => 'meta_title',
-                'value' => 'Speak Up Bd',
+                'value' => 'MCQ Admission',
             ],
             [
                 'name'  => 'meta_keyword',
-                'value' => 'Speak Up Bd',
+                'value' => 'MCQ Admission',
             ],
             [
                 'name'  => 'meta_description',
-                'value' => 'Speak Up Bd Most Popular It Company Website.',
+                'value' => 'MCQ Admission Most Popular It Company Website.',
             ],
             [
                 'name'  => 'top_banner',

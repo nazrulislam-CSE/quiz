@@ -113,6 +113,54 @@
                         <li><a class="slide-item {{ Request::is('admin/mcq/index') ? 'active' : '' }}" href="{{ route('admin.mcq.index')}}">Manage MCQ</a></li>
                     </ul>
                 </li>
+                <li class="slide {{ Request::is('admin/slider*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-store-alt"></i>
+                        <span class="side-menu__label">Sliders</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Slider</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/slider/create') ? 'active' : '' }}" href="{{ route('admin.slider.create')}}">Slider Add</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/slider/index') ? 'active' : '' }}" href="{{ route('admin.slider.index')}}">Slider List</a></li>
+                    </ul>
+                </li>
+                <li class="slide {{ Request::is('admin/pages*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-building"></i>
+                        <span class="side-menu__label">Pages</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Pages</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/pages/create') ? 'active' : '' }}" href="{{ route('admin.page.create')}}">Pages Add</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/pages/index') ? 'active' : '' }}" href="{{ route('admin.page.index')}}">Pages List</a></li>
+                    </ul>
+                </li>
+                <li class="slide {{ Request::is('admin/menus*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-vote-yea"></i>
+                        <span class="side-menu__label">Menu Builder</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                        </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Menu Builder</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/menuBuilder') ? 'active' : '' }}" href="{{ route('admin.menuBuilder')}}">Mange Menu Builder</a></li>
+                    </ul>
+                </li>
+                <li class="slide {{ Request::is('admin/counters*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-building"></i>
+                        <span class="side-menu__label">Counters</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Counters</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/counter/create') ? 'active' : '' }}" href="{{ route('admin.counter.create') }}">Counter Add</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/counter/store') ? 'active' : '' }}" href="{{ route('admin.counter.index') }}">Counter List</a></li>
+                    </ul>
+                </li>
+
                 <li class="slide {{ Request::is('admin/settings*') ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                         <i class="side-menu__icon fas fa-cog"></i>
