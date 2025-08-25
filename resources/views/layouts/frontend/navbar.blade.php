@@ -39,9 +39,9 @@
         @foreach($menuitems as $key=> $menuitem)
           <li class="nav-item {{ $loop->first ? 'active show' : '' }}">
             @if($menuitem->url == 'home-page')
-                <a href="{{ route('frontend.home') }}">{{ $menuitem->title ?? '' }}</a>
+                <a class="nav-item text-decoration-none text-secondary font-weight-bold" href="{{ route('frontend.home') }}">{{ $menuitem->title ?? '' }}</a>
             @else
-                <a href="{{ route('menu.page',$menuitem->url)}}">{{ $menuitem->title ?? '' }}</a>
+                <a class="nav-item text-decoration-none text-secondary font-weight-bold" href="{{ route('menu.page',$menuitem->url)}}">{{ $menuitem->title ?? '' }}</a>
             @endif
           </li>
         @endforeach
