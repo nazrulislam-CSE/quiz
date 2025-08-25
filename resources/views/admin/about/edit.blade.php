@@ -67,22 +67,22 @@
                             <input type="text" value="{{ $about->title }}" class=" form-control" name="title" placeholder="Enter Title">
                         </div>
                     </div>
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                    {{-- <div class="form-group col-xl-6 col-lg-6 col-md-6">
                         <label for="experience_no">Experience No: <span class="text-danger"></span></label>
                         @error('experience_no') <span class="text-danger">{{ $message }}</span> @enderror
                          <div class="input-group">
                              <span class="input-group-text" title="Title" id="basic-addon1"><i class="fas fa-building"></i></span>
                              <input type="number" min="0" value="{{ $about->experience_no }}" class=" form-control" name="experience_no" placeholder="Enter Experience No">
                          </div>
-                    </div>
-                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                    </div> --}}
+                    {{-- <div class="form-group col-xl-6 col-lg-6 col-md-6">
                         <label for="experience_title">Experience Title: <span class="text-danger"></span></label>
                         @error('experience_title') <span class="text-danger">{{ $message }}</span> @enderror
                          <div class="input-group">
                              <span class="input-group-text" title="Title" id="basic-addon1"><i class="fas fa-building"></i></span>
                              <input type="text"value="{{ $about->experience_title }}" class=" form-control" name="experience_title" placeholder="Enter Experience Title">
                          </div>
-                    </div>
+                    </div> --}}
 
                     <div class="form-group col-xl-6 col-lg-6 col-md-6">
                         <label for="status">Status:</label>
@@ -103,7 +103,7 @@
                     </div>
 
                     <div class="form-group col-xl-6 col-lg-6 col-md-6">
-                        <label for="image">Small Photo <span class="text-danger font-weight-bolder">(Size:336,510px)</span>:</label>
+                        <label for="image">Photo <span class="text-danger font-weight-bolder">(Size:1600,1050px)</span>:</label>
                         @error('image') <span class="text-danger">{{ $message }}</span> @enderror
                         <div class="input-group">
                             <span class="input-group-text" title="Photo" id="basic-addon1"><i class="fas fa-photo-video"></i></span>
@@ -115,7 +115,7 @@
                        <img id="showImage" src="{{ (!empty($about->image)) ? url('upload/about/'.$about->image):url('upload/no_image.jpg') }}" alt="Admin" style="width:100px; height: 100px;"  >
                    </div>
 
-                   <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                   {{-- <div class="form-group col-xl-6 col-lg-6 col-md-6">
                     <label for="image1">large Photo <span class="text-danger font-weight-bolder">(Size:336,510px)</span>:</label>
                     @error('image1') <span class="text-danger">{{ $message }}</span> @enderror
                     <div class="input-group">
@@ -126,7 +126,7 @@
 
                <div class="form-group col-xl-6 col-lg-6 col-md-6">
                    <img id="showImage1" src="{{ (!empty($about->image1)) ? url('upload/about/'.$about->image1):url('upload/no_image.jpg') }}" alt="Admin" style="width:100px; height: 100px;"  >
-               </div>
+               </div> --}}
 
 
                     <div class="form-group col-xl-12 col-lg-12  col-md-6">

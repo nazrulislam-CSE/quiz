@@ -17,7 +17,7 @@ class SliderController extends Controller
     {
         $pageTitle = 'Slider List';
         $sliders = Slider::latest()->get();
-        return view('admin.slider.index',compact('sliders','pageTitle'));
+        return view('admin.slider.index',compact('pageTitle','sliders'));
     }
 
     /**

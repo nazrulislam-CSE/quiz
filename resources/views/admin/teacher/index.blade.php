@@ -65,7 +65,7 @@
                                             <th class="border-bottom-0">Photo</th>
                                             <th class="border-bottom-0">Name</th>
                                             <th class="border-bottom-0">Designation</th>
-                                            <th class="border-bottom-0">Facebook Url</th>
+                                            {{-- <th class="border-bottom-0">Facebook Url</th> --}}
                                             <th class="border-bottom-0">Status</th>
                                             <th class="border-bottom-0">Actions</th>
                                         </tr>
@@ -79,7 +79,7 @@
                                             </td>
                                             <td>{{ $teacher->name ?? ''}}</td>
                                             <td>{{ $teacher->designation ?? ''}}</td>
-                                            <td>{{ $teacher->facebook_url ?? ''}}</td>
+                                            {{-- <td>{{ $teacher->facebook_url ?? ''}}</td> --}}
                                             <td>
                                                 @if($teacher->status == 1)
                                                     <a href="#" class="badge bg-pill bg-success">Active</a>

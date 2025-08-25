@@ -61,14 +61,14 @@
                 <td>Title</td>
                 <td>{{ $about->title ?? 'NULL' }}</td>
              </tr>
-             <tr>
+             {{-- <tr>
                 <td>Experience No</td>
                 <td>{{ $about->experience_no ?? 'NULL' }}</td>
              </tr>
              <tr>
                 <td>Experience Title</td>
                 <td>{{ $about->experience_title ?? 'NULL' }}</td>
-             </tr>
+             </tr> --}}
              <tr>
                 <td>Description</td>
                 <td>{!! $about->description ?? 'NULL' !!}</td>
@@ -86,17 +86,17 @@
              </td>
              </tr>
              <tr>
-                <td>Small Photo</td>
+                <td>Photo</td>
                 <td>
                     <img src="{{ (!empty($about->image)) ? url('upload/about/'.$about->image):url('upload/no_image.jpg') }}" width="80" alt="image" class="img-fluid">
                 </td>
              </tr>
-             <tr>
+             {{-- <tr>
                 <td>Large Photo</td>
                 <td>
                     <img src="{{ (!empty($about->image1)) ? url('upload/about/'.$about->image1):url('upload/no_image.jpg') }}" width="80" alt="image" class="img-fluid">
                 </td>
-             </tr>
+             </tr> --}}
           </table>
        </div>
     </div>

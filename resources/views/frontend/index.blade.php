@@ -45,14 +45,7 @@
             <!-- Right: Content -->
             <div class="col-md-6 mt-3">
                 <h2 class="fw-bold">{{ $about->title }}</h2>
-                <p class="mt-3">{{ $about->description }}</p>
-
-                <ul class="list-unstyled mt-3">
-                    @if($about->experience_no && $about->experience_title)
-                    <li>✔ {{ $about->experience_no }} {{ $about->experience_title }}</li>
-                    @endif
-                    <!-- Add more dynamic points if needed -->
-                </ul>
+                <p class="mt-3">{!! $about->description !!}</p>
 
                 @if($about->video_link && $about->video_link != '#')
                 <a href="{{ $about->video_link }}" class="btn btn-primary mt-3">ভিডিও দেখুন</a>
@@ -109,80 +102,24 @@
 
     <div id="teacherCarousel" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
-
-        <!-- Slide 1 -->
-        <div class="carousel-item active">
-          <div class="row g-4">
-            <div class="col-md-3 col-sm-6">
-              <div class="card shadow-sm border-0 h-100">
-                <img src="https://picsum.photos/300/300" class="card-img-top" alt="Teacher">
-                <div class="card-body">
-                  <h5 class="card-title mb-1">মোঃ রাকিব হাসান</h5>
-                  <p class="text-muted mb-1">Assistant Professor</p>
-                  <p class="fw-bold text-primary">পদার্থবিজ্ঞান</p>
+        @foreach($teachers->chunk(4) as $chunkIndex => $teacherChunk)
+          <div class="carousel-item {{ $chunkIndex == 0 ? 'active' : '' }}">
+            <div class="row g-4">
+              @foreach($teacherChunk as $teacher)
+                <div class="col-md-3 col-sm-6">
+                  <div class="card shadow rounded border-0 h-100">
+                    <img src="{{ asset('upload/teacher/' . $teacher->image) }}" class="card-img-top" alt="{{ $teacher->name }}">
+                    <div class="card-body">
+                      <h5 class="card-title mb-1">{{ $teacher->name }}</h5>
+                      <p class="text-muted mb-1">{{ $teacher->designation }}</p>
+                      {{-- <p class="fw-bold text-primary">{{ $teacher->description }}</p> --}}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-md-3 col-sm-6">
-              <div class="card shadow-sm border-0 h-100">
-                <img src="https://picsum.photos/301/300" class="card-img-top" alt="Teacher">
-                <div class="card-body">
-                  <h5 class="card-title mb-1">সুমাইয়া আক্তার</h5>
-                  <p class="text-muted mb-1">Lecturer</p>
-                  <p class="fw-bold text-success">রসায়ন</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 col-sm-6">
-              <div class="card shadow-sm border-0 h-100">
-                <img src="https://picsum.photos/302/300" class="card-img-top" alt="Teacher">
-                <div class="card-body">
-                  <h5 class="card-title mb-1">আব্দুল কাদের</h5>
-                  <p class="text-muted mb-1">Senior Lecturer</p>
-                  <p class="fw-bold text-danger">জীববিজ্ঞান</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 col-sm-6">
-              <div class="card shadow-sm border-0 h-100">
-                <img src="https://picsum.photos/303/300" class="card-img-top" alt="Teacher">
-                <div class="card-body">
-                  <h5 class="card-title mb-1">মেহেদী হাসান</h5>
-                  <p class="text-muted mb-1">Assistant Teacher</p>
-                  <p class="fw-bold text-warning">গণিত</p>
-                </div>
-              </div>
+              @endforeach
             </div>
           </div>
-        </div>
-
-        <!-- Slide 2 -->
-        <div class="carousel-item">
-          <div class="row g-4">
-            <div class="col-md-3 col-sm-6">
-              <div class="card shadow-sm border-0 h-100">
-                <img src="https://picsum.photos/304/300" class="card-img-top" alt="Teacher">
-                <div class="card-body">
-                  <h5 class="card-title mb-1">তানজিলা আক্তার</h5>
-                  <p class="text-muted mb-1">Lecturer</p>
-                  <p class="fw-bold text-info">ইংরেজি</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 col-sm-6">
-              <div class="card shadow-sm border-0 h-100">
-                <img src="https://picsum.photos/305/300" class="card-img-top" alt="Teacher">
-                <div class="card-body">
-                  <h5 class="card-title mb-1">আরিফুল ইসলাম</h5>
-                  <p class="text-muted mb-1">Professor</p>
-                  <p class="fw-bold text-dark">বাংলা</p>
-                </div>
-              </div>
-            </div>
-            <!-- প্রয়োজনে আরও teacher add করুন -->
-          </div>
-        </div>
-
+        @endforeach
       </div>
 
       <!-- Carousel Controls -->
@@ -197,6 +134,7 @@
     </div>
   </div>
 </section>
+
 
 <!-- Features Section -->
 <section class="py-5 bg-light">

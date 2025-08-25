@@ -62,11 +62,11 @@
                                     <thead>
                                         <tr>
                                             <th class="border-bottom-0">SL</th>
-                                            <th class="border-bottom-0">Small Photo</th>
-                                            <th class="border-bottom-0">Large Photo</th>
+                                            <th class="border-bottom-0">Photo</th>
+                                            {{-- <th class="border-bottom-0">Large Photo</th> --}}
                                             <th class="border-bottom-0">Title</th>
-                                            <th class="border-bottom-0">Experience No</th>
-                                            <th class="border-bottom-0">Experience Title</th>
+                                            {{-- <th class="border-bottom-0">Experience No</th>
+                                            <th class="border-bottom-0">Experience Title</th> --}}
                                             <th class="border-bottom-0">Status</th>
                                             <th class="border-bottom-0">Actions</th>
                                         </tr>
@@ -78,12 +78,12 @@
                                             <td>
                                                 <img src="{{ (!empty($about->image)) ? url('upload/about/'.$about->image):url('upload/no_image.jpg') }}" width="50" alt="image" class="img-fluid">
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 <img src="{{ (!empty($about->image1)) ? url('upload/about/'.$about->image1):url('upload/no_image.jpg') }}" width="50" alt="image" class="img-fluid">
-                                            </td>
-                                            <td>{{ $about->title ?? 'Null'}}</td>
-                                            <td>{{ $about->experience_no ?? 'Null'}}</td>
-                                            <td>{{ $about->experience_title ?? 'Null'}}</td>
+                                            </td> --}}
+                                            <td>{{ $about->title ?? ''}}</td>
+                                            {{-- <td>{{ $about->experience_no ?? 'Null'}}</td>
+                                            <td>{{ $about->experience_title ?? 'Null'}}</td> --}}
                                             <td>
                                                 @if($about->status == 1)
                                                     <a href="#" class="badge bg-pill bg-success">Active</a>

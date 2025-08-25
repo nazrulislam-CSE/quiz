@@ -113,7 +113,7 @@
                     </div>
 
                     <div class="form-group col-xl-6 col-lg-6 col-md-6">
-                        <label for="image">Photo <span class="text-danger font-weight-bolder">(Size:551,551px)</span>:</label>
+                        <label for="image">Photo <span class="text-danger font-weight-bolder">(Size:300,300px)</span>:</label>
                         @error('image') <span class="text-danger">{{ $message }}</span> @enderror
                         <div class="input-group">
                             <span class="input-group-text" title="Photo" id="basic-addon1"><i class="fas fa-photo-video"></i></span>

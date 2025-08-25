@@ -20,7 +20,7 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="#">
+    <a class="navbar-brand fw-bold" href="{{ route('frontend.home') }}">
       <img src="{{ asset(get_setting('site_logo')->value ?? 'upload/MCQ Logo.png')}}" height="40">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
