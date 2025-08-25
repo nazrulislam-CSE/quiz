@@ -12,15 +12,11 @@
 
   <!-- Slides -->
   <div class="carousel-inner">
+    @foreach($sliders as $slider)
     <div class="carousel-item active">
-      <img src="https://picsum.photos/id/1011/1200/500" class="d-block w-100 img-fluid" alt="Slide 1">
+      <img src="{{ (!empty($slider->image)) ? url('upload/slider/'.$slider->image):url('upload/no_image.jpg') }}" class="d-block w-100 img-fluid" alt="Slide 1">
     </div>
-    <div class="carousel-item">
-      <img src="https://picsum.photos/id/1012/1200/500" class="d-block w-100 img-fluid" alt="Slide 2">
-    </div>
-    <div class="carousel-item">
-      <img src="https://picsum.photos/id/1013/1200/500" class="d-block w-100 img-fluid" alt="Slide 3">
-    </div>
+    @endforeach
   </div>
 
   <!-- Controls -->
@@ -259,22 +255,12 @@
 <section class="py-5 text-white" style="background:#1d3557;">
   <div class="container text-center">
     <div class="row g-4">
+      @foreach($counters as $counter)
       <div class="col-md-3 reveal">
-        <h2 class="counter" data-target="50000">0</h2>
-        <p>মোট শিক্ষার্থী</p>
+        <h2 class="counter" data-target="{{ $counter->counter_no ?? '0'}}">{{ $counter->counter_no ?? '0'}}</h2>
+        <p>{{ $counter->title ?? ''}}</p>
       </div>
-      <div class="col-md-3 reveal">
-        <h2 class="counter" data-target="2000">0</h2>
-        <p>মডেল টেস্ট</p>
-      </div>
-      <div class="col-md-3 reveal">
-        <h2 class="counter" data-target="150">0</h2>
-        <p>অভিজ্ঞ শিক্ষক</p>
-      </div>
-      <div class="col-md-3 reveal">
-        <h2 class="counter" data-target="95">0%</h2>
-        <p>সাফল্যের হার</p>
-      </div>
+      @endforeach
     </div>
   </div>
 </section>

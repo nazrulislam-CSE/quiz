@@ -157,7 +157,33 @@
                     <ul class="slide-menu">
                         <li class="side-menu__label1"><a href="javascript:void(0);">Counters</a></li>
                         <li><a class="slide-item {{ Request::is('admin/counter/create') ? 'active' : '' }}" href="{{ route('admin.counter.create') }}">Counter Add</a></li>
-                        <li><a class="slide-item {{ Request::is('admin/counter/store') ? 'active' : '' }}" href="{{ route('admin.counter.index') }}">Counter List</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/counter/index') ? 'active' : '' }}" href="{{ route('admin.counter.index') }}">Counter List</a></li>
+                    </ul>
+                </li>
+
+                <li class="slide {{ Request::is('admin/teacher*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-building"></i>
+                        <span class="side-menu__label">Teacher</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Teacher</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/teacher/create') ? 'active' : '' }}" href="{{ route('admin.teacher.create') }}">Teacher Add</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/teacher/index') ? 'active' : '' }}" href="{{ route('admin.teacher.index') }}">Teacher List</a></li>
+                    </ul>
+                </li>
+
+                <li class="slide {{ Request::is('admin/student*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-building"></i>
+                        <span class="side-menu__label">Student</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Student</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/student/create') ? 'active' : '' }}" href="{{ route('admin.student.create') }}">Student Add</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/student/index') ? 'active' : '' }}" href="{{ route('admin.student.index') }}">Student List</a></li>
                     </ul>
                 </li>
 

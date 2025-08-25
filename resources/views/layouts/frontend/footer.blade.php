@@ -1,32 +1,48 @@
+@php
+  $footer_pages = App\Models\Menuitem::with(['subMenus.childMenus'])->whereNull('parent_id')->whereHas('get_menu', function($query){ $query->where('location','footer1')->where('sourch','page');})->orderby('position', 'asc')->get();
+@endphp
 <!-- Footer -->
 <footer class="footer reveal">
   <div class="container">
     <div class="row">
       <div class="col-md-4 text-center text-md-start mb-4">
-        <img src="{{ asset('upload/MCQ Logo.png') }}" height="50"><br>
+        <img src="{{ asset(get_setting('site_footer_logo')->value ?? 'upload/MCQ Logo.png') }}" height="50"><br>
         <div>
-          <a href="#" class="text-dark mx-2"><i class="fab fa-facebook fa-lg"></i></a>
-          <a href="#" class="text-dark mx-2"><i class="fab fa-instagram fa-lg"></i></a>
-          <a href="#" class="text-dark mx-2"><i class="fab fa-x-twitter fa-lg"></i></a>
-          <a href="#" class="text-dark mx-2"><i class="fab fa-linkedin fa-lg"></i></a>
+          <a href="{{ get_setting('facebook_url')->value ?? '' }}" class="text-dark mx-2"><i class="fab fa-facebook fa-lg"></i></a>
+          <a href="{{ get_setting('twitter_url')->value ?? '' }}" class="text-dark mx-2"><i class="fab fa-x-twitter fa-lg"></i></a>
+          <a href="{{ get_setting('linkedin_url')->value ?? '' }}" class="text-dark mx-2"><i class="fab fa-linkedin fa-lg"></i></a>
+          <a href="{{ get_setting('whatsapp_url')->value ?? '' }}" class="text-dark mx-2"><i class="fab fa-whatsapp fa-lg"></i></a>
         </div>
       </div>
       <div class="col-md-4 mb-4">
-        <h5>সেবা সমূহ</h5>
-        <ul>
-          <li><a href="#">ভার্সিটি প্রস্তুতি</a></li>
-          <li><a href="#">মেডিকেল প্রস্তুতি</a></li>
-          <li><a href="#">নার্সিং প্রস্তুতি</a></li>
-          <li><a href="#">জাতীয় বিশ্ববিদ্যালয় প্রস্তুতি</a></li>
-        </ul>
+        <h5>Corporate office (Address):</h5>
+          <ul class="footer-link mb-0 list-unstyled">
+              <li class="mb-3">
+                  <strong>Adress:</strong> <span class="opacity8">Malopara,Rajshahi</span>
+              </li>
+              <li class="mb-3">
+                  <strong>Email:</strong> <span class="opacity8">{{ get_setting('email')->value ?? ''}}</span>
+              </li>
+              <li class="">
+                  <strong>Phone:</strong> <span class="opacity8">01316017328</span>
+              </li>
+          </ul>
       </div>
       <div class="col-md-4 mb-4">
-        <h5>কোম্পানি</h5>
+        <h5>Popular Pages</h5>
         <ul>
-          <li><a href="#">আমাদের সম্পর্কে</a></li>
-          <li><a href="#">শর্তাবলী</a></li>
-          <li><a href="#">গোপনীয়তা নীতি</a></li>
-          <li><a href="#">ক্যারিয়ার</a></li>
+          @if(count($footer_pages) == 0)
+              @for($i=1;$i < 5;$i++)
+                  <li>
+                      <a href="#" class=""><span>Default Page {{ $i }}</span></a>
+                  </li>
+              @endfor
+          @endif
+          @foreach($footer_pages->take(5) as $key=> $pages)
+            <li>
+                <a href="{{ route('footer.menu.page',$pages->url) }}" class="text-white"><span> {{ $pages->title ?? ''}}</span></a>
+            </li>
+          @endforeach
         </ul>
       </div>
     </div>

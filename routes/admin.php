@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\CounterController;
 use App\Http\Controllers\Admin\AboutController;
+use App\Http\Controllers\Admin\TeacherController;
+use App\Http\Controllers\Admin\StudnetController;
 
 
 
@@ -180,6 +182,30 @@ Route::middleware('admin')->group(function () {
         Route::get('/get-subjects/{department_id}', [McqController::class, 'getSubjects']);
         Route::get('/get-topics/{subject_id}', [McqController::class, 'getTopics']);
         Route::post('/mcq/delete-question', [McqController::class, 'deleteQuestion'])->name('mcq.delete-question');
+    });
+
+    /* ============> Teacher <=========== */
+    Route::prefix('teacher')->group(function () {
+        Route::get('/index', [TeacherController::class, 'index'])->name('teacher.index');
+        Route::get('/create', [TeacherController::class, 'create'])->name('teacher.create');
+        Route::post('/store', [TeacherController::class, 'store'])->name('teacher.store');
+        Route::get('/edit/{id}', [TeacherController::class, 'edit'])->name('teacher.edit');
+        Route::post('/update/{id}', [TeacherController::class, 'update'])->name('teacher.update');
+        Route::get('/delete/{id}', [TeacherController::class, 'destroy'])->name('teacher.delete');
+        Route::get('/show/{id}', [TeacherController::class,'show'])->name('teacher.show');
+
+    });
+
+    /* ============> Student <=========== */
+    Route::prefix('student')->group(function () {
+        Route::get('/index', [StudentController::class, 'index'])->name('student.index');
+        Route::get('/create', [StudentController::class, 'create'])->name('student.create');
+        Route::post('/store', [StudentController::class, 'store'])->name('student.store');
+        Route::get('/edit/{id}', [StudentController::class, 'edit'])->name('student.edit');
+        Route::post('/update/{id}', [StudentController::class, 'update'])->name('student.update');
+        Route::get('/delete/{id}', [StudentController::class, 'destroy'])->name('student.delete');
+        Route::get('/show/{id}', [StudentController::class,'show'])->name('student.show');
+
     });
     
 });

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\FrontendController;
 use App\Http\Controllers\Frontend\PaymentController;
 use App\Http\Controllers\Frontend\OrderController;
+use App\Http\Controllers\Frontend\MenuPagesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,11 @@ Auth::routes();
 
 /* =========> Sart Frontend All Routes <========= */
 Route::get('/', [FrontendController::class, 'index'])->name('frontend.home');
+// page all route
+Route::get('/page/{url}', [MenuPagesController::class, 'index'])->name('menu.page');
+Route::get('/pages/{page}', [MenuPagesController::class, 'FooterPages'])->name('footer.menu.page');
+Route::post('/contact/store', [MenuPagesController::class, 'ContactPages'])->name('contact.store');
+Route::post('/search/result', [MenuPagesController::class, 'SearchResult'])->name('result.search');
 
 /* =========> End Frontend All Routes <========== */
 
