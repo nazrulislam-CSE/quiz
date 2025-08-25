@@ -125,6 +125,18 @@
                         <li><a class="slide-item {{ Request::is('admin/slider/index') ? 'active' : '' }}" href="{{ route('admin.slider.index')}}">Slider List</a></li>
                     </ul>
                 </li>
+                 <li class="slide {{ Request::is('admin/about*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-store-alt"></i>
+                        <span class="side-menu__label">About</span>
+                        <span class="badge bg-success side-badge"></span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">About</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/about/index') ? 'active' : '' }}" href="{{ route('admin.about.index')}}">About List</a></li>
+                    </ul>
+                </li>
                 <li class="slide {{ Request::is('admin/pages*') ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                         <i class="side-menu__icon fas fa-building"></i>

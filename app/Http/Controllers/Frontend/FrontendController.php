@@ -11,6 +11,7 @@ use App\Models\Counter;
 use App\Models\About;
 use App\Models\Teacher;
 use App\Models\Student;
+use App\Models\Admission;
 
 class FrontendController extends Controller
 {
@@ -22,9 +23,10 @@ class FrontendController extends Controller
         $abouts = About::where('status',1)->latest()->get();
         $teachers = Teacher::where('status',1)->latest()->get();
         $students = Student::where('status',1)->latest()->get();
+        $admissions = Admission::where('status',1)->latest()->get();
     
         $pageTitle = 'Home';
-        return view('frontend.index',compact('pageTitle','sliders','abouts','counters','teachers','students'));
+        return view('frontend.index',compact('pageTitle','sliders','abouts','counters','teachers','students','admissions'));
     }
 
 }

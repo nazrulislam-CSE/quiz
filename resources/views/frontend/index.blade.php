@@ -30,93 +30,77 @@
   </button>
 </section>
 
-<!-- About Section -->
-<section class="py-5 bg-light" id="about">
-  <div class="container">
-    <div class="row align-items-center">
-      <div class="col-md-6">
-      <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80" 
-     alt="Company Team" class="img-fluid rounded shadow">
 
-      </div>
-      <div class="col-md-6 mt-3">
-        <h2>আমাদের সম্পর্কে</h2>
-        <p class="mt-3">MCQ Admission হলো একটি স্মার্ট অনলাইন প্ল্যাটফর্ম যেখানে ভর্তি পরীক্ষার জন্য প্রয়োজনীয় সকল উপকরণ একসাথে পাওয়া যায়। এখানে রয়েছে বিশাল প্রশ্ন ব্যাংক, রিয়েল টাইম মডেল টেস্ট, অভিজ্ঞ শিক্ষকের তৈরি কনটেন্ট এবং বিস্তারিত রেজাল্ট অ্যানালাইসিস।</p>
-        <ul class="list-unstyled mt-3">
-          <li>✔ বিশ্ববিদ্যালয় ভর্তি প্রস্তুতি</li>
-          <li>✔ মেডিকেল ও নার্সিং কোচিং</li>
-          <li>✔ ডিপ্লোমা ও অন্যান্য টেকনিক্যাল পরীক্ষা</li>
-        </ul>
-        <a href="#" class="btn btn-gradient mt-3">আরও জানুন</a>
-      </div>
+<!-- Dynamic About Section -->
+<section class="py-5 bg-light" id="about">
+    <div class="container">
+        @foreach($abouts as $about)
+        <div class="row align-items-center mb-5">
+            <!-- Left: Image -->
+            <div class="col-md-6">
+                <img src="{{ (!empty($about->image)) ? url('upload/about/'.$about->image):url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') }}" 
+                     alt="{{ $about->title }}" class="img-fluid rounded shadow">
+            </div>
+
+            <!-- Right: Content -->
+            <div class="col-md-6 mt-3">
+                <h2 class="fw-bold">{{ $about->title }}</h2>
+                <p class="mt-3">{{ $about->description }}</p>
+
+                <ul class="list-unstyled mt-3">
+                    @if($about->experience_no && $about->experience_title)
+                    <li>✔ {{ $about->experience_no }} {{ $about->experience_title }}</li>
+                    @endif
+                    <!-- Add more dynamic points if needed -->
+                </ul>
+
+                @if($about->video_link && $about->video_link != '#')
+                <a href="{{ $about->video_link }}" class="btn btn-primary mt-3">ভিডিও দেখুন</a>
+                @endif
+            </div>
+        </div>
+        @endforeach
     </div>
-  </div>
 </section>
+
 
 <!-- MCQ Admission Section -->
 <section class="py-5 bg-light">
   <div class="container text-center">
     <h4 class="mb-4 fw-bold reveal">MCQ এডমিশন এক প্লাটফর্মে</h4>
     <div class="row g-4">
-      
-      <!-- Card Item -->
-      <div class="col-md-3 col-sm-6">
-        <div class="p-4 rounded shadow-sm h-100 text-white bg-primary reveal">
-          <h5 class="mb-0">বিসিএস প্রিলি</h5>
-        </div>
-      </div>
 
-      <div class="col-md-3 col-sm-6">
-        <div class="p-4 rounded shadow-sm h-100 text-white bg-success reveal">
-          <h5 class="mb-0">প্রাইমারি</h5>
-        </div>
-      </div>
+      @php
+        // Available colors for random assignment
+        $availableColors = [
+          'bg-primary text-white',
+          'bg-success text-white',
+          'bg-danger text-white',
+          'bg-warning text-dark',
+          'bg-info text-dark',
+          'bg-secondary text-white',
+          'bg-dark text-white',
+          'bg-light text-dark border'
+        ];
+      @endphp
 
-      <div class="col-md-3 col-sm-6">
-        <div class="p-4 rounded shadow-sm h-100 text-white bg-danger reveal">
-          <h5 class="mb-0">শিক্ষক নিবন্ধন</h5>
-        </div>
-      </div>
+      @foreach($admissions as $admission)
+        @php
+          // Random color for each card
+          $colorClass = $availableColors[array_rand($availableColors)];
+        @endphp
 
-      <div class="col-md-3 col-sm-6">
-        <div class="p-4 rounded shadow-sm h-100 text-dark bg-warning reveal">
-          <h5 class="mb-0">ব্যাংক জব</h5>
+        <div class="col-md-3 col-sm-6">
+          <div class="p-4 rounded shadow-sm h-100 {{ $colorClass }} reveal">
+            <h5 class="mb-0">{{ $admission->name }}</h5>
+          </div>
         </div>
-      </div>
-
-      <div class="col-md-3 col-sm-6">
-        <div class="p-4 rounded shadow-sm h-100 text-dark bg-info reveal">
-          <h5 class="mb-0">ভার্সিটি এডমিশন</h5>
-        </div>
-      </div>
-
-      <div class="col-md-3 col-sm-6">
-        <div class="p-4 rounded shadow-sm h-100 text-white bg-secondary reveal">
-          <h5 class="mb-0">মেডিকেল এডমিশন</h5>
-        </div>
-      </div>
-
-      <div class="col-md-3 col-sm-6">
-        <div class="p-4 rounded shadow-sm h-100 text-white bg-dark reveal">
-          <h5 class="mb-0">নার্সিং এডমিশন</h5>
-        </div>
-      </div>
-
-      <div class="col-md-3 col-sm-6">
-        <div class="p-4 rounded shadow-sm h-100 text-dark bg-light border reveal">
-          <h5 class="mb-0">জাতীয় বিশ্ববিদ্যালয়</h5>
-        </div>
-      </div>
-
-      <div class="col-md-3 col-sm-6">
-        <div class="p-4 rounded shadow-sm h-100 text-white bg-primary reveal">
-          <h5 class="mb-0">ডিপ্লোমা ইঞ্জিনিয়া</h5>
-        </div>
-      </div>
+      @endforeach
 
     </div>
   </div>
 </section>
+
 
 <!-- Teacher Section -->
 <section class="py-5 bg-light">
