@@ -73,6 +73,17 @@
                 </td>
              </tr>
              <tr>
+                <td>Type</td>
+                <td>
+                    @if ($admission->type == 1)
+                    <span class="badge bg-pill bg-success">All</span>
+                    @else
+                    <span class="badge bg-pill bg-success">Front Page</span>
+                    @endif
+   
+                </td>
+             </tr>
+             <tr>
                 <td>ICON</td>
                 <td>
                     <img src="{{ (!empty($admission->image)) ? url('upload/admission/'.$admission->image):url('upload/mcq.png') }}" width="80" alt="No ICON" class="img-fluid">

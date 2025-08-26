@@ -68,6 +68,20 @@
                         @enderror
                      </div>
                     </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                        <div class="form-group">
+                            <label for="type">Type: <span class="text-danger">*</span></label>
+                            @error('type')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                            <select name="type" id="type" class="form-control">
+                                <option value="1" {{ old('type', $admission->type ?? 1) == 1 ? 'selected' : '' }}>All</option>
+                                <option value="2" {{ old('type', $admission->type ?? 1) == 2 ? 'selected' : '' }}>Front Page</option>
+                            </select>
+                        </div>
+                    </div>
+
                 
                     <div class="form-group col-xl-5 col-lg-5 col-md-5">
                         <label for="image">ICON <span class="text-danger font-weight-bolder">(Size:128,50px)</span>:</label>

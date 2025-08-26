@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('image')->nullable();
+            $table->unsignedTinyInteger('type')->default(1)->comment('1=>All, 2=>Front Page');
             $table->unsignedTinyInteger('status')->default(1)->comment('1=>Active, 0=>Inactive');
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

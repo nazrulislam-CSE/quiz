@@ -23,7 +23,7 @@ class FrontendController extends Controller
         $abouts = About::where('status',1)->latest()->get();
         $teachers = Teacher::where('status',1)->latest()->get();
         $students = Student::where('status',1)->latest()->get();
-        $admissions = Admission::where('status',1)->latest()->get();
+        $admissions = Admission::where('status',1)->where('type',2)->latest()->get();
     
         $pageTitle = 'Home';
         return view('frontend.index',compact('pageTitle','sliders','abouts','counters','teachers','students','admissions'));

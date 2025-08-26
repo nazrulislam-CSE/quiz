@@ -48,6 +48,7 @@ class AdmissionController extends Controller
         }
       
         $admission->status = $request->status;
+        $admission->type = $request->type;
         $admission->name = $request->name;
         $admission->created_by = Auth::user()->id ?? '1';
         $admission->created_at = Carbon::now();
@@ -100,6 +101,7 @@ class AdmissionController extends Controller
             $request->status = 1;
         }
        
+        $admission->type = $request->type;
         $admission->status = $request->status;
         $admission->name = $request->name;
 
