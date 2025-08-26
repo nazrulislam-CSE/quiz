@@ -45,6 +45,9 @@ class StudentController extends Controller
         $student = new Student;
 
         $student->name            = $request->name;
+        $student->college         = $request->college;
+        $student->versity         = $request->versity;
+        $student->merit           = $request->merit ;
         $student->description     = $request->description;
 
         if($request->status == Null){
@@ -99,7 +102,9 @@ class StudentController extends Controller
         $student = Student::find($id);
 
         $student->name            = $request->name;
-        $student->designation     = $request->designation;
+        $student->college         = $request->college;
+        $student->versity         = $request->versity;
+        $student->merit           = $request->merit;
         $student->description     = $request->description;
 
 

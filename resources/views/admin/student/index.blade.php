@@ -64,6 +64,8 @@
                                             <th class="border-bottom-0">SL</th>
                                             <th class="border-bottom-0">Photo</th>
                                             <th class="border-bottom-0">Name</th>
+                                            <th class="border-bottom-0">College</th>
+                                            <th class="border-bottom-0">Versity</th>
                                             <th class="border-bottom-0">Status</th>
                                             <th class="border-bottom-0">Actions</th>
                                         </tr>
@@ -76,6 +78,8 @@
                                                 <img src="{{ (!empty($student->image)) ? url('upload/student/'.$student->image):url('upload/no_image.jpg') }}" width="50" alt="image" class="img-fluid">
                                             </td>
                                             <td>{{ $student->name ?? ''}}</td>
+                                            <td>{{ $student->college ?? ''}}</td>
+                                            <td>{{ $student->versity ?? ''}}</td>
                                             <td>
                                                 @if($student->status == 1)
                                                     <a href="#" class="badge bg-pill bg-success">Active</a>

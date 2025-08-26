@@ -61,6 +61,18 @@
                 <td>Name</td>
                 <td>{{ $student->name ?? '' }}</td>
              </tr>
+              <tr>
+                <td>College Name</td>
+                <td>{{ $student->college ?? '' }}</td>
+             </tr>
+              <tr>
+                <td>Chance Prapro Versity</td>
+                <td>{{ $student->versity ?? '' }}</td>
+             </tr>
+              <tr>
+                <td>Merit Position</td>
+                <td>{{ $student->merit ?? '' }}</td>
+             </tr>
              <tr>
                 <td>Description</td>
                 <td>{!! $student->description ?? '' !!}</td>

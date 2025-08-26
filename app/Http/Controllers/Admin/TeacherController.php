@@ -46,6 +46,7 @@ class TeacherController extends Controller
         $teacher = new Teacher;
 
         $teacher->name            = $request->name;
+        $teacher->versity         = $request->versity;
         $teacher->designation     = $request->designation;
         $teacher->description     = $request->description;
 
@@ -101,6 +102,7 @@ class TeacherController extends Controller
         $teacher = Teacher::find($id);
 
         $teacher->name            = $request->name;
+        $teacher->versity         = $request->versity;
         $teacher->designation     = $request->designation;
         $teacher->description     = $request->description;
 

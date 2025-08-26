@@ -65,6 +65,7 @@
                                             <th class="border-bottom-0">Photo</th>
                                             <th class="border-bottom-0">Name</th>
                                             <th class="border-bottom-0">Designation</th>
+                                            <th class="border-bottom-0">Versity</th>
                                             {{-- <th class="border-bottom-0">Facebook Url</th> --}}
                                             <th class="border-bottom-0">Status</th>
                                             <th class="border-bottom-0">Actions</th>
@@ -79,6 +80,7 @@
                                             </td>
                                             <td>{{ $teacher->name ?? ''}}</td>
                                             <td>{{ $teacher->designation ?? ''}}</td>
+                                            <td>{{ $teacher->versity ?? ''}}</td>
                                             {{-- <td>{{ $teacher->facebook_url ?? ''}}</td> --}}
                                             <td>
                                                 @if($teacher->status == 1)

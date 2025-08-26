@@ -67,7 +67,31 @@
                         </div>
                     </div>
                     <div class="form-group col-xl-6 col-lg-6 col-md-6">
-                        <label for="image">Photo <span class="text-danger font-weight-bolder">(Size:551,551px)</span>:</label>
+                       <label for="college">College Name: <span class="text-danger"></span></label>
+                       @error('college') <span class="text-danger">{{ $message }}</span> @enderror
+                        <div class="input-group">
+                            <span class="input-group-text" title="College" id="basic-addon1"><i class="fas fa-users"></i></span>
+                            <input type="text" value="{{ old('college') }}" class=" form-control" name="college" placeholder="Enter College Name">
+                        </div>
+                    </div>
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                       <label for="versity">Chance Prapro Versity: <span class="text-danger"></span></label>
+                       @error('versity') <span class="text-danger">{{ $message }}</span> @enderror
+                        <div class="input-group">
+                            <span class="input-group-text" title="Versity" id="basic-addon1"><i class="fas fa-users"></i></span>
+                            <input type="text" value="{{ old('versity') }}" class=" form-control" name="versity" placeholder="Enter Versity">
+                        </div>
+                    </div>
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                       <label for="merit ">Merit Position: <span class="text-danger"></span></label>
+                       @error('merit ') <span class="text-danger">{{ $message }}</span> @enderror
+                        <div class="input-group">
+                            <span class="input-group-text" title="Merit " id="basic-addon1"><i class="fas fa-users"></i></span>
+                            <input type="text" value="{{ old('merit ') }}" class=" form-control" name="merit " placeholder="Enter Merit Position ">
+                        </div>
+                    </div>
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                        <label for="image">Photo <span class="text-danger font-weight-bolder">(Size:300,300px)</span>:</label>
                         @error('image') <span class="text-danger">{{ $message }}</span> @enderror
                         <div class="input-group">
                             <span class="input-group-text" title="Photo" id="basic-addon1"><i class="fas fa-photo-video"></i></span>
@@ -93,7 +117,7 @@
                             <span class="input-group-text" title="Name" id="basic-addon1"><i class="fas fa-user-tie" title="Name"></i></span>
                             <select  name="status" class=" form-control">
                              <option value="">Select Status</option>
-                                <option value="1">Active</option>
+                                <option value="1" selected>Active</option>
                                 <option value="0">Deactive</option>
                             </select>
                         </div>

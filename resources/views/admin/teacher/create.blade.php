@@ -77,6 +77,15 @@
                      </div>
 
                     <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                        <label for="versity">Versity: <span class="text-danger"></span></label>
+                        @error('versity') <span class="text-danger">{{ $message }}</span> @enderror
+                         <div class="input-group">
+                             <span class="input-group-text" title="Versity" id="basic-addon1"><i class="fas fa-building"></i></span>
+                             <input type="text" value="{{ old('versity') }}" class=" form-control" name="versity" placeholder="Enter Versity">
+                         </div>
+                     </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
                         <label for="facebook_url">Facebook Url: <span class="text-danger"></span></label>
                         @error('facebook_url') <span class="text-danger">{{ $message }}</span> @enderror
                         <div class="input-group">

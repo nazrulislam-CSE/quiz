@@ -96,44 +96,81 @@
 
 
 <!-- Teacher Section -->
-<section class="py-5 bg-light">
+<section class="py-5 bg-light position-relative">
   <div class="container text-center">
     <h4 class="mb-4 fw-bold">আমাদের মেন্টর</h4>
 
-    <div id="teacherCarousel" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        @foreach($teachers->chunk(4) as $chunkIndex => $teacherChunk)
-          <div class="carousel-item {{ $chunkIndex == 0 ? 'active' : '' }}">
-            <div class="row g-4">
-              @foreach($teacherChunk as $teacher)
-                <div class="col-md-3 col-sm-6">
-                  <div class="card shadow rounded border-0 h-100">
-                    <img src="{{ asset('upload/teacher/' . $teacher->image) }}" class="card-img-top" alt="{{ $teacher->name }}">
-                    <div class="card-body">
-                      <h5 class="card-title mb-1">{{ $teacher->name }}</h5>
-                      <p class="text-muted mb-1">{{ $teacher->designation }}</p>
-                      {{-- <p class="fw-bold text-primary">{{ $teacher->description }}</p> --}}
+    @if($teachers->count() > 4)
+      <!-- Carousel Active -->
+      <div id="teacherCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        
+        <!-- Carousel Items -->
+        <div class="carousel-inner">
+          @foreach($teachers->chunk(4) as $chunkIndex => $teacherChunk)
+            <div class="carousel-item {{ $chunkIndex == 0 ? 'active' : '' }}">
+              <div class="row g-4">
+                @foreach($teacherChunk as $teacher)
+                  <div class="col-md-3 col-sm-6">
+                    <div class="card shadow rounded border-0 h-100">
+                      <img src="{{ asset('upload/teacher/' . $teacher->image) }}" 
+                           class="card-img-top" 
+                           alt="{{ $teacher->name }}">
+                      <div class="card-body">
+                        <h5 class="card-title mb-1">{{ $teacher->name }}</h5>
+                        <p class="text-muted mb-1">{{ $teacher->designation }}</p>
+                        <p class="text-success mb-1">{{ $teacher->versity }}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              @endforeach
+                @endforeach
+              </div>
+            </div>
+          @endforeach
+        </div>
+
+        <!-- Indicators -->
+        <div class="carousel-indicators position-static mt-4">
+          @foreach($teachers->chunk(4) as $chunkIndex => $teacherChunk)
+            <button type="button" data-bs-target="#teacherCarousel" data-bs-slide-to="{{ $chunkIndex }}" 
+                    class="{{ $chunkIndex == 0 ? 'active' : '' }}" 
+                    aria-current="{{ $chunkIndex == 0 ? 'true' : 'false' }}" 
+                    aria-label="Slide {{ $chunkIndex+1 }}"></button>
+          @endforeach
+        </div>
+      </div>
+
+      <!-- Carousel Controls -->
+      <button class="carousel-control-prev position-absolute top-50 start-0 translate-middle-y ms-3" 
+              type="button" data-bs-target="#teacherCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next position-absolute top-50 end-0 translate-middle-y me-3" 
+              type="button" data-bs-target="#teacherCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    @else
+      <!-- Only 4 Teachers (No Carousel) -->
+      <div class="row g-4">
+        @foreach($teachers as $teacher)
+          <div class="col-md-3 col-sm-6">
+            <div class="card shadow rounded border-0 h-100">
+              <img src="{{ asset('upload/teacher/' . $teacher->image) }}" 
+                   class="card-img-top" 
+                   alt="{{ $teacher->name }}">
+              <div class="card-body">
+                <h5 class="card-title mb-1">{{ $teacher->name }}</h5>
+                <p class="text-muted mb-1">{{ $teacher->designation }}</p>
+              </div>
             </div>
           </div>
         @endforeach
       </div>
-
-      <!-- Carousel Controls -->
-      <button class="carousel-control-prev" type="button" data-bs-target="#teacherCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#teacherCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
+    @endif
   </div>
 </section>
+
 
 
 <!-- Features Section -->
@@ -187,32 +224,59 @@
   </div>
 </section>
 
-<!-- Testimonials -->
-<section class="py-5 bg-light">
+<!-- Students Section -->
+<section class="py-5 bg-light position-relative">
   <div class="container text-center">
-    <h2 class="mb-5 reveal">শিক্ষার্থীদের মতামত</h2>
-    <div class="row g-4">
-      <div class="col-md-4 reveal">
-        <div class="p-4 border rounded shadow-sm h-100">
-          <p>"MCQ Admission এর প্রশ্নব্যাংক ব্যবহার করে আমি মেডিকেলে চান্স পেয়েছি। অসাধারণ প্লাটফর্ম।"</p>
-          <h6 class="mt-3">- রাহুল ইসলাম, মেডিকেল</h6>
+    <h2 class="mb-5">শিক্ষার্থীদের মতামত</h2>
+
+    @if($students->count() > 0)
+      <div id="studentCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+        <div class="carousel-inner">
+
+          @foreach($students as $index => $student)
+            <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+              <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8 col-sm-10">
+                  <div class="p-4 border rounded shadow-sm h-100 bg-white">
+                    <img src="{{ (!empty($student->image)) ? url('upload/student/'.$student->image):url('upload/no_image.jpg') }}" 
+                         alt="{{ $student->name }}" 
+                         class="img-fluid rounded-circle mb-3" 
+                         style="width:80px; height:80px; object-fit:cover;">
+                    <p class="fst-italic">"{{ $student->description }}"</p>
+                    <h6 class="mt-3">- {{ $student->name }}, {{ $student->versity ?? $student->college }}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          @endforeach
+
+        </div>
+
+        <!-- Indicators -->
+        <div class="carousel-indicators position-static mt-4">
+          @foreach($students as $index => $student)
+            <button type="button" data-bs-target="#studentCarousel" data-bs-slide-to="{{ $index }}" 
+                    class="{{ $index == 0 ? 'active' : '' }}" 
+                    aria-label="Slide {{ $index+1 }}"></button>
+          @endforeach
         </div>
       </div>
-      <div class="col-md-4 reveal">
-        <div class="p-4 border rounded shadow-sm h-100">
-          <p>"অনলাইন মডেল টেস্ট ফিচার আমাকে আসল পরীক্ষার মতো অনুশীলন করতে সাহায্য করেছে।"</p>
-          <h6 class="mt-3">- নুসরাত জাহান, ভার্সিটি</h6>
-        </div>
-      </div>
-      <div class="col-md-4 reveal">
-        <div class="p-4 border rounded shadow-sm h-100">
-          <p>"রেজাল্ট অ্যানালাইসিস দেখে আমি আমার দুর্বলতা চিহ্নিত করে উন্নতি করতে পেরেছি।"</p>
-          <h6 class="mt-3">- ফারহান হোসেন, নার্সিং</h6>
-        </div>
-      </div>
-    </div>
+
+      <!-- Left/Right Controls -->
+      <button class="carousel-control-prev position-absolute top-50 start-0 translate-middle-y ms-3" 
+              type="button" data-bs-target="#studentCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next position-absolute top-50 end-0 translate-middle-y me-3" 
+              type="button" data-bs-target="#studentCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    @endif
   </div>
 </section>
+
 
 
 <!-- Call to Action -->

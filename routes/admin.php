@@ -17,7 +17,7 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\CounterController;
 use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\TeacherController;
-use App\Http\Controllers\Admin\StudnetController;
+use App\Http\Controllers\Admin\StudentController;
 
 
 

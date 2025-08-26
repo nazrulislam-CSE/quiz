@@ -65,6 +65,10 @@
                 <td>Designation</td>
                 <td>{{ $teacher->designation ?? '' }}</td>
              </tr>
+              <tr>
+                <td>Versity</td>
+                <td>{{ $teacher->versity ?? '' }}</td>
+             </tr>
              <tr>
                 <td>Facebook Url</td>
                 <td>{{ $teacher->facebook_url ?? '' }}</td>

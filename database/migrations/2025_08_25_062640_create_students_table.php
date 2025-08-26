@@ -14,14 +14,11 @@ return new class extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('slug')->nullable();
             $table->string('image')->nullable();
-            $table->string('designation')->nullable();
+            $table->string('college')->nullable();
+            $table->string('versity')->nullable();
+            $table->string('merit ')->nullable();
             $table->text('description')->nullable();
-            $table->string('facebook_url')->nullable();
-            $table->string('linkedin_url')->nullable();
-            $table->string('twitter_url')->nullable();
-            $table->string('whatsapp_url')->nullable();
             $table->unsignedTinyInteger('status')->default(1)->comment('1=>Active, 0=>Inactive');
             $table->timestamps();
         });
