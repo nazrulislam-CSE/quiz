@@ -3,6 +3,7 @@
 
 use App\Models\Setting;
 use App\Models\Pages;
+use App\Models\Division;
 
 use Illuminate\Support\Collection;
 
@@ -97,5 +98,13 @@ function en2bn($number)
     if ($lang == 'bn') {
         $numto = new NumberToBangla();
         return $numto->bnCommaLakh($number);
+    }
+}
+
+/* ============ Division Select ============ */
+if (!function_exists('get_divisions')) {
+    function get_divisions()
+    {
+        return Division::where('status', 1)->get();
     }
 }

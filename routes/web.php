@@ -5,6 +5,7 @@ use App\Http\Controllers\Frontend\FrontendController;
 use App\Http\Controllers\Frontend\PaymentController;
 use App\Http\Controllers\Frontend\OrderController;
 use App\Http\Controllers\Frontend\MenuPagesController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,3 +35,5 @@ Route::post('/search/result', [MenuPagesController::class, 'SearchResult'])->nam
 /* =========> End Frontend All Routes <========== */
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/check-refer/{username}', [RegisterController::class, 'checkRefer'])->name('check.refer');

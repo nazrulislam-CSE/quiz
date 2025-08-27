@@ -56,16 +56,24 @@ class RegisterController extends Controller
     {
     
         return Validator::make($data, [
-            'company_name' => ['required'],
-            'owner_name' => ['required'],
-            'city_name' => ['required'],
-            'established_year' => ['required',],
-            // 'nid_number' => ['required'],
-            'designation' => ['required'],
-            'phone' => ['required',],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            
+            'full_name'   => ['required', 'string', 'max:255'],
+            'username'    => ['required', 'string', 'max:255', 'unique:users,username'],
+            'institute'   => ['required', 'string'],
+            'division_id' => ['required', 'integer'],
+            'refer_by'    => [
+                'nullable', 
+                'string',
+                function ($attribute, $value, $fail) {
+                    if (!empty($value)) {
+                        $exists = User::where('username', $value)->exists();
+                        if (!$exists) {
+                            $fail('Please provide a valid Username!'); 
+                        }
+                    }
+                }
+            ],
+            'phone'       => ['required', 'string', 'unique:users,phone'],
+            'password'    => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
 
@@ -77,30 +85,43 @@ class RegisterController extends Controller
      */
     public function create(array $data)
     {
-        // dd($data);
-        $user = User::create([
-            'company_name' => $data['company_name'],
-            'owner_name' => $data['owner_name'],
-            'city_name' => $data['city_name'],
-            'established_year' => $data['established_year'],
-            // 'nid_number' => $data['nid_number'],
-            'designation' => $data['designation'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'show_password' => $data['password'],
-            'username' => $data['company_name'],
-            'phone' => $data['phone'],
-            'created_by' => $data['company_name'],
-        ]);
+        try {
+            $refer_id = null;
 
-        flash()->addSuccess('User Register Successfully.');
+            if (!empty($data['refer_by'])) {
+                $referUser = User::where('username', $data['refer_by'])->first();
 
-        // DB::table('model_has_roles')->insert([
-        //     'role_id' => 1,
-        //     'model_type' => 'App\Models\User',
-        //     'model_id' => $user->id,
-        // ]);
-      
-        return $user;
+                if (!$referUser) {
+                    throw new \Exception("Please provide valid Username!");
+                }
+
+                $refer_id = $referUser->id;
+            }
+
+            $user = User::create([
+                'full_name'       => $data['full_name'],
+                'username'        => $data['company_name'],
+                'refer_id'        => $refer_id,
+                'phone'           => $data['phone'],
+                'institute'       => $data['institute'],
+                'division_id'     => $data['division_id'],
+                'password'        => Hash::make($data['password']),
+                'show_password'   => $data['password'],
+                'created_by'      => $data['username'],
+            ]);
+
+            flash()->addSuccess('User Register Successfully.');
+
+            return $user;
+        } catch (\Exception $e) {
+            flash()->addError($e->getMessage());
+            return null;
+        }
+    }
+
+    public function checkRefer($username)
+    {
+        $exists = User::where('username', $username)->exists();
+        return response()->json(['exists' => $exists]);
     }
 }

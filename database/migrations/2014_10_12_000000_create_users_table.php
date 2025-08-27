@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('company_name')->nullable();
             $table->string('owner_name')->nullable();
             $table->string('username')->nullable();
+            $table->integer('refer_by')->nullable();
+            $table->string('full_name')->nullable();
+            $table->integer('division_id')->nullable();
+            $table->string('institute')->nullable();
             $table->string('email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->integer('phone')->nullable();

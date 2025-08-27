@@ -58,18 +58,17 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="input-icon">
-                                    <input type="text" class="form-control" placeholder="Institute name">
+                                    <input type="text" name="institute" class="form-control" placeholder="Institute name">
                                     <i class="fas fa-university"></i>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="input-icon">
-                                    <select name="division" class="form-control">
+                                    <select name="division_id" class="form-control">
                                         <option selected disabled>Select division</option>
-                                        <option>Science & Technology</option>
-                                        <option>Business & Management</option>
-                                        <option>Arts & Humanities</option>
-                                        <option>Health Sciences</option>
+                                        @foreach(get_divisions() as $division)
+                                            <option value="{{ $division->id }}">{{ $division->name_en }} - {{ $division->name_bn }}</option>
+                                        @endforeach
                                     </select>
                                     <i class="fas fa-layer-group"></i>
                                 </div>
@@ -77,23 +76,29 @@
                         </div>
                     </div>
                     
-                    <div class="form-section">
+                   <div class="form-section">
                         <h4 class="form-section-title">Contact Information</h4>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="input-icon">
-                                    <input type="text" name="referral" value="{{ old('referral') }}" class="form-control" placeholder="Referral Code (Optional)">
+                                    <input type="text" id="refer_by" name="refer_by" 
+                                        value="{{ $_GET['refer_id'] ?? '' }}" 
+                                        class="form-control" placeholder="Enter Refer By Username">
                                     <i class="fas fa-user-friends"></i>
                                 </div>
+                                <small id="referMessage"></small>
                             </div>
+
                             <div class="col-md-6">
                                 <div class="input-icon">
-                                    <input type="tel"  name="phone" value="{{ old('phone') }}" class="form-control" placeholder="Phone">
+                                    <input type="tel" name="phone" value="{{ old('phone') }}" 
+                                        class="form-control" placeholder="Phone">
                                     <i class="fas fa-phone"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     
                     <div class="form-section">
                         <h4 class="form-section-title">Security</h4>
@@ -138,6 +143,40 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    $(document).ready(function(){
+
+        // refer_by input এ keyup event
+        $('#refer_by').on('keyup', function() {
+            let username = $(this).val();
+            let messageEl = $('#referMessage');
+
+            if(username.length > 2){ 
+                $.ajax({
+                    url: "{{ route('check.refer') }}", 
+                    type: "GET",
+                    data: { username: username },
+                    success: function(res){
+                        if(res.status){ 
+                            messageEl.text(res.message).css('color','green');
+                        } else { 
+                            messageEl.text(res.message).css('color','red');
+                        }
+                    },
+                    error: function(){
+                        messageEl.text('Something went wrong').css('color','red');
+                    }
+                });
+            } else {
+                messageEl.text(''); 
+            }
+        });
+
+    });
+    </script>
+
 </body>
 </html>
