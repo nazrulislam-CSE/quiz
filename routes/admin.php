@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\CounterController;
 use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\FeatureController;
 
 
 
@@ -117,6 +118,18 @@ Route::middleware('admin')->group(function () {
         Route::post('/update/{id}', [AboutController::class, 'update'])->name('about.update');
         Route::get('/delete/{id}', [AboutController::class, 'destroy'])->name('about.delete');
         Route::get('/show/{id}', [AboutController::class,'show'])->name('about.show');
+
+    });
+
+    /* ============> Manage Features   <=========== */
+    Route::prefix('features')->group(function () {
+        Route::get('/index', [FeatureController::class, 'index'])->name('feature.index');
+        Route::get('/create', [FeatureController::class, 'create'])->name('feature.create');
+        Route::post('/store', [FeatureController::class, 'store'])->name('feature.store');
+        Route::get('/edit/{id}', [FeatureController::class, 'edit'])->name('feature.edit');
+        Route::post('/update/{id}', [FeatureController::class, 'update'])->name('feature.update');
+        Route::get('/delete/{id}', [FeatureController::class, 'destroy'])->name('feature.delete');
+        Route::get('/show/{id}', [FeatureController::class,'show'])->name('feature.show');
 
     });
 

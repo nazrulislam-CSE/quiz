@@ -7,11 +7,11 @@
     <div class="row">
       <div class="col-md-4 text-center text-md-start mb-4">
         <img src="{{ asset(get_setting('site_footer_logo')->value ?? 'upload/MCQ Logo.png') }}" height="50"><br>
-        <div>
-          <a href="{{ get_setting('facebook_url')->value ?? '' }}" class="text-dark mx-2"><i class="fab fa-facebook fa-lg"></i></a>
-          <a href="{{ get_setting('twitter_url')->value ?? '' }}" class="text-dark mx-2"><i class="fab fa-x-twitter fa-lg"></i></a>
-          <a href="{{ get_setting('linkedin_url')->value ?? '' }}" class="text-dark mx-2"><i class="fab fa-linkedin fa-lg"></i></a>
-          <a href="{{ get_setting('whatsapp_url')->value ?? '' }}" class="text-dark mx-2"><i class="fab fa-whatsapp fa-lg"></i></a>
+        <div class="mt-3">
+          <a target="_blank" href="{{ get_setting('facebook_url')->value ?? '' }}" class="text-dark mx-2"><i class="fab fa-facebook fa-lg"></i></a>
+          <a target="_blank" href="{{ get_setting('twitter_url')->value ?? '' }}" class="text-dark mx-2"><i class="fab fa-twitter fa-lg"></i></a>
+          <a target="_blank" href="{{ get_setting('linkedin_url')->value ?? '' }}" class="text-dark mx-2"><i class="fab fa-linkedin fa-lg"></i></a>
+          <a target="_blank" href="{{ get_setting('whatsapp_url')->value ?? '' }}" class="text-dark mx-2"><i class="fab fa-whatsapp fa-lg"></i></a>
         </div>
       </div>
       <div class="col-md-4 mb-4">
@@ -40,7 +40,7 @@
           @endif
           @foreach($footer_pages->take(5) as $key=> $pages)
             <li>
-                <a href="{{ route('footer.menu.page',$pages->url) }}" class="text-white"><span> {{ $pages->title ?? ''}}</span></a>
+                <a href="{{ route('footer.menu.page',$pages->url) }}" class=""><span> {{ $pages->title ?? ''}}</span></a>
             </li>
           @endforeach
         </ul>

@@ -125,42 +125,29 @@
     </section>
 
 
+    @php
+        $colors = ['text-primary', 'text-success', 'text-warning', 'text-danger'];
+    @endphp
+
     <!-- Features Section -->
     <section class="py-5 bg-light">
         <div class="container text-center">
             <h2 class="mb-4 reveal">কেন MCQ Admission বেছে নিবেন?</h2>
             <div class="row g-4">
-                <div class="col-md-3">
-                    <div class="p-4 border rounded shadow-sm h-100 reveal">
-                        <i class="fa-solid fa-book-open fa-2x text-primary mb-3"></i>
-                        <h5>অসংখ্য প্রশ্ন ব্যাংক</h5>
-                        <p>ভার্সিটি, মেডিকেল ও নার্সিং ভর্তি পরীক্ষার বিশাল প্রশ্ন ব্যাংক।</p>
+                @foreach($features as $index => $feature)
+                    <div class="col-md-3">
+                        <div class="p-4 border rounded shadow-sm h-100 reveal">
+                            <i class="{{ $feature->icon }} {{ $colors[$index % count($colors)] }} fa-2x mb-3"></i>
+                            <h5>{{ $feature->title }}</h5>
+                            <p>{{ $feature->description }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="p-4 border rounded shadow-sm h-100 reveal">
-                        <i class="fa-solid fa-laptop-code fa-2x text-success mb-3"></i>
-                        <h5>স্মার্ট অনলাইন পরীক্ষা</h5>
-                        <p>বাসায় বসেই রিয়েল টাইম মডেল টেস্ট দেওয়ার সুবিধা।</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="p-4 border rounded shadow-sm h-100 reveal">
-                        <i class="fa-solid fa-users fa-2x text-warning mb-3"></i>
-                        <h5>অভিজ্ঞ শিক্ষক</h5>
-                        <p>শীর্ষস্থানীয় শিক্ষকদের তৈরি কনটেন্ট ও প্রশ্ন সেট।</p>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="p-4 border rounded shadow-sm h-100 reveal">
-                        <i class="fa-solid fa-award fa-2x text-danger mb-3"></i>
-                        <h5>রেজাল্ট অ্যানালাইসিস</h5>
-                        <p>প্রতিটি পরীক্ষার পর বিস্তারিত পারফরম্যান্স রিপোর্ট।</p>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
+
+
 
     <!-- Counter Section -->
     <section class="py-5 text-white" style="background:#1d3557;">

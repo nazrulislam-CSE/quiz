@@ -10,20 +10,8 @@
 </style>
 @php
 $currentUrl = url()->current();
-$branches = App\Models\Branch::where('status',1)->latest()->get();
 @endphp
 <!--================ PAGE TITLE  ================== -->
-<!-- Banner Section -->
-<section class="jumbotron text-center banner_image" aria-label="Banner Section">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-12">
-                <img width="100%" src="{{ (!empty($page->image)) ? url('upload/page/'.$page->image):url('upload/page-title.jpg') }}" alt="..." class="wow fadeIn" data-wow-delay="200ms">
-            </div>
-        </div>
-    </div>
-</section>
-
 <!--================ POPULAR PAGES ================== -->
 <section class="single_container">
     <div class="container">
@@ -192,82 +180,18 @@ $branches = App\Models\Branch::where('status',1)->latest()->get();
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="wow fadeIn" data-wow-delay="200ms">
-                                <h2 class="mb-3 h3">{{ $page->page_title ?? 'Null'}}</h2></h2>
-                                <p class="mb-1-9" style="text-align:justify;">{!! $page->page_description ?? 'Null' !!}</p>
+                                <h2 class="mb-3 h3">{{ $page->page_title ?? ''}}</h2></h2>
+                                <p class="mb-1-9" style="text-align:justify;">{!! $page->page_description ?? '' !!}</p>
                             </div>
                         </div>
-                    </div>
-                   <div class="row">
-                        @foreach ($branches as $branch)
-                            <div class="col-md-6 col-lg-3 mb-4">
-                                <div class="card h-100 shadow-lg border-0">
-                                    <div class="card-header bg-success text-center">
-                                        <h5 class="card-title fw-bold text-light"><i class="fa-solid fa-address-card me-2"></i> {{ $branch->branch_name }}</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        {{-- Primary Contact --}}
-                                        <p class="mb-2">
-                                            <i class="fas fa-phone-alt text-primary me-2"></i>
-                                            <a href="tel:{{ $branch->contact_no }}">{{ $branch->contact_no }}</a>
-                                        </p>
-
-                                        {{-- Optional Contact --}}
-                                        @if($branch->contact_no_optional)
-                                            <p class="mb-2">
-                                                <i class="fas fa-phone-alt text-primary me-2"></i>
-                                                <a href="tel:{{ $branch->contact_no_optional }}">{{ $branch->contact_no_optional }}</a>
-                                            </p>
-                                        @endif
-                                        {{-- Area Location Link --}}
-                                        {{-- @if($branch->area_link)
-                                            <div class="mb-2" style="height: auto; overflow: auto;">
-                                                {!! $branch->area_link !!}
-                                            </div>
-                                        @endif --}}
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
                     </div>
                 </div>
-                {{-- <div class="col-lg-4 ps-xl-5">
-                    <div class="sidebar">
-                        <div class="widget bg-secondary mb-1-9 wow fadeInUp" data-wow-delay="500ms">
-                            <div class="widget-content">
-                                <h5 class="mb-4 text-white">Popular Pages</h5>
-                                <ul class="category-list list-unstyled mb-0">
-                                    @foreach($popular_pages as $key=> $pages)
-                                        <li class=" {{ url('pages/'.$pages->url) == url()->current() ? 'active' : '' }}">
-                                            <a href="{{ route('footer.menu.page',$pages->url) }}">
-                                                <span> {!! $pages->title ?? 'Null' !!}</span>
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
             @endif
         </div>
     </div>
 </section>
 
 @push('frontend-js')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
-    <!-- Or for RTL support -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
-    <script>
-        // Initialize Select2 on the <select> element
-        $( '#country' ).select2( {
-            theme: 'bootstrap-5'
-        } );
-    </script>
 @endpush
 @endsection

@@ -173,6 +173,19 @@
                     </ul>
                 </li>
 
+                <li class="slide {{ Request::is('admin/features*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-building"></i>
+                        <span class="side-menu__label">Feature</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Feature</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/feature/create') ? 'active' : '' }}" href="{{ route('admin.feature.create') }}">Feature Add</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/feature/index') ? 'active' : '' }}" href="{{ route('admin.feature.index') }}">Feature List</a></li>
+                    </ul>
+                </li>
+
                 <li class="slide {{ Request::is('admin/teacher*') ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                         <i class="side-menu__icon fas fa-building"></i>
