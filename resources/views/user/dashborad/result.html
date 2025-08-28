@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Results Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4e54c8;
+            --secondary: #8f94fb;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary) !important;
+        }
+        
+        .exam-card {
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: none;
+            overflow: hidden;
+            background: white;
+            transition: transform 0.3s ease;
+        }
+        
+        .exam-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 600;
+            padding: 15px 20px;
+        }
+        
+        .score-display {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .result-card {
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .result-correct {
+            border-left: 5px solid var(--success);
+        }
+        
+        .result-incorrect {
+            border-left: 5px solid var(--accent);
+        }
+        
+        .result-legend {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 0 15px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+        
+        .legend-correct {
+            background-color: var(--success);
+        }
+        
+        .legend-incorrect {
+            background-color: var(--accent);
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            height: 100%;
+        }
+        
+        .stats-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stats-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+        }
+        
+        .performance-chart {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            height: 100%;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+        
+        .topic-performance {
+            margin-top: 20px;
+        }
+        
+        .topic-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        
+        .topic-name {
+            flex: 1;
+            font-weight: 500;
+        }
+        
+        .topic-score {
+            font-weight: 700;
+            margin-left: 15px;
+            color: var(--primary);
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .back-button {
+            margin-bottom: 20px;
+        }
+        
+        .time-analysis {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-top: 30px;
+        }
+        
+        .time-bar {
+            height: 10px;
+            border-radius: 5px;
+            background: #e9ecef;
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .time-fill {
+            position: absolute;
+            height: 100%;
+            border-radius: 5px;
+            background: var(--primary);
+        }
+        
+        .time-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-graduation-cap me-2"></i>EduPro MCQ
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Exams</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Results</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Help</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-primary btn-sm text-white px-3 ms-2" href="#">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container py-5">
+        <!-- Results Section -->
+        <div class="section active" id="results-section">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="exam-card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-chart-bar me-2"></i>Exam Results</span>
+                                <span class="badge bg-light text-primary">Score: <span id="score">15</span>/20</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body p-4">
+                            <div class="score-display">
+                                <span id="percentage">75%</span>
+                            </div>
+                            
+                            <div class="result-legend">
+                                <div class="legend-item">
+                                    <div class="legend-color legend-correct"></div>
+                                    <span>Correct Answers</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color legend-incorrect"></div>
+                                    <span>Incorrect Answers</span>
+                                </div>
+                            </div>
+                            
+                            <h5 class="step-title mb-4">Question Review</h5>
+                            
+                            <div class="results-container">
+                                <!-- Result Item 1 -->
+                                <div class="result-card result-correct">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="question-number">1</div>
+                                            <h6 class="m-0">Which of the following is a linear data structure?</h6>
+                                        </div>
+                                        <div class="options-result">
+                                            <div class="option-item selected">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" checked disabled>
+                                                    <label class="form-check-label">
+                                                        Array
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="alert alert-success mt-2">
+                                                <i class="fas fa-check-circle me-2"></i>Correct! Arrays are linear data structures.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Result Item 2 -->
+                                <div class="result-card result-incorrect">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="question-number">2</div>
+                                            <h6 class="m-0">What is the time complexity of accessing an element in an array?</h6>
+                                        </div>
+                                        <div class="options-result">
+                                            <div class="option-item selected">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" checked disabled>
+                                                    <label class="form-check-label">
+                                                        O(n)
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="option-item" style="background-color: rgba(40, 167, 69, 0.1);">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" disabled>
+                                                    <label class="form-check-label">
+                                                        O(1)
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="alert alert-danger mt-2">
+                                                <i class="fas fa-times-circle me-2"></i>Incorrect! The correct answer is O(1) - constant time access.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- More result items would go here -->
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-4">
+                                <button class="btn btn-outline-secondary" onclick="backToSelection()">
+                                    <i class="fas fa-redo me-2"></i>Start New Exam
+                                </button>
+                                <button class="btn btn-primary" onclick="showDetailedResults()">
+                                    View Detailed Results<i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Results Section -->
+        <div class="section" id="detailed-results-section">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <button class="btn btn-outline-secondary back-button" onclick="backToResults()">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Results
+                    </button>
+                    
+                    <div class="exam-card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-chart-pie me-2"></i>Detailed Performance Analysis</span>
+                                <span class="badge bg-light text-primary">Score: 15/20 (75%)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body p-4">
+                            <!-- Performance Overview -->
+                            <h5 class="step-title mb-4">Performance Overview</h5>
+                            <div class="row mb-5">
+                                <div class="col-md-3 mb-4">
+                                    <div class="stats-card">
+                                        <div class="stats-icon text-primary">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                        <div class="stats-number text-primary">15</div>
+                                        <div class="stats-label">Correct Answers</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-4">
+                                    <div class="stats-card">
+                                        <div class="stats-icon text-danger">
+                                            <i class="fas fa-times-circle"></i>
+                                        </div>
+                                        <div class="stats-number text-danger">5</div>
+                                        <div class="stats-label">Incorrect Answers</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-4">
+                                    <div class="stats-card">
+                                        <div class="stats-icon text-info">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="stats-number text-info">18:42</div>
+                                        <div class="stats-label">Time Taken</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-4">
+                                    <div class="stats-card">
+                                        <div class="stats-icon text-warning">
+                                            <i class="fas fa-trophy"></i>
+                                        </div>
+                                        <div class="stats-number text-warning">75%</div>
+                                        <div class="stats-label">Overall Score</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Performance Chart -->
+                            <h5 class="step-title mb-4">Performance by Topic</h5>
+                            <div class="performance-chart mb-5">
+                                <div class="chart-container">
+                                    <canvas id="performanceChart"></canvas>
+                                </div>
+                                
+                                <div class="topic-performance">
+                                    <div class="topic-item">
+                                        <div class="topic-name">Arrays and Linked Lists</div>
+                                        <div class="progress flex-grow-1 mx-3">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: 80%"></div>
+                                        </div>
+                                        <div class="topic-score">80%</div>
+                                    </div>
+                                    <div class="topic-item">
+                                        <div class="topic-name">Stacks and Queues</div>
+                                        <div class="progress flex-grow-1 mx-3">
+                                            <div class="progress-bar bg-info" role="progressbar" style="width: 65%"></div>
+                                        </div>
+                                        <div class="topic-score">65%</div>
+                                    </div>
+                                    <div class="topic-item">
+                                        <div class="topic-name">Trees and Graphs</div>
+                                        <div class="progress flex-grow-1 mx-3">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 45%"></div>
+                                        </div>
+                                        <div class="topic-score">45%</div>
+                                    </div>
+                                    <div class="topic-item">
+                                        <div class="topic-name">Sorting Algorithms</div>
+                                        <div class="progress flex-grow-1 mx-3">
+                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 90%"></div>
+                                        </div>
+                                        <div class="topic-score">90%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Time Analysis -->
+                            <h5 class="step-title mb-4">Time Management Analysis</h5>
+                            <div class="time-analysis">
+                                <div class="time-label">
+                                    <span>0s</span>
+                                    <span>Time Spent per Question</span>
+                                    <span>120s</span>
+                                </div>
+                                <div class="time-bar">
+                                    <div class="time-fill" style="width: 20%"></div>
+                                </div>
+                                <div class="time-label">
+                                    <span>Fastest: 5s (Q7)</span>
+                                    <span>Average: 25s</span>
+                                    <span>Slowest: 112s (Q12)</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Comparison -->
+                            <h5 class="step-title mb-4 mt-5">Comparison with Peers</h5>
+                            <div class="performance-chart">
+                                <div class="chart-container">
+                                    <canvas id="comparisonChart"></canvas>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <div class="badge bg-primary">Your Score: 75%</div>
+                                    <div class="badge bg-secondary mx-2">Average: 68%</div>
+                                    <div class="badge bg-success">Top Score: 95%</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Recommendations -->
+                            <h5 class="step-title mb-4 mt-5">Recommendations for Improvement</h5>
+                            <div class="alert alert-info">
+                                <h6><i class="fas fa-lightbulb me-2"></i>Areas to Focus On:</h6>
+                                <ul class="mb-0">
+                                    <li>Trees and Graphs concepts (scored 45%)</li>
+                                    <li>Time management on complex problems</li>
+                                    <li>Algorithm optimization techniques</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-4">
+                                <button class="btn btn-outline-secondary" onclick="backToResults()">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to Results
+                                </button>
+                                <button class="btn btn-success">
+                                    <i class="fas fa-download me-2"></i>Download Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Function to show detailed results
+        function showDetailedResults() {
+            document.getElementById('results-section').classList.remove('active');
+            document.getElementById('detailed-results-section').classList.add('active');
+            renderCharts();
+        }
+        
+        // Function to go back to results
+        function backToResults() {
+            document.getElementById('detailed-results-section').classList.remove('active');
+            document.getElementById('results-section').classList.add('active');
+        }
+        
+        // Function to go back to selection (for demo purposes)
+        function backToSelection() {
+            alert("This would take you back to the exam selection screen.");
+        }
+        
+        // Render performance charts
+        function renderCharts() {
+            // Performance Chart
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            const performanceChart = new Chart(performanceCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Correct', 'Incorrect'],
+                    datasets: [{
+                        data: [15, 5],
+                        backgroundColor: ['#28a745', '#dc3545'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Comparison Chart
+            const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
+            const comparisonChart = new Chart(comparisonCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Your Score', 'Average', 'Top Score'],
+                    datasets: [{
+                        data: [75, 68, 95],
+                        backgroundColor: ['#4e54c8', '#6c757d', '#28a745'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
