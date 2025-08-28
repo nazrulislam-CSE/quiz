@@ -72,7 +72,7 @@ class RegisterController extends Controller
                     }
                 }
             ],
-            'phone'       => ['required', 'string', 'unique:users,phone'],
+            'phone' => ['required', 'digits:11', 'numeric'],
             'password'    => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -86,42 +86,55 @@ class RegisterController extends Controller
     public function create(array $data)
     {
         try {
-            $refer_id = null;
-
-            if (!empty($data['refer_by'])) {
-                $referUser = User::where('username', $data['refer_by'])->first();
-
-                if (!$referUser) {
-                    throw new \Exception("Please provide valid Username!");
-                }
-
-                $refer_id = $referUser->id;
+            if (empty($data['refer_by'])) {
+                flash()->addError("Please provide a Refer Username!");
+                return null; 
             }
 
+            $referUser = User::where('username', $data['refer_by'])->first();
+            if (!$referUser) {
+                flash()->addError("Please provide a valid Refer Username!");
+                return null; 
+            }
+
+            $refer_id = $referUser->id;
+
             $user = User::create([
-                'full_name'       => $data['full_name'],
-                'username'        => $data['company_name'],
-                'refer_id'        => $refer_id,
-                'phone'           => $data['phone'],
-                'institute'       => $data['institute'],
-                'division_id'     => $data['division_id'],
-                'password'        => Hash::make($data['password']),
-                'show_password'   => $data['password'],
-                'created_by'      => $data['username'],
+                'full_name'     => $data['full_name'],
+                'username'      => $data['username'],
+                'refer_by'      => $refer_id,
+                'phone'         => $data['phone'],
+                'institute'     => $data['institute'],
+                'division_id'   => $data['division_id'],
+                'password'      => Hash::make($data['password']),
+                'show_password' => $data['password'],
+                'created_by'    => $data['username'],
             ]);
 
-            flash()->addSuccess('User Register Successfully.');
-
+            flash()->addSuccess('User Registered Successfully.');
             return $user;
+
         } catch (\Exception $e) {
             flash()->addError($e->getMessage());
             return null;
         }
+
     }
 
-    public function checkRefer($username)
-    {
-        $exists = User::where('username', $username)->exists();
-        return response()->json(['exists' => $exists]);
+    public function checkRefer($username){
+        $user = User::where('username', $username)->first();
+
+        if($user){
+            return response()->json([
+                'status' => true,
+                'message' => 'Valid Refer Username ✅'
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid Refer Username ❌'
+            ]);
+        }
     }
+
 }

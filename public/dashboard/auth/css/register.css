@@ -375,6 +375,11 @@ body {
 .form-control {
     padding: 10px 15px 10px 40px;
 }
+.btn-register:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
 
 .input-icon i {
     left: 12px;

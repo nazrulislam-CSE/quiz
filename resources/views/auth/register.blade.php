@@ -58,7 +58,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="input-icon">
-                                    <input type="text" name="institute" class="form-control" placeholder="Institute name">
+                                    <input type="text" name="institute"  value="{{ old('institute') }}" class="form-control" placeholder="Institute name">
                                     <i class="fas fa-university"></i>
                                 </div>
                             </div>
@@ -67,7 +67,10 @@
                                     <select name="division_id" class="form-control">
                                         <option selected disabled>Select division</option>
                                         @foreach(get_divisions() as $division)
-                                            <option value="{{ $division->id }}">{{ $division->name_en }} - {{ $division->name_bn }}</option>
+                                            <option value="{{ $division->id }}" 
+                                                {{ old('division_id') == $division->id ? 'selected' : '' }}>
+                                                {{ $division->name_en }} - {{ $division->name_bn }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     <i class="fas fa-layer-group"></i>
@@ -79,20 +82,22 @@
                    <div class="form-section">
                         <h4 class="form-section-title">Contact Information</h4>
                         <div class="row">
+                            <small id="referMessage" class="mb-2"></small>
                             <div class="col-md-6">
                                 <div class="input-icon">
                                     <input type="text" id="refer_by" name="refer_by" 
-                                        value="{{ $_GET['refer_id'] ?? '' }}" 
-                                        class="form-control" placeholder="Enter Refer By Username">
+                                        value="{{ $_GET['refer_id'] ?? 'chalkboardbd' }}" 
+                                        class="form-control" required placeholder="Enter Refer By Username">
                                     <i class="fas fa-user-friends"></i>
                                 </div>
-                                <small id="referMessage"></small>
+                               
                             </div>
 
-                            <div class="col-md-6">
+                           <div class="col-md-6">
                                 <div class="input-icon">
                                     <input type="tel" name="phone" value="{{ old('phone') }}" 
-                                        class="form-control" placeholder="Phone">
+                                        class="form-control" placeholder="Phone"
+                                        pattern="[0-9]{11}" maxlength="11" minlength="11" required>
                                     <i class="fas fa-phone"></i>
                                 </div>
                             </div>
@@ -129,7 +134,7 @@
                     
                     <div class="row">
                         <div class="col-md-6 mx-auto">
-                            <button type="submit" class="btn btn-register">
+                            <button type="submit" class="btn btn-register" id="registerBtn">
                                 <i class="fas fa-user-plus me-2"></i> REGISTER
                             </button>
                         </div>
@@ -148,34 +153,39 @@
 
     <script>
     $(document).ready(function(){
-
-        // refer_by input এ keyup event
         $('#refer_by').on('keyup', function() {
             let username = $(this).val();
-            let messageEl = $('#referMessage');
+            const registerBtn = $('#registerBtn');
 
             if(username.length > 2){ 
                 $.ajax({
-                    url: "{{ route('check.refer') }}", 
+                    url: "/check-refer/" + username,
                     type: "GET",
                     data: { username: username },
                     success: function(res){
+                        let messageEl = $('#referMessage');
+
                         if(res.status){ 
                             messageEl.text(res.message).css('color','green');
+                            registerBtn.prop('disabled', false);
                         } else { 
                             messageEl.text(res.message).css('color','red');
+                            registerBtn.prop('disabled', true);
                         }
                     },
                     error: function(){
                         messageEl.text('Something went wrong').css('color','red');
+                        registerBtn.prop('disabled', true);
                     }
                 });
             } else {
                 messageEl.text(''); 
+                registerBtn.prop('disabled', true); 
             }
         });
 
     });
+    
     </script>
 
 </body>
