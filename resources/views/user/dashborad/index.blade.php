@@ -77,152 +77,299 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <span><i class="fas fa-book-open me-2"></i>MCQ Exam Preparation</span>
-                            <span class="badge bg-light text-primary" id="step-badge">Step 1 of 4</span>
+                            <span class="badge bg-light text-primary" id="step-badge">Step 1 of 5</span>
                         </div>
                     </div>
-                    
-                    <div class="progress-container">
+
+                    @php
+                        $currentStep = 1;
+
+                        if ($selectedAdmission && !$selectedDepartment) {
+                            $currentStep = 2;
+                        } elseif ($selectedDepartment && !$selectedSubject) {
+                            $currentStep = 3;
+                        } elseif ($selectedSubject && !$selectedTopic) {
+                            $currentStep = 4;
+                        } elseif ($selectedTopic) {
+                            $currentStep = 5;
+                        }
+
+                        // Map step to percentage
+                        $progressPercent = match($currentStep) {
+                            1 => 20,
+                            2 => 40,
+                            3 => 60,
+                            4 => 80,
+                            5 => 100,
+                            default => 20
+                        };
+                    @endphp
+
+                   <div class="progress-container mb-2">
                         <div class="progress">
-                            <div class="progress-bar" id="progress-bar" style="width: 25%"></div>
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                id="progress-bar" 
+                                style="width: {{ $progressPercent }}%; padding: 0.25rem 0.5rem;">
+                                {{ $progressPercent }}%
+                            </div>
                         </div>
                     </div>
-                    
+
+
                     <div class="card-body p-4">
                         <!-- Step Indicator -->
-                        <div class="step-indicator mb-5">
-                            <div class="step active" id="step-1">1</div>
-                            <div class="step" id="step-2">2</div>
-                            <div class="step" id="step-3">3</div>
-                            <div class="step" id="step-4">4</div>
+                        <div class="step-indicator mb-3">
+                            <div class="step {{ $currentStep == 1 ? 'active' : ($currentStep > 1 ? 'completed' : '') }}" id="step-1">1</div>
+                            <div class="step {{ $currentStep == 2 ? 'active' : ($currentStep > 2 ? 'completed' : '') }}" id="step-2">2</div>
+                            <div class="step {{ $currentStep == 3 ? 'active' : ($currentStep > 3 ? 'completed' : '') }}" id="step-3">3</div>
+                            <div class="step {{ $currentStep == 4 ? 'active' : ($currentStep > 4 ? 'completed' : '') }}" id="step-4">4</div>
+                            <div class="step {{ $currentStep == 5 ? 'active' : ($currentStep > 5 ? 'completed' : '') }}" id="step-4">5</div>
                         </div>
+
+                        <form action="{{ route('user.user.home') }}" method="GET">
+                            <!-- Step 1: Admission Selection -->
+                            @if (!$selectedAdmission)
+                                <div class="step-content active" id="step-admission">
+                                    <h5 class="step-title">
+                                        <i class="fas fa-university me-2"></i> Select Admission
+                                    </h5>
+                                    <div class="mb-4">
+                                        @foreach ($admissions as $admission)
+                                            <label for="admission{{ $admission->id }}"
+                                                class="selection-item d-flex align-items-center p-2 border rounded mb-2"
+                                                style="cursor: pointer;"
+                                                onclick="document.getElementById('admission{{ $admission->id }}').checked = true; this.closest('form').submit();">
+
+                                                <img src="{{ !empty($admission->image) ? url('upload/admission/' . $admission->image) : url('upload/MCQ Logo.png') }}"
+                                                    alt="ICON" class="me-2"
+                                                    style="width:40px;height:40px;object-fit:cover;">
+
+                                                <input type="radio" name="admission" id="admission{{ $admission->id }}"
+                                                    value="{{ $admission->id }}" class="d-none"> {{-- hide radio --}}
+
+                                                <span>{{ $admission->name }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
+
+                            <!-- Step 2: Department Selection -->
+                            @if ($selectedAdmission && !$selectedDepartment)
+                                <div class="step-content active" id="step-department">
+                                    <h5 class="step-title"><i class="fas fa-building me-2"></i>Select Department</h5>
+                                    <input type="hidden" name="admission" value="{{ $selectedAdmission }}">
+                                    <div class="mb-4">
+                                        @foreach ($departments as $department)
+                                            <label for="department{{ $department->id }}"
+                                                class="selection-item d-flex align-items-center p-2 border rounded mb-2"
+                                                style="cursor: pointer;"
+                                                onclick="document.getElementById('department{{ $department->id }}').checked = true; this.closest('form').submit();">
+                                                <img src="{{ !empty($department->image) ? url('upload/department/' . $department->image) : url('upload/MCQ Logo.png') }}"
+                                                    alt="ICON">
+                                                <input type="radio" name="department"
+                                                    id="department{{ $department->id }}" value="{{ $department->id }}"
+                                                    onchange="this.form.submit()">
+                                                <span>{{ $department->name }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
+                            <!-- Step 3: Subject Selection -->
+                            @if ($selectedDepartment && !$selectedSubject)
+                                <div class="step-content active" id="step-subject">
+                                    <h5 class="step-title"><i class="fas fa-book me-2"></i>Select Subject</h5>
+                                    <input type="hidden" name="admission" value="{{ $selectedAdmission }}">
+                                    <input type="hidden" name="department" value="{{ $selectedDepartment }}">
+                                    <div class="mb-4">
+                                        @foreach ($subjects as $subject)
+                                            <label for="subject{{ $subject->id }}"
+                                                class="selection-item d-flex align-items-center p-2 border rounded mb-2"
+                                                style="cursor: pointer;"
+                                                onclick="document.getElementById('subject{{ $subject->id }}').checked = true; this.closest('form').submit();">
+                                                <img src="{{ !empty($subject->image) ? url('upload/subject/' . $subject->image) : url('upload/MCQ Logo.png') }}"
+                                                    alt="ICON">
+                                                <input type="radio" name="subject" id="subject{{ $subject->id }}"
+                                                    value="{{ $subject->id }}" onchange="this.form.submit()">
+                                                <span>{{ $subject->name }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
+                            <!-- Step 4: Topic Selection -->
+                            @if ($selectedSubject && !$selectedTopic)
+                                <div class="step-content active" id="step-topic">
+                                    <h5 class="step-title"><i class="fas fa-tag me-2"></i>Select Topic</h5>
+                                    <input type="hidden" name="admission" value="{{ $selectedAdmission }}">
+                                    <input type="hidden" name="department" value="{{ $selectedDepartment }}">
+                                    <input type="hidden" name="subject" value="{{ $selectedSubject }}">
+                                    <div class="mb-4">
+                                        @foreach ($topics as $topic)
+                                            <label for="topic{{ $topic->id }}"
+                                                class="selection-item d-flex align-items-center p-2 border rounded mb-2"
+                                                style="cursor: pointer;"
+                                                onclick="document.getElementById('topic{{ $topic->id }}').checked = true; this.closest('form').submit();">
+                                                <img src="{{ !empty($topic->image) ? url('upload/topic/' . $topic->image) : url('upload/MCQ Logo.png') }}"
+                                                    alt="ICON">
+                                                <input type="radio" name="topic" id="topic{{ $topic->id }}"
+                                                    value="{{ $topic->id }}" onchange="this.form.submit()">
+                                                <label for="topic{{ $topic->id }}">{{ $topic->name }}</label>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                        </form>
+
+                        <!-- ✅ Exam Notice & Subject Card (Only show after Topic is selected) -->
+                        @if ($selectedTopic)
+                            <div class="card border-success shadow-sm mb-4">
+                                <div class="card-header bg-success text-white fw-bold">
+                                    <i class="fa fa-info-circle me-2"></i> পরীক্ষার নোটিশ
+                                </div>
+                                <div class="card-body">
+
+                                    <!-- পরীক্ষার বিষয়সমূহ -->
+                                    <div class="d-flex align-items-start mb-3">
+                                        <i class="fa fa-book text-success fs-4 me-3"></i>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">পরীক্ষার বিষয়সমূহ</h6>
+                                            <p class="mb-0 small">
+                                                নিচের তালিকা থেকে আপনার গপছন্দ বিষয় নির্বাচন করুন এবং পরীক্ষা শুরু করুন।
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- পরীক্ষার সময় -->
+                                    <div class="d-flex align-items-start mb-3">
+                                        <i class="fa fa-clock text-success fs-4 me-3"></i>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">পরীক্ষার সময়</h6>
+                                            <p class="mb-0 small">
+                                                প্রতিটি বিষয়ের জন্য আলাদা পরীক্ষার সময় নির্ধারিত আছে যা বিষয়ের পাশে দেখানো
+                                                হয়েছে।
+                                                নির্দিষ্ট সময়ের মধ্যে আপনাকে পরীক্ষা সম্পন্ন করতে হবে।
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- পরীক্ষার মার্ক -->
+                                    <div class="d-flex align-items-start mb-3">
+                                        <i class="fa fa-star text-success fs-4 me-3"></i>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">পরীক্ষার মার্ক</h6>
+                                            <p class="mb-0 small">
+                                                প্রতিটি পরীক্ষার জন্য সর্বোচ্চ মার্ক নির্ধারিত আছে যা বিষয়ের পাশে দেখানো
+                                                হয়েছে।
+                                                পরীক্ষার ফলাফল এই মার্ক অনুযায়ী নির্ধারিত হবে।
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- পরীক্ষার ফি -->
+                                    <div class="d-flex align-items-start mb-3">
+                                        <i class="fa fa-money-bill text-success fs-4 me-3"></i>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">পরীক্ষার ফি</h6>
+                                            <p class="mb-0 small text-danger">
+                                                এখনই বাটনে ক্লিক করলে পরীক্ষা শুরু হবে এবং আপনার ওয়ালেট থেকে স্বয়ংক্রিয়ভাবে
+                                                পরীক্ষার ফি কেটে নেয়া হবে।
+                                            </p>
+                                            <p class="mb-0 small">
+                                                প্রতিটি বিষয়ের জন্য আলাদা ফি নির্ধারিত আছে যা বিষয়ের পাশে দেখানো হয়েছে।
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Warning -->
+                                    <div class="alert alert-warning mt-3 small mb-0">
+                                        দয়া করে নিশ্চিত হয়ে নিন যে আপনার ওয়ালেটে পর্যাপ্ত ব্যালেন্স আছে।
+                                        অন্যথায় পরীক্ষা শুরু করা সম্ভব হবে না।
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Subject Card -->
+                            <div class="card shadow-lg border-success mb-4">
+                                <div class="card-body">
+                                    <h6 class="fw-bold text-success mb-3 text-center">সিলেক্টেড টপিক → MCQ শুরু</h6>
+                                    <div class="d-flex align-items-center border rounded p-3">
+                                        <img src="{{ !empty($selectedTopic->image) ? url('upload/topic/' . $selectedTopic->image) : url('upload/mcq.png') }}"
+                                            class="rounded-circle me-3" width="60" alt="topic icon">
+                                        <div class="flex-grow-1">
+                                            @php
+                                                $selectedTopicData = $topics->where('id', $selectedTopic)->first();
+                                            @endphp
+
+                                            @if ($selectedTopicData)
+                                                <h6 class="mb-1">{{ $selectedTopicData->name }}</h6>
+                                                <small class="d-block">সময়: {{ $selectedTopicData->exam_duration }}
+                                                    মিনিট</small>
+                                                <small class="d-block">মার্ক: {{ $selectedTopicData->exam_mark }}</small>
+                                                <small class="d-block">পরীক্ষার ফি:
+                                                    {{ number_format($selectedTopicData->fee, 2) }} টাকা</small>
+                                            @else
+                                                <h6 class="mb-1">কোনো টপিক সিলেক্ট করা হয়নি</h6>
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-danger btn-sm me-2">📖 স্টাডি</button>
+                                            <button class="btn btn-success btn-sm">📝 এক্সাম</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                         
-                        <!-- Step 1: Admission Selection -->
-                        <div class="step-content active" id="step-content-1">
-                            <h5 class="step-title"><i class="fas fa-university me-2"></i>Select Admission</h5>
-                            
-                            <div class="mb-4">
-                                <div class="selection-item selected" data-value="1">
-                                    <input type="radio" name="admission" id="admission1" checked>
-                                    <label for="admission1" class="mb-0">Fall 2023 Admission</label>
+                        @if ($selectedTopic && $mcqs->isNotEmpty())
+                            <div class="exam-card mt-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-book-open me-2"></i>{{ $topics->where('id',$selectedTopic)->first()->name }} - MCQ Exam</span>
+                                    <span class="badge bg-light text-primary">Question <span id="current-question">1</span> of {{ $mcqs->count() }}</span>
                                 </div>
-                                <div class="selection-item" data-value="2">
-                                    <input type="radio" name="admission" id="admission2">
-                                    <label for="admission2" class="mb-0">Spring 2023 Admission</label>
+
+                                <div class="progress-container mb-2">
+                                    <div class="progress">
+                                        <div class="progress-bar" id="question-progress" style="width: 0%;"></div>
+                                    </div>
                                 </div>
-                                <div class="selection-item" data-value="3">
-                                    <input type="radio" name="admission" id="admission3">
-                                    <label for="admission3" class="mb-0">Summer 2023 Admission</label>
-                                </div>
-                            </div>
-                            
-                            <div class="d-flex justify-content-between mt-4">
-                                <button class="btn btn-outline-secondary" disabled>
-                                    <i class="fas fa-arrow-left me-2"></i>Back
-                                </button>
-                                <button class="btn btn-primary" onclick="nextStep(2)">
-                                    Next<i class="fas fa-arrow-right ms-2"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Step 2: Department Selection -->
-                        <div class="step-content" id="step-content-2">
-                            <h5 class="step-title"><i class="fas fa-building me-2"></i>Select Department</h5>
-                            
-                            <div class="mb-4">
-                                <div class="selection-item" data-value="1">
-                                    <input type="radio" name="department" id="dept1">
-                                    <label for="dept1" class="mb-0">Computer Science & Engineering</label>
-                                </div>
-                                <div class="selection-item" data-value="2">
-                                    <input type="radio" name="department" id="dept2">
-                                    <label for="dept2" class="mb-0">Electrical & Electronic Engineering</label>
-                                </div>
-                                <div class="selection-item" data-value="3">
-                                    <input type="radio" name="department" id="dept3">
-                                    <label for="dept3" class="mb-0">Business Administration</label>
-                                </div>
-                                <div class="selection-item" data-value="4">
-                                    <input type="radio" name="department" id="dept4">
-                                    <label for="dept4" class="mb-0">Economics</label>
+
+                                <div class="card-body p-4">
+                                    @foreach($mcqs as $index => $mcq)
+                                        <div class="question-container" data-question="{{ $index + 1 }}" @if($index != 0) style="display:none;" @endif>
+                                            <div class="d-flex align-items-center mb-4">
+                                                <div class="question-number">{{ $index + 1 }}</div>
+                                                <h5 class="m-0">{{ $mcq->question }}</h5>
+                                            </div>
+
+                                            <div class="options-container">
+                                                @foreach($mcq->answers as $answer)
+                                                    <div class="option-item" data-option="{{ $answer->id }}">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="question_{{ $mcq->id }}" id="option{{ $answer->id }}">
+                                                            <label class="form-check-label" for="option{{ $answer->id }}">
+                                                                {{ $answer->answer }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                    <div class="navigation-buttons mt-4">
+                                        <button class="btn btn-outline-secondary" id="prev-btn" disabled><i class="fas fa-arrow-left me-2"></i>Previous</button>
+                                        <button class="btn btn-primary" id="next-btn">Next<i class="fas fa-arrow-right ms-2"></i></button>
+                                        <button class="btn btn-success" id="submit-btn" style="display: none;">Submit Exam<i class="fas fa-check-circle ms-2"></i></button>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <div class="d-flex justify-content-between mt-4">
-                                <button class="btn btn-outline-secondary" onclick="prevStep(1)">
-                                    <i class="fas fa-arrow-left me-2"></i>Back
-                                </button>
-                                <button class="btn btn-primary" onclick="nextStep(3)">
-                                    Next<i class="fas fa-arrow-right ms-2"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Step 3: Subject Selection -->
-                        <div class="step-content" id="step-content-3">
-                            <h5 class="step-title"><i class="fas fa-book me-2"></i>Select Subject</h5>
-                            
-                            <div class="mb-4">
-                                <div class="selection-item" data-value="1">
-                                    <input type="radio" name="subject" id="subject1">
-                                    <label for="subject1" class="mb-0">Data Structures and Algorithms</label>
-                                </div>
-                                <div class="selection-item" data-value="2">
-                                    <input type="radio" name="subject" id="subject2">
-                                    <label for="subject2" class="mb-0">Database Management Systems</label>
-                                </div>
-                                <div class="selection-item" data-value="3">
-                                    <input type="radio" name="subject" id="subject3">
-                                    <label for="subject3" class="mb-0">Computer Networks</label>
-                                </div>
-                                <div class="selection-item" data-value="4">
-                                    <input type="radio" name="subject" id="subject4">
-                                    <label for="subject4" class="mb-0">Software Engineering</label>
-                                </div>
-                            </div>
-                            
-                            <div class="d-flex justify-content-between mt-4">
-                                <button class="btn btn-outline-secondary" onclick="prevStep(2)">
-                                    <i class="fas fa-arrow-left me-2"></i>Back
-                                </button>
-                                <button class="btn btn-primary" onclick="nextStep(4)">
-                                    Next<i class="fas fa-arrow-right ms-2"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Step 4: Topic Selection -->
-                        <div class="step-content" id="step-content-4">
-                            <h5 class="step-title"><i class="fas fa-tag me-2"></i>Select Topic</h5>
-                            
-                            <div class="mb-4">
-                                <div class="selection-item" data-value="1">
-                                    <input type="radio" name="topic" id="topic1">
-                                    <label for="topic1" class="mb-0">Arrays and Linked Lists</label>
-                                </div>
-                                <div class="selection-item" data-value="2">
-                                    <input type="radio" name="topic" id="topic2">
-                                    <label for="topic2" class="mb-0">Stacks and Queues</label>
-                                </div>
-                                <div class="selection-item" data-value="3">
-                                    <input type="radio" name="topic" id="topic3">
-                                    <label for="topic3" class="mb-0">Trees and Graphs</label>
-                                </div>
-                                <div class="selection-item" data-value="4">
-                                    <input type="radio" name="topic" id="topic4">
-                                    <label for="topic4" class="mb-0">Sorting Algorithms</label>
-                                </div>
-                            </div>
-                            
-                            <div class="d-flex justify-content-between mt-4">
-                                <button class="btn btn-outline-secondary" onclick="prevStep(3)">
-                                    <i class="fas fa-arrow-left me-2"></i>Back
-                                </button>
-                                <button class="btn btn-success" onclick="startExam()">
-                                    Start Exam<i class="fas fa-play-circle ms-2"></i>
-                                </button>
-                            </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -240,34 +387,37 @@
                         <i class="fas fa-clock me-2"></i><span id="timer">30:00</span>
                     </div>
                 </div>
-                
+
                 <div class="exam-card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-book-open me-2"></i>Data Structures and Algorithms - Topic: Arrays</span>
-                            <span class="badge bg-light text-primary">Question <span id="current-question">1</span> of 20</span>
+                            <span><i class="fas fa-book-open me-2"></i>Data Structures and Algorithms - Topic:
+                                Arrays</span>
+                            <span class="badge bg-light text-primary">Question <span id="current-question">1</span> of
+                                20</span>
                         </div>
                     </div>
-                    
+
                     <div class="progress-container">
                         <div class="progress">
                             <div class="progress-bar" id="question-progress" style="width: 5%"></div>
                         </div>
                     </div>
-                    
+
                     <div class="card-body p-4">
                         <!-- Question Navigation -->
                         <div class="question-navigation" id="question-nav">
                             <!-- JS will generate question numbers here -->
                         </div>
-                        
+
                         <!-- Current Question -->
                         <div class="question-container">
                             <div class="d-flex align-items-center mb-4">
                                 <div class="question-number" id="q-number">1</div>
-                                <h5 class="m-0" id="question-text">Which of the following is a linear data structure?</h5>
+                                <h5 class="m-0" id="question-text">Which of the following is a linear data structure?
+                                </h5>
                             </div>
-                            
+
                             <div class="options-container">
                                 <div class="option-item" data-option="1">
                                     <div class="form-check">
@@ -303,7 +453,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="navigation-buttons">
                             <button class="btn btn-outline-secondary" id="prev-btn" disabled>
                                 <i class="fas fa-arrow-left me-2"></i>Previous
@@ -332,12 +482,12 @@
                             <span class="badge bg-light text-primary">Score: <span id="score">15</span>/20</span>
                         </div>
                     </div>
-                    
+
                     <div class="card-body p-4">
                         <div class="score-display">
                             <span id="percentage">75%</span>
                         </div>
-                        
+
                         <div class="result-legend">
                             <div class="legend-item">
                                 <div class="legend-color legend-correct"></div>
@@ -348,9 +498,9 @@
                                 <span>Incorrect Answers</span>
                             </div>
                         </div>
-                        
+
                         <h5 class="step-title mb-4">Question Review</h5>
-                        
+
                         <div class="results-container">
                             <!-- Result Item 1 -->
                             <div class="result-card result-correct">
@@ -369,18 +519,20 @@
                                             </div>
                                         </div>
                                         <div class="alert alert-success mt-2">
-                                            <i class="fas fa-check-circle me-2"></i>Correct! Arrays are linear data structures.
+                                            <i class="fas fa-check-circle me-2"></i>Correct! Arrays are linear data
+                                            structures.
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Result Item 2 -->
                             <div class="result-card result-incorrect">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center mb-3">
                                         <div class="question-number">2</div>
-                                        <h6 class="m-0">What is the time complexity of accessing an element in an array?</h6>
+                                        <h6 class="m-0">What is the time complexity of accessing an element in an array?
+                                        </h6>
                                     </div>
                                     <div class="options-result">
                                         <div class="option-item selected">
@@ -400,15 +552,16 @@
                                             </div>
                                         </div>
                                         <div class="alert alert-danger mt-2">
-                                            <i class="fas fa-times-circle me-2"></i>Incorrect! The correct answer is O(1) - constant time access.
+                                            <i class="fas fa-times-circle me-2"></i>Incorrect! The correct answer is O(1) -
+                                            constant time access.
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- More result items would go here -->
                         </div>
-                        
+
                         <div class="d-flex justify-content-between mt-4">
                             <button class="btn btn-outline-secondary" onclick="backToSelection()">
                                 <i class="fas fa-redo me-2"></i>Start New Exam
@@ -422,323 +575,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Current step tracker
-        let currentStep = 1;
-        
-        // Function to navigate to next step
-        function nextStep(step) {
-            if (step > 4) return;
-            
-            // Hide current step
-            document.getElementById(`step-content-${currentStep}`).classList.remove('active');
-            document.getElementById(`step-${currentStep}`).classList.remove('active');
-            
-            // Show next step
-            document.getElementById(`step-content-${step}`).classList.add('active');
-            document.getElementById(`step-${step}`).classList.add('active');
-            
-            // Update progress bar
-            const progressPercentage = (step / 4) * 100;
-            document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
-            
-            // Update step badge
-            document.getElementById('step-badge').textContent = `Step ${step} of 4`;
-            
-            // Update current step
-            currentStep = step;
-        }
-        
-        // Function to navigate to previous step
-        function prevStep(step) {
-            if (step < 1) return;
-            
-            // Hide current step
-            document.getElementById(`step-content-${currentStep}`).classList.remove('active');
-            document.getElementById(`step-${currentStep}`).classList.remove('active');
-            
-            // Show previous step
-            document.getElementById(`step-content-${step}`).classList.add('active');
-            document.getElementById(`step-${step}`).classList.add('active');
-            
-            // Update progress bar
-            const progressPercentage = (step / 4) * 100;
-            document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
-            
-            // Update step badge
-            document.getElementById('step-badge').textContent = `Step ${step} of 4`;
-            
-            // Update current step
-            currentStep = step;
-        }
-        
-        // Simple interaction for selection items
-        document.querySelectorAll('.selection-item').forEach(item => {
-            item.addEventListener('click', function() {
-                // Remove selected class from all items in the same group
-                const groupName = this.querySelector('input').getAttribute('name');
-                document.querySelectorAll(`.selection-item input[name="${groupName}"]`).forEach(input => {
-                    input.parentElement.classList.remove('selected');
-                });
-                
-                // Add selected class to clicked item
-                this.classList.add('selected');
-                const radio = this.querySelector('input[type="radio"]');
-                if (radio) radio.checked = true;
-            });
-        });
-
-        // Switch between sections
-        function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId).classList.add('active');
-        }
-
-        // Start the exam
-        function startExam() {
-            showSection('exam-section');
-            initExam();
-        }
-
-        // Back to selection screen
-        function backToSelection() {
-            showSection('selection-section');
-        }
-
-        // Exam questions data
-        const questions = [
-            {
-                id: 1,
-                question: "Which of the following is a linear data structure?",
-                options: ["Tree", "Graph", "Array", "Network"],
-                correctAnswer: 3
-            },
-            {
-                id: 2,
-                question: "What is the time complexity of accessing an element in an array?",
-                options: ["O(n)", "O(log n)", "O(1)", "O(n log n)"],
-                correctAnswer: 3
-            },
-            {
-                id: 3,
-                question: "Which of the following is not a type of array?",
-                options: ["Single-dimensional", "Double-dimensional", "Multi-dimensional", "Linked-dimensional"],
-                correctAnswer: 4
-            },
-            // Add more questions here...
-        ];
-
-        // Initialize exam variables
-        let currentQuestion = 1;
-        const totalQuestions = 20;
-        let userAnswers = new Array(totalQuestions).fill(null);
-        let timeLeft = 30 * 60; // 30 minutes in seconds
-        let timerInterval;
-
-        // Initialize the exam
-        function initExam() {
-            // Generate question navigation
-            generateQuestionNav();
-            
-            // Start the timer
-            startTimer();
-            
-            // Display first question
-            showQuestion(currentQuestion);
-            
-            // Set up event listeners
-            document.getElementById('prev-btn').addEventListener('click', goToPreviousQuestion);
-            document.getElementById('next-btn').addEventListener('click', goToNextQuestion);
-            document.getElementById('submit-btn').addEventListener('click', submitExam);
-            
-            // Set up option selection
-            document.querySelectorAll('.option-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    selectOption(this);
-                });
-            });
-        }
-
-        // Generate question navigation numbers
-        function generateQuestionNav() {
-            const navContainer = document.getElementById('question-nav');
-            navContainer.innerHTML = '';
-            
-            for (let i = 1; i <= totalQuestions; i++) {
-                const navItem = document.createElement('div');
-                navItem.className = 'question-nav-item';
-                if (i === 1) navItem.classList.add('current');
-                navItem.textContent = i;
-                navItem.setAttribute('data-question', i);
-                
-                navItem.addEventListener('click', function() {
-                    goToQuestion(parseInt(this.getAttribute('data-question')));
-                });
-                
-                navContainer.appendChild(navItem);
-            }
-        }
-
-        // Show a specific question
-        function showQuestion(questionNumber) {
-            // Update current question indicator
-            document.getElementById('current-question').textContent = questionNumber;
-            document.getElementById('q-number').textContent = questionNumber;
-            
-            // Update progress bar
-            const progressPercentage = (questionNumber / totalQuestions) * 100;
-            document.getElementById('question-progress').style.width = `${progressPercentage}%`;
-            
-            // Update navigation buttons
-            document.getElementById('prev-btn').disabled = (questionNumber === 1);
-            
-            if (questionNumber === totalQuestions) {
-                document.getElementById('next-btn').style.display = 'none';
-                document.getElementById('submit-btn').style.display = 'block';
-            } else {
-                document.getElementById('next-btn').style.display = 'block';
-                document.getElementById('submit-btn').style.display = 'none';
-            }
-            
-            // Update question navigation
-            document.querySelectorAll('.question-nav-item').forEach(item => {
-                item.classList.remove('current');
-                if (parseInt(item.getAttribute('data-question')) === questionNumber) {
-                    item.classList.add('current');
-                }
-                
-                // Mark answered questions
-                const qNum = parseInt(item.getAttribute('data-question'));
-                if (userAnswers[qNum - 1] !== null) {
-                    item.classList.add('answered');
-                } else {
-                    item.classList.remove('answered');
-                }
-            });
-            
-            // For demo purposes, we're using a limited set of questions
-            const questionIndex = (questionNumber - 1) % questions.length;
-            const question = questions[questionIndex];
-            
-            // Update question text
-            document.getElementById('question-text').textContent = question.question;
-            
-            // Update options
-            const options = document.querySelectorAll('.option-item');
-            options.forEach((option, index) => {
-                const optionText = option.querySelector('.form-check-label');
-                optionText.textContent = question.options[index];
-                
-                // Clear previous selection
-                const radio = option.querySelector('input[type="radio"]');
-                radio.checked = false;
-                option.classList.remove('selected');
-                
-                // Check if user has previously selected this option
-                if (userAnswers[questionNumber - 1] === index + 1) {
-                    radio.checked = true;
-                    option.classList.add('selected');
-                }
-            });
-        }
-
-        // Select an option
-        function selectOption(optionElement) {
-            // Clear previous selection
-            optionElement.parentElement.querySelectorAll('.option-item').forEach(item => {
-                item.classList.remove('selected');
-                item.querySelector('input[type="radio"]').checked = false;
-            });
-            
-            // Select current option
-            optionElement.classList.add('selected');
-            optionElement.querySelector('input[type="radio"]').checked = true;
-            
-            // Save user's answer
-            const selectedOption = parseInt(optionElement.getAttribute('data-option'));
-            userAnswers[currentQuestion - 1] = selectedOption;
-            
-            // Mark question as answered in navigation
-            document.querySelector(`.question-nav-item[data-question="${currentQuestion}"]`).classList.add('answered');
-        }
-
-        // Go to next question
-        function goToNextQuestion() {
-            if (currentQuestion < totalQuestions) {
-                goToQuestion(currentQuestion + 1);
-            }
-        }
-
-        // Go to previous question
-        function goToPreviousQuestion() {
-            if (currentQuestion > 1) {
-                goToQuestion(currentQuestion - 1);
-            }
-        }
-
-        // Go to specific question
-        function goToQuestion(questionNumber) {
-            currentQuestion = questionNumber;
-            showQuestion(currentQuestion);
-        }
-
-        // Start the exam timer
-        function startTimer() {
-            clearInterval(timerInterval);
-            
-            timerInterval = setInterval(function() {
-                timeLeft--;
-                
-                const minutes = Math.floor(timeLeft / 60);
-                const seconds = timeLeft % 60;
-                
-                document.getElementById('timer').textContent = 
-                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                
-                // Change color when time is running out
-                if (timeLeft <= 300) { // 5 minutes
-                    document.getElementById('exam-timer').classList.add('timer-danger');
-                } else if (timeLeft <= 600) { // 10 minutes
-                    document.getElementById('exam-timer').classList.add('timer-warning');
-                }
-                
-                // Auto submit when time is up
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    submitExam();
-                }
-            }, 1000);
-        }
-
-        // Submit the exam
-        function submitExam() {
-            clearInterval(timerInterval);
-            
-            // Calculate score (for demo, we're using a simple calculation)
-            const score = calculateScore();
-            const percentage = Math.round((score / totalQuestions) * 100);
-            
-            // Update results
-            document.getElementById('score').textContent = score;
-            document.getElementById('percentage').textContent = `${percentage}%`;
-            
-            // Show results section
-            showSection('results-section');
-        }
-
-        // Calculate score (for demo purposes)
-        function calculateScore() {
-            let score = 0;
-            for (let i = 0; i < totalQuestions; i++) {
-                // For demo, every 3rd question is wrong, others are right
-                if (i % 3 !== 0) {
-                    score++;
-                }
-            }
-            return score;
-        }
-    </script>
+    
 @endsection

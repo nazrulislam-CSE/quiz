@@ -11,6 +11,7 @@ use App\Models\Topic;
 use App\Models\Subject;
 use App\Models\Admission;
 use App\Models\Department;
+use App\Models\Mcq;
 
 class DashboardController extends Controller
 {
@@ -18,33 +19,48 @@ class DashboardController extends Controller
     {
         $pageTitle = "Dashboard";
 
-        // Active admissions
         $admissions = Admission::where('status',1)->latest()->get();
 
-        // Selected admission, department, subject from query
         $selectedAdmission = $request->query('admission');
         $selectedDepartment = $request->query('department');
         $selectedSubject = $request->query('subject');
+        $selectedTopic = $request->query('topic');
 
         $departments = collect();
         $subjects = collect();
         $topics = collect();
+        $mcqs = collect();
 
         if ($selectedAdmission) {
             $departments = Department::where('admission_id', $selectedAdmission)->where('status',1)->get();
+            if ($departments->isEmpty() && !$selectedDepartment) {
+                return redirect()->route('user.user.home')->with('error', 'No departments available for this admission.');
+            }
         }
 
         if ($selectedDepartment) {
             $subjects = Subject::where('department_id', $selectedDepartment)->where('status',1)->get();
+            if ($subjects->isEmpty() && !$selectedSubject) {
+                return redirect()->route('user.user.home')->with('error', 'No subjects available for this department.');
+            }
         }
 
         if ($selectedSubject) {
             $topics = Topic::where('subject_id', $selectedSubject)->where('status',1)->get();
+            if ($topics->isEmpty() && !$selectedTopic) {
+                return redirect()->route('user.user.home')->with('error', 'No topics available for this subject.');
+            }
+        }
+
+        if ($selectedTopic) {
+            $mcqs = Mcq::with('answers')
+                        ->where('topic_id', $selectedTopic)
+                        ->get();
         }
 
         return view('user.dashborad.index', compact(
             'pageTitle','admissions','departments','subjects','topics',
-            'selectedAdmission','selectedDepartment','selectedSubject'
+            'selectedAdmission','selectedDepartment','selectedSubject','selectedTopic','mcqs'
         ));
     }
 

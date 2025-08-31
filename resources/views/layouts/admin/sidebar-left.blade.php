@@ -5,7 +5,7 @@
 <div class="sticky">
     <aside class="app-sidebar sidebar-scroll">
         <div class="main-sidebar-header active">
-            <a class="desktop-logo logo-light active" href="{{ route('user.home') }}">
+            <a class="desktop-logo logo-light active" href="{{ route('admin.admin.home') }}">
                <h4 class="text-uppercase font-weight-bolder">Quiz Application</h4>
             </a>
         </div>

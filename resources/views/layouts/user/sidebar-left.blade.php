@@ -53,22 +53,6 @@
                 <li class="slide">
                     <a class="side-menu__item {{ Request::is('user') ? 'active' : '' }}" href="{{ route('user.home') }}"><i class="side-menu__icon fas fa-th-large"></i><span class="side-menu__label">Dashboard</span></a>
                 </li>
-                @if(Auth::check() && Auth::user()->status == 1)
-                    <li class="slide {{ Request::is('user/notices*') ? 'is-expanded' : '' }}">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
-                            <i class="side-menu__icon fas fa-building"></i>
-                            <span class="side-menu__label">Notices</span>
-                            <span class="badge bg-success side-badge"></span>
-                            <i class="angle fe fe-chevron-down"></i>
-                        </a>
-                        <ul class="slide-menu">
-                            <li class="side-menu__label1"><a href="javascript:void(0);">Notices</a></li>
-                            <li><a class="slide-item {{ Request::is('user/notice/index') ? 'active' : '' }}" href="{{ route('user.notice.index') }}">Notice List</a></li>
-                        </ul>
-                    </li>
-                @else
-                    <p class="text-danger font-weight-bolder p-3">You are not authorized to access this content.please contact super admin.</p>
-                @endif
             </ul>
             <div class="slide-right" id="slide-right">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24" height="24" viewBox="0 0 24 24">

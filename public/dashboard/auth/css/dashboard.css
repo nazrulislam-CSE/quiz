@@ -338,3 +338,58 @@ footer {
 .section.active {
     display: block;
 }
+
+.step-indicator {
+    display: flex;
+    gap: 10px;
+}
+
+.step {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    text-align: center;
+    line-height: 30px;
+    color: #fff;
+}
+
+.step.active {
+    background: #0d6efd; /* blue */
+}
+
+.step.completed {
+    background: #198754; /* green */
+}
+
+.step-title i {
+    font-size: 14px; /* Make step icons smaller */
+}
+
+.selection-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.selection-item input[type="radio"] {
+    display: none; /* Hide default radio button */
+}
+
+.selection-item label {
+    margin-left: 8px;
+    cursor: pointer;
+}
+
+/* Optional: Highlight selected label */
+.selection-item input[type="radio"]:checked + label {
+    font-weight: bold;
+    color: #0d6efd;
+}
+
+.selection-item img {
+    width: 20px;
+    height: 14px;
+    margin-right: 10px;
+}

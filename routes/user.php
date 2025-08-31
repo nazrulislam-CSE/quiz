@@ -21,7 +21,7 @@ use App\Http\Controllers\User\AgentSupplierInvoiceController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('home');
+    Route::get('/', [DashboardController::class, 'index'])->name('user.home');
     Route::get('logout', [DashboardController::class, 'logout'])->name('user.logout');
 
     // Staff routes
@@ -64,6 +64,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/password/change', [SettingController::class, 'passwordChange'])->name('password.change');   
         Route::post('/password/update', [SettingController::class, 'passwordUpdate'])->name('password.update');   
     });
+    
 
 
 });
