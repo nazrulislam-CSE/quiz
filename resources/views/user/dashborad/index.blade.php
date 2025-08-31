@@ -227,7 +227,7 @@
                         </form>
 
                         <!-- ✅ Exam Notice & Subject Card (Only show after Topic is selected) -->
-                        @if ($selectedTopic)
+                        @if ($selectedTopic && $mcqs->isEmpty())
                             <div class="card border-success shadow-sm mb-4">
                                 <div class="card-header bg-success text-white fw-bold">
                                     <i class="fa fa-info-circle me-2"></i> পরীক্ষার নোটিশ
@@ -325,7 +325,7 @@
                                 </div>
                             </div>
                         @endif
-                        
+
                         @if ($selectedTopic && $mcqs->isNotEmpty())
                             <div class="exam-card mt-4">
                                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -340,7 +340,7 @@
                                 </div>
 
                                 <div class="card-body p-4">
-                                    @foreach($mcqs as $index => $mcq)
+                                   @foreach($mcqs as $index => $mcq)
                                         <div class="question-container" data-question="{{ $index + 1 }}" @if($index != 0) style="display:none;" @endif>
                                             <div class="d-flex align-items-center mb-4">
                                                 <div class="question-number">{{ $index + 1 }}</div>
@@ -349,12 +349,13 @@
 
                                             <div class="options-container">
                                                 @foreach($mcq->answers as $answer)
-                                                    <div class="option-item" data-option="{{ $answer->id }}">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="question_{{ $mcq->id }}" id="option{{ $answer->id }}">
-                                                            <label class="form-check-label" for="option{{ $answer->id }}">
+                                                    <div class="option-item p-2 rounded mb-2" data-correct="{{ $answer->is_correct ? '1' : '0' }}" style="cursor:pointer;">
+                                                        <div class="d-flex align-items-center">
+                                                            <input class="form-check-input me-2" type="radio" name="question_{{ $mcq->id }}" id="option{{ $answer->id }}">
+                                                            <label class="form-check-label flex-grow-1 mb-0" for="option{{ $answer->id }}">
                                                                 {{ $answer->answer }}
                                                             </label>
+                                                            <span class="feedback ms-2" style="display:none;"></span>
                                                         </div>
                                                     </div>
                                                 @endforeach
@@ -575,5 +576,78 @@
             </div>
         </div>
     </div>
-    
+
+    <script>
+        let currentQuestion = 0;
+        const questions = document.querySelectorAll('.question-container');
+        const totalQuestions = questions.length;
+        const progressBar = document.getElementById('question-progress');
+
+        document.getElementById('next-btn').addEventListener('click', function() {
+            if(currentQuestion < totalQuestions - 1) {
+                questions[currentQuestion].style.display = 'none';
+                currentQuestion++;
+                questions[currentQuestion].style.display = 'block';
+                updateProgress();
+            }
+            toggleButtons();
+        });
+
+        document.getElementById('prev-btn').addEventListener('click', function() {
+            if(currentQuestion > 0) {
+                questions[currentQuestion].style.display = 'none';
+                currentQuestion--;
+                questions[currentQuestion].style.display = 'block';
+                updateProgress();
+            }
+            toggleButtons();
+        });
+
+        function updateProgress() {
+            const percent = ((currentQuestion + 1) / totalQuestions) * 100;
+            progressBar.style.width = percent + '%';
+            document.getElementById('current-question').innerText = currentQuestion + 1;
+        }
+
+        function toggleButtons() {
+            document.getElementById('prev-btn').disabled = currentQuestion === 0;
+            document.getElementById('next-btn').style.display = (currentQuestion === totalQuestions - 1) ? 'none' : 'inline-block';
+            document.getElementById('submit-btn').style.display = (currentQuestion === totalQuestions - 1) ? 'inline-block' : 'none';
+        }
+    </script>
+   <script>
+        document.querySelectorAll('.option-item').forEach(option => {
+            option.addEventListener('click', function() {
+                // If already answered, do nothing
+                if(this.dataset.answered === "1") return;
+
+                const isCorrect = this.dataset.correct === "1";
+                const feedback = this.querySelector('.feedback');
+
+                // Add background & text feedback
+                if(isCorrect){
+                    this.classList.add('bg-success', 'text-white');
+                    feedback.innerHTML = '✔ Correct Answer';
+                } else {
+                    this.classList.add('bg-danger', 'text-white');
+                    feedback.innerHTML = '✖ Wrong Answer';
+                }
+                feedback.style.display = 'inline';
+
+                // Check the radio input
+                this.querySelector('input[type="radio"]').checked = true;
+
+                // Mark as answered
+                this.dataset.answered = "1";
+
+                // Disable all siblings for this question
+                const siblings = this.closest('.options-container').querySelectorAll('.option-item');
+                siblings.forEach(sib => {
+                    if(sib !== this) sib.dataset.answered = "1";
+                });
+            });
+        });
+    </script>
+
+
 @endsection
