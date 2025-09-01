@@ -18,11 +18,13 @@ use App\Http\Controllers\User\AgentRefundController;
 use App\Http\Controllers\User\AgentNoticeController;
 use App\Http\Controllers\User\AgentSupplierController;
 use App\Http\Controllers\User\AgentSupplierInvoiceController;
+use App\Http\Controllers\User\ExamController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('user.home');
     Route::get('logout', [DashboardController::class, 'logout'])->name('user.logout');
+    Route::post('/exam/submit', [ExamController::class, 'submit'])->name('exam.submit');
 
     // Staff routes
     // Route::prefix('staffs')->as('staff.')->group(function () {

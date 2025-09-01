@@ -95,19 +95,20 @@
                         }
 
                         // Map step to percentage
-                        $progressPercent = match ($currentStep) {
+                        $progressPercent = match($currentStep) {
                             1 => 20,
                             2 => 40,
                             3 => 60,
                             4 => 80,
                             5 => 100,
-                            default => 20,
+                            default => 20
                         };
                     @endphp
 
-                    <div class="progress-container mb-2">
+                   <div class="progress-container mb-2">
                         <div class="progress">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" id="progress-bar"
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                id="progress-bar" 
                                 style="width: {{ $progressPercent }}%; padding: 0.25rem 0.5rem;">
                                 {{ $progressPercent }}%
                             </div>
@@ -118,19 +119,14 @@
                     <div class="card-body p-4">
                         <!-- Step Indicator -->
                         <div class="step-indicator mb-3">
-                            <div class="step {{ $currentStep == 1 ? 'active' : ($currentStep > 1 ? 'completed' : '') }}"
-                                id="step-1">1</div>
-                            <div class="step {{ $currentStep == 2 ? 'active' : ($currentStep > 2 ? 'completed' : '') }}"
-                                id="step-2">2</div>
-                            <div class="step {{ $currentStep == 3 ? 'active' : ($currentStep > 3 ? 'completed' : '') }}"
-                                id="step-3">3</div>
-                            <div class="step {{ $currentStep == 4 ? 'active' : ($currentStep > 4 ? 'completed' : '') }}"
-                                id="step-4">4</div>
-                            <div class="step {{ $currentStep == 5 ? 'active' : ($currentStep > 5 ? 'completed' : '') }}"
-                                id="step-4">5</div>
+                            <div class="step {{ $currentStep == 1 ? 'active' : ($currentStep > 1 ? 'completed' : '') }}" id="step-1">1</div>
+                            <div class="step {{ $currentStep == 2 ? 'active' : ($currentStep > 2 ? 'completed' : '') }}" id="step-2">2</div>
+                            <div class="step {{ $currentStep == 3 ? 'active' : ($currentStep > 3 ? 'completed' : '') }}" id="step-3">3</div>
+                            <div class="step {{ $currentStep == 4 ? 'active' : ($currentStep > 4 ? 'completed' : '') }}" id="step-4">4</div>
+                            <div class="step {{ $currentStep == 5 ? 'active' : ($currentStep > 5 ? 'completed' : '') }}" id="step-4">5</div>
                         </div>
 
-                        <form action="{{ route('user.user.home') }}" id="exam-form" method="GET">
+                        <form action="{{ route('user.user.home') }}" method="GET">
                             <!-- Step 1: Admission Selection -->
                             @if (!$selectedAdmission)
                                 <div class="step-content active" id="step-admission">
@@ -144,7 +140,7 @@
                                                 style="cursor: pointer;"
                                                 onclick="document.getElementById('admission{{ $admission->id }}').checked = true; this.closest('form').submit();">
 
-                                                <img src="{{ !empty($admission->image) ? url('upload/admission/' . $admission->image) : url('upload/mcq.png') }}"
+                                                <img src="{{ !empty($admission->image) ? url('upload/admission/' . $admission->image) : url('upload/MCQ Logo.png') }}"
                                                     alt="ICON" class="me-2"
                                                     style="width:40px;height:40px;object-fit:cover;">
 
@@ -158,6 +154,7 @@
                                 </div>
                             @endif
 
+
                             <!-- Step 2: Department Selection -->
                             @if ($selectedAdmission && !$selectedDepartment)
                                 <div class="step-content active" id="step-department">
@@ -169,7 +166,7 @@
                                                 class="selection-item d-flex align-items-center p-2 border rounded mb-2"
                                                 style="cursor: pointer;"
                                                 onclick="document.getElementById('department{{ $department->id }}').checked = true; this.closest('form').submit();">
-                                                <img src="{{ !empty($department->image) ? url('upload/department/' . $department->image) : url('upload/mcq.png') }}"
+                                                <img src="{{ !empty($department->image) ? url('upload/department/' . $department->image) : url('upload/MCQ Logo.png') }}"
                                                     alt="ICON">
                                                 <input type="radio" name="department"
                                                     id="department{{ $department->id }}" value="{{ $department->id }}"
@@ -193,7 +190,7 @@
                                                 class="selection-item d-flex align-items-center p-2 border rounded mb-2"
                                                 style="cursor: pointer;"
                                                 onclick="document.getElementById('subject{{ $subject->id }}').checked = true; this.closest('form').submit();">
-                                                <img src="{{ !empty($subject->image) ? url('upload/subject/' . $subject->image) : url('upload/mcq.png') }}"
+                                                <img src="{{ !empty($subject->image) ? url('upload/subject/' . $subject->image) : url('upload/MCQ Logo.png') }}"
                                                     alt="ICON">
                                                 <input type="radio" name="subject" id="subject{{ $subject->id }}"
                                                     value="{{ $subject->id }}" onchange="this.form.submit()">
@@ -217,7 +214,7 @@
                                                 class="selection-item d-flex align-items-center p-2 border rounded mb-2"
                                                 style="cursor: pointer;"
                                                 onclick="document.getElementById('topic{{ $topic->id }}').checked = true; this.closest('form').submit();">
-                                                <img src="{{ !empty($topic->image) ? url('upload/topic/' . $topic->image) : url('upload/mcq.png') }}"
+                                                <img src="{{ !empty($topic->image) ? url('upload/topic/' . $topic->image) : url('upload/MCQ Logo.png') }}"
                                                     alt="ICON">
                                                 <input type="radio" name="topic" id="topic{{ $topic->id }}"
                                                     value="{{ $topic->id }}" onchange="this.form.submit()">
@@ -227,7 +224,6 @@
                                     </div>
                                 </div>
                             @endif
-
                         </form>
 
                         <!-- ✅ Exam Notice & Subject Card (Only show after Topic is selected) -->
@@ -331,48 +327,250 @@
                         @endif
 
                         @if ($selectedTopic && $mcqs->isNotEmpty())
-                        <form action="{{ route('user.exam.submit') }}" method="POST" id="mcq-form">
-                            @csrf
-                            @foreach ($mcqs as $index => $mcq)
-                                <div class="question-container" data-question="{{ $index + 1 }}"
-                                    @if ($index != 0) style="display:none;" @endif>
-                                    <div class="d-flex align-items-center mb-4">
-                                        <div class="question-number">{{ $index + 1 }}</div>
-                                        <h5 class="m-0">{{ $mcq->question }}</h5>
-                                    </div>
-                                    <div class="options-container">
-                                        @foreach ($mcq->answers as $answer)
-                                            <div class="option-item p-2 rounded mb-2" style="cursor:pointer;">
-                                                <div class="d-flex align-items-center">
-                                                    <input class="form-check-input me-2" type="radio"
-                                                        name="answers[{{ $mcq->id }}]"
-                                                        id="option{{ $answer->id }}"
-                                                        value="{{ $answer->id }}" required>
-                                                    <label class="form-check-label flex-grow-1 mb-0"
-                                                        for="option{{ $answer->id }}">
-                                                        {{ $answer->answer }}
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        @endforeach
+                            <div class="exam-card mt-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-book-open me-2"></i>{{ $topics->where('id',$selectedTopic)->first()->name }} - MCQ Exam</span>
+                                    <span class="badge bg-light text-primary">Question <span id="current-question">1</span> of {{ $mcqs->count() }}</span>
+                                </div>
+
+                                <div class="progress-container mb-2">
+                                    <div class="progress">
+                                        <div class="progress-bar" id="question-progress" style="width: 0%;"></div>
                                     </div>
                                 </div>
-                            @endforeach
 
-                            <!-- Navigation Buttons -->
-                            <div class="navigation-buttons mt-4">
-                                <button type="button" class="btn btn-outline-secondary" id="prev-btn" disabled>
-                                    <i class="fas fa-arrow-left me-2"></i>Previous
-                                </button>
-                                <button type="button" class="btn btn-primary" id="next-btn">
-                                    Next<i class="fas fa-arrow-right ms-2"></i>
-                                </button>
-                                <button type="submit" class="btn btn-success" id="submit-btn" style="display: none;">
-                                    Submit Exam<i class="fas fa-check-circle ms-2"></i>
-                                </button>
+                                <div class="card-body p-4">
+                                    @foreach($mcqs as $index => $mcq)
+                                        <div class="question-container" data-question="{{ $index + 1 }}" @if($index != 0) style="display:none;" @endif>
+                                            <div class="d-flex align-items-center mb-4">
+                                                <div class="question-number">{{ $index + 1 }}</div>
+                                                <h5 class="m-0">{{ $mcq->question }}</h5>
+                                            </div>
+
+                                            <div class="options-container">
+                                                @foreach($mcq->answers as $answer)
+                                                    <div class="option-item p-2 rounded mb-2" data-correct="{{ $answer->is_correct ? '1' : '0' }}" style="cursor:pointer;">
+                                                        <div class="d-flex align-items-center">
+                                                            <input class="form-check-input me-2" type="radio" name="question_{{ $mcq->id }}" id="option{{ $answer->id }}">
+                                                            <label class="form-check-label flex-grow-1 mb-0" for="option{{ $answer->id }}">
+                                                                {{ $answer->answer }}
+                                                            </label>
+                                                            <span class="feedback ms-2" style="display:none;"></span>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                    <div class="navigation-buttons mt-4">
+                                        <button class="btn btn-outline-secondary" id="prev-btn" disabled><i class="fas fa-arrow-left me-2"></i>Previous</button>
+                                        <button class="btn btn-primary" id="next-btn">Next<i class="fas fa-arrow-right ms-2"></i></button>
+                                        <button class="btn btn-success" id="submit-btn" style="display: none;">Submit Exam<i class="fas fa-check-circle ms-2"></i></button>
+                                    </div>
+                                </div>
                             </div>
-                        </form>
                         @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exam Section -->
+    <div class="section" id="exam-section">
+        <div class="row mb-4 g-3">
+            <div class="col-lg-12">
+                <!-- Exam Timer -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="m-0">MCQ Examination</h3>
+                    <div class="exam-timer" id="exam-timer">
+                        <i class="fas fa-clock me-2"></i><span id="timer">30:00</span>
+                    </div>
+                </div>
+
+                <div class="exam-card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-book-open me-2"></i>Data Structures and Algorithms - Topic:
+                                Arrays</span>
+                            <span class="badge bg-light text-primary">Question <span id="current-question">1</span> of
+                                20</span>
+                        </div>
+                    </div>
+
+                    <div class="progress-container">
+                        <div class="progress">
+                            <div class="progress-bar" id="question-progress" style="width: 5%"></div>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <!-- Question Navigation -->
+                        <div class="question-navigation" id="question-nav">
+                            <!-- JS will generate question numbers here -->
+                        </div>
+
+                        <!-- Current Question -->
+                        <div class="question-container">
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="question-number" id="q-number">1</div>
+                                <h5 class="m-0" id="question-text">Which of the following is a linear data structure?
+                                </h5>
+                            </div>
+
+                            <div class="options-container">
+                                <div class="option-item" data-option="1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="options" id="option1">
+                                        <label class="form-check-label" for="option1">
+                                            Tree
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="option-item" data-option="2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="options" id="option2">
+                                        <label class="form-check-label" for="option2">
+                                            Graph
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="option-item" data-option="3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="options" id="option3">
+                                        <label class="form-check-label" for="option3">
+                                            Array
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="option-item" data-option="4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="options" id="option4">
+                                        <label class="form-check-label" for="option4">
+                                            Network
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="navigation-buttons">
+                            <button class="btn btn-outline-secondary" id="prev-btn" disabled>
+                                <i class="fas fa-arrow-left me-2"></i>Previous
+                            </button>
+                            <button class="btn btn-primary" id="next-btn">
+                                Next<i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                            <button class="btn btn-success" id="submit-btn" style="display: none;">
+                                Submit Exam<i class="fas fa-check-circle ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="section" id="results-section">
+        <div class="row mb-4 g-3">
+            <div class="col-lg-12">
+                <div class="exam-card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-chart-bar me-2"></i>Exam Results</span>
+                            <span class="badge bg-light text-primary">Score: <span id="score">15</span>/20</span>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <div class="score-display">
+                            <span id="percentage">75%</span>
+                        </div>
+
+                        <div class="result-legend">
+                            <div class="legend-item">
+                                <div class="legend-color legend-correct"></div>
+                                <span>Correct Answers</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color legend-incorrect"></div>
+                                <span>Incorrect Answers</span>
+                            </div>
+                        </div>
+
+                        <h5 class="step-title mb-4">Question Review</h5>
+
+                        <div class="results-container">
+                            <!-- Result Item 1 -->
+                            <div class="result-card result-correct">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="question-number">1</div>
+                                        <h6 class="m-0">Which of the following is a linear data structure?</h6>
+                                    </div>
+                                    <div class="options-result">
+                                        <div class="option-item selected">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" checked disabled>
+                                                <label class="form-check-label">
+                                                    Array
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-success mt-2">
+                                            <i class="fas fa-check-circle me-2"></i>Correct! Arrays are linear data
+                                            structures.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Result Item 2 -->
+                            <div class="result-card result-incorrect">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="question-number">2</div>
+                                        <h6 class="m-0">What is the time complexity of accessing an element in an array?
+                                        </h6>
+                                    </div>
+                                    <div class="options-result">
+                                        <div class="option-item selected">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" checked disabled>
+                                                <label class="form-check-label">
+                                                    O(n)
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="option-item" style="background-color: rgba(40, 167, 69, 0.1);">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" disabled>
+                                                <label class="form-check-label">
+                                                    O(1)
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-danger mt-2">
+                                            <i class="fas fa-times-circle me-2"></i>Incorrect! The correct answer is O(1) -
+                                            constant time access.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- More result items would go here -->
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button class="btn btn-outline-secondary" onclick="backToSelection()">
+                                <i class="fas fa-redo me-2"></i>Start New Exam
+                            </button>
+                            <button class="btn btn-primary">
+                                View Detailed Results<i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -386,7 +584,7 @@
         const progressBar = document.getElementById('question-progress');
 
         document.getElementById('next-btn').addEventListener('click', function() {
-            if (currentQuestion < totalQuestions - 1) {
+            if(currentQuestion < totalQuestions - 1) {
                 questions[currentQuestion].style.display = 'none';
                 currentQuestion++;
                 questions[currentQuestion].style.display = 'block';
@@ -396,7 +594,7 @@
         });
 
         document.getElementById('prev-btn').addEventListener('click', function() {
-            if (currentQuestion > 0) {
+            if(currentQuestion > 0) {
                 questions[currentQuestion].style.display = 'none';
                 currentQuestion--;
                 questions[currentQuestion].style.display = 'block';
@@ -413,23 +611,21 @@
 
         function toggleButtons() {
             document.getElementById('prev-btn').disabled = currentQuestion === 0;
-            document.getElementById('next-btn').style.display = (currentQuestion === totalQuestions - 1) ? 'none' :
-                'inline-block';
-            document.getElementById('submit-btn').style.display = (currentQuestion === totalQuestions - 1) ?
-                'inline-block' : 'none';
+            document.getElementById('next-btn').style.display = (currentQuestion === totalQuestions - 1) ? 'none' : 'inline-block';
+            document.getElementById('submit-btn').style.display = (currentQuestion === totalQuestions - 1) ? 'inline-block' : 'none';
         }
     </script>
-    <script>
+   <script>
         document.querySelectorAll('.option-item').forEach(option => {
             option.addEventListener('click', function() {
                 // If already answered, do nothing
-                if (this.dataset.answered === "1") return;
+                if(this.dataset.answered === "1") return;
 
                 const isCorrect = this.dataset.correct === "1";
                 const feedback = this.querySelector('.feedback');
 
                 // Add background & text feedback
-                if (isCorrect) {
+                if(isCorrect){
                     this.classList.add('bg-success', 'text-white');
                     feedback.innerHTML = '✔ Correct Answer';
                 } else {
@@ -447,67 +643,11 @@
                 // Disable all siblings for this question
                 const siblings = this.closest('.options-container').querySelectorAll('.option-item');
                 siblings.forEach(sib => {
-                    if (sib !== this) sib.dataset.answered = "1";
+                    if(sib !== this) sib.dataset.answered = "1";
                 });
             });
         });
     </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let duration = {{ $topics->where('id', $selectedTopic)->first()->exam_duration ?? 1 }} * 60; // seconds
-            let timerElement = document.getElementById("exam-timer");
-            let submitBtn = document.getElementById("submit-btn");
-
-            function updateTimer() {
-                let minutes = Math.floor(duration / 60);
-                let seconds = duration % 60;
-                timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-                if (duration <= 0) {
-                    clearInterval(timer);
-                    alert("⏳ Time's up! Your exam will be submitted automatically.");
-                    submitBtn.click(); // auto submit
-                }
-                duration--;
-            }
-
-            // Start countdown
-            updateTimer();
-            let timer = setInterval(updateTimer, 1000);
-        });
-    </script>
-
-     {{-- <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // total exam duration in seconds
-            let duration = {{ $topic->exam_duration ?? 1 }} * 60; 
-
-            let timerElement = document.getElementById("exam-timer");
-            let submitBtn = document.getElementById("submit-btn");
-
-            // Optional: sync with server start time
-            let startTime = new Date("{{ session('exam_start_time') }}").getTime();
-            let now = new Date().getTime();
-            let elapsed = Math.floor((now - startTime) / 1000);
-            duration = duration - elapsed; // remaining time
-
-            function updateTimer() {
-                let minutes = Math.floor(duration / 60);
-                let seconds = duration % 60;
-                timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-                if (duration <= 0) {
-                    clearInterval(timer);
-                    alert("⏳ Time's up! Your exam will be submitted automatically.");
-                    submitBtn.click(); // auto submit
-                }
-                duration--;
-            }
-
-            updateTimer();
-            let timer = setInterval(updateTimer, 1000);
-        });
-    </script> --}}
 
 @endsection

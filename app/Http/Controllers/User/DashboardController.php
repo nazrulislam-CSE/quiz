@@ -19,6 +19,12 @@ class DashboardController extends Controller
     {
         $pageTitle = "Dashboard";
 
+        $submitted = false;
+        $correct = 0;
+        $wrong = 0;
+        $score = 0;
+        $total = 0;
+
         $admissions = Admission::where('status',1)->latest()->get();
 
         $selectedAdmission = $request->query('admission');
@@ -58,12 +64,12 @@ class DashboardController extends Controller
                         ->get();
         }
 
+    
         return view('user.dashborad.index', compact(
             'pageTitle','admissions','departments','subjects','topics',
             'selectedAdmission','selectedDepartment','selectedSubject','selectedTopic','mcqs'
         ));
     }
-
 
     public function logout(Request $request) {
         Auth::guard('web')->logout();
