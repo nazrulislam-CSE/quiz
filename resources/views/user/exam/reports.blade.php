@@ -38,7 +38,17 @@
                                 <td class="text-success fw-bold">{{ $result->correct }}</td>
                                 <td class="text-danger fw-bold">{{ $result->wrong }}</td>
                                 <td class="fw-bold">{{ $result->score }}%</td>
-                                <td>{{ $result->time_taken ?? 'N/A' }}</td>
+                                @php
+                                    $totalSeconds = round($result->time_taken * 60);
+                                @endphp
+
+                               <td>
+                                    @if($totalSeconds < 60)
+                                        {{ $totalSeconds }} সেকেন্ড
+                                    @else
+                                        {{ floor($totalSeconds / 60) }} মিনিট {{ $totalSeconds % 60 }} সেকেন্ড
+                                    @endif
+                                </td>
                                 <td>
                                     <a href="{{ route('user.exam.view', $result->id) }}" class="btn btn-sm btn-primary">
                                         <i class="fas fa-eye"></i> View

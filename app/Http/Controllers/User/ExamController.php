@@ -32,6 +32,7 @@ class ExamController extends Controller
         $selectedDepartment = $request->query('department');
         $selectedSubject = $request->query('subject');
         $selectedTopic = $request->query('topic');
+        $examStart = $request->query('exam');
 
         $departments = collect();
         $subjects = collect();
@@ -59,10 +60,19 @@ class ExamController extends Controller
             }
         }
 
-        if ($selectedTopic) {
+        if ($selectedTopic && $examStart) {
             $mcqs = Mcq::with('answers')
                         ->where('topic_id', $selectedTopic)
                         ->get();
+
+            if ($mcqs->isEmpty()) {
+                return redirect()->route('user.mcq.exam', [
+                    'admission' => $selectedAdmission,
+                    'department' => $selectedDepartment,
+                    'subject' => $selectedSubject,
+                    'topic' => $selectedTopic,
+                ])->with('error', 'This topic has no questions.');
+            }
         }
 
         
@@ -70,12 +80,15 @@ class ExamController extends Controller
     
         return view('user.exam.mcq', compact(
             'pageTitle','admissions','departments','subjects','topics',
-            'selectedAdmission','selectedDepartment','selectedSubject','selectedTopic','mcqs'
+            'selectedAdmission','selectedDepartment','selectedSubject','selectedTopic','mcqs','examStart'
         ));
 
     }
+
+
     public function submit(Request $request)
     {
+        // dd($request->all());
         $pageTitle = "Exam Result";
         $answers = $request->input('answers', []);
         $mcqs = Mcq::with('answers')->whereIn('id', array_keys($answers))->get();
@@ -98,13 +111,8 @@ class ExamController extends Controller
         $score = $total > 0 ? round(($correct/$total)*100, 2) : 0;
 
         // Calculate time taken using session
-        $timeTaken = null;
-        if ($request->session()->has('exam_start_time')) {
-            $startTime = Carbon::parse($request->session()->get('exam_start_time'));
-            $endTime = Carbon::now();
-            $timeTaken = $endTime->diff($startTime)->format('%H:%I:%S');
-            $request->session()->forget('exam_start_time');
-        }
+        $timeTaken = $request->time_taken;
+        
 
         $alreadyExists = ExamResult::where('user_id', Auth::id())
             ->where('admission_id', $request->admission)
@@ -134,6 +142,8 @@ class ExamController extends Controller
 
         $examResult = ExamResult::with(['user','admission','department','subject','topic'])->find($examResult->id);
 
+        $givenAnswers = $examResult->given_answers;
+
         return view('user.exam.result', [
             'pageTitle' => "Exam Result",
             'examResult' => $examResult,
@@ -142,7 +152,8 @@ class ExamController extends Controller
             'wrong' => $examResult->wrong,
             'score' => $examResult->score,
             'timeTaken' => $examResult->time_taken,
-            'mcqs' => Mcq::with('answers')->whereIn('id', array_keys($examResult->given_answers ?? []))->get()
+            'mcqs' => Mcq::with('answers')->whereIn('id', array_keys($givenAnswers ?? []))->get(),
+            'answers' => $givenAnswers,
         ]);
     }
 

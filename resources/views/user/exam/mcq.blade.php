@@ -159,51 +159,169 @@
                                     </div>
                                 </div>
                             @endif
-                        </form>
-
-                        @if ($selectedTopic && $mcqs->isNotEmpty())
-                        <form action="{{ route('user.exam.submit') }}" method="POST" id="mcq-form">
-                            @csrf
-                            @foreach ($mcqs as $index => $mcq)
-                                <div class="question-container" data-question="{{ $index + 1 }}" @if ($index != 0) style="display:none;" @endif>
-                                    <div class="d-flex align-items-center mb-4">
-                                        <div class="question-number">{{ $index + 1 }}</div>
-                                        <h5 class="m-0">{{ $mcq->question }}</h5>
-                                    </div>
-                                    <div class="options-container">
-                                        @foreach ($mcq->answers as $answer)
-                                            <div class="option-item p-2 rounded mb-2" style="cursor:pointer;"
-                                                data-correct="{{ $answer->is_correct ? '1' : '0' }}">
-                                                <div class="d-flex align-items-center">
-                                                    <input class="form-check-input me-2" type="radio"
-                                                        name="answers[{{ $mcq->id }}]"
-                                                        id="option{{ $answer->id }}"
-                                                        value="{{ $answer->id }}" required hidden>
-                                                    <label class="form-check-label flex-grow-1 mb-0"
-                                                        for="option{{ $answer->id }}">
-                                                        {{ $answer->answer }}
-                                                    </label>
-                                                    <span class="feedback ms-2" style="display:none;"></span>
+                            @if ($selectedTopic && $mcqs->isEmpty())
+                                <div class="card border-success shadow-sm mb-4">
+                                    <div class="card-header bg-success text-white fw-bold">
+                                            <i class="fa fa-info-circle me-2"></i> পরীক্ষার নোটিশ
+                                        </div>
+                                        <div class="card-body">
+                                            <!-- পরীক্ষার বিষয়সমূহ -->
+                                            <div class="d-flex align-items-start mb-3">
+                                                <i class="fa fa-book text-success fs-4 me-3"></i>
+                                                <div>
+                                                    <h6 class="fw-bold mb-1">পরীক্ষার বিষয়সমূহ</h6>
+                                                    <p class="mb-0 small">
+                                                        নিচের তালিকা থেকে আপনার গপছন্দ বিষয় নির্বাচন করুন এবং পরীক্ষা শুরু করুন।
+                                                    </p>
                                                 </div>
                                             </div>
-                                        @endforeach
+
+                                            <!-- পরীক্ষার সময় -->
+                                            <div class="d-flex align-items-start mb-3">
+                                                <i class="fa fa-clock text-success fs-4 me-3"></i>
+                                                <div>
+                                                    <h6 class="fw-bold mb-1">পরীক্ষার সময়</h6>
+                                                    <p class="mb-0 small">
+                                                        প্রতিটি বিষয়ের জন্য আলাদা পরীক্ষার সময় নির্ধারিত আছে যা বিষয়ের পাশে দেখানো
+                                                        হয়েছে।
+                                                        নির্দিষ্ট সময়ের মধ্যে আপনাকে পরীক্ষা সম্পন্ন করতে হবে।
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <!-- পরীক্ষার মার্ক -->
+                                            <div class="d-flex align-items-start mb-3">
+                                                <i class="fa fa-star text-success fs-4 me-3"></i>
+                                                <div>
+                                                    <h6 class="fw-bold mb-1">পরীক্ষার মার্ক</h6>
+                                                    <p class="mb-0 small">
+                                                        প্রতিটি পরীক্ষার জন্য সর্বোচ্চ মার্ক নির্ধারিত আছে যা বিষয়ের পাশে দেখানো
+                                                        হয়েছে।
+                                                        পরীক্ষার ফলাফল এই মার্ক অনুযায়ী নির্ধারিত হবে।
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <!-- পরীক্ষার ফি -->
+                                            <div class="d-flex align-items-start mb-3">
+                                                <i class="fa fa-money-bill text-success fs-4 me-3"></i>
+                                                <div>
+                                                    <h6 class="fw-bold mb-1">পরীক্ষার ফি</h6>
+                                                    <p class="mb-0 small text-danger">
+                                                        এখনই বাটনে ক্লিক করলে পরীক্ষা শুরু হবে এবং আপনার ওয়ালেট থেকে স্বয়ংক্রিয়ভাবে
+                                                        পরীক্ষার ফি কেটে নেয়া হবে।
+                                                    </p>
+                                                    <p class="mb-0 small">
+                                                        প্রতিটি বিষয়ের জন্য আলাদা ফি নির্ধারিত আছে যা বিষয়ের পাশে দেখানো হয়েছে।
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Warning -->
+                                            <div class="alert alert-warning mt-3 small mb-0">
+                                                দয়া করে নিশ্চিত হয়ে নিন যে আপনার ওয়ালেটে পর্যাপ্ত ব্যালেন্স আছে।
+                                                অন্যথায় পরীক্ষা শুরু করা সম্ভব হবে না।
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Subject Card -->
+                                    <div class="card shadow-lg border-success mb-4">
+                                        <div class="card-body">
+                                            <h6 class="fw-bold text-success mb-3 text-center">সিলেক্টেড টপিক → MCQ শুরু</h6>
+                                            <div class="d-flex align-items-center border rounded p-3">
+                                                <img src="{{ !empty($selectedTopic->image) ? url('upload/topic/' . $selectedTopic->image) : url('upload/mcq.png') }}"
+                                                    class="rounded-circle me-3" width="60" alt="topic icon">
+                                                <div class="flex-grow-1">
+                                                    @php
+                                                        $selectedTopicData = $topics->where('id', $selectedTopic)->first();
+                                                    @endphp
+
+                                                    @if ($selectedTopicData)
+                                                        <h6 class="mb-1">{{ $selectedTopicData->name }}</h6>
+                                                        <small class="d-block">সময়: {{ $selectedTopicData->exam_duration }}
+                                                            মিনিট</small>
+                                                        <small class="d-block">মার্ক: {{ $selectedTopicData->exam_mark }}</small>
+                                                        <small class="d-block">পরীক্ষার ফি:
+                                                            {{ number_format($selectedTopicData->fee, 2) }} টাকা</small>
+                                                    @else
+                                                        <h6 class="mb-1">কোনো টপিক সিলেক্ট করা হয়নি</h6>
+                                                    @endif
+                                                </div>
+                                                <div>
+                                                    <button class="btn btn-danger btn-sm me-2">📖 স্টাডি</button>
+                                                    <a href="{{ route('user.mcq.exam', [
+                                                        'admission' => $selectedAdmission,
+                                                        'department' => $selectedDepartment,
+                                                        'subject' => $selectedSubject,
+                                                        'topic' => $selectedTopic,
+                                                        'exam' => 1
+                                                    ]) }}" class="btn btn-success btn-sm">📝 এক্সাম</a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            @endforeach
-
-                            <!-- Navigation Buttons -->
-                            <div class="navigation-buttons mt-4">
-                                <button type="button" class="btn btn-outline-secondary" id="prev-btn" disabled>
-                                    <i class="fas fa-arrow-left me-2"></i>Previous
-                                </button>
-                                <button type="button" class="btn btn-primary" id="next-btn">
-                                    Next<i class="fas fa-arrow-right ms-2"></i>
-                                </button>
-                                <button type="submit" class="btn btn-success" id="submit-btn" style="display: none;">
-                                    Submit Exam<i class="fas fa-check-circle ms-2"></i>
-                                </button>
-                            </div>
+                            @endif
                         </form>
+                        @if ($examStart && $mcqs->isNotEmpty())
+                            <!-- ✅ Exam Header with Countdown -->
+                            <div class="card shadow-sm border-success mb-4">
+                                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-clock me-2"></i> পরীক্ষার সময় চলছে</span>
+                                    <span id="exam-timer" class="fw-bold">00:00</span>
+                                </div>
+                            </div>
+
+                            <!-- ✅ MCQ Form -->
+                            <form action="{{ route('user.exam.submit') }}" method="POST" id="mcq-form">
+                                @csrf
+                                <input type="hidden" name="time_taken" id="time_taken">
+                                <input type="hidden" name="admission" value="{{ $selectedAdmission }}">
+                                <input type="hidden" name="department" value="{{ $selectedDepartment }}">
+                                <input type="hidden" name="subject" value="{{ $selectedSubject }}">
+                                <input type="hidden" name="topic" value="{{ $selectedTopic }}">
+
+                                @foreach ($mcqs as $index => $mcq)
+                                    <div class="question-container" data-question="{{ $index + 1 }}" @if ($index != 0) style="display:none;" @endif>
+                                        <div class="d-flex align-items-center mb-4">
+                                            <div class="question-number">{{ $index + 1 }}</div>
+                                            <h5 class="m-0">{{ $mcq->question }}</h5>
+                                        </div>
+                                        <div class="options-container">
+                                            @foreach ($mcq->answers as $answer)
+                                                <div class="option-item p-2 rounded mb-2" style="cursor:pointer;"
+                                                    data-correct="{{ $answer->is_correct ? '1' : '0' }}">
+                                                    <div class="d-flex align-items-center">
+                                                        <input class="form-check-input me-2" type="radio"
+                                                            name="answers[{{ $mcq->id }}]"
+                                                            id="option{{ $answer->id }}"
+                                                            value="{{ $answer->id }}" required hidden>
+                                                        <label class="form-check-label flex-grow-1 mb-0"
+                                                            for="option{{ $answer->id }}">
+                                                            {{ $answer->answer }}
+                                                        </label>
+                                                        <span class="feedback ms-2" style="display:none;"></span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                                <!-- Navigation Buttons -->
+                                <div class="navigation-buttons mt-4">
+                                    <button type="button" class="btn btn-outline-secondary" id="prev-btn" disabled>
+                                        <i class="fas fa-arrow-left me-2"></i>Previous
+                                    </button>
+                                    <button type="button" class="btn btn-primary" id="next-btn">
+                                        Next<i class="fas fa-arrow-right ms-2"></i>
+                                    </button>
+                                    <button type="submit" class="btn btn-success" id="submit-btn" style="display: none;">
+                                        Submit Exam<i class="fas fa-check-circle ms-2"></i>
+                                    </button>
+                                </div>
+                            </form>
                         @endif
                     </div>
                 </div>
@@ -290,61 +408,40 @@
         });
     </script>
 
-
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let duration = {{ $topics->where('id', $selectedTopic)->first()->exam_duration ?? 1 }} * 60; // seconds
-            let timerElement = document.getElementById("exam-timer");
-            let submitBtn = document.getElementById("submit-btn");
+        document.addEventListener("DOMContentLoaded", function () {
+            let duration = {{ $selectedTopicData->exam_duration ?? 10 }} * 60; // total seconds
+            let startTime = Date.now(); // exam start timestamp
+            let timerDisplay = document.getElementById("exam-timer");
 
             function updateTimer() {
                 let minutes = Math.floor(duration / 60);
                 let seconds = duration % 60;
-                timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                timerDisplay.textContent = `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
 
                 if (duration <= 0) {
-                    clearInterval(timer);
+                    clearInterval(timerInterval);
                     alert("⏳ Time's up! Your exam will be submitted automatically.");
-                    submitBtn.click(); // auto submit
+                    
+                    // Calculate time taken in minutes
+                    let endTime = Date.now();
+                    let diffInSeconds = Math.floor((endTime - startTime) / 1000);
+                    let diffInMinutes = (diffInSeconds / 60).toFixed(2); // fractional minutes
+                    document.getElementById("time_taken").value = diffInMinutes;
+
+                    document.getElementById("mcq-form").submit();
                 }
                 duration--;
             }
 
-            // Start countdown
-            updateTimer();
-            let timer = setInterval(updateTimer, 1000);
+            let timerInterval = setInterval(updateTimer, 1000);
+
+            document.getElementById("mcq-form").addEventListener("submit", function () {
+                let endTime = Date.now();
+                let diffInSeconds = Math.floor((endTime - startTime) / 1000);
+                let diffInMinutes = (diffInSeconds / 60).toFixed(2); // fractional minutes
+                document.getElementById("time_taken").value = diffInMinutes;
+            });
         });
     </script>
-
-    {{-- <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // total exam duration in seconds
-            let duration = {{ $topic->exam_duration ?? 1 }} * 60; 
-
-            let timerElement = document.getElementById("exam-timer");
-            let submitBtn = document.getElementById("submit-btn");
-
-            // Optional: sync with server start time
-            let startTime = new Date("{{ session('exam_start_time') }}").getTime();
-            let now = new Date().getTime();
-            let elapsed = Math.floor((now - startTime) / 1000);
-            duration = duration - elapsed; // remaining time
-
-            function updateTimer() {
-                let minutes = Math.floor(duration / 60);
-                let seconds = duration % 60;
-                timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-                if (duration <= 0) {
-                    clearInterval(timer);
-                    alert("⏳ Time's up! Your exam will be submitted automatically.");
-                    submitBtn.click(); // auto submit
-                }
-                duration--;
-            }
-
-            updateTimer();
-            let timer = setInterval(updateTimer, 1000);
-        });
-    </script> --}}
 @endsection

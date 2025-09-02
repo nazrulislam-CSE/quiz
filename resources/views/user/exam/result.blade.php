@@ -38,8 +38,16 @@
                                 <div class="stats-icon text-info">
                                     <i class="fas fa-clock"></i>
                                 </div>
+                               @php
+                                    $totalSeconds = round($examResult->time_taken * 60);
+                                @endphp
+
                                 <div class="stats-number text-info">
-                                    {{ $examResult->time_taken   }}
+                                    @if($totalSeconds < 60)
+                                        {{ $totalSeconds }} সেকেন্ড
+                                    @else
+                                        {{ floor($totalSeconds / 60) }} মিনিট {{ $totalSeconds % 60 }} সেকেন্ড
+                                    @endif
                                 </div>
                                 <div class="stats-label">Time Taken</div>
                             </div>
@@ -71,7 +79,7 @@
                             </div>
                         </div>
                         
-                        <h5 class="step-title mb-4">Question Review</h5>
+                        {{-- <h5 class="step-title mb-4">Question Review</h5>
                         
                         <div class="results-container">
                             @php
@@ -145,7 +153,89 @@
                                     </div>
                                 </div>
                             @endforeach
-                        </div>
+                        </div> --}}
+
+                        <style>
+                            .result-card {
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+.table th {
+    width: 30%;
+    background: #f8f9fa;
+}
+
+                        </style>
+                       <h5 class="step-title mb-4">প্রশ্ন ও উত্তর বিশ্লেষণ</h5>
+
+<div class="results-container">
+    @php
+        $incorrectTopics = [];
+        $questionNumber = 1;
+    @endphp
+
+    @foreach($mcqs as $mcq)
+        @php
+            // User's given answer for this question
+            $givenAnswerId = $answers[$mcq->id] ?? null;
+
+            // Correct answer object
+            $correctAnswer = $mcq->answers->where('is_correct', 1)->first();
+
+            // Check if user's answer is correct
+            $isCorrect = $givenAnswerId && $correctAnswer && $givenAnswerId == $correctAnswer->id;
+
+            // Track incorrect topics
+            if (!$isCorrect && $mcq->topic) {
+                $incorrectTopics[$mcq->topic->id] = $mcq->topic->name;
+            }
+        @endphp
+
+        <div class="result-card border mb-4 {{ $isCorrect ? 'border-success' : 'border-danger' }}">
+            <div class="card-body">
+                {{-- Question Title --}}
+                <div class="mb-3">
+                    <strong>প্রশ্ন {{ $questionNumber++ }}:</strong>
+                    {{ $mcq->question }}
+                </div>
+
+                {{-- Answer Table --}}
+                <table class="table table-bordered mb-3">
+                    <tr>
+                        <th>আপনার উত্তর:</th>
+                        <td class="{{ $isCorrect ? 'text-success' : 'text-danger' }}">
+                            {{ $mcq->answers->firstWhere('id', $givenAnswerId)->answer ?? 'উত্তর প্রদান করা হয়নি' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>সঠিক উত্তর:</th>
+                        <td class="text-success">
+                            {{ $correctAnswer->answer ?? 'সঠিক উত্তর পাওয়া যায়নি' }}
+                        </td>
+                    </tr>
+                </table>
+
+                {{-- Result Indicator --}}
+                @if($isCorrect)
+                    <div class="alert alert-success mb-0">
+                        ✅ আপনি সঠিক উত্তর দিয়েছেন
+                    </div>
+                @else
+                    <div class="alert alert-danger mb-0">
+                        ❌ আপনি ভুল উত্তর দিয়েছেন
+                    </div>
+                @endif
+            </div>
+        </div>
+    @endforeach
+</div>
+
+
                     </div>
 
                     <!-- Recommendations -->
@@ -187,9 +277,9 @@
 
                         <!-- Right Side Buttons -->
                         <div class="d-flex ms-auto gap-2">
-                            <a href="{{ route('user.exam.view', $examResult->id) }}" class="btn btn-success">
+                            {{-- <a href="{{ route('user.exam.view', $examResult->id) }}" class="btn btn-success">
                                 <i class="fas fa-eye me-2"></i>Exam View
-                            </a>
+                            </a> --}}
                             <button class="btn btn-success" onclick="window.print()">
                                 <i class="fas fa-download me-2"></i>Download Report
                             </button>
