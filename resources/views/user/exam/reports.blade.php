@@ -1,0 +1,59 @@
+@extends('layouts.user.app', ['pageTitle' => $pageTitle])
+
+@section('content')
+<div class="container">
+    <h3 class="mb-4">{{ $pageTitle }}</h3>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Exam Reports</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Sl</th>
+                            <th>Admission</th>
+                            <th>Department</th>
+                            <th>Subject</th>
+                            <th>Topic</th>
+                            <th>Total</th>
+                            <th class="text-success">Correct</th>
+                            <th class="text-danger">Wrong</th>
+                            <th>Score (%)</th>
+                            <th>Time Taken</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($examResults as $index => $result)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $result->admission->name ?? 'N/A' }}</td>
+                                <td>{{ $result->department->name ?? 'N/A' }}</td>
+                                <td>{{ $result->subject->name ?? 'N/A' }}</td>
+                                <td>{{ $result->topic->name ?? 'N/A' }}</td>
+                                <td>{{ $result->total }}</td>
+                                <td class="text-success fw-bold">{{ $result->correct }}</td>
+                                <td class="text-danger fw-bold">{{ $result->wrong }}</td>
+                                <td class="fw-bold">{{ $result->score }}%</td>
+                                <td>{{ $result->time_taken ?? 'N/A' }}</td>
+                                <td>
+                                    <a href="{{ route('user.exam.view', $result->id) }}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="11" class="text-center">No exam reports found.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

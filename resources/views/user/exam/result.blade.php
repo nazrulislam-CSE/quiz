@@ -7,7 +7,7 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <span><i class="fas fa-chart-pie me-2"></i>Detailed Performance Analysis</span>
-                        <span class="badge bg-light text-primary">Score: {{ $correct }}/{{ $total }} ({{ $score }}%)</span>
+                        <span class="badge bg-light text-primary">Score: {{ $examResult->correct }}/{{ $examResult->total }} ({{ $examResult->score }}%)</span>
                     </div>
                 </div>
 
@@ -20,7 +20,7 @@
                                 <div class="stats-icon text-primary">
                                     <i class="fas fa-check-circle"></i>
                                 </div>
-                                <div class="stats-number text-primary">{{ $correct }}</div>
+                                <div class="stats-number text-primary">{{ $examResult->correct }}</div>
                                 <div class="stats-label">Correct Answers</div>
                             </div>
                         </div>
@@ -29,7 +29,7 @@
                                 <div class="stats-icon text-danger">
                                     <i class="fas fa-times-circle"></i>
                                 </div>
-                                <div class="stats-number text-danger">{{ $wrong }}</div>
+                                <div class="stats-number text-danger">{{ $examResult->wrong  }}</div>
                                 <div class="stats-label">Incorrect Answers</div>
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                                     <i class="fas fa-clock"></i>
                                 </div>
                                 <div class="stats-number text-info">
-                                    {{ $timeTaken ?? 'N/A' }}
+                                    {{ $examResult->time_taken   }}
                                 </div>
                                 <div class="stats-label">Time Taken</div>
                             </div>
@@ -49,7 +49,7 @@
                                 <div class="stats-icon text-warning">
                                     <i class="fas fa-trophy"></i>
                                 </div>
-                                <div class="stats-number text-warning">{{ $score }}%</div>
+                                <div class="stats-number text-warning">{{ $examResult->score }}%</div>
                                 <div class="stats-label">Overall Score</div>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
 
                     <div class="card-body">
                         <div class="score-display">
-                            <span id="percentage">{{ $score }}%</span>
+                            <span id="percentage">{{ $examResult->score }}%</span>
                         </div>
                         
                         <div class="result-legend">
@@ -180,12 +180,20 @@
                     @endif
 
                     <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ route('user.user.home') }}" class="btn btn btn-primary">
+                        <!-- Left Side -->
+                        <a href="{{ route('user.user.home') }}" class="btn btn-primary">
                             <i class="fas fa-arrow-left me-2"></i>Back to Exams
                         </a>
-                        <button class="btn btn-success" onclick="window.print()">
-                            <i class="fas fa-download me-2"></i>Download Report
-                        </button>
+
+                        <!-- Right Side Buttons -->
+                        <div class="d-flex ms-auto gap-2">
+                            <a href="{{ route('user.exam.view', $examResult->id) }}" class="btn btn-success">
+                                <i class="fas fa-eye me-2"></i>Exam View
+                            </a>
+                            <button class="btn btn-success" onclick="window.print()">
+                                <i class="fas fa-download me-2"></i>Download Report
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

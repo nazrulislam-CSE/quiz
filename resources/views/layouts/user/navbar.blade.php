@@ -1,7 +1,7 @@
 <!-- Top Header -->
 <header class="bg-white shadow py-3 mb-4 sticky-top">
     <div class="container d-flex justify-content-between align-items-center">
-        <h3 class="mb-0">User Dashboard</h3>
+        <a href="{{ route('user.user.home') }}"><img src="{{ asset('upload/MCQ Logo.png') }}" alt="ICON" class="me-2"style="width:40px;height:40px;"></a>
         <div class="dropdown">
             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                 <i class="fas fa-user me-2"></i>User

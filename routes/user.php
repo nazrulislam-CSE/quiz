@@ -24,7 +24,12 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('user.home');
     Route::get('logout', [DashboardController::class, 'logout'])->name('user.logout');
+    Route::get('/mcq/exam', [ExamController::class, 'create'])->name('mcq.exam');
     Route::post('/exam/submit', [ExamController::class, 'submit'])->name('exam.submit');
+    Route::get('/exam/view/{id}', [ExamController::class, 'examView'])->name('exam.view');
+    Route::get('/exam/reports', [ExamController::class, 'reportList'])->name('exam.reports');
+
+
 
     // Staff routes
     // Route::prefix('staffs')->as('staff.')->group(function () {

@@ -12,10 +12,68 @@ use App\Models\Subject;
 use App\Models\Admission;
 use App\Models\Department;
 use App\Models\Mcq;
-use Carbon;
+use App\Models\ExamResult;
+use Carbon\Carbon;
 
 class ExamController extends Controller
 {
+    public function create(Request $request)
+    {
+        $pageTitle = "MCQ Exam";
+        $submitted = false;
+        $correct = 0;
+        $wrong = 0;
+        $score = 0;
+        $total = 0;
+
+        $admissions = Admission::where('status',1)->latest()->get();
+
+        $selectedAdmission = $request->query('admission');
+        $selectedDepartment = $request->query('department');
+        $selectedSubject = $request->query('subject');
+        $selectedTopic = $request->query('topic');
+
+        $departments = collect();
+        $subjects = collect();
+        $topics = collect();
+        $mcqs = collect();
+
+        if ($selectedAdmission) {
+            $departments = Department::where('admission_id', $selectedAdmission)->where('status',1)->get();
+            if ($departments->isEmpty() && !$selectedDepartment) {
+                return redirect()->route('user.mcq.exam')->with('error', 'No departments available for this admission.');
+            }
+        }
+
+        if ($selectedDepartment) {
+            $subjects = Subject::where('department_id', $selectedDepartment)->where('status',1)->get();
+            if ($subjects->isEmpty() && !$selectedSubject) {
+                return redirect()->route('user.mcq.exam')->with('error', 'No subjects available for this department.');
+            }
+        }
+
+        if ($selectedSubject) {
+            $topics = Topic::where('subject_id', $selectedSubject)->where('status',1)->get();
+            if ($topics->isEmpty() && !$selectedTopic) {
+                return redirect()->route('user.mcq.exam')->with('error', 'No topics available for this subject.');
+            }
+        }
+
+        if ($selectedTopic) {
+            $mcqs = Mcq::with('answers')
+                        ->where('topic_id', $selectedTopic)
+                        ->get();
+        }
+
+        
+
+    
+        return view('user.exam.mcq', compact(
+            'pageTitle','admissions','departments','subjects','topics',
+            'selectedAdmission','selectedDepartment','selectedSubject','selectedTopic','mcqs'
+        ));
+
+    }
     public function submit(Request $request)
     {
         $pageTitle = "Exam Result";
@@ -45,11 +103,76 @@ class ExamController extends Controller
             $startTime = Carbon::parse($request->session()->get('exam_start_time'));
             $endTime = Carbon::now();
             $timeTaken = $endTime->diff($startTime)->format('%H:%I:%S');
-
-            // Clear session after submission
             $request->session()->forget('exam_start_time');
         }
 
-        return view('user.exam.result', compact('pageTitle','total', 'correct', 'wrong', 'score','timeTaken','mcqs'));
+        $alreadyExists = ExamResult::where('user_id', Auth::id())
+            ->where('admission_id', $request->admission)
+            ->where('department_id', $request->department)
+            ->where('subject_id', $request->subject)
+            ->where('topic_id', $request->topic)
+            ->first();
+
+        // ✅ Only insert if not already exists
+        if (!$alreadyExists) {
+            $examResult = ExamResult::create([
+                'user_id'       => Auth::id(),
+                'admission_id'  => $request->admission,
+                'department_id' => $request->department,
+                'subject_id'    => $request->subject,
+                'topic_id'      => $request->topic,
+                'total'         => $total,
+                'correct'       => $correct,
+                'wrong'         => $wrong,
+                'score'         => $score,
+                'time_taken'    => $timeTaken,
+                'given_answers' => $answers,
+            ]);
+        } else {
+            $examResult = $alreadyExists;
+        }
+
+        $examResult = ExamResult::with(['user','admission','department','subject','topic'])->find($examResult->id);
+
+        return view('user.exam.result', [
+            'pageTitle' => "Exam Result",
+            'examResult' => $examResult,
+            'total' => $examResult->total,
+            'correct' => $examResult->correct,
+            'wrong' => $examResult->wrong,
+            'score' => $examResult->score,
+            'timeTaken' => $examResult->time_taken,
+            'mcqs' => Mcq::with('answers')->whereIn('id', array_keys($examResult->given_answers ?? []))->get()
+        ]);
     }
+
+    public function examView($id)
+    {
+        $pageTitle = "Exam Result";
+
+        $examResult = ExamResult::with(['user','admission','department','subject','topic'])->findOrFail($id);
+
+        // Decode given answers
+        $givenAnswers = json_decode($examResult->given_answers, true);
+
+        // Fetch MCQs with answers
+        $mcqs = Mcq::with('answers')->whereIn('id', array_keys($givenAnswers))->get();
+
+        return view('user.exam.view', compact('pageTitle','examResult','givenAnswers','mcqs'));
+    }
+
+    public function reportList()
+    {
+        $pageTitle = "Exam Reports";
+
+        $examResults = ExamResult::with(['admission','department','subject','topic'])
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('user.exam.reports', compact('pageTitle','examResults'));
+    }
+
+
+
 }
