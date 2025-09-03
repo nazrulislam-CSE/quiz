@@ -19,6 +19,8 @@ use App\Http\Controllers\User\AgentNoticeController;
 use App\Http\Controllers\User\AgentSupplierController;
 use App\Http\Controllers\User\AgentSupplierInvoiceController;
 use App\Http\Controllers\User\ExamController;
+use App\Http\Controllers\User\ReferController;
+use App\Http\Controllers\User\GenerationController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth'], function () {
@@ -28,6 +30,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/exam/submit', [ExamController::class, 'submit'])->name('exam.submit');
     Route::get('/exam/view/{id}', [ExamController::class, 'examView'])->name('exam.view');
     Route::get('/exam/reports', [ExamController::class, 'reportList'])->name('exam.reports');
+    Route::get('/refer-list', [ReferController::class, 'index'])->name('refer.list');
+    Route::get('/generation-list', [GenerationController::class, 'index'])->name('generation.list');
 
 
 

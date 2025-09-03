@@ -11,10 +11,33 @@
         </div>
     </div>
 
+    <!-- Refer Link Card -->
+    @php
+        // Generate full refer link
+        $referLink = route('register', ['refer' => Auth::user()->username]);
+    @endphp
+
+    <div class="card border-success shadow-sm mb-4">
+        <div class="card-header bg-success text-white fw-bold">
+            Your Refer Link
+        </div>
+        <div class="card-body">
+            <p class="mb-2">Share this link and earn rewards!</p>
+            <div class="input-group">
+                <input type="text" id="referLinkInput" class="form-control"
+                    value="{{ url('register') }}?refer_id={{ Auth::user()->username }}" readonly>
+                <button class="btn btn-success" type="button" onclick="copyReferLink()">
+                    <i class="fas fa-copy me-1"></i> Copy
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Dashboard Buttons -->
     <div class="row mb-4 g-3">
         <div class="col-md-4 col-sm-6">
-            <a href="{{ route('user.mcq.exam') }}" class="btn btn-danger w-100 text-white d-flex flex-column align-items-center py-4">
+            <a href="{{ route('user.mcq.exam') }}"
+                class="btn btn-danger w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-question-circle fa-2x mb-2"></i>
                 <h5 class="mb-0">MCQ Exam</h5>
             </a>
@@ -26,7 +49,8 @@
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
-            <a href="{{ route('user.exam.reports') }}" class="btn btn-info w-100 text-white d-flex flex-column align-items-center py-4">
+            <a href="{{ route('user.exam.reports') }}"
+                class="btn btn-info w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-file-alt fa-2x mb-2"></i>
                 <h5 class="mb-0">Report</h5>
             </a>
@@ -44,7 +68,20 @@
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
-            <a href="#" class="btn btn-secondary w-100 text-white d-flex flex-column align-items-center py-4">
+            <a href="{{ route('user.refer.list') }}"
+                class="btn btn-warning w-100 text-white d-flex flex-column align-items-center py-4">
+                <i class="fas fa-chart-line fa-2x mb-2"></i>
+                <h5 class="mb-0">Refer List</h5>
+            </a>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <a href="#" class="btn btn-danger w-100 text-white d-flex flex-column align-items-center py-4">
+                <i class="fas fa-chart-line fa-2x mb-2"></i>
+                <h5 class="mb-0">Generation List</h5>
+            </a>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <a href="#" class="btn btn-primary w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-chart-line fa-2x mb-2"></i>
                 <h5 class="mb-0">Generation Income</h5>
             </a>
@@ -72,4 +109,22 @@
             </div>
         </div>
     </div>
+    <script>
+        function copyReferLink() {
+            var copyText = document.getElementById("referLinkInput");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+            navigator.clipboard.writeText(copyText.value).then(function() {
+                toastr.success("Refer link copied to clipboard!");
+            }).catch(function() {
+                toastr.error("Failed to copy refer link.");
+            });
+        }
+
+        // Optional: Toastr config
+        toastr.options = {
+            "positionClass": "toast-top-right",
+            "timeOut": "2500",
+        };
+    </script>
 @endsection
