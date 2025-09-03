@@ -43,7 +43,7 @@
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
-            <a href="#" class="btn btn-primary w-100 text-white d-flex flex-column align-items-center py-4">
+            <a href="{{ route('user.balance.request') }}" class="btn btn-primary w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
                 <h5 class="mb-0">Balance Request</h5>
             </a>

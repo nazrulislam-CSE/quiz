@@ -21,6 +21,7 @@ use App\Http\Controllers\User\AgentSupplierInvoiceController;
 use App\Http\Controllers\User\ExamController;
 use App\Http\Controllers\User\ReferController;
 use App\Http\Controllers\User\GenerationController;
+use App\Http\Controllers\User\BalanceRequestController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth'], function () {
@@ -32,6 +33,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/exam/reports', [ExamController::class, 'reportList'])->name('exam.reports');
     Route::get('/refer-list', [ReferController::class, 'index'])->name('refer.list');
     Route::get('/generation-list', [GenerationController::class, 'index'])->name('generation.list');
+    Route::get('/balance-request', [BalanceRequestController::class, 'create'])->name('balance.request');
+    Route::post('/balance-request', [BalanceRequestController::class, 'store'])->name('balance.request.store');
+    Route::get('/balance-request/report', [BalanceRequestController::class, 'report'])->name('balance.request.report');
 
 
 
