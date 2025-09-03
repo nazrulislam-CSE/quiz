@@ -27,12 +27,12 @@
                         @forelse($requests as $key => $request)
                         <tr>
                             <td>{{ $key+1 }}</td>
-                            <td>{{ \Carbon\Carbon::parse($request->created_at)->format('d-m-Y') }}</td>
+                           <td>{{ \Carbon\Carbon::parse($request->created_at)->format('j F Y') }}</td>
                             <td>
                                 <span class="badge bg-info text-dark">{{ ucfirst($request->method) }}</span>
                             </td>
                             <td>{{ $request->from_account }}</td>
-                            <td class="fw-bold text-success">{{ number_format($request->amount) }} ৳</td>
+                            <td class="fw-bold text-success">৳{{ number_format($request->amount ?? 0, 2) }}</td>
                             <td>
                                 @if($request->screenshot)
                                     <a href="{{ (!empty($request->screenshot)) ? url('upload/balance/'.$request->screenshot):url('upload/mcq.png') }}" target="_blank">

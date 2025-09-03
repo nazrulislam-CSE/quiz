@@ -12,15 +12,17 @@ use App\Models\Subject;
 use App\Models\Admission;
 use App\Models\Department;
 use App\Models\Mcq;
+use App\Models\BalanceRequest;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
         $pageTitle = "Dashboard";
-
+        $balance = BalanceRequest::where('user_id',Auth::user()->id)->sum('amount');
         return view('user.dashborad.index', compact(
-            'pageTitle'
+            'pageTitle',
+            'balance',
         ));
     }
 

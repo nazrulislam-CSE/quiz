@@ -92,18 +92,27 @@
     <div class="row mb-4 g-3">
         <div class="col-md-12">
             <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Total Balance</h5>
-                    <h2 class="text-primary">$12,567.89</h2>
+               <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Total Balance</h5>
+                        <a href="{{ route('user.balance.request') }}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-paper-plane me-1"></i> রিকোয়েস্ট করুন
+                        </a>
+                    </div>
+
+                    <h2 class="text-primary mt-2">৳{{ number_format($balance ?? 0, 2) }}</h2>
 
                     <!-- Bootstrap Button Group -->
                     <div class="btn-group mt-3 w-100" role="group" aria-label="Balance Actions">
-                        <button type="button" class="btn btn-sm btn-primary"><i class="fas fa-plus me-2"></i>Add
-                            Funds</button>
-                        <button type="button" class="btn btn-sm btn-success"><i
-                                class="fas fa-download me-2"></i>Withdraw</button>
-                        <button type="button" class="btn btn-sm btn-info"><i
-                                class="fas fa-exchange-alt me-2"></i>Transfer</button>
+                        <button type="button" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus me-2"></i>Add Funds
+                        </button>
+                        <button type="button" class="btn btn-sm btn-success">
+                            <i class="fas fa-download me-2"></i>Withdraw
+                        </button>
+                        <button type="button" class="btn btn-sm btn-info">
+                            <i class="fas fa-exchange-alt me-2"></i>Transfer
+                        </button>
                     </div>
                 </div>
             </div>

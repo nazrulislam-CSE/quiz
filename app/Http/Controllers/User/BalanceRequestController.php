@@ -36,7 +36,6 @@ class BalanceRequestController extends Controller
             'from_account' => $request->from_account,
             'amount' => $request->amount,
             'trx_id' => $request->trx_id,
-            'screenshot' => $screenshotPath,
             'status' => 'pending',
         ]);
 
