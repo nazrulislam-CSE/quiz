@@ -2,7 +2,7 @@
   $footer_pages = App\Models\Menuitem::with(['subMenus.childMenus'])->whereNull('parent_id')->whereHas('get_menu', function($query){ $query->where('location','footer1')->where('sourch','page');})->orderby('position', 'asc')->get();
 @endphp
 <!-- Footer -->
-<footer class="footer reveal">
+<footer class="footer reveal custom-footer">
   <div class="container">
     <div class="row">
       <div class="col-md-4 text-center text-md-start mb-4">

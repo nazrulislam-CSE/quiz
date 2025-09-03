@@ -81,6 +81,7 @@ color: white;
 padding: 50px 20px;
 border-radius: 20px;
 margin-top: 40px;
+margin-bottom: 40px;
 animation: gradientBG 10s ease infinite;
 }
 @keyframes gradientBG {
@@ -221,4 +222,37 @@ font-size: 20px;
 .teacher-slider .card,
 .student-slider .card {
     height: 100%;
+}
+
+.custom-footer {
+    background-color: #1d3557;
+    color: #fff; /* Make text white */
+}
+
+.custom-footer a {
+    color: #fff; /* Make links white */
+}
+
+.custom-footer a:hover {
+    color: #ccc; /* Optional: light gray on hover */
+}
+
+.custom-footer h5 {
+    color: #fff; /* Make headings white */
+}
+
+.custom-footer strong {
+    color: #fff; /* Make strong text white */
+}
+
+.custom-footer i {
+    color: #fff; /* Make social icons white */
+}
+
+.custom-footer .opacity8 {
+    opacity: 0.8;
+    color: #fff; /* Ensure this text is also white */
+}
+    .custom-footer ul li a {
+    color: #fff; /* Make links white */
 }
