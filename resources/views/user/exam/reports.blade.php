@@ -1,6 +1,7 @@
 @extends('layouts.user.app', ['pageTitle' => $pageTitle])
 
 @section('content')
+<link rel="stylesheet" href="{{ asset('dashboard/auth/css/dashboard.css') }}">
 <div class="container">
     <h3 class="mb-4">{{ $pageTitle }}</h3>
 

@@ -14,6 +14,7 @@ use App\Models\Department;
 use App\Models\Mcq;
 use App\Models\ExamResult;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Crypt;
 
 class ExamController extends Controller
 {
@@ -33,6 +34,7 @@ class ExamController extends Controller
         $selectedSubject = $request->query('subject');
         $selectedTopic = $request->query('topic');
         $examStart = $request->query('exam');
+        $studyMode = $request->query('study'); 
 
         $departments = collect();
         $subjects = collect();
@@ -60,6 +62,23 @@ class ExamController extends Controller
             }
         }
 
+        // study start
+        if ($selectedTopic && $studyMode) {
+            $mcqs = Mcq::with('answers')
+                        ->where('topic_id', $selectedTopic)
+                        ->get();
+
+            if ($mcqs->isEmpty()) {
+                return redirect()->route('user.mcq.exam', [
+                    'admission' => $selectedAdmission,
+                    'department' => $selectedDepartment,
+                    'subject' => $selectedSubject,
+                    'topic' => $selectedTopic,
+                ])->with('error', 'This topic has no questions.');
+            }
+        }
+
+        // exam start
         if ($selectedTopic && $examStart) {
             $mcqs = Mcq::with('answers')
                         ->where('topic_id', $selectedTopic)
@@ -75,12 +94,9 @@ class ExamController extends Controller
             }
         }
 
-        
-
-    
         return view('user.exam.mcq', compact(
             'pageTitle','admissions','departments','subjects','topics',
-            'selectedAdmission','selectedDepartment','selectedSubject','selectedTopic','mcqs','examStart'
+            'selectedAdmission','selectedDepartment','selectedSubject','selectedTopic','mcqs','examStart','studyMode'
         ));
 
     }
@@ -163,11 +179,10 @@ class ExamController extends Controller
 
         $examResult = ExamResult::with(['user','admission','department','subject','topic'])->findOrFail($id);
 
-        // Decode given answers
-        $givenAnswers = json_decode($examResult->given_answers, true);
+        $givenAnswers = $examResult->given_answers;
 
         // Fetch MCQs with answers
-        $mcqs = Mcq::with('answers')->whereIn('id', array_keys($givenAnswers))->get();
+        $mcqs = Mcq::with('answers')->whereIn('id', array_keys($givenAnswers ?? []))->get();
 
         return view('user.exam.view', compact('pageTitle','examResult','givenAnswers','mcqs'));
     }

@@ -248,15 +248,22 @@
                                                         <h6 class="mb-1">কোনো টপিক সিলেক্ট করা হয়নি</h6>
                                                     @endif
                                                 </div>
-                                                <div>
-                                                    <button class="btn btn-danger btn-sm me-2">📖 স্টাডি</button>
+                                               <div class="d-flex flex-wrap gap-2">
+                                                    <a href="{{ route('user.mcq.exam', [
+                                                        'admission' => $selectedAdmission,
+                                                        'department' => $selectedDepartment,
+                                                        'subject' => $selectedSubject,
+                                                        'topic' => $selectedTopic,
+                                                        'study' => 1
+                                                    ]) }}" class="btn btn-danger btn-sm flex-fill text-center">📖 স্টাডি</a>
+
                                                     <a href="{{ route('user.mcq.exam', [
                                                         'admission' => $selectedAdmission,
                                                         'department' => $selectedDepartment,
                                                         'subject' => $selectedSubject,
                                                         'topic' => $selectedTopic,
                                                         'exam' => 1
-                                                    ]) }}" class="btn btn-success btn-sm">📝 এক্সাম</a>
+                                                    ]) }}" class="btn btn-success btn-sm flex-fill text-center">📝 এক্সাম</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -322,6 +329,41 @@
                                     </button>
                                 </div>
                             </form>
+                        @endif
+
+                        {{-- Study Mode --}}
+                        @if ($studyMode && $mcqs->isNotEmpty())
+                            <div class="study-container">
+                                @foreach($mcqs as $index => $mcq)
+                                    <div class="card shadow-sm mb-4">
+                                        
+                                        {{-- Card Header with color and shadow --}}
+                                        <div class="card-header bg-danger text-white shadow-sm">
+                                            প্রশ্ন নং {{ $index + 1 }}
+                                        </div>
+
+                                        <div class="card-body">
+                                            <p class="mb-3"><strong>প্রশ্ন:</strong> {{ $mcq->question }}</p>
+
+                                            <div class="options mb-3">
+                                                @foreach($mcq->answers->take(4) as $answer)
+                                                    <p class="mb-1 {{ $answer->is_correct ? 'text-success fw-bold' : '' }}">
+                                                        {{ chr(65 + $loop->index) }}. {{ $answer->answer }}
+                                                    </p>
+                                                @endforeach
+                                            </div>
+
+                                            {{-- সঠিক উত্তর দেখানো --}}
+                                            @php
+                                                $correctAnswer = $mcq->answers->firstWhere('is_correct', 1);
+                                            @endphp
+                                            @if($correctAnswer)
+                                                <p class="mt-2 text-success fw-bold"><strong>সঠিক উত্তর:</strong> {{ $correctAnswer->answer }}</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
                         @endif
                     </div>
                 </div>

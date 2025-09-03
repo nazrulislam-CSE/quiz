@@ -201,3 +201,16 @@ body {
     font-size: 0.9rem;
     color: #6c757d;
 }
+.result-card {
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+.table th {
+    width: 30%;
+    background: #f8f9fa;
+}
