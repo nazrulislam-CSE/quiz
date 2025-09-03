@@ -75,7 +75,7 @@
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
-            <a href="#" class="btn btn-danger w-100 text-white d-flex flex-column align-items-center py-4">
+            <a href="{{ route('user.generation.list') }}" class="btn btn-danger w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-chart-line fa-2x mb-2"></i>
                 <h5 class="mb-0">Generation List</h5>
             </a>
