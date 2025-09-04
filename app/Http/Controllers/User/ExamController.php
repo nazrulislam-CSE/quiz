@@ -13,6 +13,7 @@ use App\Models\Admission;
 use App\Models\Department;
 use App\Models\Mcq;
 use App\Models\ExamResult;
+use App\Models\BalanceRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Crypt;
 
@@ -80,6 +81,24 @@ class ExamController extends Controller
 
         // exam start
         if ($selectedTopic && $examStart) {
+
+            $selectedTopicData = Topic::find($selectedTopic);
+
+            if (!$selectedTopicData) {
+                return redirect()->back()->with('error', 'টপিক পাওয়া যায়নি।');
+            }
+
+            $examFee = $selectedTopicData->fee;
+
+            // Approved balance
+            $userBalance = BalanceRequest::where('user_id', Auth::id())
+                            ->where('status', 'approved')
+                            ->sum('amount');
+
+            // balance check
+            if ($userBalance < $examFee) {
+                return redirect()->back()->with('error', 'আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালান্স নেই। অনুগ্রহ করে রিচার্জ করুন।');
+            }
             $mcqs = Mcq::with('answers')
                         ->where('topic_id', $selectedTopic)
                         ->get();

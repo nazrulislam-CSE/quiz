@@ -371,6 +371,17 @@
         </div>
     </div>
 
+    @if(session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'নোটিশ',
+                text: '{{ session("error") }}',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
+    
     <script>
         let currentQuestion = 0;
         const questions = document.querySelectorAll('.question-container');
