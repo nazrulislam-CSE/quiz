@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\FeatureController;
+use App\Http\Controllers\Admin\BalanceRequestController;
 
 
 
@@ -218,6 +219,18 @@ Route::middleware('admin')->group(function () {
         Route::post('/update/{id}', [StudentController::class, 'update'])->name('student.update');
         Route::get('/delete/{id}', [StudentController::class, 'destroy'])->name('student.delete');
         Route::get('/show/{id}', [StudentController::class,'show'])->name('student.show');
+
+    });
+
+    /* ============> Balance Request <=========== */
+    Route::prefix('balance')->group(function () {
+        Route::get('/index', [BalanceRequestController::class, 'index'])->name('balance.request.index');
+        Route::get('/create', [BalanceRequestController::class, 'create'])->name('balance.request.create');
+        Route::post('/store', [BalanceRequestController::class, 'store'])->name('balance.request.store');
+        Route::get('/edit/{id}', [BalanceRequestController::class, 'edit'])->name('balance.request.edit');
+        Route::put('/update/{id}', [BalanceRequestController::class, 'update'])->name('balance.request.update');
+        Route::get('/delete/{id}', [BalanceRequestController::class, 'destroy'])->name('balance.request.delete');
+        Route::get('/show/{id}', [BalanceRequestController::class,'show'])->name('balance.request.show');
 
     });
     

@@ -54,6 +54,17 @@
                 <li class="slide">
                     <a class="side-menu__item {{ Request::is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.admin.home') }}"><i class="side-menu__icon fas fa-th-large"></i><span class="side-menu__label">Dashboard</span></a>
                 </li>
+                <li class="slide {{ Request::is('admin/balance*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-cog"></i>
+                        <span class="side-menu__label">Balance Request</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Balance Request</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/balance/index') ? 'active' : '' }}" href="{{ route('admin.balance.request.index')}}">Balance Request List</a></li>
+                    </ul>
+                </li>
                 <li class="slide {{ Request::is('admin/admission*') ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                         <i class="side-menu__icon fas fa-cog"></i>

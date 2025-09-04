@@ -19,7 +19,8 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $pageTitle = "Dashboard";
-        $balance = BalanceRequest::where('user_id',Auth::user()->id)->sum('amount');
+        $balance = BalanceRequest::where('user_id', Auth::id())->where('status', 'approved')->sum('amount');
+        
         return view('user.dashborad.index', compact(
             'pageTitle',
             'balance',
