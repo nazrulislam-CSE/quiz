@@ -44,7 +44,7 @@ class BalanceRequestController extends Controller
 
         $balanceRequest->update([
             'status' => $request->status,
-            // 'amount' => $balanceRequest->amount + 20,
+            'amount' => $balanceRequest->amount + 20,
         ]);
 
         // ---- Only run commission logic if status is approved ----
