@@ -21,9 +21,26 @@ class DashboardController extends Controller
         $pageTitle = "Dashboard";
         $balance = BalanceRequest::where('user_id', Auth::id())->where('status', 'approved')->sum('amount');
         
+        $user = Auth::user();
+
+        // Total balance (approved balance requests)
+        $balance = BalanceRequest::where('user_id', $user->id)
+                    ->where('status', 'approved')
+                    ->sum('amount');
+
+        // Commission amounts from users table
+        $directIncome   = $user->direct_commission;
+        $firstGenIncome = $user->first_gen_commission;
+        $secondGenIncome = $user->second_gen_commission;
+        $dIncome = $user->visa_amount;
+
         return view('user.dashborad.index', compact(
             'pageTitle',
             'balance',
+            'directIncome',
+            'firstGenIncome',
+            'secondGenIncome',
+            'dIncome',
         ));
     }
 

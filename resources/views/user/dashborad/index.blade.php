@@ -86,6 +86,31 @@
                 <h5 class="mb-0">Generation Income</h5>
             </a>
         </div>
+
+        <!-- Direct Income -->
+    <div class="col-md-4 col-sm-6">
+        <a href="#" class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4">
+            <i class="fas fa-user-plus fa-2x mb-2"></i>
+            <h5 class="mb-0">Direct Income: {{ number_format($dIncome, 2) }}</h5>
+        </a>
+    </div>
+
+    <!-- 1st Gen Income -->
+    <div class="col-md-4 col-sm-6">
+        <a href="#" class="btn btn-info w-100 text-white d-flex flex-column align-items-center py-4">
+            <i class="fas fa-users fa-2x mb-2"></i>
+            <h5 class="mb-0">1st Gen Income: {{ number_format($firstGenIncome, 2) }}</h5>
+        </a>
+    </div>
+
+    <!-- 2nd Gen Income -->
+    <div class="col-md-4 col-sm-6">
+        <a href="#" class="btn btn-warning w-100 text-white d-flex flex-column align-items-center py-4">
+            <i class="fas fa-network-wired fa-2x mb-2"></i>
+            <h5 class="mb-0">2nd Gen Income: {{ number_format($secondGenIncome, 2) }}</h5>
+        </a>
+    </div>
+
     </div>
 
     <!-- Total Balance & Quick Stats -->

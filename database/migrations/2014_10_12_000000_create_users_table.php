@@ -23,7 +23,12 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->integer('phone')->nullable();
-            $table->double('visa_amount')->default(0.00)->comment('Total Visa Amount')->ullable();
+            
+            $table->decimal('direct_commission', 12, 2)->default(0)->nullable();
+            $table->decimal('first_gen_commission', 12, 2)->default(0)->nullable();
+            $table->decimal('second_gen_commission', 12, 2)->default(0)->nullable();
+
+            $table->double('visa_amount')->default(0.00)->comment('Total Visa Amount')->nullable();
             $table->double('withdraw_amount')->default(0.00)->comment('Total Withdraw Amount')->nullable();
             $table->double('v_total_amount')->default(0.00)->comment('Total Voucher Amount')->nullable();
             $table->double('voucher_amount')->default(0.00)->comment('Total Due Amount')->nullable();

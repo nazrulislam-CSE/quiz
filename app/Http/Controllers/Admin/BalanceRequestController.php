@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BalanceRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class BalanceRequestController extends Controller
@@ -34,6 +35,7 @@ class BalanceRequestController extends Controller
 
     public function update(Request $request, string $id)
     {
+        // dd($request->all());
         $balanceRequest = BalanceRequest::findOrFail($id);
 
         $request->validate([
@@ -42,7 +44,43 @@ class BalanceRequestController extends Controller
 
         $balanceRequest->update([
             'status' => $request->status,
+            // 'amount' => $balanceRequest->amount + 20,
         ]);
+
+        // ---- Only run commission logic if status is approved ----
+        if ($request->status === 'approved') {
+            $user   = User::find($balanceRequest->user_id); // Balance request owner
+            // dd($user);
+            $amount = $balanceRequest->amount;
+           
+
+            // Direct Referrer (20%)
+            if ($user && $user->refer_by) {
+                $directRef = User::find($user->refer_by);
+                // dd($directRef);
+                if ($directRef) {
+                    $directRef->increment('direct_commission', $amount / 100 * 20);
+                }
+
+                // 1st Generation Referrer (10%)
+                if ($directRef && $directRef->refer_by) {
+                    $firstGen = User::find($directRef->refer_by);
+                    if ($firstGen) {
+                        $firstGen->increment('first_gen_commission', $amount / 100 * 10);
+                    }
+
+                    // 2nd Generation Referrer (5%)
+                    if ($firstGen && $firstGen->refer_by) {
+                        $secondGen = User::find($firstGen->refer_by);
+                        if ($secondGen) {
+                            $secondGen->increment('second_gen_commission', $amount / 100 * 5);
+                        }
+                    }
+                }
+            }
+            $user->visa_amount += 20;
+            $user->save();
+        }
 
         return redirect()->route('admin.balance.request.index')
                         ->with('success','Balance request status updated successfully.');

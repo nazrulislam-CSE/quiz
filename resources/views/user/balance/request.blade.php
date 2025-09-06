@@ -51,8 +51,9 @@
 
                 <div class="mb-3">
                     <label class="form-label">টাকার পরিমান</label>
-                    <input type="number" name="amount" class="form-control" placeholder="টাকার পরিমান" required>
+                    <input type="number" name="amount" class="form-control" placeholder="টাকার পরিমান" required min="100">
                 </div>
+
 
                 <div class="mb-3">
                     <label class="form-label">ট্রান্সেকশন আইডি (ঐচ্ছিক)</label>

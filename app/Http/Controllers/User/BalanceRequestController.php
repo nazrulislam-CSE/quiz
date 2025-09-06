@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BalanceRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class BalanceRequestController extends Controller
@@ -20,15 +21,10 @@ class BalanceRequestController extends Controller
         $request->validate([
             'method' => 'required|string',
             'from_account' => 'required|string',
-            'amount' => 'required|numeric|min:10',
+            'amount' => 'required|numeric|min:100',
             'trx_id' => 'nullable|string',
             'screenshot' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
-
-        // $screenshotPath = null;
-        // if ($request->hasFile('screenshot')) {
-        //     $screenshotPath = $request->file('screenshot')->store('balance_screenshots', 'public');
-        // }
 
         $balance = BalanceRequest::create([
             'user_id' => Auth::id(),
@@ -39,19 +35,22 @@ class BalanceRequestController extends Controller
             'status' => 'pending',
         ]);
 
+        // Upload Screenshot
         if ($request->file('screenshot')) {
             $file = $request->file('screenshot');
-            @unlink(public_path('upload/balance/'.$balance->screenshot));
-            $filename = date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('upload/balance'),$filename);
+            @unlink(public_path('upload/balance/' . $balance->screenshot));
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $file->move(public_path('upload/balance'), $filename);
             $balance['screenshot'] = $filename;
+            $balance->save();
         }
 
-        $balance->save();
+       
 
-
-        return redirect()->route('user.balance.request')->with('success', 'Balance request submitted successfully!');
+        return redirect()->route('user.balance.request')
+            ->with('success', 'Balance request submitted successfully!');
     }
+
 
     public function report()
     {
