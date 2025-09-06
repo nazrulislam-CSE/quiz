@@ -97,7 +97,7 @@
     <div class="col-md-4 col-sm-6">
         <a href="#" class="btn btn-info w-100 text-white d-flex flex-column align-items-center py-4">
             <i class="fas fa-users fa-2x mb-2"></i>
-            <h5 class="mb-0">Direct Refer: {{ number_format($directIncome+$firstGenIncome+$secondGenIncome+, 2) }}</h5>
+            <h5 class="mb-0">Direct Refer: {{ number_format($directIncome+$firstGenIncome+$secondGenIncome, 2) }}</h5>
         </a>
     </div>
 
