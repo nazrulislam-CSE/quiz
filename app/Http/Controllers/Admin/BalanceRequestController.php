@@ -44,7 +44,7 @@ class BalanceRequestController extends Controller
 
         $balanceRequest->update([
             'status' => $request->status,
-            'amount' => $balanceRequest->amount + 20,
+            'amount' => $balanceRequest->amount + 0.20,
         ]);
 
         // ---- Only run commission logic if status is approved ----
@@ -59,26 +59,26 @@ class BalanceRequestController extends Controller
                 $directRef = User::find($user->refer_by);
                 // dd($directRef);
                 if ($directRef) {
-                    $directRef->increment('direct_commission', $amount / 100 * 20);
+                    $directRef->increment('direct_commission', $amount / 100 * 0.20);
                 }
 
                 // 1st Generation Referrer (10%)
                 if ($directRef && $directRef->refer_by) {
                     $firstGen = User::find($directRef->refer_by);
                     if ($firstGen) {
-                        $firstGen->increment('first_gen_commission', $amount / 100 * 10);
+                        $firstGen->increment('first_gen_commission', $amount / 100 * 0.10);
                     }
 
                     // 2nd Generation Referrer (5%)
                     if ($firstGen && $firstGen->refer_by) {
                         $secondGen = User::find($firstGen->refer_by);
                         if ($secondGen) {
-                            $secondGen->increment('second_gen_commission', $amount / 100 * 5);
+                            $secondGen->increment('second_gen_commission', $amount / 100 * 0.5);
                         }
                     }
                 }
             }
-            $user->visa_amount += 20;
+            $user->visa_amount += $amount / 100 * 0.20;
             $user->save();
         }
 
