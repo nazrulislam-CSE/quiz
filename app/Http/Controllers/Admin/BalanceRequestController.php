@@ -78,7 +78,7 @@ class BalanceRequestController extends Controller
                     }
                 }
             }
-            $user->visa_amount += round(($amount * 20) / 100, 2); 
+            $user->visa_amount += intval(($balanceRequest->amount * 20) / 100); 
             $user->save();
         }
 
