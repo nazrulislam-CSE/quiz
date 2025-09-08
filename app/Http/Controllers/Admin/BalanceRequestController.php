@@ -54,10 +54,8 @@ class BalanceRequestController extends Controller
             'status' => 'required|in:pending,approved,rejected',
         ]);
 
-        $balanceRequest->update([
-            'status' => $request->status,
-            'amount' => $balanceRequest->amount + 0.20,
-        ]);
+        $commission = ($balanceRequest->amount * 20) / 100;
+
 
         // ---- Only run commission logic if status is approved ----
         if ($request->status === 'approved') {
@@ -93,6 +91,11 @@ class BalanceRequestController extends Controller
             $user->visa_amount += ($amount * 20) / 100;
             $user->save();
         }
+
+        $balanceRequest->update([
+            'status' => $request->status,
+            'amount' => $balanceRequest->amount + $commission,
+        ]);
 
         return redirect()->route('admin.balance.request.index')
                         ->with('success','Balance request status updated successfully.');
