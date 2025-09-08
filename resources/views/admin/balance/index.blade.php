@@ -11,36 +11,9 @@
             </ol>
         </nav>
     </div>
-    {{-- <div class="d-flex my-auto">
-        <div class=" d-flex right-page">
-            <div class="d-flex justify-content-center me-5">
-                <div class="">
-                    <span class="d-block">
-                        <span class="label ">EXPENSES</span>
-                    </span>
-                    <span class="value">
-                        $53,000
-                    </span>
-                </div>
-                <div class="ms-3 mt-2">
-                    <span class="sparkline_bar"></span>
-                </div>
-            </div>
-            <div class="d-flex justify-content-center">
-                <div class="">
-                    <span class="d-block">
-                        <span class="label">PROFIT</span>
-                    </span>
-                    <span class="value">
-                        $34,000
-                    </span>
-                </div>
-                <div class="ms-3 mt-2">
-                    <span class="sparkline_bar31"></span>
-                </div>
-            </div>
-        </div>
-    </div> --}}
+    <div class="d-flex my-auto">
+        
+    </div>
 </div>
     <div class="main-content-body">
         <!-- Row -->
@@ -49,39 +22,80 @@
                     <div class="card">
                         <div class="card-header border-bottom d-flex justify-content-between align-items-center">
                             <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}} <span class="badge bg-danger side-badge" style="font-size:17px;">{{ count($requests) }}</span> </p>
+
+                            <div class="d-flex">
+                                <a href="{{ route('admin.admission.create')}}" class="btn btn-success me-2">
+                                    <i class="fas fa-plus d-inline"></i> Add Now Admission
+                                </a>
                             </div>
                         </div>
                         <div class="card-body">
+                            {{-- Filter buttons and date form --}}
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                               <div class="btn-group" role="group" aria-label="status-filter">
+
+    <a href="{{ route('admin.balance.request.index', array_merge(request()->except('page'), ['status' => 'pending'])) }}"
+       class="btn btn-sm {{ ($status === 'pending') ? 'btn-warning text-white' : 'btn-outline-warning' }}">
+       Pending
+    </a>
+
+    <a href="{{ route('admin.balance.request.index', array_merge(request()->except('page'), ['status' => 'approved'])) }}"
+       class="btn btn-sm {{ ($status === 'approved') ? 'btn-success text-white' : 'btn-outline-success' }}">
+       Approved
+    </a>
+
+    <a href="{{ route('admin.balance.request.index', array_merge(request()->except('page'), ['status' => 'rejected'])) }}"
+       class="btn btn-sm {{ ($status === 'rejected') ? 'btn-danger text-white' : 'btn-outline-danger' }}">
+       Rejected
+    </a>
+</div>
+
+
+                                <form method="GET" class="form-inline">
+                                    @if(!empty($status))
+                                        <input type="hidden" name="status" value="{{ $status }}">
+                                    @endif
+
+                                    <div class="input-group input-group-sm">
+                                        <input type="date" name="date" class="form-control form-control-sm" value="{{ $date ?? '' }}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-sm btn-primary" type="submit">Filter</button>
+                                            <a href="{{ route('admin.balance.request.index') }}" class="btn btn-sm btn-light">Clear</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            {{-- Table --}}
                             <div class="table-responsive">
-                                <table id="file-datatable" class="border-top-0  table table-bordered text-nowrap key-buttons border-bottom">
+                                <table id="file-datatable" class="border-top-0 table table-bordered text-nowrap key-buttons border-bottom">
                                     <thead>
                                         <tr>
-                                            <th class="border-bottom-0">SL</th>
-                                            <th class="border-bottom-0">Name</th>
-                                            <th class="border-bottom-0">Date</th>
-                                            <th class="border-bottom-0">Method</th>
-                                            <th class="border-bottom-0">From Account</th>
-                                            <th class="border-bottom-0">Amount</th>
-                                            <th class="border-bottom-0">Trx ID</th>
-                                            <th class="border-bottom-0">Screenshot</th>
-                                            <th class="border-bottom-0">Status</th>
-                                            <th class="border-bottom-0">Actions</th>
+                                            <th class="border-bottom-0">নং</th>
+                                            <th class="border-bottom-0">তারিখ</th>
+                                            <th class="border-bottom-0">ইউজার</th>
+                                            <th class="border-bottom-0">পেমেন্ট মেথড</th>
+                                            <th class="border-bottom-0">একাউন্ট নম্বর</th>
+                                            <th class="border-bottom-0">টাকার পরিমান</th>
+                                            <th class="border-bottom-0">ভাউচার</th>
+                                            <th class="border-bottom-0">স্টেটাস</th>
+                                            <th class="border-bottom-0">অ্যাকশন</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($requests as $key => $request)
+                                        @forelse ($requests as $key => $request)
                                         <tr>
                                             <td class="col-1">{{ $key+1 }}</td>
-                                            <td>{{ $request->user->full_name ?? ''}}</td>
+                        
                                             <td>{{ \Carbon\Carbon::parse($request->created_at)->format('j F Y') }}</td>
+                                            <td>{{ $request->user->full_name ?? ''}}</td>
                                             <td>{{ ucfirst($request->method) }}</td>
                                             <td>{{ $request->from_account }}</td>
-                                            <td class="font-weight-bold">৳{{ number_format($request->amount, 2) }} ৳</td>
-                                            <td>{{ $request->trx_id ?? '' }}</td>
+                                            <td class="font-weight-bold">৳{{ number_format($request->amount, 2) }}</td>
                                             <td>
                                                 @if($request->screenshot)
-                                                    <a href="{{ (!empty($request->screenshot)) ? url('upload/balance/'.$request->screenshot):url('upload/mcq.png') }}" target="_blank">
-                                                        <img src="{{ (!empty($request->screenshot)) ? url('upload/balance/'.$request->screenshot):url('upload/mcq.png') }}" alt="screenshot" class="img-thumbnail" style="width:80px; height:80px;">
+                                                    <a href="{{ url('upload/balance/'.$request->screenshot) }}" target="_blank">
+                                                        <img src="{{ url('upload/balance/'.$request->screenshot) }}" alt="screenshot" class="img-thumbnail" style="width:80px; height:80px;">
                                                     </a>
                                                 @else
                                                     <span class="text-muted">No Image</span>
@@ -97,16 +111,21 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('admin.balance.request.show',$request->id)}}" class="btn btn-success btn-sm mr-2"><i class="fas fa-eye"></i></a>
-                                                <a href="{{ route('admin.balance.request.edit',$request->id)}}" class="btn btn-primary btn-sm mr-2"><i class="fas fa-edit"></i></a>
-                                                <a href="{{ route('admin.balance.request.delete',$request->id)}}" class="btn btn-danger btn-sm" title="Delete Data" id="delete"><i class="fa fa-trash"></i></a>
+                                                <a href="{{ route('admin.balance.request.show', $request->id) }}" class="btn btn-success btn-sm mr-2"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ route('admin.balance.request.edit', $request->id) }}" class="btn btn-primary btn-sm mr-2"><i class="fas fa-edit"></i></a>
+                                                <a href="{{ route('admin.balance.request.delete', $request->id) }}" class="btn btn-danger btn-sm" title="Delete Data" id="delete"><i class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
-                                        @endforeach
+                                        @empty
+                                        <tr>
+                                            <td colspan="9" class="text-center">No requests found.</td>
+                                        </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

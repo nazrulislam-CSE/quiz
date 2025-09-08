@@ -10,12 +10,24 @@ use Illuminate\Support\Facades\Auth;
 
 class BalanceRequestController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $pageTitle = "Balance Request List";
-        $requests = BalanceRequest::latest()->get();
 
-        return view('admin.balance.index', compact('pageTitle', 'requests'));
+        $status = $request->query('status', 'pending');
+        $date = $request->query('date');
+
+        $requests = BalanceRequest::with('user')
+            ->when($status, function ($q) use ($status) {
+                return $q->where('status', $status);
+            })
+            ->when($date, function ($q) use ($date) {
+                return $q->whereDate('created_at', $date);
+            })
+            ->latest()
+            ->get();
+
+        return view('admin.balance.index', compact('pageTitle', 'requests', 'status', 'date'));
     }
 
     public function show(string $id)
