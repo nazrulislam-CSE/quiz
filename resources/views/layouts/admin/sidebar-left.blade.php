@@ -54,6 +54,17 @@
                 <li class="slide">
                     <a class="side-menu__item {{ Request::is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.admin.home') }}"><i class="side-menu__icon fas fa-th-large"></i><span class="side-menu__label">Dashboard</span></a>
                 </li>
+                <li class="slide {{ Request::is('admin/users*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-cog"></i>
+                        <span class="side-menu__label">User List</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">User List</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/users/index') ? 'active' : '' }}" href="{{ route('admin.user.index')}}">List</a></li>
+                    </ul>
+                </li>
                 <li class="slide {{ Request::is('admin/balance*') ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                         <i class="side-menu__icon fas fa-cog"></i>
@@ -220,6 +231,18 @@
                         <li class="side-menu__label1"><a href="javascript:void(0);">Student</a></li>
                         <li><a class="slide-item {{ Request::is('admin/student/create') ? 'active' : '' }}" href="{{ route('admin.student.create') }}">Student Add</a></li>
                         <li><a class="slide-item {{ Request::is('admin/student/index') ? 'active' : '' }}" href="{{ route('admin.student.index') }}">Student List</a></li>
+                    </ul>
+                </li>
+
+                <li class="slide {{ Request::is('admin/commission*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-cog"></i>
+                        <span class="side-menu__label">Commission</span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">List</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/commission/index') ? 'active' : '' }}" href="{{ route('admin.commission.index')}}">List</a></li>
                     </ul>
                 </li>
 

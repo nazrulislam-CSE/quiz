@@ -20,6 +20,8 @@ use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\BalanceRequestController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CommissionController;
 
 
 
@@ -231,6 +233,26 @@ Route::middleware('admin')->group(function () {
         Route::put('/update/{id}', [BalanceRequestController::class, 'update'])->name('balance.request.update');
         Route::get('/delete/{id}', [BalanceRequestController::class, 'destroy'])->name('balance.request.delete');
         Route::get('/show/{id}', [BalanceRequestController::class,'show'])->name('balance.request.show');
+
+    });
+
+    /* ============> User List <=========== */
+    Route::prefix('users')->group(function () {
+        Route::get('/index', [UserController::class, 'index'])->name('user.index');
+        Route::get('/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+        Route::put('/update/{id}', [UserController::class, 'update'])->name('user.update');
+        Route::get('/delete/{id}', [UserController::class, 'destroy'])->name('user.delete');
+        Route::get('/show/{id}', [UserController::class,'show'])->name('user.show');
+
+    });
+
+    /* ============> Commission List <=========== */
+    Route::prefix('commission')->group(function () {
+        Route::get('/index', [CommissionController::class, 'index'])->name('commission.index');
+        Route::get('/edit/{id}', [CommissionController::class, 'edit'])->name('commission.edit');
+        Route::put('/update/{id}', [CommissionController::class, 'update'])->name('commission.update');
+        Route::get('/delete/{id}', [CommissionController::class, 'destroy'])->name('commission.delete');
+        Route::get('/show/{id}', [CommissionController::class,'show'])->name('commission.show');
 
     });
     

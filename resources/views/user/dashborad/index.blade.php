@@ -36,6 +36,12 @@
     <!-- Dashboard Buttons -->
     <div class="row mb-4 g-3">
         <div class="col-md-4 col-sm-6">
+            <a href="{{ route('user.balance.request.report') }}" class="btn btn-primary w-100 text-white d-flex flex-column align-items-center py-4">
+                <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
+                <h5 class="mb-0">Balance Request Report</h5>
+            </a>
+        </div>
+        <div class="col-md-4 col-sm-6">
             <a href="{{ route('user.mcq.exam') }}"
                 class="btn btn-danger w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-question-circle fa-2x mb-2"></i>
@@ -43,34 +49,9 @@
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
-            <a href="{{ route('user.balance.request') }}" class="btn btn-primary w-100 text-white d-flex flex-column align-items-center py-4">
-                <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
-                <h5 class="mb-0">Balance Request</h5>
-            </a>
-        </div>
-        <div class="col-md-4 col-sm-6">
-            <a href="{{ route('user.exam.reports') }}"
-                class="btn btn-info w-100 text-white d-flex flex-column align-items-center py-4">
-                <i class="fas fa-file-alt fa-2x mb-2"></i>
-                <h5 class="mb-0">Report</h5>
-            </a>
-        </div>
-        <div class="col-md-4 col-sm-6">
-            <a href="#" class="btn btn-warning w-100 text-white d-flex flex-column align-items-center py-4">
+            <a href="{{ route('user.exam.reports')}}" class="btn btn-warning w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-list fa-2x mb-2"></i>
-                <h5 class="mb-0">Porikhar List</h5>
-            </a>
-        </div>
-        <div class="col-md-4 col-sm-6">
-            <a href="#" class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4">
-                <i class="fas fa-hand-holding-usd fa-2x mb-2"></i>
-                <h5 class="mb-0">Withdraw</h5>
-            </a>
-        </div>
-        <div class="col-md-4 col-sm-6">
-            <a href="#" class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4">
-                <i class="fas fa-hand-holding-usd fa-2x mb-2"></i>
-                <h5 class="mb-0">Balance Transfer</h5>
+                <h5 class="mb-0">Exam List</h5>
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
@@ -81,34 +62,40 @@
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
-            <a href="{{ route('user.generation.list') }}" class="btn btn-danger w-100 text-white d-flex flex-column align-items-center py-4">
-                <i class="fas fa-chart-line fa-2x mb-2"></i>
-                <h5 class="mb-0">Generation List</h5>
+            <a href="#" class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4">
+                <i class="fas fa-hand-holding-usd fa-2x mb-2"></i>
+                <h5 class="mb-0">Withdraw</h5>
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
-            <a href="#" class="btn btn-primary w-100 text-white d-flex flex-column align-items-center py-4">
+            <a href="{{ route('user.generation.list') }}" class="btn btn-primary w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-chart-line fa-2x mb-2"></i>
                 <h5 class="mb-0">Generation Income</h5>
             </a>
         </div>
 
-    <!-- 1st Gen Income -->
-    <div class="col-md-4 col-sm-6">
-        <a href="#" class="btn btn-info w-100 text-white d-flex flex-column align-items-center py-4">
-            <i class="fas fa-users fa-2x mb-2"></i>
-            <h5 class="mb-0">Direct Refer: {{ number_format($directIncome+$firstGenIncome+$secondGenIncome, 2) }}</h5>
-        </a>
-    </div>
+        <div class="col-md-4 col-sm-6">
+            <a href="#" class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4">
+                <i class="fas fa-hand-holding-usd fa-2x mb-2"></i>
+                <h5 class="mb-0">Balance Transfer</h5>
+            </a>
+        </div>
+
+        <!-- 1st Gen Income -->
+        <div class="col-md-4 col-sm-6">
+            <a href="#" class="btn btn-info w-100 text-white d-flex flex-column align-items-center py-4">
+                <i class="fas fa-users fa-2x mb-2"></i>
+                <h5 class="mb-0">Direct Refer: {{ number_format($directIncome+$firstGenIncome+$secondGenIncome, 2) }}</h5>
+            </a>
+        </div>
 
         <!-- Direct Income -->
-    <div class="col-md-4 col-sm-6">
-        <a href="#" class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4">
-            <i class="fas fa-user-plus fa-2x mb-2"></i>
-            <h5 class="mb-0">Direct Income: {{ number_format($dIncome, 2) }}</h5>
-        </a>
-    </div>
-
+        <div class="col-md-4 col-sm-6">
+            <a href="#" class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4">
+                <i class="fas fa-user-plus fa-2x mb-2"></i>
+                <h5 class="mb-0">Direct Income: {{ number_format($dIncome, 2) }}</h5>
+            </a>
+        </div>
     </div>
 
     <!-- Total Balance & Quick Stats -->

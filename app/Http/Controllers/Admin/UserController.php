@@ -19,14 +19,6 @@ class UserController extends Controller
         return view('admin.user.index',compact('pageTitle', 'users'));
     }
 
-    // agent list
-    public function agentList()
-    {
-        $agents = Agent::latest()->get();
-        $pageTitle = 'Agent List';
-        return view('admin.agent.index',compact('pageTitle', 'agents'));
-    }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -48,30 +40,77 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $pageTitle = 'User Details';
+        $user = User::findOrFail($id);
+        return view('admin.user.show', compact('user', 'pageTitle'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+   public function edit(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        $pageTitle = 'User Edit';
+        return view('admin.user.edit', compact('user','pageTitle'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        // ✅ Validation
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'username'  => 'required|string|max:255|unique:users,username,'.$id,
+            // 'phone'     => 'required|string|max:20|unique:users,phone,'.$id,
+            'email'     => 'nullable|email|unique:users,email,'.$id,
+            'status'    => 'required|in:0,1',
+            'image'     => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'password'  => 'nullable|min:6',
+        ]);
+
+        $user->full_name = $request->full_name;
+        $user->username  = $request->username;
+        $user->phone     = $request->phone;
+        $user->email     = $request->email;
+        $user->status    = $request->status;
+
+        // ✅ Password update (optional)
+        if ($request->filled('password')) {
+            $user->password      = bcrypt($request->password);
+            $user->show_password = $request->password; 
+        }
+
+        // ✅ Image update
+        if ($request->hasFile('image')) {
+            @unlink(public_path('upload/user/'.$user->image));
+            $file = $request->file('image');
+            $filename = date('YmdHi').'.'.$file->getClientOriginalExtension();
+            $file->move(public_path('upload/user'), $filename);
+            $user->image = $filename;
+        }
+
+        $user->save();
+
+        return redirect()->route('admin.user.index')->with('success','User updated successfully!');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        if ($user->image && file_exists(public_path('upload/user/' . $user->image))) {
+            unlink(public_path('upload/user/' . $user->image));
+        }
+
+        $user->delete();
+
+        return redirect()->route('admin.user.index')->with('success', 'User deleted successfully!');
     }
+
 }

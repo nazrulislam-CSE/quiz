@@ -53,11 +53,77 @@
                                     <img src="{{ asset('dashboard/img/icons/total-sales.png') }}" alt="" class="me-5 ht-70 wd-70 my-auto border shadow-sm rounded-lg p-2 bg-light">
                                 </div>
                                 <div class="project-content d-grid align-items-center">
-                                    <h4>{{ __('Total Admission') }}</h4>
+                                    <h4>{{ __('Total User') }}</h4>
                                     <ul>
                                         <li>
                                             <strong class="d-inline-flex mb-0" style="font-size: 15px !important;">Total:</strong>
-                                            <span><strong style="font-size: 15px !important;">{{ count($admissions ?? '0') }}</strong></span>
+                                            <span><strong style="font-size: 15px !important;">{{ count($users ?? '0') }}</strong></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                <a href="javascript:;" class="text-dark" onclick="comingSoon();">
+                    <div class="card overflow-hidden project-card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="my-auto">
+                                    <img src="{{ asset('dashboard/img/icons/total-sales.png') }}" alt="" class="me-5 ht-70 wd-70 my-auto border shadow-sm rounded-lg p-2 bg-light">
+                                </div>
+                                <div class="project-content d-grid align-items-center">
+                                    <h4>{{ __('Total User') }}</h4>
+                                    <ul>
+                                        <li>
+                                            <strong class="d-inline-flex mb-0" style="font-size: 15px !important;">Total:</strong>
+                                            <span><strong style="font-size: 15px !important;">{{ count($users ?? '0') }}</strong></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                <a href="javascript:;" class="text-dark" onclick="comingSoon();">
+                    <div class="card overflow-hidden project-card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="my-auto">
+                                    <img src="{{ asset('dashboard/img/icons/total-sales.png') }}" alt="" class="me-5 ht-70 wd-70 my-auto border shadow-sm rounded-lg p-2 bg-light">
+                                </div>
+                                <div class="project-content d-grid align-items-center">
+                                    <h4>{{ __('Total Active User') }}</h4>
+                                    <ul>
+                                        <li>
+                                            <strong class="d-inline-flex mb-0" style="font-size: 15px !important;">Total:</strong>
+                                            <span><strong style="font-size: 15px !important;">{{ count($activeusers ?? '0') }}</strong></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                <a href="javascript:;" class="text-dark" onclick="comingSoon();">
+                    <div class="card overflow-hidden project-card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="my-auto">
+                                    <img src="{{ asset('dashboard/img/icons/total-sales.png') }}" alt="" class="me-5 ht-70 wd-70 my-auto border shadow-sm rounded-lg p-2 bg-light">
+                                </div>
+                                <div class="project-content d-grid align-items-center">
+                                    <h4>{{ __('Total In Active User') }}</h4>
+                                    <ul>
+                                        <li>
+                                            <strong class="d-inline-flex mb-0" style="font-size: 15px !important;">Total:</strong>
+                                            <span><strong style="font-size: 15px !important;">{{ count($inactiveusers ?? '0') }}</strong></span>
                                         </li>
                                     </ul>
                                 </div>
@@ -75,11 +141,77 @@
                                     <img src="{{ asset('dashboard/img/icons/due.png') }}" alt="" class="me-5 ht-70 wd-70 my-auto border shadow-sm rounded-lg p-2 bg-light">
                                 </div>
                                 <div class="project-content d-grid align-items-center">
-                                    <h4>{{ __('Total Department') }}</h4>
+                                    <h4>{{ __('User Refer Balance') }}</h4>
                                     <ul>
                                         <li>
                                             <strong class="d-inline-flex mb-0" style="font-size: 15px !important;">Total:</strong>
-                                            <span><strong style="font-size: 15px !important;">{{ count($departments ?? '0') }}</strong></span>
+                                            <span><strong style="font-size: 15px !important;">0</strong></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                <a href="javascript:;" class="text-dark" onclick="comingSoon();">
+                    <div class="card overflow-hidden project-card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="my-auto">
+                                    <img src="{{ asset('dashboard/img/icons/due.png') }}" alt="" class="me-5 ht-70 wd-70 my-auto border shadow-sm rounded-lg p-2 bg-light">
+                                </div>
+                                <div class="project-content d-grid align-items-center">
+                                    <h4>{{ __('Total Exam Balance') }}</h4>
+                                    <ul>
+                                        <li>
+                                            <strong class="d-inline-flex mb-0" style="font-size: 15px !important;">Total:</strong>
+                                            <span><strong style="font-size: 15px !important;">0</strong></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                <a href="javascript:;" class="text-dark" onclick="comingSoon();">
+                    <div class="card overflow-hidden project-card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="my-auto">
+                                    <img src="{{ asset('dashboard/img/icons/due.png') }}" alt="" class="me-5 ht-70 wd-70 my-auto border shadow-sm rounded-lg p-2 bg-light">
+                                </div>
+                                <div class="project-content d-grid align-items-center">
+                                    <h4>{{ __('Total Balance Request') }}</h4>
+                                    <ul>
+                                        <li>
+                                            <strong class="d-inline-flex mb-0" style="font-size: 15px !important;">Total:</strong>
+                                            <span><strong style="font-size: 15px !important;">{{ $totalBalanceRequest ?? '0' }}</strong></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                <a href="javascript:;" class="text-dark" onclick="comingSoon();">
+                    <div class="card overflow-hidden project-card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="my-auto">
+                                    <img src="{{ asset('dashboard/img/icons/due.png') }}" alt="" class="me-5 ht-70 wd-70 my-auto border shadow-sm rounded-lg p-2 bg-light">
+                                </div>
+                                <div class="project-content d-grid align-items-center">
+                                    <h4>{{ __('Approved Balance') }}</h4>
+                                    <ul>
+                                        <li>
+                                            <strong class="d-inline-flex mb-0" style="font-size: 15px !important;">Total:</strong>
+                                            <span><strong style="font-size: 15px !important;">{{ $approvedBalanceRequest ?? '0' }}</strong></span>
                                         </li>
                                     </ul>
                                 </div>

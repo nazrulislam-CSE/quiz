@@ -28,11 +28,10 @@ return new class extends Migration
             $table->decimal('first_gen_commission', 12, 2)->default(0)->nullable();
             $table->decimal('second_gen_commission', 12, 2)->default(0)->nullable();
 
-            $table->double('visa_amount')->default(0.00)->comment('Total Visa Amount')->nullable();
-            $table->double('withdraw_amount')->default(0.00)->comment('Total Withdraw Amount')->nullable();
-            $table->double('v_total_amount')->default(0.00)->comment('Total Voucher Amount')->nullable();
-            $table->double('voucher_amount')->default(0.00)->comment('Total Due Amount')->nullable();
-            $table->double('v_advance_payment')->default(0.00)->comment('Total Advance Amount')->nullable();
+            $table->decimal('fund_wallet', 12, 2)->default(0)->nullable();
+            $table->decimal('main_wallet', 12, 2)->default(0)->nullable();
+            $table->decimal('refer_bonus', 12, 2)->default(0)->nullable();
+
             $table->string('image')->default('user.png')->nullable();
             $table->string('city_name')->nullable();
             $table->integer('established_year')->nullable();

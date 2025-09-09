@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MenuSeeder::class);
         $this->call(AboutSeeder::class);
         $this->call(FeatureSeeder::class);
+        $this->call(CommissionSeeder::class);
 
     }
 }
