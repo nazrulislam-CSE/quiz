@@ -5,11 +5,11 @@
             <i class="fas fa-home fa-lg"></i>
             <div style="font-size: 12px;">Home</div>
         </a>
-        <a href="#" class="nav-link text-center text-light">
+        <a href="{{ route('user.password.change') }}" class="nav-link text-center text-light">
             <i class="fas fa-bell fa-lg"></i>
-            <div style="font-size: 12px;">Alerts</div>
+            <div style="font-size: 12px;">Password Change</div>
         </a>
-        <a href="#" class="nav-link text-center text-light">
+        <a href="{{ route('user.profile.view') }}" class="nav-link text-center text-light">
             <i class="fas fa-user fa-lg"></i>
             <div style="font-size: 12px;">Profile</div>
         </a>

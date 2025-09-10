@@ -22,6 +22,7 @@ use App\Http\Controllers\User\ExamController;
 use App\Http\Controllers\User\ReferController;
 use App\Http\Controllers\User\GenerationController;
 use App\Http\Controllers\User\BalanceRequestController;
+use App\Http\Controllers\User\WithdrawController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth'], function () {
@@ -37,7 +38,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/balance-request', [BalanceRequestController::class, 'store'])->name('balance.request.store');
     Route::get('/balance-request/report', [BalanceRequestController::class, 'report'])->name('balance.request.report');
 
-
+    Route::prefix('withdraw')->name('withdraw.')->group(function () {
+        Route::get('/create', [WithdrawController::class, 'create'])->name('create');
+        Route::post('/store', [WithdrawController::class, 'store'])->name('store');
+        Route::get('/list', [WithdrawController::class, 'index'])->name('list');
+    });
 
     // Staff routes
     // Route::prefix('staffs')->as('staff.')->group(function () {

@@ -80,23 +80,19 @@ class SettingController extends Controller
 
     /* ===========> Start Profile Update <===========*/
     public function profileUpdate(Request $request){
-        // $this->validate($request, [
-        //     'name' =>'required',
-        //     'email' =>'required',
-        //     'phone' =>'required',
-        //     'address' =>'required',
-        // ]);
+
+        $this->validate($request, [
+            'full_name' =>'required',
+            'email' =>'required',
+            'phone' =>'required',
+            'present_address' =>'required',
+        ]);
 
         $profile = User::where('id',Auth::user()->id)->first();
-        $profile->company_name = $request->company_name;
-        $profile->owner_name = $request->owner_name;
-        $profile->city_name = $request->city_name;
-        $profile->established_year = $request->established_year;
-        $profile->nid_number = $request->nid_number;
-        $profile->username = $request->username;
+        $profile->full_name = $request->full_name;
         $profile->email = $request->email;
         $profile->phone = $request->phone;
-        $profile->designation = $request->designation;
+        $profile->present_address = $request->present_address;
         $profile->save();
 
         if ($request->file('photo')) {

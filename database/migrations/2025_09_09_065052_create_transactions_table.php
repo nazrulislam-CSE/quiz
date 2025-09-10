@@ -13,13 +13,16 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->integer('from_id')->nullable();
-            $table->integer('user_id')->nullable();
-            $table->integer('from_user')->nullable();
-            $table->string('out')->nullable();
-            $table->string('status')->nullable();
-            $table->string('purpose')->nullable();
-            $table->double('amount')->nullable();
+            $table->unsignedBigInteger('from_id')->nullable();     // Who triggered the transaction (e.g., buyer)
+            $table->unsignedBigInteger('user_id')->nullable();     // Who received the commission
+            $table->unsignedBigInteger('from_user')->nullable();   // Redundant? Could be same as from_id
+
+            $table->string('out')->nullable();                     // Category/type (e.g., 'referral')
+            $table->string('status')->nullable();                  // 'success', 'pending', etc.
+            $table->string('purpose')->nullable();                 // Description (e.g., 'Direct Referral Commission')
+
+            $table->decimal('amount', 16, 2)->nullable();           // Commission amount
+
             $table->timestamps();
         });
     }

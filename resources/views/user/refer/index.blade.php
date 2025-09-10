@@ -34,6 +34,7 @@
                         @endforelse
                     </tbody>
                 </table>
+                {{ $refers->links() }}
             </div>
         </div>
     </div>

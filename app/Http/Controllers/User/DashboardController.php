@@ -12,6 +12,8 @@ use App\Models\Subject;
 use App\Models\Admission;
 use App\Models\Department;
 use App\Models\Mcq;
+use App\Models\Generation;
+use App\Models\Transaction;
 use App\Models\BalanceRequest;
 
 class DashboardController extends Controller
@@ -28,19 +30,21 @@ class DashboardController extends Controller
                     ->where('status', 'approved')
                     ->sum('amount');
 
-        // Commission amounts from users table
-        $directIncome   = $user->direct_commission;
-        $firstGenIncome = $user->first_gen_commission;
-        $secondGenIncome = $user->second_gen_commission;
-        $dIncome = $user->visa_amount;
+        // ✅ Total Refer Bonus (1st + 2nd generation commissions)
+        $referBonus = Generation::where('to_user_id', $user->id)->sum('commission');
+
+        // ✅ Total Direct Income (Direct referral commission)
+        $directIncome = Transaction::where('user_id', $user->id)
+                        ->where('purpose', 'Direct Referral Commission')
+                        ->sum('amount');
+        $mainWallet = $user->main_wallet;
 
         return view('user.dashborad.index', compact(
             'pageTitle',
-            'balance',
+            'mainWallet',
+            'referBonus',
             'directIncome',
-            'firstGenIncome',
-            'secondGenIncome',
-            'dIncome',
+            'balance',
         ));
     }
 

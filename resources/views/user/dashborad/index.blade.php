@@ -62,40 +62,44 @@
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
-            <a href="#" class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4">
-                <i class="fas fa-hand-holding-usd fa-2x mb-2"></i>
-                <h5 class="mb-0">Withdraw</h5>
-            </a>
-        </div>
-        <div class="col-md-4 col-sm-6">
             <a href="{{ route('user.generation.list') }}" class="btn btn-primary w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-chart-line fa-2x mb-2"></i>
-                <h5 class="mb-0">Generation Income</h5>
+                <h5 class="mb-0">Generation List</h5>
+            </a>
+        </div>
+        <div class="col-md-4 col-sm-6">
+            <a href="{{ route('user.withdraw.list') }}" 
+            class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4 shadow-sm rounded-3">
+                <i class="fas fa-hand-holding-usd fa-2x mb-2"></i>
+                <h5 class="mb-0">Withdraw List</h5>
             </a>
         </div>
 
         <div class="col-md-4 col-sm-6">
             <a href="#" class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-hand-holding-usd fa-2x mb-2"></i>
-                <h5 class="mb-0">Balance Transfer</h5>
+                <h5 class="mb-0">Balance Transfer List</h5>
             </a>
         </div>
 
-        <!-- 1st Gen Income -->
-        <div class="col-md-4 col-sm-6">
-            <a href="#" class="btn btn-info w-100 text-white d-flex flex-column align-items-center py-4">
+       <!-- 1st & 2nd Gen Income (Refer Bonus) -->
+        <div class="col-md-4 col-sm-6 mb-3">
+            <div class="btn btn-info w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-users fa-2x mb-2"></i>
-                <h5 class="mb-0">Direct Refer: {{ number_format($directIncome+$firstGenIncome+$secondGenIncome, 2) }}</h5>
-            </a>
+                <h5 class="mb-0">Refer Bonus:</h5>
+                <span>{{ number_format($referBonus, 2) }}</span>
+            </div>
         </div>
 
-        <!-- Direct Income -->
-        <div class="col-md-4 col-sm-6">
-            <a href="#" class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4">
+        <!-- Direct Referral Income -->
+        <div class="col-md-4 col-sm-6 mb-3">
+            <div class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-user-plus fa-2x mb-2"></i>
-                <h5 class="mb-0">Direct Income: {{ number_format($dIncome, 2) }}</h5>
-            </a>
+                <h5 class="mb-0">Direct Income:</h5>
+                <span>{{ number_format($directIncome, 2) }}</span>
+            </div>
         </div>
+
     </div>
 
     <!-- Total Balance & Quick Stats -->
@@ -110,7 +114,8 @@
                         </a>
                     </div>
 
-                    <h2 class="text-primary mt-2">৳{{ number_format($balance ?? 0, 2) }}</h2>
+                    <h2 class="text-primary mt-2">{{ number_format($mainWallet, 2) }}</h2>
+
 
                     <!-- Bootstrap Button Group -->
                     <div class="btn-group mt-3 w-100" role="group" aria-label="Balance Actions">

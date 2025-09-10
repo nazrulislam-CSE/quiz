@@ -15,7 +15,7 @@
 <body>
     @include('layouts.user.navbar')
    
-    <div class="container">
+    <div class="container" style="padding-bottom:100px;">
         @yield('content')
     </div>
 
