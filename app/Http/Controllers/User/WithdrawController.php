@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Withdraw;
 use App\Models\User;
+use App\Models\Transaction;
 use Carbon\Carbon;
 
 class WithdrawController extends Controller
@@ -33,7 +34,7 @@ class WithdrawController extends Controller
     public function create()
     {
         $pageTitle = "Withdraw Create";
-        return view('user.withdraw.create', compact('pageTitle', 'withdraws'));
+        return view('user.withdraw.create', compact('pageTitle'));
     }
 
     /**
@@ -50,7 +51,7 @@ class WithdrawController extends Controller
         $user = auth()->user();
 
         // check balance
-        if ($user->main_wallet < $request->amount) {
+        if ($user->income_wallet < $request->amount) {
             return back()->with('error', 'Your balance is not sufficient!');
         }
 
@@ -64,7 +65,8 @@ class WithdrawController extends Controller
         ]);
 
         // decrease user wallet balance
-        $user->decrement('main_wallet', $request->amount);
+        $user->increment('withdraw_wallet', $request->amount);
+        $user->decrement('income_wallet', $request->amount);
 
         // create transaction log
         Transaction::create([

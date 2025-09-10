@@ -9,7 +9,7 @@ use App\Models\Generation;
 
 class GenerationController extends Controller
 {
-   public function index()
+    public function index()
     {
         $pageTitle = "Generation List";
 

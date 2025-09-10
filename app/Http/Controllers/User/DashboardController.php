@@ -37,6 +37,7 @@ class DashboardController extends Controller
         $directIncome = Transaction::where('user_id', $user->id)
                         ->where('purpose', 'Direct Referral Commission')
                         ->sum('amount');
+                        
         $mainWallet = $user->main_wallet;
 
         return view('user.dashborad.index', compact(

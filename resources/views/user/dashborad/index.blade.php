@@ -33,6 +33,22 @@
         </div>
     </div>
 
+    <!-- Total Balance & Quick Stats -->
+    <div class="row mb-4 g-3">
+        <div class="col-md-12">
+            <div class="card h-100">
+               <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">মোট ব্যালেন্স: <span class="text-success fw-bold">৳{{ number_format($mainWallet, 2) }}</span></h5>
+                        <a href="{{ route('user.balance.request') }}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-paper-plane me-1"></i> রিকোয়েস্ট করুন
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Dashboard Buttons -->
     <div class="row mb-4 g-3">
         <div class="col-md-4 col-sm-6">
@@ -82,7 +98,7 @@
             </a>
         </div>
 
-       <!-- 1st & 2nd Gen Income (Refer Bonus) -->
+       {{-- <!-- 1st & 2nd Gen Income (Refer Bonus) -->
         <div class="col-md-4 col-sm-6 mb-3">
             <div class="btn btn-info w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-users fa-2x mb-2"></i>
@@ -98,41 +114,10 @@
                 <h5 class="mb-0">Direct Income:</h5>
                 <span>{{ number_format($directIncome, 2) }}</span>
             </div>
-        </div>
+        </div> --}}
 
     </div>
 
-    <!-- Total Balance & Quick Stats -->
-    <div class="row mb-4 g-3">
-        <div class="col-md-12">
-            <div class="card h-100">
-               <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Total Balance</h5>
-                        <a href="{{ route('user.balance.request') }}" class="btn btn-sm btn-primary">
-                            <i class="fas fa-paper-plane me-1"></i> রিকোয়েস্ট করুন
-                        </a>
-                    </div>
-
-                    <h2 class="text-primary mt-2">{{ number_format($mainWallet, 2) }}</h2>
-
-
-                    <!-- Bootstrap Button Group -->
-                    <div class="btn-group mt-3 w-100" role="group" aria-label="Balance Actions">
-                        <button type="button" class="btn btn-sm btn-primary">
-                            <i class="fas fa-plus me-2"></i>Add Funds
-                        </button>
-                        <button type="button" class="btn btn-sm btn-success">
-                            <i class="fas fa-download me-2"></i>Withdraw
-                        </button>
-                        <button type="button" class="btn btn-sm btn-info">
-                            <i class="fas fa-exchange-alt me-2"></i>Transfer
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <script>
         function copyReferLink() {
             var copyText = document.getElementById("referLinkInput");

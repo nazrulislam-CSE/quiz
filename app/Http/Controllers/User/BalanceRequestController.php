@@ -47,7 +47,7 @@ class BalanceRequestController extends Controller
 
        
 
-        return redirect()->route('user.balance.request')
+        return redirect()->route('user.balance.request.report')
             ->with('success', 'Balance request submitted successfully!');
     }
 

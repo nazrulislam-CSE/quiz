@@ -8,7 +8,7 @@
     <div class="text-center mb-3">
         <h5 class="fw-semibold">
             আপনার বর্তমান ক্যাশ আউটযোগ্য ব্যালান্স রয়েছে - 
-            <span class="text-success">{{ number_format(auth()->user()->main_wallet, 2) }} টাকা</span>
+            <span class="text-success">{{ number_format(auth()->user()->income_wallet, 2) }} টাকা</span>
         </h5>
     </div>
 

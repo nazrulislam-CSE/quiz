@@ -22,7 +22,6 @@
                             <th>Method</th>
                             <th>Account Number</th>
                             <th>Amount</th>
-                            <th>Status</th>
                             <th>Date</th>
                         </tr>
                     </thead>
@@ -33,13 +32,6 @@
                                 <td>{{ ucfirst($withdraw->method) }}</td>
                                 <td>{{ $withdraw->account_number }}</td>
                                 <td>{{ number_format($withdraw->amount, 2) }}</td>
-                                <td>
-                                    <span class="badge 
-                                        {{ $withdraw->status == 'approved' ? 'bg-success' : 
-                                           ($withdraw->status == 'rejected' ? 'bg-danger' : 'bg-warning') }}">
-                                        {{ ucfirst($withdraw->status) }}
-                                    </span>
-                                </td>
                                 <td>{{ $withdraw->created_at->format('d M, Y h:i A') }}</td>
                             </tr>
                         @empty

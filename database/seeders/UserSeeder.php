@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             [
                 'company_name' => 'ChalkboardBD',
                 'username'     => 'chalkboardbd',
+                'full_name'    => 'ChalkboardBD',
                 'email'        => 'chalkboardbd@gmail.com',
                 'password'     => Hash::make('12345678'),
                 'show_password'=> '12345678',
@@ -28,6 +29,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'company_name' => 'Demo',
+                'full_name'    => 'Demo',
                 'username'     => 'demo',
                 'email'        => 'demo@gmail.com',
                 'password'     => Hash::make('demo1234'),

@@ -62,17 +62,21 @@ class BalanceRequestController extends Controller
             $user   = User::find($balanceRequest->user_id);
             $amount = $balanceRequest->amount;
             $this->referCommission($user->id, $amount);
+
+            $commission = Commission::find(1);
+
+            $commission_bonus = ($balanceRequest->amount * $commission->refer1) / 100;
+
+            $balanceRequest->update([
+                'status' => $request->status,
+                // 'amount' => $balanceRequest->amount + $commission_bonus,
+            ]);
+
+           $totalAdd = $balanceRequest->amount + $commission_bonus;
+           $user->main_wallet += $totalAdd;
+           $user->save();
+
         }
-
-        $commission = Commission::find(1);
-
-        $commission_bonus = ($balanceRequest->amount * $commission->refer1) / 100;
-
-        $balanceRequest->update([
-            'status' => $request->status,
-            'amount' => $balanceRequest->amount + $commission_bonus,
-        ]);
-
 
         return redirect()->route('admin.balance.request.index')
                         ->with('success','Balance request status updated successfully.');
@@ -95,9 +99,7 @@ class BalanceRequestController extends Controller
 
         // 💰 Pay Direct Referrer (20%)
         $directCommission = ($amount * $commission->refer1) / 100;
-        $directReferrer->increment('main_wallet', $directCommission);
-        $directReferrer->increment('refer_bonus', $directCommission);
-        // $directReferrer->increment('fund_wallet', $directCommission); // optional
+        $directReferrer->increment('income_wallet', $directCommission);
 
         Transaction::create([
             'from_id'   => $refer_id,
@@ -124,9 +126,7 @@ class BalanceRequestController extends Controller
 
         if ($firstGenReferrer) {
             $firstGenCommission = ($amount * $commission->refer2) / 100;
-            $firstGenReferrer->increment('main_wallet', $firstGenCommission);
-            $firstGenReferrer->increment('refer_bonus', $firstGenCommission);
-            // $firstGenReferrer->increment('fund_wallet', $firstGenCommission); // optional
+            $firstGenReferrer->increment('income_wallet', $firstGenCommission);
 
             Transaction::create([
                 'from_id'   => $refer_id,
@@ -154,9 +154,7 @@ class BalanceRequestController extends Controller
 
                 if ($secondGenReferrer) {
                     $secondGenCommission = ($amount * $commission->refer3) / 100;
-                    $secondGenReferrer->increment('main_wallet', $secondGenCommission);
-                    $secondGenReferrer->increment('refer_bonus', $secondGenCommission);
-                    // $secondGenReferrer->increment('fund_wallet', $secondGenCommission); // optional
+                    $secondGenReferrer->increment('income_wallet', $secondGenCommission);
 
                     Transaction::create([
                         'from_id'   => $refer_id,

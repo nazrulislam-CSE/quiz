@@ -13,11 +13,10 @@
                 <thead class="table-light">
                     <tr>
                         <th>SL</th>
-                        <th>From User</th>
-                        <th>Level</th>
-                        <th>Commission</th>
-                        <th>Total Amount</th>
+                        <th>User</th>
                         <th>Date</th>
+                        <th>Income</th>
+                        <th>Total Amount</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,10 +24,9 @@
                         <tr>
                             <td>{{ $generations->firstItem() + $key }}</td>
                             <td>{{ optional($gen->fromUser)->username ?? 'N/A' }}</td>
-                            <td>{{ $gen->level }}</td>
+                            <td>{{ \Carbon\Carbon::parse($gen->date)->format('d M Y') }}</td>
                             <td>{{ number_format($gen->commission, 2) }}</td>
                             <td>{{ number_format($gen->total_amount, 2) }}</td>
-                            <td>{{ \Carbon\Carbon::parse($gen->date)->format('d M Y') }}</td>
                         </tr>
                     @empty
                         <tr>

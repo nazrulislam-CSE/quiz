@@ -23,15 +23,10 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->integer('phone')->nullable();
-            
-            $table->decimal('direct_commission', 12, 2)->default(0)->nullable();
-            $table->decimal('first_gen_commission', 12, 2)->default(0)->nullable();
-            $table->decimal('second_gen_commission', 12, 2)->default(0)->nullable();
-
-            $table->decimal('fund_wallet', 12, 2)->default(0)->nullable();
             $table->decimal('main_wallet', 12, 2)->default(0)->nullable();
+            $table->decimal('income_wallet', 12, 2)->default(0)->nullable();
+            $table->decimal('withdraw_wallet', 12, 2)->default(0)->nullable();
             $table->decimal('refer_bonus', 12, 2)->default(0)->nullable();
-
             $table->string('image')->default('user.png')->nullable();
             $table->string('city_name')->nullable();
             $table->integer('established_year')->nullable();

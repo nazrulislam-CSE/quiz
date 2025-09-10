@@ -56,9 +56,9 @@
                                     <thead>
                                         <tr>
                                             <th class="border-bottom-0">SL</th>
-                                            <th class="border-bottom-0">Refer 1</th>
-                                            <th class="border-bottom-0">Refer 2</th>
-                                            <th class="border-bottom-0">Refer 3</th>
+                                            <th class="border-bottom-0">Direct Refer</th>
+                                            <th class="border-bottom-0">1st Generation</th>
+                                            <th class="border-bottom-0">2nd Generation</th>
                                             <th class="border-bottom-0">Actions</th>
                                         </tr>
                                     </thead>

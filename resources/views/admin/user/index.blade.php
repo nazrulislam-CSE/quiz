@@ -118,14 +118,11 @@
                                                 আইডি: {{ $user->refer_by ?? '---' }}
                                             </td>
                                             <td>
-                                                সচল ব্যালেন্স: 0 <br>
-                                                উত্তোলন: {{ number_format($user->withdraw_amount, 2) }} <br>
-                                                সর্বমোট: {{ number_format($user->visa_amount, 2) }}
+                                                সচল ব্যালেন্স:  {{ number_format($user->main_wallet, 2) }} <br>
+                                                উত্তোলন: {{ number_format($user->withdraw_wallet, 2) }} <br>
                                             </td>
                                             <td>
-                                                সংখ্যা আয়: ........ <br>
-                                                মৌলিক আয়: {{ number_format($user->direct_commission, 2) }} <br>
-                                                উপার্জিত আয়: {{ number_format($user->first_gen_commission, 2) }}
+                                                উপার্জিত আয়: {{ number_format($user->income_wallet, 2) }}
                                             </td>
                                             <td>
                                                 @if ($user->status == 1)
