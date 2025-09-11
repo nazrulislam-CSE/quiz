@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Withdraw extends Model
+class BalanceTransfer extends Model
 {
     use HasFactory;
-    protected $guarded = [];
+    
+    protected $fillable = ['user_id', 'amount', 'status'];
 
     public function user()
     {

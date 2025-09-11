@@ -91,9 +91,8 @@ class ExamController extends Controller
             $examFee = $selectedTopicData->fee;
 
             // Approved balance
-            $userBalance = BalanceRequest::where('user_id', Auth::id())
-                            ->where('status', 'approved')
-                            ->sum('amount');
+            $user = Auth::user();
+            $userBalance = $user->main_wallet;
 
             // balance check
             if ($userBalance < $examFee) {

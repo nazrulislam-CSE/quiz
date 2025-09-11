@@ -65,18 +65,18 @@ class WithdrawController extends Controller
         ]);
 
         // decrease user wallet balance
-        $user->increment('withdraw_wallet', $request->amount);
-        $user->decrement('income_wallet', $request->amount);
+        // $user->increment('withdraw_wallet', $request->amount);
+        // $user->decrement('income_wallet', $request->amount);
 
         // create transaction log
-        Transaction::create([
-            'from_id'  => $user->id,
-            'user_id'  => $user->id,
-            'out'      => 'withdraw',
-            'status'   => 'pending',
-            'purpose'  => 'Withdraw Request',
-            'amount'   => $request->amount,
-        ]);
+        // Transaction::create([
+        //     'from_id'  => $user->id,
+        //     'user_id'  => $user->id,
+        //     'out'      => 'withdraw',
+        //     'status'   => 'pending',
+        //     'purpose'  => 'Withdraw Request',
+        //     'amount'   => $request->amount,
+        // ]);
 
         return redirect()
             ->route('user.withdraw.list')

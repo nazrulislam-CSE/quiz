@@ -10,7 +10,7 @@
             <div class="card shadow-sm">
                 <div class="card-body text-center">
                     <img id="previewImage" 
-                         src="{{ (!empty($profile->image)) ? url('upload/user_images/'.$profile->image) : url('upload/no_image.jpg') }}" 
+                         src="{{ (!empty($profile->image)) ? url('upload/user_images/'.$profile->image) : url('upload/user.png') }}" 
                          class="rounded-circle mb-3" width="120" height="120" alt="Profile Photo">
                     <h5 class="mb-0">{{ $profile->name }}</h5>
                     <small class="text-muted">{{ $profile->email }}</small>
@@ -31,25 +31,25 @@
                         <!-- Name -->
                         <div class="mb-3">
                             <label class="form-label">Full Name</label>
-                            <input type="text" name="full_name" value="{{ old('full_name', $profile->full_name) }}" class="form-control" required>
+                            <input type="text" name="full_name" value="{{ old('full_name', $profile->full_name) }}" class="form-control"  placeholder="Enter full name" required>
                         </div>
 
                         <!-- Email -->
                         <div class="mb-3">
                             <label class="form-label">Email</label>
-                            <input type="email" name="email" value="{{ old('email', $profile->email) }}" class="form-control" required>
+                            <input type="email" name="email" value="{{ old('email', $profile->email) }}" class="form-control"  placeholder="Enter email" required>
                         </div>
 
                         <!-- Phone -->
                         <div class="mb-3">
                             <label class="form-label">Phone</label>
-                            <input type="text" name="phone" value="{{ old('phone', $profile->phone) }}" class="form-control" required>
+                            <input type="text" name="phone" value="{{ old('phone', $profile->phone) }}" class="form-control" placeholder="Enter phone" required>
                         </div>
 
                         <!-- Present Address -->
                         <div class="mb-3">
                             <label class="form-label">Present Address</label>
-                            <textarea name="present_address" class="form-control" rows="3" required>{{ old('present_address', $profile->present_address) }}</textarea>
+                            <textarea name="present_address" class="form-control" rows="3" placeholder="Enter present address" required>{{ old('present_address', $profile->present_address) }}</textarea>
                         </div>
 
                         <!-- Photo -->

@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\FeatureController;
 use App\Http\Controllers\Admin\BalanceRequestController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CommissionController;
+use App\Http\Controllers\Admin\WithdrawController;
 
 
 
@@ -253,6 +254,18 @@ Route::middleware('admin')->group(function () {
         Route::put('/update/{id}', [CommissionController::class, 'update'])->name('commission.update');
         Route::get('/delete/{id}', [CommissionController::class, 'destroy'])->name('commission.delete');
         Route::get('/show/{id}', [CommissionController::class,'show'])->name('commission.show');
+
+    });
+
+    /* ============> Withdraw Request <=========== */
+    Route::prefix('withdraw')->group(function () {
+        Route::get('/index', [WithdrawController::class, 'index'])->name('withdraw.request.index');
+        Route::get('/create', [WithdrawController::class, 'create'])->name('withdraw.request.create');
+        Route::post('/store', [WithdrawController::class, 'store'])->name('withdraw.request.store');
+        Route::get('/edit/{id}', [WithdrawController::class, 'edit'])->name('withdraw.request.edit');
+        Route::put('/update/{id}', [WithdrawController::class, 'update'])->name('withdraw.request.update');
+        Route::get('/delete/{id}', [WithdrawController::class, 'destroy'])->name('withdraw.request.delete');
+        Route::get('/show/{id}', [WithdrawController::class,'show'])->name('withdraw.request.show');
 
     });
     

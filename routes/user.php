@@ -23,6 +23,7 @@ use App\Http\Controllers\User\ReferController;
 use App\Http\Controllers\User\GenerationController;
 use App\Http\Controllers\User\BalanceRequestController;
 use App\Http\Controllers\User\WithdrawController;
+use App\Http\Controllers\User\BalanceTransferController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth'], function () {
@@ -85,6 +86,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/password/update', [SettingController::class, 'passwordUpdate'])->name('password.update');   
     });
     
+    Route::group(['prefix'=>'transfer'], function(){ 
+        Route::get('/balance-transfer', [BalanceTransferController::class, 'index'])->name('balance.transfer.index');
+        Route::get('/balance-transfer/create', [BalanceTransferController::class, 'create'])->name('balance.transfer.create');
+        Route::post('/balance-transfer/store', [BalanceTransferController::class, 'store'])->name('balance.transfer.store');
+    });
+
 
 
 });

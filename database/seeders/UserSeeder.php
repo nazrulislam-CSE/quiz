@@ -38,6 +38,30 @@ class UserSeeder extends Seeder
                 'created_by'   => 'demo',
                 'email_verified_at' => now(),
                 'status'       => 1,
+            ],
+            [
+                'company_name' => 'Nazrul Islam',
+                'full_name'    => 'Nazrul Islam',
+                'username'     => 'nazrul',
+                'email'        => 'nazrul@gmail.com',
+                'password'     => Hash::make('12345678'),
+                'show_password'=> '12345678',
+                'phone'        => '01783465103',
+                'created_by'   => 'demo',
+                'email_verified_at' => now(),
+                'status'       => 1,
+            ],
+            [
+                'company_name' => 'Sazzad Hossain',
+                'full_name'    => 'Sazzad Hossain',
+                'username'     => 'sazzad',
+                'email'        => 'sazzad@gmail.com',
+                'password'     => Hash::make('12345678'),
+                'show_password'=> '12345678',
+                'phone'        => '01783465103',
+                'created_by'   => 'demo',
+                'email_verified_at' => now(),
+                'status'       => 1,
             ]
         ];
 

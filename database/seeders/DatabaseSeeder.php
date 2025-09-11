@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AboutSeeder::class);
         $this->call(FeatureSeeder::class);
         $this->call(CommissionSeeder::class);
+        $this->call(DivisionSeeder::class);
 
     }
 }

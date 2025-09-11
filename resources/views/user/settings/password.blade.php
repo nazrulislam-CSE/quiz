@@ -22,7 +22,7 @@
                         <!-- Old Password -->
                         <div class="mb-3">
                             <label class="form-label">Old Password</label>
-                            <input type="password" name="old_password" class="form-control" required>
+                            <input type="password" name="old_password" class="form-control" placeholder="Enter old password" required>
                             @error('old_password')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -31,7 +31,7 @@
                         <!-- New Password -->
                         <div class="mb-3">
                             <label class="form-label">New Password</label>
-                            <input type="password" name="new_password" class="form-control" required>
+                            <input type="password" name="new_password" class="form-control"  placeholder="Enter new password" required>
                             @error('new_password')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
@@ -40,7 +40,7 @@
                         <!-- Confirm New Password -->
                         <div class="mb-3">
                             <label class="form-label">Confirm New Password</label>
-                            <input type="password" name="new_password_confirmation" class="form-control" required>
+                            <input type="password" name="new_password_confirmation" class="form-control"  placeholder="Enter confirm password" required>
                         </div>
 
                         <button type="submit" class="btn btn-success w-100">Update Password</button>

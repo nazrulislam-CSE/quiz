@@ -11,16 +11,26 @@ class GenerationController extends Controller
 {
     public function index()
     {
-        $pageTitle = "Generation List";
-
+        $pageTitle = "Upline Generation List";
         $userId = auth()->id();
 
-        // Get generations where current user was the receiver (to_user_id)
-        $generations = Generation::where('to_user_id', $userId)
-            ->with('fromUser') 
-            ->latest()
-            ->paginate(10);
+        $uplineGenerations = [];
+        $currentUserId = $userId;
 
-        return view('user.generation.index', compact('pageTitle', 'generations'));
+        for ($i = 0; $i < 3; $i++) {
+            $generation = Generation::where('to_user_id', $currentUserId)
+                ->with('fromUser')
+                ->first();
+
+            if ($generation) {
+                $uplineGenerations[] = $generation;
+                $currentUserId = $generation->from_user_id;
+            } else {
+                break;
+            }
+        }
+
+        return view('user.generation.index', compact('pageTitle', 'uplineGenerations'));
     }
+
 }

@@ -18,10 +18,11 @@
                 <table class="table table-bordered table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>#</th>
+                            <th>Sl</th>
                             <th>Method</th>
                             <th>Account Number</th>
                             <th>Amount</th>
+                            <th>Status</th>
                             <th>Date</th>
                         </tr>
                     </thead>
@@ -32,7 +33,14 @@
                                 <td>{{ ucfirst($withdraw->method) }}</td>
                                 <td>{{ $withdraw->account_number }}</td>
                                 <td>{{ number_format($withdraw->amount, 2) }}</td>
-                                <td>{{ $withdraw->created_at->format('d M, Y h:i A') }}</td>
+                                <td>
+                                    <span class="badge 
+                                        {{ $withdraw->status == 'approved' ? 'bg-success' : 
+                                           ($withdraw->status == 'rejected' ? 'bg-danger' : 'bg-warning') }}">
+                                        {{ ucfirst($withdraw->status) }}
+                                    </span>
+                                </td>
+                               <td>{{ $withdraw->created_at->format('d M, Y h:i:s A') }}</td>
                             </tr>
                         @empty
                             <tr>
