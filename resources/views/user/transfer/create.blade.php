@@ -15,7 +15,7 @@
                 @csrf
                 <div class="mb-3">
                     <label>Amount to Transfer</label>
-                    <input type="number" name="amount" class="form-control" required>
+                    <input type="number" name="amount" class="form-control" placeholder="Enter amount" required>
                 </div>
 
                 <button type="submit" class="btn btn-success w-100">Transfer Now</button>

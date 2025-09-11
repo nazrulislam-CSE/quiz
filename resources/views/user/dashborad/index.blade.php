@@ -92,7 +92,7 @@
         </div>
 
         <div class="col-md-4 col-sm-6">
-            <a href="#" class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4">
+            <a href="{{ route('user.balance.transfer.index') }}" class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-hand-holding-usd fa-2x mb-2"></i>
                 <h5 class="mb-0">Balance Transfer List</h5>
             </a>

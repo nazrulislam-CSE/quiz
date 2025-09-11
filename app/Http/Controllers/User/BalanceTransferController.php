@@ -58,13 +58,11 @@ class BalanceTransferController extends Controller
         Transaction::create([
             'user_id'      => $user->id,
             'from_id'      => $user->id,
-            'to_id'        => $user->id,
-            'type'         => 'transfer',
+            'from_user'    => $user->id,
+            'out'         => 'transfer',
             'amount'       => $request->amount,
             'status'       => 'success',
             'purpose'      => 'Income to Main Wallet Transfer',
-            'wallet_from'  => 'income_wallet',
-            'wallet_to'    => 'main_wallet',
         ]);
 
 
