@@ -12,21 +12,23 @@
                 <table class="table table-bordered table-hover">
                     <thead class="table-light">
                         <tr>
-                            <th>SL</th>
-                            <th>User</th>
+                            <th>Sl</th>
+                            <th>From User</th>
+                            <th>To User</th>
                             <th>Date</th>
                             <th>Income</th>
                             <th>Total Amount</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($uplineGenerations as $key => $gen)
+                        @forelse($myGenerations  as $key => $gen)
                             <tr>
-                                <td>{{ $key + 1 }}</td>
-                                <td>{{ optional($gen->fromUser)->username ?? 'N/A' }}</td>
-                                <td>{{ \Carbon\Carbon::parse($gen->date)->format('d M Y') }}</td>
-                                <td>{{ number_format($gen->commission, 2) }}</td>
-                                <td>{{ number_format($gen->total_amount, 2) }}</td>
+                                <td>{{ $key+1 }}</td>
+                                <td>{{ ucfirst($gen->fromUser->username ?? 'N/A') }}</td>
+                                <td>{{ ucfirst($gen->toUser->username ?? 'N/A') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($gen->date)->format('d M Y h:i:s A') }}</td>
+                                <td>{{ number_format($gen->commission, 2) }} টাকা</td>
+                                <td>{{ number_format($gen->total_amount, 2) }} টাকা</td>
                             </tr>
                         @empty
                             <tr>

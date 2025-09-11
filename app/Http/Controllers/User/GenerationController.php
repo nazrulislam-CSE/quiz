@@ -9,28 +9,19 @@ use App\Models\Generation;
 
 class GenerationController extends Controller
 {
-    public function index()
+   public function index()
     {
-        $pageTitle = "Upline Generation List";
+        $pageTitle = "My Generation List";
         $userId = auth()->id();
 
-        $uplineGenerations = [];
-        $currentUserId = $userId;
+        $myGenerations = Generation::with(['fromUser', 'toUser'])
+            ->where('from_user_id', $userId)
+            ->orderBy('level', 'asc')
+            ->get();
 
-        for ($i = 0; $i < 3; $i++) {
-            $generation = Generation::where('to_user_id', $currentUserId)
-                ->with('fromUser')
-                ->first();
-
-            if ($generation) {
-                $uplineGenerations[] = $generation;
-                $currentUserId = $generation->from_user_id;
-            } else {
-                break;
-            }
-        }
-
-        return view('user.generation.index', compact('pageTitle', 'uplineGenerations'));
+        return view('user.generation.index', compact('pageTitle', 'myGenerations'));
     }
+
+
 
 }

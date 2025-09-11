@@ -61,7 +61,8 @@ class BalanceRequestController extends Controller
         if ($request->status === 'approved') {
             $user   = User::find($balanceRequest->user_id);
             $amount = $balanceRequest->amount;
-            $this->referCommission($user->id, $amount);
+
+            $this->referCommission($user, $amount);
 
             $commission = Commission::find(1);
 
@@ -82,13 +83,15 @@ class BalanceRequestController extends Controller
                         ->with('success','Balance request status updated successfully.');
     }
 
-    public function referCommission($refer_id, $amount)
+    public function referCommission($user, $amount)
     {
         $commission = Commission::find(1);
 
         if (!$commission) {
             return back()->with('error', 'Commission settings not found.');
         }
+
+        $refer_id = $user->refer_by;
 
         // Step 1: Direct Referrer
         $directReferrer = User::find($refer_id);
@@ -102,7 +105,7 @@ class BalanceRequestController extends Controller
         $directReferrer->increment('income_wallet', $directCommission);
 
         Transaction::create([
-            'from_id'   => $refer_id,
+            'from_id'   => $user->id,
             'user_id'   => $directReferrer->id,
             'from_user' => $refer_id,
             'out'       => 'referral',
@@ -112,7 +115,7 @@ class BalanceRequestController extends Controller
         ]);
 
         Generation::create([
-            'from_user_id' => $refer_id,
+            'from_user_id' => $user->id,
             'to_user_id'   => $directReferrer->id,
             'level'        => 0,
             'date'         => now(),
@@ -129,7 +132,7 @@ class BalanceRequestController extends Controller
             $firstGenReferrer->increment('income_wallet', $firstGenCommission);
 
             Transaction::create([
-                'from_id'   => $refer_id,
+                'from_id'   => $user->id,
                 'user_id'   => $firstGenReferrer->id,
                 'from_user' => $refer_id,
                 'out'       => 'referral',
@@ -139,7 +142,7 @@ class BalanceRequestController extends Controller
             ]);
 
             Generation::create([
-                'from_user_id' => $refer_id,
+                'from_user_id' => $user->id,
                 'to_user_id'   => $firstGenReferrer->id,
                 'level'        => 1,
                 'date'         => now(),
@@ -157,7 +160,7 @@ class BalanceRequestController extends Controller
                     $secondGenReferrer->increment('income_wallet', $secondGenCommission);
 
                     Transaction::create([
-                        'from_id'   => $refer_id,
+                        'from_id'   => $user->id,
                         'user_id'   => $secondGenReferrer->id,
                         'from_user' => $refer_id,
                         'out'       => 'referral',
@@ -167,7 +170,7 @@ class BalanceRequestController extends Controller
                     ]);
 
                     Generation::create([
-                        'from_user_id' => $refer_id,
+                        'from_user_id' => $user->id,
                         'to_user_id'   => $secondGenReferrer->id,
                         'level'        => 2,
                         'date'         => now(),
