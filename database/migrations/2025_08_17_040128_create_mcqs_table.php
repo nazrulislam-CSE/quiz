@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('department_id')->constrained()->onDelete('cascade');
             $table->foreignId('subject_id')->constrained()->onDelete('cascade');
             $table->foreignId('topic_id')->constrained()->onDelete('cascade');
+            $table->integer('paper_id')->nullable();
+            $table->integer('model_id')->nullable();
             $table->text('question');
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

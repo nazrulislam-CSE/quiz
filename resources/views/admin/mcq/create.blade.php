@@ -97,6 +97,42 @@
                                 </select>
                             </div>
 
+                            {{-- select paper final --}}
+                            <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                                <label for="topic_id">Paper Final: <span class="text-danger">*</span></label>
+                                @error('topic_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                                <select name="topic_id" id="topic_id" class="form-control">
+                                    <option value="">Select Paper Final</option>
+                                    @if(old('topic_id'))
+                                        @foreach ($topics as $topic)
+                                            <option value="{{ $topic->id }}" {{ old('topic_id') == $topic->id ? 'selected' : '' }}>
+                                                {{ $topic->name }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+
+                            {{-- select model --}}
+                            <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                                <label for="topic_id">Model Test: <span class="text-danger">*</span></label>
+                                @error('topic_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                                <select name="topic_id" id="topic_id" class="form-control">
+                                    <option value="">Select Model Test</option>
+                                    @if(old('topic_id'))
+                                        @foreach ($topics as $topic)
+                                            <option value="{{ $topic->id }}" {{ old('topic_id') == $topic->id ? 'selected' : '' }}>
+                                                {{ $topic->name }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+
                             {{-- Number of Questions --}}
                             <div class="form-group col-xl-4 col-lg-4 col-md-4">
                                 <label for="total_questions">How many questions?</label>

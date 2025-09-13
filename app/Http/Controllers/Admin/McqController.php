@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Admission;
 use App\Models\Topic;
+use App\Models\PaperFinal;
+use App\Models\FinalModel;
 use Illuminate\Support\Facades\DB;
 
 class McqController extends Controller
@@ -35,6 +37,8 @@ class McqController extends Controller
         $departments = Department::where('status', '1')->get();
         $subjects = Subject::where('status', '1')->get();
         $topics = Topic::where('status', '1')->get();
+        $topics = PaperFinal::where('status', '1')->get();
+        $topics = FinalModel::where('status', '1')->get();
 
         return view('admin.mcq.create', compact('admissions', 'departments', 'subjects','topics', 'pageTitle'));
     }
@@ -66,6 +70,8 @@ class McqController extends Controller
                     'department_id' => $request->department_id,
                     'subject_id' => $request->subject_id,
                     'topic_id' => $request->topic_id,
+                    'paper_id' => $request->topic_id,
+                    'model_id' => $request->topic_id,
                     'question' => $qData['text'],
                     'created_by' => Auth::id(),
                 ]);
