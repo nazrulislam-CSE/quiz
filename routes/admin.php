@@ -23,6 +23,8 @@ use App\Http\Controllers\Admin\BalanceRequestController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CommissionController;
 use App\Http\Controllers\Admin\WithdrawController;
+use App\Http\Controllers\Admin\PaperFinalController;
+use App\Http\Controllers\Admin\ModelTestController;
 
 
 
@@ -182,6 +184,32 @@ Route::middleware('admin')->group(function () {
         Route::post('/update/{id}', [TopicController::class, 'update'])->name('topic.update');
         Route::get('/delete/{id}', [TopicController::class, 'destroy'])->name('topic.delete');
         Route::get('/show/{id}', [TopicController::class,'show'])->name('topic.show');
+        Route::get('/get-departments/{admission_id}', [TopicController::class, 'getDepartments'])->name('get.departments');
+        Route::get('/get-subjects/{department_id}', [TopicController::class, 'getSubjects']);
+    });
+
+    /* ============> Paper Final <=========== */
+    Route::prefix('paper')->group(function () {
+        Route::get('/index', [PaperFinalController::class, 'index'])->name('paper.index');
+        Route::get('/create', [PaperFinalController::class, 'create'])->name('paper.create');
+        Route::post('/store', [PaperFinalController::class, 'store'])->name('paper.store');
+        Route::get('/edit/{id}', [PaperFinalController::class, 'edit'])->name('paper.edit');
+        Route::post('/update/{id}', [PaperFinalController::class, 'update'])->name('paper.update');
+        Route::get('/delete/{id}', [PaperFinalController::class, 'destroy'])->name('paper.delete');
+        Route::get('/show/{id}', [PaperFinalController::class,'show'])->name('paper.show');
+        Route::get('/get-departments/{admission_id}', [TopicController::class, 'getDepartments'])->name('get.departments');
+        Route::get('/get-subjects/{department_id}', [TopicController::class, 'getSubjects']);
+    });
+
+    /* ============> Model Test <=========== */
+    Route::prefix('model')->group(function () {
+        Route::get('/index', [ModelTestController::class, 'index'])->name('model.index');
+        Route::get('/create', [ModelTestController::class, 'create'])->name('model.create');
+        Route::post('/store', [ModelTestController::class, 'store'])->name('model.store');
+        Route::get('/edit/{id}', [ModelTestController::class, 'edit'])->name('model.edit');
+        Route::post('/update/{id}', [ModelTestController::class, 'update'])->name('model.update');
+        Route::get('/delete/{id}', [ModelTestController::class, 'destroy'])->name('model.delete');
+        Route::get('/show/{id}', [ModelTestController::class,'show'])->name('model.show');
         Route::get('/get-departments/{admission_id}', [TopicController::class, 'getDepartments'])->name('get.departments');
         Route::get('/get-subjects/{department_id}', [TopicController::class, 'getSubjects']);
     });

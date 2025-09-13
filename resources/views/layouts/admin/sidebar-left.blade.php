@@ -134,6 +134,30 @@
                         <li><a class="slide-item {{ Request::is('admin/topic/index') ? 'active' : '' }}" href="{{ route('admin.topic.index')}}">Manage Topics</a></li>
                     </ul>
                 </li>
+                <li class="slide {{ Request::is('admin/paper*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-cog"></i>
+                        <span class="side-menu__label">Paper Final Exam</span>
+                        <span class="badge bg-success side-badge"></span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Paper Final</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/paper/index') ? 'active' : '' }}" href="{{ route('admin.paper.index')}}">Manage Paper Final</a></li>
+                    </ul>
+                </li>
+                <li class="slide {{ Request::is('admin/model*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-cog"></i>
+                        <span class="side-menu__label">Final Model Test</span>
+                        <span class="badge bg-success side-badge"></span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Final Model Test</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/model/index') ? 'active' : '' }}" href="{{ route('admin.model.index')}}">Manage Final Model Test</a></li>
+                    </ul>
+                </li>
                   <li class="slide {{ Request::is('admin/mcq*') ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                         <i class="side-menu__icon fas fa-cog"></i>
