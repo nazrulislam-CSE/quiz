@@ -52,7 +52,7 @@ class McqController extends Controller
             'admission_id' => 'required|exists:admissions,id',
             'department_id' => 'required|exists:departments,id',
             'subject_id' => 'required|exists:subjects,id',
-            'topic_id' => 'required|exists:topics,id',
+            // 'topic_id' => 'required|exists:topics,id',
             'questions' => 'required|array|min:1',
             'questions.*.text' => 'required|string',
             'questions.*.answers' => 'required|array|min:4', // Ensure exactly 4 answers
@@ -137,7 +137,7 @@ class McqController extends Controller
         'admission_id' => 'required|exists:admissions,id',
         'department_id' => 'required|exists:departments,id',
         'subject_id' => 'required|exists:subjects,id',
-        'topic_id' => 'required|exists:topics,id',
+        // 'topic_id' => 'required|exists:topics,id',
         'questions' => 'required|array|min:1',
         'questions.*.text' => 'required|string|max:1000',
         'questions.*.answers' => 'required|array|min:2|max:6',
