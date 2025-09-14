@@ -48,7 +48,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header border-bottom d-flex justify-content-between align-items-center">
-                            <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}} <span class="badge bg-danger side-badge" style="font-size:17px;">{{ count($topics) }}</span> </p>
+                            <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}} <span class="badge bg-danger side-badge" style="font-size:17px;">{{ count($models) }}</span> </p>
 
                             <div class="d-flex">
                                 <a href="{{ route('admin.model.create')}}" class="btn btn-success me-2">
