@@ -16,7 +16,7 @@ class SettingsTableSeeder extends Seeder
         $settings = [
             [
                 'name'  => 'site_name',
-                'value' => 'Speak Up Bd',
+                'value' => 'Chalkboard Bd',
             ],
             [
                 'name'  => 'site_logo',

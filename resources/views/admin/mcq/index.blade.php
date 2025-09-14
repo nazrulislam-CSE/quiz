@@ -104,7 +104,15 @@
                                                     <br>
                                                     Subject: {{ $mcq->subject->name ?? '' }}
                                                     <br>
-                                                    Topic: {{ $mcq->topic->name ?? '' }}
+                                                    @if ($mcq->topic)
+                                                        Topic: {{ $mcq->topic->name }}
+                                                    @elseif ($mcq->paperFinal)
+                                                        Paper Final: {{ $mcq->paperFinal->name }}
+                                                    @elseif ($mcq->modelTest)
+                                                        Model Test: {{ $mcq->modelTest->name }}
+                                                    @else
+                                                        N/A
+                                                    @endif
                                                 </div>
                                             </td>
                                             <td class="col-2">{{ $mcq->created_at->format('d M Y') }}</td>

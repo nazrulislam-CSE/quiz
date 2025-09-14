@@ -99,16 +99,16 @@
 
                             {{-- select paper final --}}
                             <div class="form-group col-xl-4 col-lg-4 col-md-4">
-                                <label for="topic_id">Paper Final: <span class="text-danger">*</span></label>
-                                @error('topic_id')
+                                <label for="paper_final_id">Paper Final: <span class="text-danger">*</span></label>
+                                @error('paper_final_id')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
-                                <select name="topic_id" id="topic_id" class="form-control">
+                                <select name="paper_final_id" id="paper_final_id" class="form-control">
                                     <option value="">Select Paper Final</option>
-                                    @if(old('topic_id'))
-                                        @foreach ($topics as $topic)
-                                            <option value="{{ $topic->id }}" {{ old('topic_id') == $topic->id ? 'selected' : '' }}>
-                                                {{ $topic->name }}
+                                    @if(old('paper_final_id'))
+                                        @foreach ($papers as $paper)
+                                            <option value="{{ $paper->id }}" {{ old('paper_final_id') == $paper->id ? 'selected' : '' }}>
+                                                {{ $paper->name }}
                                             </option>
                                         @endforeach
                                     @endif
@@ -117,16 +117,16 @@
 
                             {{-- select model --}}
                             <div class="form-group col-xl-4 col-lg-4 col-md-4">
-                                <label for="topic_id">Model Test: <span class="text-danger">*</span></label>
-                                @error('topic_id')
+                                <label for="model_test_id">Model Test: <span class="text-danger">*</span></label>
+                                @error('model_test_id')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
-                                <select name="topic_id" id="topic_id" class="form-control">
+                                <select name="model_test_id" id="model_test_id" class="form-control">
                                     <option value="">Select Model Test</option>
-                                    @if(old('topic_id'))
-                                        @foreach ($topics as $topic)
-                                            <option value="{{ $topic->id }}" {{ old('topic_id') == $topic->id ? 'selected' : '' }}>
-                                                {{ $topic->name }}
+                                    @if(old('model_test_id'))
+                                        @foreach ($models as $model)
+                                            <option value="{{ $model->id }}" {{ old('model_test_id') == $model->id ? 'selected' : '' }}>
+                                                {{ $model->name }}
                                             </option>
                                         @endforeach
                                     @endif

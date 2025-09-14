@@ -52,7 +52,7 @@
 
                             <div class="d-flex">
                                 <a href="{{ route('admin.model.create')}}" class="btn btn-success me-2">
-                                    <i class="fas fa-plus d-inline"></i> Add Now Model Test
+                                    <i class="fas fa-plus d-inline"></i> Add Now Final Model Test
                                 </a>
                             </div>
                         </div>
@@ -74,31 +74,31 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($topics as $key=> $topic)
+                                        @foreach ($models as $key=> $model)
                                         <tr>
                                             <td class="col-1">{{ $key+1 }}</td>
                                             <td>
-                                                <img src="{{ (!empty($topic->image)) ? url('upload/topic/'.$topic->image):url('upload/mcq.png') }}"  width="30" height="20" alt="No ICON" class="img-fluid">
+                                                <img src="{{ (!empty($model->image)) ? url('upload/model/'.$model->image):url('upload/mcq.png') }}"  width="30" height="20" alt="No ICON" class="img-fluid">
                                             </td>
                                             <td>
-                                                {{ $topic->name ?? '' }}
+                                                {{ $model->name ?? '' }}
                                             </td>
-                                            <td>{{ $topic->subject->admission->name ?? '' }}</td>
-                                            <td>{{ $topic->subject->department->name ?? '' }}</td>
-                                            <td>{{ $topic->subject->name ?? '' }}</td>
+                                            <td>{{ $model->subject->admission->name ?? '' }}</td>
+                                            <td>{{ $model->subject->department->name ?? '' }}</td>
+                                            <td>{{ $model->subject->name ?? '' }}</td>
                                             <td>
-                                                {{ $topic->exam_duration ?? '' }}
-                                            </td>
-                                            <td>
-                                                {{ $topic->exam_mark ?? '' }}
+                                                {{ $model->exam_duration ?? '' }}
                                             </td>
                                             <td>
-                                                {{ $topic->fee ?? '' }}
+                                                {{ $model->exam_mark ?? '' }}
                                             </td>
                                             <td>
-                                                <a href="{{ route('admin.model.show',$topic->id)}}" class="btn btn-success btn-sm mr-2"><i class="fas fa-eye"></i></a>
-                                                <a href="{{ route('admin.model.edit',$topic->id)}}" class="btn btn-primary btn-sm mr-2"><i class="fas fa-edit"></i></a>
-                                                <a href="{{ route('admin.model.delete',$topic->id)}}" class="btn btn-danger btn-sm" title="Delete Data" id="delete"><i class="fa fa-trash"></i></a>
+                                                {{ $model->fee ?? '' }}
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('admin.model.show',$model->id)}}" class="btn btn-success btn-sm mr-2"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ route('admin.model.edit',$model->id)}}" class="btn btn-primary btn-sm mr-2"><i class="fas fa-edit"></i></a>
+                                                <a href="{{ route('admin.model.delete',$model->id)}}" class="btn btn-danger btn-sm" title="Delete Data" id="delete"><i class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
                                         @endforeach

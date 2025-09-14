@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('admission_id')->constrained()->onDelete('cascade');
             $table->foreignId('department_id')->constrained()->onDelete('cascade');
             $table->foreignId('subject_id')->constrained()->onDelete('cascade');
-            $table->foreignId('topic_id')->constrained()->onDelete('cascade');
-            $table->integer('paper_id')->nullable();
-            $table->integer('model_id')->nullable();
+            $table->foreignId('topic_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('model_test_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('paper_final_id')->nullable()->constrained()->onDelete('cascade');
             $table->text('question');
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

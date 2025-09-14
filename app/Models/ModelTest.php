@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FinalModel extends Model
+class ModelTest extends Model
 {
     use HasFactory;
 
@@ -15,4 +15,10 @@ class FinalModel extends Model
     {
         return $this->belongsTo(Subject::class);
     }
+
+    public function mcqs()
+    {
+        return $this->hasMany(Mcq::class);
+    }
+
 }

@@ -94,6 +94,38 @@
                             @enderror
                         </div>
 
+                        <!-- Paper Final Selection -->
+                        <div class="form-group col-xl-4 col-lg-4 col-md-6">
+                            <label for="paper_final_id">Paper Final <span class="text-danger">*</span></label>
+                            <select name="paper_final_id" id="paper_final_id" class="form-control select2 @error('paper_final_id') is-invalid @enderror" required>
+                                <option value="">Select Paper Final</option>
+                                @foreach ($papers as $paper)
+                                    <option value="{{ $paper->id }}" {{ old('paper_final_id', $mcq->paper_final_id) == $paper->id ? 'selected' : '' }}>
+                                        {{ $paper->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('paper_final_id')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Model Test Selection -->
+                        <div class="form-group col-xl-4 col-lg-4 col-md-6">
+                            <label for="model_test_id">Model Test <span class="text-danger">*</span></label>
+                            <select name="model_test_id" id="model_test_id" class="form-control select2 @error('model_test_id') is-invalid @enderror" required>
+                                <option value="">Select Model Test</option>
+                                @foreach ($models as $model)
+                                    <option value="{{ $model->id }}" {{ old('model_test_id', $mcq->model_test_id) == $model->id ? 'selected' : '' }}>
+                                        {{ $model->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('model_test_id')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                         <!-- Questions Container -->
                         <div class="col-12 mt-4" id="questions-container">
                             <!-- Existing Question -->
@@ -184,6 +216,8 @@
             $('#department_id').html('<option value="">Loading...</option>');
             $('#subject_id').html('<option value="">Select Subject</option>');
             $('#topic_id').html('<option value="">Select Topic</option>');
+            $('#paper_final_id').html('<option value="">Select Paper Final</option>');
+            $('#model_test_id').html('<option value="">Select Model Test</option>');
 
             if (admissionID) {
                 $.ajax({

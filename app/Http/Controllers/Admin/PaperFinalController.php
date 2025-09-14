@@ -19,8 +19,8 @@ class PaperFinalController extends Controller
     public function index()
     {
         $pageTitle = 'Paper Final List';
-        $topics = PaperFinal::latest()->get();
-        return view('admin.paper.index', compact('topics', 'pageTitle'));
+        $papers = PaperFinal::latest()->get();
+        return view('admin.paper.index', compact('papers', 'pageTitle'));
     }
 
     /**
@@ -57,7 +57,7 @@ class PaperFinalController extends Controller
             $counter++;
         }
 
-        $topic = PaperFinal::create([
+        $paper = PaperFinal::create([
             'subject_id' => $request->subject_id,
             'name' => $request->name,
             'slug' => $slug,
@@ -74,9 +74,9 @@ class PaperFinalController extends Controller
         if ($request->file('image')) {
             $file = $request->file('image');
             $filename = date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('upload/topic'), $filename);
-            $topic->image = $filename;
-            $topic->save();
+            $file->move(public_path('upload/paper'), $filename);
+            $paper->image = $filename;
+            $paper->save();
         }
 
         flash()->addSuccess("Paper Final created successfully.");
@@ -89,8 +89,8 @@ class PaperFinalController extends Controller
     public function show(string $id)
     {
         $pageTitle = 'Paper Final Details';
-        $topic = PaperFinal::findOrFail($id);
-        return view('admin.paper.show', compact('topic', 'pageTitle'));
+        $paper = PaperFinal::findOrFail($id);
+        return view('admin.paper.show', compact('paper', 'pageTitle'));
     }
 
     /**
@@ -98,12 +98,12 @@ class PaperFinalController extends Controller
      */
     public function edit(string $id)
     {
-        $pageTitle = 'Edit Topic';
-        $topic = PaperFinal::findOrFail($id);
+        $pageTitle = 'Edit Paper Final';
+        $paper = PaperFinal::findOrFail($id);
         $subjects = Subject::where('status', '1')->get();
         $admissions = Admission::where('status', '1')->get();
         $departments = Department::where('status', '1')->get();
-        return view('admin.topic.edit', compact('topic', 'subjects', 'admissions', 'departments', 'pageTitle'));
+        return view('admin.paper.edit', compact('paper', 'subjects', 'admissions', 'departments', 'pageTitle'));
     }
 
     /**
@@ -119,7 +119,7 @@ class PaperFinalController extends Controller
             'fee' => 'required|numeric',
         ]);
 
-        $topic = PaperFinal::findOrFail($id);
+        $paper = PaperFinal::findOrFail($id);
 
         $slug = Str::slug($request->name);
         $originalSlug = $slug;
@@ -130,7 +130,7 @@ class PaperFinalController extends Controller
             $counter++;
         }
 
-        $topic->update([
+        $paper->update([
             'subject_id' => $request->subject_id,
             'name' => $request->name,
             'slug' => $slug,
@@ -146,8 +146,8 @@ class PaperFinalController extends Controller
         if ($request->file('image')) {
             $file = $request->file('image');
             $filename = date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('upload/topic'), $filename);
-            PaperFinal::where('id', $topic->id)->update(['topic' => $filename]);
+            $file->move(public_path('upload/paper'), $filename);
+            PaperFinal::where('id', $paper->id)->update(['paper' => $filename]);
         }
 
         flash()->addSuccess("Paper Final updated successfully.");
@@ -159,9 +159,9 @@ class PaperFinalController extends Controller
      */
     public function destroy(string $id)
     {
-        $topic = PaperFinal::findOrFail($id);
-        @unlink(public_path('upload/topic/'.$topic->image));
-        $topic->delete();
+        $paper = PaperFinal::findOrFail($id);
+        @unlink(public_path('upload/paper/'.$paper->image));
+        $paper->delete();
 
         flash()->addSuccess("Paper Final deleted successfully.");
         return redirect()->route('admin.paper.index');

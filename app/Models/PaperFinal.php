@@ -15,4 +15,10 @@ class PaperFinal extends Model
     {
         return $this->belongsTo(Subject::class);
     }
+    
+    public function mcqs()
+    {
+        return $this->hasMany(Mcq::class);
+    }
+
 }

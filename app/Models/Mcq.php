@@ -37,4 +37,15 @@ class Mcq extends Model
     {
         return $this->belongsTo(Topic::class);
     }
+
+    public function modelTest()
+    {
+        return $this->belongsTo(ModelTest::class);
+    }
+
+    public function paperFinal()
+    {
+        return $this->belongsTo(PaperFinal::class);
+    }
+
 }

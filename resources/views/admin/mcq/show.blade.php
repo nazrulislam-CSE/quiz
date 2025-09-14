@@ -69,10 +69,30 @@
                     <td>Subject</td>
                     <td>{{ $mcq->subject->name ?? '' }}</td>
                 </tr>
+                {{-- Show Topic if it exists --}}
+                @if ($mcq->topic)
                 <tr>
                     <td>Topic</td>
-                    <td>{{ $mcq->topic->name ?? '' }}</td>
+                    <td>{{ $mcq->topic->name }}</td>
                 </tr>
+                @endif
+
+                {{-- Show Paper Final if it exists --}}
+                @if ($mcq->paperFinal)
+                <tr>
+                    <td>Paper Final</td>
+                    <td>{{ $mcq->paperFinal->name }}</td>
+                </tr>
+                @endif
+
+                {{-- Show Model Test if it exists --}}
+                @if ($mcq->modelTest)
+                <tr>
+                    <td>Model Test</td>
+                    <td>{{ $mcq->modelTest->name }}</td>
+                </tr>
+                @endif
+
                 <tr>
                     <td>Question</td>
                     <td>{{ $mcq->question }}</td>

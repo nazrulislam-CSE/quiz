@@ -50,12 +50,12 @@
             <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}}</p>
             <div class="d-flex">
                 <a href="{{ route('admin.topic.index')}}" class="btn btn-danger me-2">
-                    <i class="fas fa-list d-inline"></i> Paper List
+                    <i class="fas fa-list d-inline"></i> Paper Final List
                 </a>
             </div>
         </div>
         <div class="card-body">
-            <form action="{{ route('admin.paper.update',$topic->id)}}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('admin.paper.update',$paper->id)}}" method="post" enctype="multipart/form-data">
                 @csrf
               <div class="row">
                    {{-- select admission --}}
@@ -92,7 +92,7 @@
                     <div class="form-group col-xl-4 col-lg-4 col-md-4">
                      <div class="form-group">
                        <label for="name">Exam Duration/Time (In Minutes): <span class="text-danger">*</span></label>
-                        <input type="number" min="0" name="exam_duration" value="{{ $topic->exam_duration }}" id="exam_duration" class="form-control" placeholder="Ex:10 minutes">
+                        <input type="number" min="0" name="exam_duration" value="{{ $paper->exam_duration }}" id="exam_duration" class="form-control" placeholder="Ex:10 minutes">
                         @error('exam_duration')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -102,7 +102,7 @@
                     <div class="form-group col-xl-4 col-lg-4 col-md-4">
                         <div class="form-group">
                           <label for="exam_mark">Exam Mark: <span class="text-danger">*</span></label>
-                            <input type="number" min="0" name="exam_mark" value="{{ $topic->exam_mark }}" id="exam_mark" class="form-control" placeholder="Ex:25">
+                            <input type="number" min="0" name="exam_mark" value="{{ $paper->exam_mark }}" id="exam_mark" class="form-control" placeholder="Ex:25">
                             @error('exam_mark')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -112,7 +112,7 @@
                     <div class="form-group col-xl-4 col-lg-4 col-md-4">
                         <div class="form-group">
                           <label for="fee">Exam Fee (Use Only Amount): <span class="text-danger">*</span></label>
-                            <input type="number" min="0" name="fee" value="{{ $topic->fee }}" id="fee" class="form-control" placeholder="Ex:100">
+                            <input type="number" min="0" name="fee" value="{{ $paper->fee }}" id="fee" class="form-control" placeholder="Ex:100">
                             @error('fee')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -122,7 +122,7 @@
                     <div class="form-group col-xl-6 col-lg-6 col-md-6">
                      <div class="form-group">
                        <label for="name">Paper Final Name: <span class="text-danger">*</span></label>
-                        <input type="text" name="name" value="{{ $topic->name }}" id="name" class="form-control" placeholder="Enter paper final name">
+                        <input type="text" name="name" value="{{ $paper->name }}" id="name" class="form-control" placeholder="Enter Paper Final Name">
                         @error('name')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -139,7 +139,7 @@
                     </div>
 
                    <div class="form-group col-xl-1 col-lg-1 col-md-1">
-                       <img id="showImage" src="{{ (!empty($topic->image)) ? url('upload/topic/'.$topic->image):url('upload/mcq.png') }}" alt="No ICON" style="width:100px; height: 100px;"  >
+                       <img id="showImage" src="{{ (!empty($paper->image)) ? url('upload/paper/'.$paper->image):url('upload/mcq.png') }}" alt="No ICON" style="width:100px; height: 100px;"  >
                    </div>
   
                     <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12 mt-3">
@@ -178,9 +178,9 @@
     <script>
         $(document).ready(function(){
 
-            let oldAdmission = "{{ $topic->subject->department->admission_id ?? '' }}";
-            let oldDepartment = "{{ $topic->subject->department_id ?? '' }}";
-            let oldSubject = "{{ $topic->subject_id ?? '' }}";
+            let oldAdmission = "{{ $paper->subject->department->admission_id ?? '' }}";
+            let oldDepartment = "{{ $paper->subject->department_id ?? '' }}";
+            let oldSubject = "{{ $paper->subject_id ?? '' }}";
 
             // Set admission value
             $('#admission_id').val(oldAdmission);

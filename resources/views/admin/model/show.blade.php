@@ -50,7 +50,7 @@
        <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}}</p>
        <div class="d-flex">
            <a href="{{ route('admin.model.index')}}" class="btn btn-danger me-2">
-               <i class="fas fa-list d-inline"></i> Model Test List
+               <i class="fas fa-list d-inline"></i> Final Model Test List
            </a>
        </div>
    </div>
@@ -59,36 +59,36 @@
           <table class="table table-bordered">
              <tr>
                 <td>Admission</td>
-                <td>{{ $topic->subject->admission->name ?? '' }}</td>
+                <td>{{ $model->subject->admission->name ?? '' }}</td>
              </tr>
               <tr>
                 <td>Department Name</td>
-                <td>{{ $topic->subject->department->name ?? '' }}</td>
+                <td>{{ $model->subject->department->name ?? '' }}</td>
              </tr>
               <tr>
                 <td>Subject Name</td>
-                <td>{{ $topic->subject->name ?? '' }}</td>
+                <td>{{ $model->subject->name ?? '' }}</td>
              </tr>
              <tr>
                 <td>Model Test Name</td>
-                <td>{{ $topic->name ?? '' }}</td>
+                <td>{{ $model->name ?? '' }}</td>
              </tr>
              <tr>
                 <td>Exam Duration/Time</td>
-                <td>{{ $topic->exam_duration ?? '' }}</td>
+                <td>{{ $model->exam_duration ?? '' }}</td>
              </tr>
              <tr>
                 <td>Exam Mark</td>
-                <td>{{ $topic->exam_mark ?? '' }}</td>
+                <td>{{ $model->exam_mark ?? '' }}</td>
              </tr>
                <tr>
                 <td>Fee</td>
-                <td>{{ $topic->fee ?? '' }}</td>
+                <td>{{ $model->fee ?? '' }}</td>
              </tr>
              <tr>
                 <td>Status</td>
                 <td>
-                    @if ($topic->status == 1)
+                    @if ($model->status == 1)
                     <span class="badge bg-pill bg-success">Active</span>
                     @else
                     <span class="badge bg-pill bg-success">Disable</span>
@@ -99,7 +99,7 @@
              <tr>
                 <td>ICON</td>
                 <td>
-                    <img src="{{ (!empty($topic->image)) ? url('upload/topic/'.$topic->image):url('upload/mcq.png') }}" width="80" alt="No ICON" class="img-fluid">
+                    <img src="{{ (!empty($model->image)) ? url('upload/model/'.$model->image):url('upload/mcq.png') }}" width="80" alt="No ICON" class="img-fluid">
                 </td>
              </tr>
           </table>

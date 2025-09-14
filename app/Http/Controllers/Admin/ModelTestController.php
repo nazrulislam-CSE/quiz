@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\FinalModel;
+use App\Models\ModelTest;
 use App\Models\Subject;
 use App\Models\Admission;
 use App\Models\Department;
@@ -19,8 +19,8 @@ class ModelTestController extends Controller
     public function index()
     {
         $pageTitle = 'Final Model Test List';
-        $topics = FinalModel::latest()->get();
-        return view('admin.model.index', compact('topics', 'pageTitle'));
+        $models = ModelTest::latest()->get();
+        return view('admin.model.index', compact('models', 'pageTitle'));
     }
 
     /**
@@ -28,7 +28,7 @@ class ModelTestController extends Controller
      */
     public function create()
     {
-        $pageTitle = 'Create Model Test';
+        $pageTitle = 'Create Final Model Test';
         $subjects = Subject::where('status', '1')->get();
         $admissions = Admission::where('status', '1')->get();
         $departments = Department::where('status', '1')->get();
@@ -52,12 +52,12 @@ class ModelTestController extends Controller
         $originalSlug = $slug;
         $counter = 1;
 
-        while (Topic::where('slug', $slug)->exists()) {
+        while (ModelTest::where('slug', $slug)->exists()) {
             $slug = $originalSlug . '-' . $counter;
             $counter++;
         }
 
-        $topic = FinalModel::create([
+        $model = ModelTest::create([
             'subject_id' => $request->subject_id,
             'name' => $request->name,
             'slug' => $slug,
@@ -74,9 +74,9 @@ class ModelTestController extends Controller
         if ($request->file('image')) {
             $file = $request->file('image');
             $filename = date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('upload/topic'), $filename);
-            $topic->image = $filename;
-            $topic->save();
+            $file->move(public_path('upload/model'), $filename);
+            $model->image = $filename;
+            $model->save();
         }
 
         flash()->addSuccess("Final Model Test created successfully.");
@@ -88,9 +88,9 @@ class ModelTestController extends Controller
      */
     public function show(string $id)
     {
-        $pageTitle = 'Topic Details';
-        $topic = FinalModel::findOrFail($id);
-        return view('admin.model.show', compact('topic', 'pageTitle'));
+        $pageTitle = 'Final Model Test Details';
+        $model = ModelTest::findOrFail($id);
+        return view('admin.model.show', compact('model', 'pageTitle'));
     }
 
     /**
@@ -98,12 +98,12 @@ class ModelTestController extends Controller
      */
     public function edit(string $id)
     {
-        $pageTitle = 'Edit Topic';
-        $topic = FinalModel::findOrFail($id);
+        $pageTitle = 'Edit Final Model Test';
+        $model = ModelTest::findOrFail($id);
         $subjects = Subject::where('status', '1')->get();
         $admissions = Admission::where('status', '1')->get();
         $departments = Department::where('status', '1')->get();
-        return view('admin.model.edit', compact('topic', 'subjects', 'admissions', 'departments', 'pageTitle'));
+        return view('admin.model.edit', compact('model', 'subjects', 'admissions', 'departments', 'pageTitle'));
     }
 
     /**
@@ -119,18 +119,18 @@ class ModelTestController extends Controller
             'fee' => 'required|numeric',
         ]);
 
-        $topic = FinalModel::findOrFail($id);
+        $model = ModelTest::findOrFail($id);
 
         $slug = Str::slug($request->name);
         $originalSlug = $slug;
         $counter = 1;
 
-        while (FinalModel::where('slug', $slug)->exists()) {
+        while (ModelTest::where('slug', $slug)->exists()) {
             $slug = $originalSlug . '-' . $counter;
             $counter++;
         }
 
-        $topic->update([
+        $model->update([
             'subject_id' => $request->subject_id,
             'name' => $request->name,
             'slug' => $slug,
@@ -146,11 +146,11 @@ class ModelTestController extends Controller
         if ($request->file('image')) {
             $file = $request->file('image');
             $filename = date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('upload/topic'), $filename);
-            Topic::where('id', $topic->id)->update(['topic' => $filename]);
+            $file->move(public_path('upload/model'), $filename);
+            ModelTest::where('id', $model->id)->update(['model' => $filename]);
         }
 
-        flash()->addSuccess("Model Test updated successfully.");
+        flash()->addSuccess("Final Model Test updated successfully.");
         return redirect()->route('admin.model.index');
     }
 
@@ -159,9 +159,9 @@ class ModelTestController extends Controller
      */
     public function destroy(string $id)
     {
-        $topic = FinalModel::findOrFail($id);
-        @unlink(public_path('upload/topic/'.$topic->image));
-        $topic->delete();
+        $model = ModelTest::findOrFail($id);
+        @unlink(public_path('upload/model/'.$model->image));
+        $model->delete();
 
         flash()->addSuccess("Final Model Test deleted successfully.");
         return redirect()->route('admin.model.index');

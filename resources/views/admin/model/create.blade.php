@@ -50,7 +50,7 @@
             <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}}</p>
             <div class="d-flex">
                 <a href="{{ route('admin.model.index')}}" class="btn btn-danger me-2">
-                    <i class="fas fa-list d-inline"></i> Model Test List
+                    <i class="fas fa-list d-inline"></i> Final Model Test List
                 </a>
             </div>
         </div>
@@ -120,8 +120,8 @@
 
                     <div class="form-group col-xl-6 col-lg-6 col-md-6">
                      <div class="form-group">
-                       <label for="name">Model Test Name: <span class="text-danger">*</span></label>
-                        <input type="text" name="name" value="{{ old('name') }}" id="name" class="form-control" placeholder="Enter model test name">
+                       <label for="name">Final Model Test Name: <span class="text-danger">*</span></label>
+                        <input type="text" name="name" value="{{ old('name') }}" id="name" class="form-control" placeholder="Enter Final Model Test Name">
                         @error('name')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -138,11 +138,11 @@
                     </div>
 
                    <div class="form-group col-xl-1 col-lg-1 col-md-1">
-                       <img id="showImage" src="{{ (!empty($topic->image)) ? url('upload/topic/'.$topic->image):url('upload/mcq.png') }}" alt="No ICON" style="width:100px; height: 100px;"  >
+                       <img id="showImage" src="{{ (!empty($model->image)) ? url('upload/model/'.$model->image):url('upload/mcq.png') }}" alt="No ICON" style="width:100px; height: 100px;"  >
                    </div>
   
                     <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12 mt-3">
-                        <button type="submit" class="add-to-cart btn btn-success btn-block"><i class="fas fa-plus"></i> Add Model Test</button>
+                        <button type="submit" class="add-to-cart btn btn-success btn-block"><i class="fas fa-plus"></i> Add Final Model Test</button>
                     </div>
                 </div>
             </form>

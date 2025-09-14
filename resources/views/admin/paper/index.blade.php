@@ -48,11 +48,11 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header border-bottom d-flex justify-content-between align-items-center">
-                            <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}} <span class="badge bg-danger side-badge" style="font-size:17px;">{{ count($topics) }}</span> </p>
+                            <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}} <span class="badge bg-danger side-badge" style="font-size:17px;">{{ count($papers) }}</span> </p>
 
                             <div class="d-flex">
                                 <a href="{{ route('admin.paper.create')}}" class="btn btn-success me-2">
-                                    <i class="fas fa-plus d-inline"></i> Add Now Paper
+                                    <i class="fas fa-plus d-inline"></i> Add Now Paper Final
                                 </a>
                             </div>
                         </div>
@@ -74,31 +74,31 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($topics as $key=> $topic)
+                                        @foreach ($papers as $key=> $paper)
                                         <tr>
                                             <td class="col-1">{{ $key+1 }}</td>
                                             <td>
-                                                <img src="{{ (!empty($topic->image)) ? url('upload/topic/'.$topic->image):url('upload/mcq.png') }}"  width="30" height="20" alt="No ICON" class="img-fluid">
+                                                <img src="{{ (!empty($paper->image)) ? url('upload/paper/'.$paper->image):url('upload/mcq.png') }}"  width="30" height="20" alt="No ICON" class="img-fluid">
                                             </td>
                                             <td>
-                                                {{ $topic->name ?? '' }}
+                                                {{ $paper->name ?? '' }}
                                             </td>
-                                            <td>{{ $topic->subject->admission->name ?? '' }}</td>
-                                            <td>{{ $topic->subject->department->name ?? '' }}</td>
-                                            <td>{{ $topic->subject->name ?? '' }}</td>
+                                            <td>{{ $paper->subject->admission->name ?? '' }}</td>
+                                            <td>{{ $paper->subject->department->name ?? '' }}</td>
+                                            <td>{{ $paper->subject->name ?? '' }}</td>
                                             <td>
-                                                {{ $topic->exam_duration ?? '' }}
-                                            </td>
-                                            <td>
-                                                {{ $topic->exam_mark ?? '' }}
+                                                {{ $paper->exam_duration ?? '' }}
                                             </td>
                                             <td>
-                                                {{ $topic->fee ?? '' }}
+                                                {{ $paper->exam_mark ?? '' }}
                                             </td>
                                             <td>
-                                                <a href="{{ route('admin.paper.show',$topic->id)}}" class="btn btn-success btn-sm mr-2"><i class="fas fa-eye"></i></a>
-                                                <a href="{{ route('admin.paper.edit',$topic->id)}}" class="btn btn-primary btn-sm mr-2"><i class="fas fa-edit"></i></a>
-                                                <a href="{{ route('admin.paper.delete',$topic->id)}}" class="btn btn-danger btn-sm" title="Delete Data" id="delete"><i class="fa fa-trash"></i></a>
+                                                {{ $paper->fee ?? '' }}
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('admin.paper.show',$paper->id)}}" class="btn btn-success btn-sm mr-2"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ route('admin.paper.edit',$paper->id)}}" class="btn btn-primary btn-sm mr-2"><i class="fas fa-edit"></i></a>
+                                                <a href="{{ route('admin.paper.delete',$paper->id)}}" class="btn btn-danger btn-sm" title="Delete Data" id="delete"><i class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
                                         @endforeach

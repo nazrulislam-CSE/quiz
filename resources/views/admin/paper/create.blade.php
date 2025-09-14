@@ -50,7 +50,7 @@
             <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}}</p>
             <div class="d-flex">
                 <a href="{{ route('admin.paper.index')}}" class="btn btn-danger me-2">
-                    <i class="fas fa-list d-inline"></i> Paper List
+                    <i class="fas fa-list d-inline"></i> Paper Final List
                 </a>
             </div>
         </div>
@@ -121,7 +121,7 @@
                     <div class="form-group col-xl-6 col-lg-6 col-md-6">
                      <div class="form-group">
                        <label for="name">Paper Final Name: <span class="text-danger">*</span></label>
-                        <input type="text" name="name" value="{{ old('name') }}" id="name" class="form-control" placeholder="Enter Paper Final name">
+                        <input type="text" name="name" value="{{ old('name') }}" id="name" class="form-control" placeholder="Enter Paper Final Name">
                         @error('name')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
