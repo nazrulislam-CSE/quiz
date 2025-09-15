@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subjects', function (Blueprint $table) {
+        Schema::create('groups', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('admission_id');
             $table->unsignedBigInteger('department_id');
             $table->foreign('admission_id')->references('id')->on('admissions')->onDelete('cascade');
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
-            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
             $table->string('image')->nullable();
             $table->tinyInteger('status')->default(1)->comment('1=active, 0=inactive');
             $table->integer('created_by')->nullable();
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subjects');
+        Schema::dropIfExists('groups');
     }
 };

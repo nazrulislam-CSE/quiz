@@ -48,11 +48,11 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header border-bottom d-flex justify-content-between align-items-center">
-                            <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}} <span class="badge bg-danger side-badge" style="font-size:17px;">{{ count($subjects) }}</span> </p>
+                            <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}} <span class="badge bg-danger side-badge" style="font-size:17px;">{{ count($groups) }}</span> </p>
 
                             <div class="d-flex">
-                                <a href="{{ route('admin.subject.create')}}" class="btn btn-success me-2">
-                                    <i class="fas fa-plus d-inline"></i> Add Now Subject
+                                <a href="{{ route('admin.group.create')}}" class="btn btn-success me-2">
+                                    <i class="fas fa-plus d-inline"></i> Add Now Group
                                 </a>
                             </div>
                         </div>
@@ -63,44 +63,40 @@
                                         <tr>
                                             <th class="border-bottom-0">SL</th>
                                             <th class="border-bottom-0">ICON</th>
-                                            <th class="border-bottom-0">Subject Name</th>
+                                            <th class="border-bottom-0">Group Name</th>
                                             <th class="border-bottom-0">Admission</th>
                                             <th class="border-bottom-0">Department</th>
-                                            <th class="border-bottom-0">Group</th>
                                             <th class="border-bottom-0">Status</th>
                                             <th class="border-bottom-0">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($subjects as $key=> $subject)
+                                        @foreach ($groups as $key=> $group)
                                         <tr>
                                             <td class="col-1">{{ $key+1 }}</td>
                                             <td>
-                                                <img src="{{ (!empty($subject->image)) ? url('upload/subject/'.$subject->image):url('upload/mcq.png') }}"  width="30" height="20" alt="No ICON" class="img-fluid">
+                                                <img src="{{ (!empty($group->image)) ? url('upload/group/'.$group->image):url('upload/mcq.png') }}"  width="30" height="20" alt="No ICON" class="img-fluid">
                                             </td>
                                             <td>
-                                                {{ $subject->name ?? '' }}
+                                                {{ $group->name ?? '' }}
                                             </td>
                                             <td>
-                                                {{ $subject->admission->name ?? '' }}
+                                                {{ $group->admission->name ?? '' }}
                                             </td>
                                             <td>
-                                                {{ $subject->department->name ?? '' }}
+                                                {{ $group->department->name ?? '' }}
                                             </td>
                                             <td>
-                                                {{ $subject->group->name ?? '' }}
-                                            </td>
-                                            <td>
-                                                @if($subject->status == 1)
+                                                @if($group->status == 1)
                                                     <a href="#" class="badge bg-pill bg-success">Active</a>
                                                 @else
                                                     <a href="#" class="badge bg-pill bg-danger">Disable</a>
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('admin.subject.show',$subject->id)}}" class="btn btn-success btn-sm mr-2"><i class="fas fa-eye"></i></a>
-                                                <a href="{{ route('admin.subject.edit',$subject->id)}}" class="btn btn-primary btn-sm mr-2"><i class="fas fa-edit"></i></a>
-                                                <a href="{{ route('admin.subject.delete',$subject->id)}}" class="btn btn-danger btn-sm" title="Delete Data" id="delete"><i class="fa fa-trash"></i></a>
+                                                <a href="{{ route('admin.group.show',$group->id)}}" class="btn btn-success btn-sm mr-2"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ route('admin.group.edit',$group->id)}}" class="btn btn-primary btn-sm mr-2"><i class="fas fa-edit"></i></a>
+                                                <a href="{{ route('admin.group.delete',$group->id)}}" class="btn btn-danger btn-sm" title="Delete Data" id="delete"><i class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
                                         @endforeach

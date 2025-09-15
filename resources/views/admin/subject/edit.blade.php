@@ -81,6 +81,15 @@
                         </select>
                     </div>
 
+                    {{-- select group --}}
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                        <label for="group_id">Group: <span class="text-danger">*</span></label>
+                        @error('group_id') <span class="text-danger">{{ $message }}</span> @enderror
+                        <select name="group_id" id="group_id" class="form-control">
+                            <option value="">Select Group</option>
+                        </select>
+                    </div>
+
                     <div class="form-group col-xl-6 col-lg-6 col-md-6">
                      <div class="form-group">
                        <label for="name">Name: <span class="text-danger">*</span></label>
@@ -151,7 +160,7 @@
         /* ============== Summernote Added ============ */
     </script>
     <script>
-    function loadDepartments(admissionID, selectedDeptID = null) {
+    function loadDepartments(admissionID, selectedDeptID = null, selectedGroupID = null) {
         $('#department_id').html('<option value="">Loading...</option>');
 
         if (admissionID) {
@@ -165,10 +174,36 @@
                         let selected = (selectedDeptID == value.id) ? 'selected' : '';
                         $('#department_id').append('<option value="' + value.id + '" ' + selected + '>' + value.name + '</option>');
                     });
+
+                    if (selectedDeptID) {
+                        loadGroups(selectedDeptID, selectedGroupID);
+                    }
                 }
             });
         } else {
             $('#department_id').html('<option value="">Select Department</option>');
+            $('#group_id').html('<option value="">Select Group</option>');
+        }
+    }
+
+    function loadGroups(departmentID, selectedGroupID = null) {
+        $('#group_id').html('<option value="">Loading...</option>');
+
+        if (departmentID) {
+            $.ajax({
+                url: "{{ url('/admin/subject/get-groups') }}/" + departmentID,
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $('#group_id').html('<option value="">Select Group</option>');
+                    $.each(data, function (key, value) {
+                        let selected = (selectedGroupID == value.id) ? 'selected' : '';
+                        $('#group_id').append('<option value="' + value.id + '" ' + selected + '>' + value.name + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#group_id').html('<option value="">Select Group</option>');
         }
     }
 
@@ -178,11 +213,17 @@
             loadDepartments($(this).val());
         });
 
+        // On department change
+        $('#department_id').on('change', function () {
+            loadGroups($(this).val());
+        });
+
         // Load departments on page load for edit form
         let currentAdmissionID = "{{ $subject->admission_id }}";
         let currentDepartmentID = "{{ $subject->department_id }}";
+        let currentGroupID = "{{ $subject->group_id }}";
         if (currentAdmissionID) {
-            loadDepartments(currentAdmissionID, currentDepartmentID);
+            loadDepartments(currentAdmissionID, currentDepartmentID, currentGroupID);
         }
     });
 </script>

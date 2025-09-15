@@ -49,8 +49,8 @@
     <div class="card-header border-bottom d-flex justify-content-between align-items-center">
        <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}}</p>
        <div class="d-flex">
-           <a href="{{ route('admin.subject.index')}}" class="btn btn-danger me-2">
-               <i class="fas fa-list d-inline"></i> Subject List
+           <a href="{{ route('admin.group.index')}}" class="btn btn-danger me-2">
+               <i class="fas fa-list d-inline"></i> Group List
            </a>
        </div>
    </div>
@@ -59,24 +59,20 @@
           <table class="table table-bordered">
              <tr>
                 <td>Admission</td>
-                <td>{{ $subject->admission->name ?? '' }}</td>
+                <td>{{ $group->admission->name ?? '' }}</td>
              </tr>
               <tr>
                 <td>Department Name</td>
-                <td>{{ $subject->department->name ?? '' }}</td>
-             </tr>
-             <tr>
-                <td>Group Name</td>
-                <td>{{ $subject->group->name ?? '' }}</td>
+                <td>{{ $group->department->name ?? '' }}</td>
              </tr>
               <tr>
-                <td>Subject Name</td>
-                <td>{{ $subject->name ?? '' }}</td>
+                <td>Group Name</td>
+                <td>{{ $group->name ?? '' }}</td>
              </tr>
              <tr>
                 <td>Status</td>
                 <td>
-                    @if ($subject->status == 1)
+                    @if ($group->status == 1)
                     <span class="badge bg-pill bg-success">Active</span>
                     @else
                     <span class="badge bg-pill bg-success">Disable</span>
@@ -87,7 +83,7 @@
              <tr>
                 <td>ICON</td>
                 <td>
-                    <img src="{{ (!empty($subject->image)) ? url('upload/subject/'.$subject->image):url('upload/mcq.png') }}" width="80" alt="No ICON" class="img-fluid">
+                    <img src="{{ (!empty($group->image)) ? url('upload/group/'.$group->image):url('upload/mcq.png') }}" width="80" alt="No ICON" class="img-fluid">
                 </td>
              </tr>
           </table>

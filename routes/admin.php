@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\CommissionController;
 use App\Http\Controllers\Admin\WithdrawController;
 use App\Http\Controllers\Admin\PaperFinalController;
 use App\Http\Controllers\Admin\ModelTestController;
+use App\Http\Controllers\Admin\GroupController;
 
 
 
@@ -163,6 +164,19 @@ Route::middleware('admin')->group(function () {
 
     });
 
+    /* ============> Group <=========== */
+    Route::prefix('group')->group(function () {
+        Route::get('/index', [GroupController::class, 'index'])->name('group.index');
+        Route::get('/create', [GroupController::class, 'create'])->name('group.create');
+        Route::post('/store', [GroupController::class, 'store'])->name('group.store');
+        Route::get('/edit/{id}', [GroupController::class, 'edit'])->name('group.edit');
+        Route::post('/update/{id}', [GroupController::class, 'update'])->name('group.update');
+        Route::get('/delete/{id}', [GroupController::class, 'destroy'])->name('group.delete');
+        Route::get('/show/{id}', [GroupController::class,'show'])->name('group.show');
+        Route::get('/get-departments/{admission_id}', [GroupController::class, 'getDepartments'])->name('get.departments');
+
+    });
+
     /* ============> Subject <=========== */
     Route::prefix('subject')->group(function () {
         Route::get('/index', [SubjectController::class, 'index'])->name('subject.index');
@@ -173,6 +187,7 @@ Route::middleware('admin')->group(function () {
         Route::get('/delete/{id}', [SubjectController::class, 'destroy'])->name('subject.delete');
         Route::get('/show/{id}', [SubjectController::class,'show'])->name('subject.show');
         Route::get('/get-departments/{admission_id}', [SubjectController::class, 'getDepartments'])->name('get.departments');
+        Route::get('/get-groups/{department_id}', [SubjectController::class, 'getGroups']);
     });
 
     /* ============> Topics <=========== */

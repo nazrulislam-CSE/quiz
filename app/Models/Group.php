@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Subject extends Model
+class Group extends Model
 {
     use HasFactory;
     protected $guarded = [];
@@ -19,14 +19,11 @@ class Subject extends Model
     {
         return $this->belongsTo(Department::class, 'department_id', 'id');
     }
-    
-    public function group()
+
+    public function subjects()
     {
-        return $this->belongsTo(Group::class, 'group_id', 'id');
+        return $this->hasMany(Subject::class);
     }
 
-    public function topics()
-    {
-        return $this->hasMany(Topic::class);
-    }
+
 }

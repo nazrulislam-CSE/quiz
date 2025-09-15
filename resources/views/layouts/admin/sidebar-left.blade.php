@@ -110,6 +110,18 @@
                         <li><a class="slide-item {{ Request::is('admin/department/index') ? 'active' : '' }}" href="{{ route('admin.department.index')}}">Manage Department</a></li>
                     </ul>
                 </li>
+                <li class="slide {{ Request::is('admin/group*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-cog"></i>
+                        <span class="side-menu__label">Group</span>
+                        <span class="badge bg-success side-badge"></span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1"><a href="javascript:void(0);">Group</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/group/index') ? 'active' : '' }}" href="{{ route('admin.group.index')}}">Manage Group</a></li>
+                    </ul>
+                </li>
                 <li class="slide {{ Request::is('admin/subject*') ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                         <i class="side-menu__icon fas fa-cog"></i>
