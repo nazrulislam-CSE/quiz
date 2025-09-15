@@ -89,6 +89,15 @@
                         </select>
                     </div>
 
+                    {{-- select group --}}
+                    <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                        <label for="group_id">Group: <span class="text-danger">*</span></label>
+                        @error('group_id') <span class="text-danger">{{ $message }}</span> @enderror
+                        <select name="group_id" id="group_id" class="form-control">
+                            <option value="">Select Group</option>
+                        </select>
+                    </div>
+
                     <div class="form-group col-xl-4 col-lg-4 col-md-4">
                      <div class="form-group">
                        <label for="name">Exam Duration/Time (In Minutes): <span class="text-danger">*</span></label>
@@ -181,6 +190,7 @@
             let oldAdmission = "{{ $paper->subject->department->admission_id ?? '' }}";
             let oldDepartment = "{{ $paper->subject->department_id ?? '' }}";
             let oldSubject = "{{ $paper->subject_id ?? '' }}";
+            let oldGroup = "{{ $paper->group_id ?? '' }}";
 
             // Set admission value
             $('#admission_id').val(oldAdmission);
@@ -193,6 +203,11 @@
             // Load subjects if editing
             if (oldDepartment) {
                 loadSubjects(oldDepartment, oldSubject);
+            }
+
+            // Load groups if editing
+            if (oldDepartment) {
+                loadGroups(oldDepartment, oldGroup);
             }
 
             // On admission change
@@ -214,9 +229,20 @@
                 }
             });
 
+            // On department change for groups
+            $('#department_id').on('change', function(){
+                let departmentID = $(this).val();
+                $('#group_id').html('<option value="">Loading...</option>');
+                if (departmentID) {
+                    loadGroups(departmentID, null);
+                } else {
+                    $('#group_id').html('<option value="">Select Group</option>');
+                }
+            });
+
             function loadDepartments(admissionID, selectedDept){
                 $.ajax({
-                    url: "{{ url('/admin/topic/get-departments') }}/" + admissionID,
+                    url: "{{ url('/admin/paper/get-departments') }}/" + admissionID,
                     type: "GET",
                     dataType: "json",
                     success: function(data){
@@ -229,9 +255,24 @@
                 });
             }
 
+            function loadGroups(departmentID, selectedGroup){
+                $.ajax({
+                    url: "{{ url('/admin/paper/get-groups') }}/" + departmentID,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data){
+                        $('#group_id').html('<option value="">Select Group</option>');
+                        $.each(data, function(key, value){
+                            let selected = (selectedGroup == value.id) ? 'selected' : '';
+                            $('#group_id').append('<option value="'+value.id+'" '+selected+'>'+value.name+'</option>');
+                        });
+                    }
+                });
+            }
+
             function loadSubjects(departmentID, selectedSubject){
                 $.ajax({
-                    url: "{{ url('/admin/topic/get-subjects') }}/" + departmentID,
+                    url: "{{ url('/admin/paper/get-subjects') }}/" + departmentID,
                     type: "GET",
                     dataType: "json",
                     success: function(data){

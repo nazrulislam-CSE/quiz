@@ -8,6 +8,7 @@ use App\Models\PaperFinal;
 use App\Models\Subject;
 use App\Models\Admission;
 use App\Models\Department;
+use App\Models\Group;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -32,7 +33,8 @@ class PaperFinalController extends Controller
         $subjects = Subject::where('status', '1')->get();
         $admissions = Admission::where('status', '1')->get();
         $departments = Department::where('status', '1')->get();
-        return view('admin.paper.create', compact('subjects', 'admissions', 'departments', 'pageTitle'));
+        $groups = Group::where('status', '1')->get();
+        return view('admin.paper.create', compact('subjects', 'admissions', 'departments','groups', 'pageTitle'));
     }
 
     /**
@@ -103,6 +105,7 @@ class PaperFinalController extends Controller
         $subjects = Subject::where('status', '1')->get();
         $admissions = Admission::where('status', '1')->get();
         $departments = Department::where('status', '1')->get();
+        $groups = Group::where('status', '1')->get();
         return view('admin.paper.edit', compact('paper', 'subjects', 'admissions', 'departments', 'pageTitle'));
     }
 
@@ -173,9 +176,15 @@ class PaperFinalController extends Controller
         return response()->json($departments);
     }
 
-    public function getSubjects($department_id)
+    public function getGroups($department_id)
     {
-        $subjects = Subject::where('department_id', $department_id)->get();
+        $groups = Group::where('department_id', $department_id)->get();
+        return response()->json($groups);
+    }
+
+    public function getSubjects($group_id)
+    {
+        $subjects = Subject::where('group_id', $group_id)->get();
         return response()->json($subjects);
     }
 

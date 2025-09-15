@@ -79,6 +79,15 @@
                         </select>
                     </div>
 
+                    {{-- select group --}}
+                    <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                        <label for="group_id">Group: <span class="text-danger">*</span></label>
+                        @error('group_id') <span class="text-danger">{{ $message }}</span> @enderror
+                        <select name="group_id" id="group_id" class="form-control">
+                            <option value="">Select Group</option>
+                        </select>
+                    </div>
+                    
                     {{-- select subject --}}
                     <div class="form-group col-xl-4 col-lg-4 col-md-4">
                         <label for="subject_id">Subject: <span class="text-danger">*</span></label>
@@ -184,7 +193,7 @@
 
                 if (admissionID) {
                     $.ajax({
-                        url: "{{ url('/admin/topic/get-departments') }}/" + admissionID,
+                        url: "{{ url('/admin/paper/get-departments') }}/" + admissionID,
                         type: "GET",
                         dataType: "json",
                         success: function (data) {
@@ -196,18 +205,41 @@
                     });
                 } else {
                     $('#department_id').html('<option value="">Select Department</option>');
+                    $('#group_id').html('<option value="">Select Group</option>');
                     $('#subject_id').html('<option value="">Select Subject</option>');
                 }
             });
 
-            // Load subjects when department changes
+            // Load groups when department changes
             $('#department_id').on('change', function () {
                 var departmentID = $(this).val();
-                $('#subject_id').html('<option value="">Loading...</option>');
+                $('#group_id').html('<option value="">Loading...</option>');
 
                 if (departmentID) {
                     $.ajax({
-                        url: "{{ url('/admin/topic/get-subjects') }}/" + departmentID,
+                        url: "{{ url('/admin/paper/get-groups') }}/" + departmentID,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            $('#group_id').html('<option value="">Select Group</option>');
+                            $.each(data, function (key, value) {
+                                $('#group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    $('#group_id').html('<option value="">Select Group</option>');
+                }
+            });
+
+            // Load subjects when group changes
+            $('#group_id').on('change', function () {
+                var groupID = $(this).val();
+                $('#subject_id').html('<option value="">Loading...</option>');
+
+                if (groupID) {
+                    $.ajax({
+                        url: "{{ url('/admin/paper/get-subjects') }}/" + groupID,
                         type: "GET",
                         dataType: "json",
                         success: function (data) {

@@ -66,7 +66,7 @@
                                             <th class="border-bottom-0">Name</th>
                                             <th class="border-bottom-0">Admission</th>
                                             <th class="border-bottom-0">Department</th>
-                                            <th class="border-bottom-0">Subject</th>
+                                            <th class="border-bottom-0">Group</th>
                                             <th class="border-bottom-0">Exam Duration/Time</th>
                                             <th class="border-bottom-0">Exam Mark</th>
                                             <th class="border-bottom-0">Fee</th>
@@ -83,9 +83,9 @@
                                             <td>
                                                 {{ $model->name ?? '' }}
                                             </td>
-                                            <td>{{ $model->subject->admission->name ?? '' }}</td>
-                                            <td>{{ $model->subject->department->name ?? '' }}</td>
-                                            <td>{{ $model->subject->name ?? '' }}</td>
+                                            <td>{{ $model->group->admission->name ?? '' }}</td>
+                                            <td>{{ $model->group->department->name ?? '' }}</td>
+                                            <td>{{ $model->group->name ?? '' }}</td>
                                             <td>
                                                 {{ $model->exam_duration ?? '' }}
                                             </td>

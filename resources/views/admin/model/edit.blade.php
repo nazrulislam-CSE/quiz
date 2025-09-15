@@ -80,12 +80,12 @@
                         </select>
                     </div>
 
-                    {{-- select subject --}}
+                    {{-- select group --}}
                     <div class="form-group col-xl-4 col-lg-4 col-md-4">
-                        <label for="subject_id">Subject: <span class="text-danger">*</span></label>
-                        @error('subject_id') <span class="text-danger">{{ $message }}</span> @enderror
-                        <select name="subject_id" id="subject_id" class="form-control">
-                            <option value="">Select Subject</option>
+                        <label for="group_id">Group: <span class="text-danger">*</span></label>
+                        @error('group_id') <span class="text-danger">{{ $message }}</span> @enderror
+                        <select name="group_id" id="group_id" class="form-control">
+                            <option value="">Select Group</option>
                         </select>
                     </div>
 
@@ -178,9 +178,9 @@
     <script>
         $(document).ready(function(){
 
-            let oldAdmission = "{{ $model->subject->department->admission_id ?? '' }}";
-            let oldDepartment = "{{ $model->subject->department_id ?? '' }}";
-            let oldSubject = "{{ $model->subject_id ?? '' }}";
+            let oldAdmission = "{{ $model->group->department->admission_id ?? '' }}";
+            let oldDepartment = "{{ $model->group->department_id ?? '' }}";
+            let oldGroup = "{{ $model->group_id ?? '' }}";
 
             // Set admission value
             $('#admission_id').val(oldAdmission);
@@ -190,16 +190,16 @@
                 loadDepartments(oldAdmission, oldDepartment);
             }
 
-            // Load subjects if editing
+            // Load group if editing
             if (oldDepartment) {
-                loadSubjects(oldDepartment, oldSubject);
+                loadGroups(oldDepartment, oldGroup);
             }
 
             // On admission change
             $('#admission_id').on('change', function(){
                 let admissionID = $(this).val();
                 $('#department_id').html('<option value="">Loading...</option>');
-                $('#subject_id').html('<option value="">Select Subject</option>');
+                $('#group_id').html('<option value="">Select Group</option>');
                 if (admissionID) {
                     loadDepartments(admissionID, null);
                 }
@@ -208,15 +208,15 @@
             // On department change
             $('#department_id').on('change', function(){
                 let departmentID = $(this).val();
-                $('#subject_id').html('<option value="">Loading...</option>');
+                $('#group_id').html('<option value="">Loading...</option>');
                 if (departmentID) {
-                    loadSubjects(departmentID, null);
+                    loadGroups(departmentID, null);
                 }
             });
 
             function loadDepartments(admissionID, selectedDept){
                 $.ajax({
-                    url: "{{ url('/admin/topic/get-departments') }}/" + admissionID,
+                    url: "{{ url('/admin/model/get-departments') }}/" + admissionID,
                     type: "GET",
                     dataType: "json",
                     success: function(data){
@@ -229,16 +229,16 @@
                 });
             }
 
-            function loadSubjects(departmentID, selectedSubject){
+            function loadGroups(departmentID, selectedGroup){
                 $.ajax({
-                    url: "{{ url('/admin/topic/get-subjects') }}/" + departmentID,
+                    url: "{{ url('/admin/model/get-groups') }}/" + departmentID,
                     type: "GET",
                     dataType: "json",
                     success: function(data){
-                        $('#subject_id').html('<option value="">Select Subject</option>');
+                        $('#group_id').html('<option value="">Select Group</option>');
                         $.each(data, function(key, value){
-                            let selected = (selectedSubject == value.id) ? 'selected' : '';
-                            $('#subject_id').append('<option value="'+value.id+'" '+selected+'>'+value.name+'</option>');
+                            let selected = (selectedGroup == value.id) ? 'selected' : '';
+                            $('#group_id').append('<option value="'+value.id+'" '+selected+'>'+value.name+'</option>');
                         });
                     }
                 });

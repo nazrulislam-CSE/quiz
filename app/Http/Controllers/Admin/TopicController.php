@@ -8,6 +8,7 @@ use App\Models\Topic;
 use App\Models\Subject;
 use App\Models\Admission;
 use App\Models\Department;
+use App\Models\Group;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -177,6 +178,12 @@ class TopicController extends Controller
     {
         $subjects = Subject::where('department_id', $department_id)->get();
         return response()->json($subjects);
+    }
+
+    public function getGroups($department_id)
+    {
+        $groups = Group::where('department_id', $department_id)->get();
+        return response()->json($groups);
     }
 
 }

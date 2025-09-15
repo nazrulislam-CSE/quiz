@@ -79,15 +79,15 @@
                         </select>
                     </div>
 
-                    {{-- select subject --}}
+                    {{-- select group --}}
                     <div class="form-group col-xl-4 col-lg-4 col-md-4">
-                        <label for="subject_id">Subject: <span class="text-danger">*</span></label>
-                        @error('subject_id') <span class="text-danger">{{ $message }}</span> @enderror
-                        <select name="subject_id" id="subject_id" class="form-control">
-                            <option value="">Select Subject</option>
+                        <label for="group_id">Group: <span class="text-danger">*</span></label>
+                        @error('group_id') <span class="text-danger">{{ $message }}</span> @enderror
+                        <select name="group_id" id="group_id" class="form-control">
+                            <option value="">Select Group</option>
                         </select>
                     </div>
-
+                   
                     <div class="form-group col-xl-4 col-lg-4 col-md-4">
                      <div class="form-group">
                        <label for="name">Exam Duration/Time (In Minutes): <span class="text-danger">*</span></label>
@@ -180,7 +180,7 @@
             $('#admission_id').on('change', function () {
                 var admissionID = $(this).val();
                 $('#department_id').html('<option value="">Loading...</option>');
-                $('#subject_id').html('<option value="">Select Subject</option>');
+                $('#group_id').html('<option value="">Select Group</option>');
 
                 if (admissionID) {
                     $.ajax({
@@ -196,32 +196,31 @@
                     });
                 } else {
                     $('#department_id').html('<option value="">Select Department</option>');
-                    $('#subject_id').html('<option value="">Select Subject</option>');
+                    $('#group_id').html('<option value="">Select Group</option>');
                 }
             });
 
-            // Load subjects when department changes
+            // Load groups when department changes
             $('#department_id').on('change', function () {
                 var departmentID = $(this).val();
-                $('#subject_id').html('<option value="">Loading...</option>');
-
+                $('#group_id').html('<option value="">Loading...</option>');
                 if (departmentID) {
                     $.ajax({
-                        url: "{{ url('/admin/topic/get-subjects') }}/" + departmentID,
+                        url: "{{ url('/admin/model/get-groups') }}/" + departmentID,
                         type: "GET",
                         dataType: "json",
                         success: function (data) {
-                            $('#subject_id').html('<option value="">Select Subject</option>');
+                            $('#group_id').html('<option value="">Select Group</option>');
                             $.each(data, function (key, value) {
-                                $('#subject_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                                $('#group_id').append('<option value="' + value.id + '">' + value.name + '</option>');
                             });
                         }
                     });
                 } else {
-                    $('#subject_id').html('<option value="">Select Subject</option>');
+                    $('#group_id').html('<option value="">Select Group</option>');
                 }
             });
-
+           
         });
     </script>
 @endpush

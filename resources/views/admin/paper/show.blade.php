@@ -65,6 +65,10 @@
                 <td>Department Name</td>
                 <td>{{ $paper->subject->department->name ?? '' }}</td>
              </tr>
+                <tr>
+                    <td>Group Name</td>
+                    <td>{{ $paper->subject->group->name ?? '' }}</td>
+                </tr>
               <tr>
                 <td>Subject Name</td>
                 <td>{{ $paper->subject->name ?? '' }}</td>

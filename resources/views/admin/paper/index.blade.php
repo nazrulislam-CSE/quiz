@@ -66,6 +66,7 @@
                                             <th class="border-bottom-0">Name</th>
                                             <th class="border-bottom-0">Admission</th>
                                             <th class="border-bottom-0">Department</th>
+                                            <th class="border-bottom-0">Group</th>
                                             <th class="border-bottom-0">Subject</th>
                                             <th class="border-bottom-0">Exam Duration/Time</th>
                                             <th class="border-bottom-0">Exam Mark</th>
@@ -85,6 +86,7 @@
                                             </td>
                                             <td>{{ $paper->subject->admission->name ?? '' }}</td>
                                             <td>{{ $paper->subject->department->name ?? '' }}</td>
+                                            <td>{{ $paper->subject->group->name ?? '' }}</td>
                                             <td>{{ $paper->subject->name ?? '' }}</td>
                                             <td>
                                                 {{ $paper->exam_duration ?? '' }}

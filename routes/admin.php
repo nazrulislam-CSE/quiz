@@ -212,8 +212,9 @@ Route::middleware('admin')->group(function () {
         Route::post('/update/{id}', [PaperFinalController::class, 'update'])->name('paper.update');
         Route::get('/delete/{id}', [PaperFinalController::class, 'destroy'])->name('paper.delete');
         Route::get('/show/{id}', [PaperFinalController::class,'show'])->name('paper.show');
-        Route::get('/get-departments/{admission_id}', [TopicController::class, 'getDepartments'])->name('get.departments');
-        Route::get('/get-subjects/{department_id}', [TopicController::class, 'getSubjects']);
+        Route::get('/get-departments/{admission_id}', [PaperFinalController::class, 'getDepartments'])->name('get.departments');
+        Route::get('/get-groups/{department_id}', [PaperFinalController::class, 'getGroups']);
+        Route::get('/get-subjects/{group_id}', [PaperFinalController::class, 'getSubjects']);
     });
 
     /* ============> Model Test <=========== */
@@ -225,8 +226,8 @@ Route::middleware('admin')->group(function () {
         Route::post('/update/{id}', [ModelTestController::class, 'update'])->name('model.update');
         Route::get('/delete/{id}', [ModelTestController::class, 'destroy'])->name('model.delete');
         Route::get('/show/{id}', [ModelTestController::class,'show'])->name('model.show');
-        Route::get('/get-departments/{admission_id}', [TopicController::class, 'getDepartments'])->name('get.departments');
-        Route::get('/get-subjects/{department_id}', [TopicController::class, 'getSubjects']);
+        Route::get('/get-departments/{admission_id}', [ModelTestController::class, 'getDepartments'])->name('get.departments');
+        Route::get('/get-groups/{department_id}', [ModelTestController::class, 'getGroups']);
     });
 
     /* ============> MCQ <=========== */

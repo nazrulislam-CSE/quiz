@@ -11,9 +11,9 @@ class ModelTest extends Model
 
     protected $guarded = [];
     
-    public function subject()
+    public function group()
     {
-        return $this->belongsTo(Subject::class);
+        return $this->belongsTo(Group::class);
     }
 
     public function mcqs()

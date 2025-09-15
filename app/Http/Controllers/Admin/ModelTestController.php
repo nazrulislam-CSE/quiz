@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\ModelTest;
-use App\Models\Subject;
 use App\Models\Admission;
 use App\Models\Department;
+use App\Models\Group;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -29,10 +29,10 @@ class ModelTestController extends Controller
     public function create()
     {
         $pageTitle = 'Create Final Model Test';
-        $subjects = Subject::where('status', '1')->get();
         $admissions = Admission::where('status', '1')->get();
         $departments = Department::where('status', '1')->get();
-        return view('admin.model.create', compact('subjects', 'admissions', 'departments', 'pageTitle'));
+        $groups = Group::where('status', '1')->get();
+        return view('admin.model.create', compact('admissions', 'departments','groups', 'pageTitle'));
     }
 
     /**
@@ -41,7 +41,7 @@ class ModelTestController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'subject_id' => 'required|exists:subjects,id',
+            'group_id' => 'required|exists:groups,id',
             'name' => 'required|string|max:255',
             'exam_duration' => 'required|integer',
             'exam_mark' => 'required|integer',
@@ -58,7 +58,7 @@ class ModelTestController extends Controller
         }
 
         $model = ModelTest::create([
-            'subject_id' => $request->subject_id,
+            'group_id' => $request->group_id,
             'name' => $request->name,
             'slug' => $slug,
             'description' => $request->description,
@@ -100,10 +100,10 @@ class ModelTestController extends Controller
     {
         $pageTitle = 'Edit Final Model Test';
         $model = ModelTest::findOrFail($id);
-        $subjects = Subject::where('status', '1')->get();
         $admissions = Admission::where('status', '1')->get();
         $departments = Department::where('status', '1')->get();
-        return view('admin.model.edit', compact('model', 'subjects', 'admissions', 'departments', 'pageTitle'));
+        $groups = Group::where('status', '1')->get();
+        return view('admin.model.edit', compact('model','admissions', 'departments','groups', 'pageTitle'));
     }
 
     /**
@@ -112,7 +112,7 @@ class ModelTestController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'subject_id' => 'required|exists:subjects,id',
+            'group_id' => 'required|exists:groups,id',
             'name' => 'required|string|max:255',
             'exam_duration' => 'required|integer',
             'exam_mark' => 'required|integer',
@@ -131,7 +131,7 @@ class ModelTestController extends Controller
         }
 
         $model->update([
-            'subject_id' => $request->subject_id,
+            'group_id' => $request->group_id,
             'name' => $request->name,
             'slug' => $slug,
             'description' => $request->description,
@@ -172,11 +172,11 @@ class ModelTestController extends Controller
         $departments = Department::where('admission_id', $admission_id)->get();
         return response()->json($departments);
     }
-
-    public function getSubjects($department_id)
+    
+    public function getGroups($department_id)
     {
-        $subjects = Subject::where('department_id', $department_id)->get();
-        return response()->json($subjects);
+        $groups = Group::where('department_id', $department_id)->get();
+        return response()->json($groups);
     }
 
 }
