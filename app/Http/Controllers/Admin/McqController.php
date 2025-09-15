@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Mcq;
 use App\Models\Department;
+use App\Models\Group;
 use App\Models\Subject;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -35,12 +36,13 @@ class McqController extends Controller
         $pageTitle = 'MCQ Create';
         $admissions = Admission::where('status', '1')->get();
         $departments = Department::where('status', '1')->get();
+        $groups = Group::where('status', '1')->get();
         $subjects = Subject::where('status', '1')->get();
         $topics = Topic::where('status', '1')->get();
         $papers = PaperFinal::where('status', '1')->get();
         $models = ModelTest::where('status', '1')->get();
 
-        return view('admin.mcq.create', compact('admissions', 'departments', 'subjects','topics','papers','models', 'pageTitle'));
+        return view('admin.mcq.create', compact('admissions', 'departments','groups', 'subjects','topics','papers','models', 'pageTitle'));
     }
 
     /**

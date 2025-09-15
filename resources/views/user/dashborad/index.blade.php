@@ -54,47 +54,47 @@
         <div class="col-md-4 col-sm-6">
             <a href="{{ route('user.balance.request.report') }}" class="btn btn-primary w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
-                <h5 class="mb-0">Balance Request Report</h5>
+                <h5 class="mb-0 fw-bold">ব্যালেন্স ট্রান্সফার রিপোর্ট</h5>
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
             <a href="{{ route('user.mcq.exam') }}"
                 class="btn btn-danger w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-question-circle fa-2x mb-2"></i>
-                <h5 class="mb-0">MCQ Exam</h5>
+                <h5 class="mb-0 fw-bold">এমসিকিউ এক্সাম</h5>
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
             <a href="{{ route('user.exam.reports')}}" class="btn btn-warning w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-list fa-2x mb-2"></i>
-                <h5 class="mb-0">Exam List</h5>
+                <h5 class="mb-0 fw-bold">এক্সাম লিস্ট</h5>
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
             <a href="{{ route('user.refer.list') }}"
                 class="btn btn-warning w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-chart-line fa-2x mb-2"></i>
-                <h5 class="mb-0">Refer List</h5>
+                <h5 class="mb-0 fw-bold">রেফার লিস্ট</h5>
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
             <a href="{{ route('user.generation.list') }}" class="btn btn-primary w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-chart-line fa-2x mb-2"></i>
-                <h5 class="mb-0">Generation List</h5>
+                <h5 class="mb-0 fw-bold">জেনারেশন ইনকাম</h5>
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
             <a href="{{ route('user.withdraw.list') }}" 
             class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4 shadow-sm rounded-3">
                 <i class="fas fa-hand-holding-usd fa-2x mb-2"></i>
-                <h5 class="mb-0">Withdraw List</h5>
+                <h5 class="mb-0 fw-bold">উইথড্র লিস্ট</h5>
             </a>
         </div>
 
         <div class="col-md-4 col-sm-6">
             <a href="{{ route('user.balance.transfer.index') }}" class="btn btn-success w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-hand-holding-usd fa-2x mb-2"></i>
-                <h5 class="mb-0">Balance Transfer List</h5>
+                <h5 class="mb-0 fw-bold">ব্যালেন্স ট্রান্সফার লিস্ট</h5>
             </a>
         </div>
 

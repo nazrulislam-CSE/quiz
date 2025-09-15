@@ -27,8 +27,22 @@
                     <form action="{{ route('admin.mcq.store') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
+                            {{-- select mcq type --}}
+                            <div class="form-group col-xl-12 col-lg-12 col-md-12">
+                                <label for="mcq_type">MCQ Type: <span class="text-danger">*</span></label>
+                                @error('mcq_type')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                                <select name="mcq_type" id="mcq_type" class="form-control">
+                                    <option value="">Select MCQ Type</option>
+                                    <option value="1" {{ old('mcq_type') == '1' ? 'selected' : '' }}>MCQ Topic Wise</option>
+                                    <option value="2" {{ old('mcq_type') == '1' ? 'selected' : '' }}>MCQ Study Question Topic Wise</option>
+                                    <option value="3" {{ old('mcq_type') == '3' ? 'selected' : '' }}>MCQ Paper Final Exam</option>
+                                    <option value="4" {{ old('mcq_type') == '4' ? 'selected' : '' }}>MCQ Final Model Test</option>
+                                </select>
+                            </div>
                             {{-- select admission --}}
-                            <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                            <div class="form-group col-xl-4 col-lg-4 col-md-4 d-none" id="admission_box">
                                 <label for="admission_id">Admission: <span class="text-danger">*</span></label>
                                 @error('admission_id')
                                     <span class="text-danger">{{ $message }}</span>
@@ -44,7 +58,7 @@
                             </div>
 
                             {{-- select department --}}
-                            <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                            <div class="form-group col-xl-4 col-lg-4 col-md-4 d-none" id="department_box">
                                 <label for="department_id">Department: <span class="text-danger">*</span></label>
                                 @error('department_id')
                                     <span class="text-danger">{{ $message }}</span>
@@ -61,8 +75,26 @@
                                 </select>
                             </div>
 
+                            {{-- select group --}}
+                            <div class="form-group col-xl-4 col-lg-4 col-md-4 d-none" id="group_box">
+                                <label for="group_id">Group: <span class="text-danger">*</span></label>
+                                @error('group_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                                <select name="group_id" id="group_id" class="form-control">
+                                    <option value="">Select Group</option>
+                                    @if(old('group_id'))
+                                        @foreach ($groups as $group)
+                                            <option value="{{ $group->id }}" {{ old('group_id') == $group->id ? 'selected' : '' }}>
+                                                {{ $group->name }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+
                             {{-- select subject --}}
-                            <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                            <div class="form-group col-xl-4 col-lg-4 col-md-4 d-none" id="subject_box">
                                 <label for="subject_id">Subject: <span class="text-danger">*</span></label>
                                 @error('subject_id')
                                     <span class="text-danger">{{ $message }}</span>
@@ -80,7 +112,7 @@
                             </div>
 
                             {{-- select topic --}}
-                            <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                            <div class="form-group col-xl-4 col-lg-4 col-md-4 d-none" id="topic_box">
                                 <label for="topic_id">Topic: <span class="text-danger">*</span></label>
                                 @error('topic_id')
                                     <span class="text-danger">{{ $message }}</span>
@@ -98,7 +130,7 @@
                             </div>
 
                             {{-- select paper final --}}
-                            <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                            <div class="form-group col-xl-4 col-lg-4 col-md-4 d-none" id="paper_final_box">
                                 <label for="paper_final_id">Paper Final: <span class="text-danger">*</span></label>
                                 @error('paper_final_id')
                                     <span class="text-danger">{{ $message }}</span>
@@ -116,7 +148,7 @@
                             </div>
 
                             {{-- select model --}}
-                            <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                            <div class="form-group col-xl-4 col-lg-4 col-md-4 d-none" id="model_box">
                                 <label for="model_test_id">Model Test: <span class="text-danger">*</span></label>
                                 @error('model_test_id')
                                     <span class="text-danger">{{ $message }}</span>
@@ -192,6 +224,54 @@
 @endsection
 
 @push('admin')
+{{-- JavaScript --}}
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const mcqType = document.getElementById("mcq_type");
+
+        function toggleFields(type) {
+            // সব ফিল্ড hide করে দিচ্ছি
+            document.querySelectorAll('#admission_box, #department_box, #group_box, #subject_box, #topic_box, #paper_final_box, #model_box')
+                .forEach(el => el.classList.add("d-none"));
+
+            // তারপর type অনুযায়ী show করবো
+            if (type === "1") { // MCQ Topic Wise
+                admission_box.classList.remove("d-none");
+                department_box.classList.remove("d-none");
+                subject_box.classList.remove("d-none");
+                topic_box.classList.remove("d-none");
+            }
+            else if (type === "2") { // MCQ Study Question Topic Wise
+                admission_box.classList.remove("d-none");
+                department_box.classList.remove("d-none");
+                subject_box.classList.remove("d-none");
+                topic_box.classList.remove("d-none");
+                paper_final_box.classList.remove("d-none");
+            }
+            else if (type === "3") { // MCQ Paper Final Exam
+                admission_box.classList.remove("d-none");
+                department_box.classList.remove("d-none");
+                group_box.classList.remove("d-none");
+                subject_box.classList.remove("d-none");
+                paper_final_box.classList.remove("d-none");
+            }
+            else if (type === "4") { // MCQ Final Model Test
+                admission_box.classList.remove("d-none");
+                department_box.classList.remove("d-none");
+                group_box.classList.remove("d-none");
+            }
+        }
+
+        // load time old value handle
+        toggleFields(mcqType.value);
+
+        // onchange event
+        mcqType.addEventListener("change", function() {
+            toggleFields(this.value);
+        });
+    });
+</script>
+
     <script>
         /* ============== Department, Subject, Topic Selection ============ */
         $(document).ready(function() {
@@ -199,6 +279,7 @@
             $('#admission_id').on('change', function() {
                 var admissionID = $(this).val();
                 $('#department_id').html('<option value="">Loading...</option>');
+                $('#group_id').html('<option value="">Loading...</option>');
                 $('#subject_id').html('<option value="">Select Subject</option>');
                 $('#topic_id').html('<option value="">Select Topic</option>');
 
@@ -226,6 +307,7 @@
             // Load subjects when department changes
             $('#department_id').on('change', function() {
                 var departmentID = $(this).val();
+                $('#group_id').html('<option value="">Loading...</option>');
                 $('#subject_id').html('<option value="">Loading...</option>');
                 $('#topic_id').html('<option value="">Select Topic</option>');
 
