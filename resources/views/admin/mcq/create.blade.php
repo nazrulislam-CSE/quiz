@@ -230,11 +230,8 @@
         const mcqType = document.getElementById("mcq_type");
 
         function toggleFields(type) {
-            // সব ফিল্ড hide করে দিচ্ছি
             document.querySelectorAll('#admission_box, #department_box, #group_box, #subject_box, #topic_box, #paper_final_box, #model_box')
                 .forEach(el => el.classList.add("d-none"));
-
-            // তারপর type অনুযায়ী show করবো
             if (type === "1") { // MCQ Topic Wise
                 admission_box.classList.remove("d-none");
                 department_box.classList.remove("d-none");
