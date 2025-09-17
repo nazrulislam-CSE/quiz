@@ -64,6 +64,7 @@
                                             <th class="border-bottom-0">SL</th>
                                             <th class="border-bottom-0">ICON</th>
                                             <th class="border-bottom-0">Name</th>
+                                            <th class="border-bottom-0">Type</th>
                                             <th class="border-bottom-0">Admission</th>
                                             <th class="border-bottom-0">Department</th>
                                             <th class="border-bottom-0">Subject</th>
@@ -82,6 +83,13 @@
                                             </td>
                                             <td>
                                                 {{ $topic->name ?? '' }}
+                                            </td>
+                                            <td>
+                                                @if($topic->type == 1)
+                                                    <span class="badge bg-primary">MCQ Exam</span>
+                                                @else
+                                                    <span class="badge bg-info">Study Question</span>
+                                                @endif
                                             </td>
                                             <td>{{ $topic->subject->admission->name ?? '' }}</td>
                                             <td>{{ $topic->subject->department->name ?? '' }}</td>

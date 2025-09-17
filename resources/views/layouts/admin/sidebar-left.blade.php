@@ -144,6 +144,8 @@
                     <ul class="slide-menu">
                         <li class="side-menu__label1"><a href="javascript:void(0);">Topics</a></li>
                         <li><a class="slide-item {{ Request::is('admin/topic/index') ? 'active' : '' }}" href="{{ route('admin.topic.index')}}">Manage Topics</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/topic/study/mcq/index') ? 'active' : '' }}" href="{{ route('admin.topic.study.mcq.index')}}">MCQ ( Topic Wise Study)</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/topic/mcq/index') ? 'active' : '' }}" href="{{ route('admin.topic.mcq.index')}}">MCQ ( Topic Wise Exam)</a></li>
                     </ul>
                 </li>
                 <li class="slide {{ Request::is('admin/paper*') ? 'is-expanded' : '' }}">
@@ -156,6 +158,7 @@
                     <ul class="slide-menu">
                         <li class="side-menu__label1"><a href="javascript:void(0);">Paper Final</a></li>
                         <li><a class="slide-item {{ Request::is('admin/paper/index') ? 'active' : '' }}" href="{{ route('admin.paper.index')}}">Manage Paper Final</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/paper/mcq/index') ? 'active' : '' }}" href="{{ route('admin.paper.mcq.index')}}">MCQ ( Paper Final)</a></li>
                     </ul>
                 </li>
                 <li class="slide {{ Request::is('admin/model*') ? 'is-expanded' : '' }}">
@@ -168,6 +171,7 @@
                     <ul class="slide-menu">
                         <li class="side-menu__label1"><a href="javascript:void(0);">Final Model Test</a></li>
                         <li><a class="slide-item {{ Request::is('admin/model/index') ? 'active' : '' }}" href="{{ route('admin.model.index')}}">Manage Final Model Test</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/model/mcq/index') ? 'active' : '' }}" href="{{ route('admin.model.mcq.index')}}">MCQ ( Final Model Test)</a></li>
                     </ul>
                 </li>
                   <li class="slide {{ Request::is('admin/mcq*') ? 'is-expanded' : '' }}">

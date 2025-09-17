@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('exam_mark');
             $table->integer('pass_mark')->nullable();
             $table->decimal('fee', 8, 2)->default(0.00);
+            $table->unsignedTinyInteger('type')->default(2)->comment('1=>MCQ Exam, 2=>Study Question');
             $table->unsignedTinyInteger('status')->default(1)->comment('1=>Active, 0=>Inactive');
             $table->integer('order')->default(0);
             $table->integer('created_by')->nullable();

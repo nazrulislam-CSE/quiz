@@ -129,6 +129,17 @@
                      </div>
                     </div>
 
+                    {{-- select topic --}}
+                    <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                        <label for="type">Topic Type: <span class="text-danger">*</span></label>
+                        @error('type') <span class="text-danger">{{ $message }}</span> @enderror
+                        <select name="type" id="type" class="form-control">
+                            <option value="">Select Type</option>
+                            <option value="1" {{ ($topic->type == 1) ? 'selected' : '' }}>MCQ Exam</option>
+                            <option value="2" {{ ($topic->type == 2) ? 'selected' : '' }}>Study Question</option>
+                        </select>
+                    </div>
+
                     <div class="form-group col-xl-5 col-lg-5 col-md-5">
                         <label for="image">ICON <span class="text-danger font-weight-bolder">(Size:128,50px)</span>:</label>
                         @error('image') <span class="text-danger">{{ $message }}</span> @enderror

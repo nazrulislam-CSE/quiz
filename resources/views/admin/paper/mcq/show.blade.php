@@ -49,8 +49,8 @@
     <div class="card-header border-bottom d-flex justify-content-between align-items-center">
        <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}}</p>
        <div class="d-flex">
-           <a href="{{ route('admin.topic.study.mcq.index')}}" class="btn btn-danger me-2">
-               <i class="fas fa-list d-inline"></i> Topic List
+           <a href="{{ route('admin.paper.mcq.index')}}" class="btn btn-danger me-2">
+               <i class="fas fa-list d-inline"></i> MCQ  List
            </a>
        </div>
    </div>
@@ -59,59 +59,49 @@
           <table class="table table-bordered">
              <tr>
                 <td>Admission</td>
-                <td>{{ $topic->subject->admission->name ?? '' }}</td>
+                <td>{{ $mcq->admission->name ?? '' }}</td>
              </tr>
-              <tr>
-                <td>Department Name</td>
-                <td>{{ $topic->subject->department->name ?? '' }}</td>
-             </tr>
-              <tr>
-                <td>Subject Name</td>
-                <td>{{ $topic->subject->name ?? '' }}</td>
-             </tr>
-             <tr>
-                <td>Topic Name</td>
-                <td>{{ $topic->name ?? '' }}</td>
-             </tr>
-              <tr>
-                <td>Topic Type</td>
-                <td>
-                    @if($topic->type == 1)
-                        <span class="badge bg-primary">MCQ Exam</span>
-                    @else
-                        <span class="badge bg-info">Study Question</span>
-                    @endif
-                </td>
-             </tr>
-             <tr>
-                <td>Exam Duration/Time</td>
-                <td>{{ $topic->exam_duration ?? '' }}</td>
-             </tr>
-             <tr>
-                <td>Exam Mark</td>
-                <td>{{ $topic->exam_mark ?? '' }}</td>
-             </tr>
-               <tr>
-                <td>Fee</td>
-                <td>{{ $topic->fee ?? '' }}</td>
-             </tr>
-             <tr>
-                <td>Status</td>
-                <td>
-                    @if ($topic->status == 1)
-                    <span class="badge bg-pill bg-success">Active</span>
-                    @else
-                    <span class="badge bg-pill bg-success">Disable</span>
-                    @endif
-   
-                </td>
-             </tr>
-             <tr>
-                <td>ICON</td>
-                <td>
-                    <img src="{{ (!empty($topic->image)) ? url('upload/topic/'.$topic->image):url('upload/mcq.png') }}" width="80" alt="No ICON" class="img-fluid">
-                </td>
-             </tr>
+                <tr>
+                    <td>Department</td>
+                    <td>{{ $mcq->department->name ?? '' }}</td>
+                </tr>
+                <tr>
+                    <td>Group</td>
+                    <td>{{ $mcq->group->name ?? '' }}</td>
+                </tr>
+                <tr>
+                    <td>Subject</td>
+                    <td>{{ $mcq->subject->name ?? '' }}</td>
+                </tr>
+                <tr>
+                    <td>Paper</td>
+                    <td>{{ $mcq->paperFinal->title ?? '' }}</td>
+                </tr>
+                <tr>
+                    <td>Question</td>
+                    <td>{{ $mcq->question }}</td>
+                </tr>
+                <tr>
+                    <td>Answers</td>
+                    <td>
+                        @if($mcq->answers->count() > 0)
+                            <ul class="list-group">
+                                @foreach($mcq->answers as $answer)
+                                    <li class="list-group-item">
+                                        {{ $answer->answer }} 
+                                        @if($answer->is_correct)
+                                            <span class="badge bg-success">Correct</span>
+                                        @else
+                                            <span class="badge bg-secondary">Incorrect</span>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <p class="text-muted">No answers available for this question.</p>
+                        @endif
+                    </td>
+                </tr>
           </table>
        </div>
     </div>

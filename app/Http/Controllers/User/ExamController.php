@@ -28,7 +28,8 @@ class ExamController extends Controller
         $score = 0;
         $total = 0;
 
-        $admissions = Admission::where('status',1)->latest()->get();
+        $admissions = Admission::where('status', 1)->orderBy('id', 'asc')->get();
+
 
         $selectedAdmission = $request->query('admission');
         $selectedDepartment = $request->query('department');
@@ -43,21 +44,21 @@ class ExamController extends Controller
         $mcqs = collect();
 
         if ($selectedAdmission) {
-            $departments = Department::where('admission_id', $selectedAdmission)->where('status',1)->get();
+            $departments = Department::where('admission_id', $selectedAdmission)->where('status',1)->orderBy('id', 'asc')->get();
             if ($departments->isEmpty() && !$selectedDepartment) {
                 return redirect()->route('user.mcq.exam')->with('error', 'No departments available for this admission.');
             }
         }
 
         if ($selectedDepartment) {
-            $subjects = Subject::where('department_id', $selectedDepartment)->where('status',1)->get();
+            $subjects = Subject::where('department_id', $selectedDepartment)->where('status',1)->orderBy('id', 'asc')->get();
             if ($subjects->isEmpty() && !$selectedSubject) {
                 return redirect()->route('user.mcq.exam')->with('error', 'No subjects available for this department.');
             }
         }
 
         if ($selectedSubject) {
-            $topics = Topic::where('subject_id', $selectedSubject)->where('status',1)->get();
+            $topics = Topic::where('subject_id', $selectedSubject)->where('status',1)->orderBy('id', 'asc')->get();
             if ($topics->isEmpty() && !$selectedTopic) {
                 return redirect()->route('user.mcq.exam')->with('error', 'No topics available for this subject.');
             }

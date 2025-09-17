@@ -1,0 +1,350 @@
+@extends('layouts.admin.app', [$pageTitle => 'Edit MCQ'])
+
+@section('content')
+<div class="breadcrumb-header justify-content-between">
+    <div class="d-flex align-items-center">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('admin.model.mcq.index') }}">MCQ List</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit MCQ</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="main-content-body">
+    <div class="row row-sm">
+        <div class="card">
+            <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                <p class="card-title my-0">Edit MCQ Question</p>
+                <div class="d-flex">
+                    <a href="{{ route('admin.model.mcq.index')}}" class="btn btn-danger me-2">
+                        <i class="fas fa-list d-inline"></i> MCQ List
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <form action="{{ route('admin.model.mcq.update', $mcq->id) }}" method="post">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div class="row">
+                        {{-- select admission --}}
+                        <div class="col-md-4 mb-3">
+                            <label for="admission_id" class="form-label">Admission <span class="text-danger">*</span></label>
+                            <select name="admission_id" id="admission_id" class="form-control select2 @error('admission_id') is-invalid @enderror" required>
+                                <option value="">Select Admission</option>
+                                @foreach($admissions as $admission)
+                                    <option value="{{ $admission->id }}" {{ old('admission_id', $mcq->admission_id) == $admission->id ? 'selected' : '' }}>
+                                        {{ $admission->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('admission_id')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        {{-- select department --}}
+                        <div class="col-md-4 mb-3">
+                            <label for="department_id" class="form-label">Department <span class="text-danger">*</span></label>
+                            <select name="department_id" id="department_id" class="form-control select2 @error('department_id') is-invalid @enderror" required>
+                                <option value="">Select Department</option>
+                                @foreach($departments as $department)
+                                    <option value="{{ $department->id }}" {{ old('department_id', $mcq->department_id) == $department->id ? 'selected' : '' }}>
+                                        {{ $department->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('department_id')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        {{-- select group --}}
+                        <div class="col-md-4 mb-3">
+                            <label for="group_id" class="form-label">Group <span class="text-danger">*</span></label>
+                            <select name="group_id" id="group_id" class="form-control select2 @error('group_id') is-invalid @enderror" required>
+                                <option value="">Select Group</option>
+                                @foreach($groups as $group)
+                                    <option value="{{ $group->id }}" {{ old('group_id', $mcq->group_id) == $group->id ? 'selected' : '' }}>
+                                        {{ $group->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('group_id')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        {{-- select model test --}}
+                        <div class="col-md-4 mb-3">
+                            <label for="model_test_id" class="form-label">Model Test <span class="text-danger">*</span></label>
+                            <select name="model_test_id" id="model_test_id" class="form-control select2 @error('model_test_id') is-invalid @enderror" required>
+                                <option value="">Select Model Test</option>
+                                @foreach($modelTests as $modelTest)
+                                    <option value="{{ $modelTest->id }}" {{ old('model_test_id', $mcq->model_test_id) == $modelTest->id ? 'selected' : '' }}>
+                                        {{ $modelTest->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('model_test_id')
+                                <span class="invalid-feedback">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Questions Container -->
+                        <div class="col-12 mt-4" id="questions-container">
+                            <!-- Existing Question -->
+                            <div class="card shadow-none border mb-3 question-card" data-question-index="0">
+                                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Question #1</h5>
+                                    <button type="button" class="btn btn-danger btn-sm remove-question" data-question-id="{{ $mcq->id }}">
+                                        <i class="fas fa-trash"></i> Remove
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label>Question Text <span class="text-danger">*</span></label>
+                                        <textarea name="questions[0][text]" class="form-control @error('questions.0.text') is-invalid @enderror" 
+                                            rows="3" placeholder="Enter question text" required>{{ old('questions.0.text', $mcq->question) }}</textarea>
+                                        <input type="hidden" name="questions[0][id]" value="{{ $mcq->id }}">
+                                        @error('questions.0.text')
+                                            <span class="invalid-feedback">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <label>Options <span class="text-danger">*</span> <small class="text-muted">(Select the correct answer)</small></label>
+                                        <div class="row">
+                                            @foreach($mcq->answers as $index => $answer)
+                                               <div class="col-md-6">
+                                                    <div class="input-group mb-3">
+                                                        <input type="text" name="questions[0][answers][{{ $index }}][text]" 
+                                                            class="form-control @error('questions.0.answers.'.$index.'.text') is-invalid @enderror" 
+                                                            placeholder="Option {{ $index+1 }}" 
+                                                            value="{{ old('questions.0.answers.'.$index.'.text', $answer->answer) }}" 
+                                                            required>
+                                                        <input type="hidden" name="questions[0][answers][{{ $index }}][id]" value="{{ $answer->id }}">
+                                                        <div class="input-group-text">
+                                                            <input type="radio" name="questions[0][correct_answer]" 
+                                                                value="{{ $index }}" 
+                                                                {{ old('questions.0.correct_answer', $answer->is_correct ? $index : '') == $index ? 'checked' : '' }}
+                                                                class="form-check-input" style="cursor: pointer; margin-right:5px;">
+                                                            Correct
+                                                        </div>
+                                                        @error('questions.0.answers.'.$index.'.text')
+                                                            <span class="invalid-feedback">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                            
+                                            @error('questions.0.correct_answer')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add More Question Button -->
+                        <div class="col-12 mt-2">
+                            <button type="button" id="add-question" class="btn btn-success">
+                                <i class="fas fa-plus mr-2"></i> Add Another Question
+                            </button>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary px-5">
+                                <i class="fas fa-save mr-2"></i> Update MCQ
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@push('admin')
+<script>
+    $(document).ready(function() {
+        // Initialize select2
+        $('.select2').select2({
+            width: '100%'
+        });
+
+        // Dynamic dropdowns for Admission, Department, Subject, Topic
+        $('#admission_id').on('change', function () {
+            var admissionID = $(this).val();
+            $('#department_id').html('<option value="">Loading...</option>');
+            $('#group_id').html('<option value="">Select Group</option>');
+            $('#model_test_id').html('<option value="">Select Model Test</option>');
+            if (admissionID) {
+                $.ajax({
+                    url: '/admin/model/mcq/get-departments/' + admissionID,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+                        $('#department_id').html('<option value="">Select Department</option>');
+                        $.each(data, function(key, value) {
+                            $('#department_id').append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#department_id').html('<option value="">Select Department</option>');
+                $('#group_id').html('<option value="">Select Group</option>');
+                $('#model_test_id').html('<option value="">Select Model Test</option>');
+            }
+        });
+
+        $('#department_id').on('change', function () {
+            var departmentID = $(this).val();
+            $('#group_id').html('<option value="">Loading...</option>');
+            $('#model_test_id').html('<option value="">Select Model Test</option>');
+            if (departmentID) {
+                $.ajax({
+                    url: '/admin/model/mcq/get-groups/' + departmentID,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+                        $('#group_id').html('<option value="">Select Group</option>');
+                        $.each(data, function(key, value) {
+                            $('#group_id').append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#group_id').html('<option value="">Select Group</option>');
+                $('#model_test_id').html('<option value="">Select Model Test</option>');
+            }
+        });
+
+        $('#group_id').on('change', function () {
+            var groupID = $(this).val();
+            $('#model_test_id').html('<option value="">Loading...</option>');
+            if (groupID) {
+                $.ajax({
+                    url: '/admin/model/mcq/get-model-tests/' + groupID,
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data) {
+                        $('#model_test_id').html('<option value="">Select Model Test</option>');
+                        $.each(data, function(key, value) {
+                            $('#model_test_id').append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#model_test_id').html('<option value="">Select Model Test</option>');
+            }
+        });
+
+
+    
+        // Add new question
+        $('#add-question').click(function() {
+            const container = $('#questions-container');
+            const questionCount = container.children('.question-card').length;
+            const newIndex = questionCount;
+            
+            const newQuestion = `
+                <div class="card shadow-none border mb-3 question-card" data-question-index="${newIndex}">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Question #${newIndex + 1}</h5>
+                        <button type="button" class="btn btn-danger btn-sm remove-question">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Question Text <span class="text-danger">*</span></label>
+                            <textarea name="questions[${newIndex}][text]" class="form-control" 
+                                rows="3" placeholder="Enter question text" required></textarea>
+                        </div>
+
+                        <div class="mt-4">
+                            <label>Options <span class="text-danger">*</span> <small class="text-muted">(Select the correct answer)</small></label>
+                            <div class="row">
+                                ${Array(4).fill().map((_, i) => `
+                                    <div class="col-md-6">
+                                        <div class="input-group mb-3">
+                                            <input type="text" name="questions[${newIndex}][answers][${i}][text]" 
+                                                class="form-control" 
+                                                placeholder="Option ${i+1}" 
+                                                required>
+                                            <div class="input-group-text">
+                                                <input type="radio" name="questions[${newIndex}][correct_answer]" 
+                                                    value="${i}" 
+                                                    class="form-check-input" style="cursor: pointer; margin-right:5px;">
+                                                Correct
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.append(newQuestion);
+        });
+
+        // Remove question
+        $(document).on('click', '.remove-question', function() {
+            const card = $(this).closest('.question-card');
+            const questionId = $(this).data('question-id');
+            
+            if (questionId) {
+                if (confirm('Are you sure you want to delete this question? This action cannot be undone.')) {
+                    // Send AJAX request to delete the question
+                    $.ajax({
+                        url: "{{ route('admin.model.mcq.delete-question') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            question_id: questionId
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                card.remove();
+                                renumberQuestions();
+                            } else {
+                                alert('Failed to delete question: ' + response.message);
+                            }
+                        },
+                        error: function() {
+                            alert('An error occurred while trying to delete the question.');
+                        }
+                    });
+                }
+            } else {
+                // For newly added questions (not saved yet)
+                card.remove();
+                renumberQuestions();
+            }
+        });
+
+        // Renumber questions after adding/removing
+        function renumberQuestions() {
+            $('#questions-container .question-card').each(function(index) {
+                $(this).attr('data-question-index', index);
+                $(this).find('.card-header h5').text('Question #' + (index + 1));
+                
+                // Update all input names
+                $(this).find('[name*="questions["]').each(function() {
+                    const name = $(this).attr('name');
+                    const newName = name.replace(/questions\[\d+\]/, `questions[${index}]`);
+                    $(this).attr('name', newName);
+                });
+            });
+        }
+    });
+</script>
+@endpush

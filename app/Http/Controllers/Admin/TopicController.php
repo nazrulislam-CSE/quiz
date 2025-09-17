@@ -44,6 +44,7 @@ class TopicController extends Controller
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
             'name' => 'required|string|max:255',
+            'type' => 'required|in:1,2', // 1 for MCQ Topic, 2 for Study Topic
             'exam_duration' => 'required|integer',
             'exam_mark' => 'required|integer',
             'fee' => 'required|numeric',
@@ -62,6 +63,7 @@ class TopicController extends Controller
             'subject_id' => $request->subject_id,
             'name' => $request->name,
             'slug' => $slug,
+            'type' => $request->type,
             'description' => $request->description,
             'exam_duration' => $request->exam_duration,
             'exam_mark' => $request->exam_mark,
@@ -115,6 +117,7 @@ class TopicController extends Controller
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
             'name' => 'required|string|max:255',
+            'type' => 'required|in:1,2', // 1 for MCQ Topic, 2 for Study Topic
             'exam_duration' => 'required|integer',
             'exam_mark' => 'required|integer',
             'fee' => 'required|numeric',
@@ -135,6 +138,7 @@ class TopicController extends Controller
             'subject_id' => $request->subject_id,
             'name' => $request->name,
             'slug' => $slug,
+            'type' => $request->type,
             'description' => $request->description,
             'exam_duration' => $request->exam_duration,
             'exam_mark' => $request->exam_mark,

@@ -10,7 +10,17 @@ class Mcq extends Model
     use HasFactory;
 
     protected $fillable = [
-        'admission_id', 'department_id', 'subject_id', 'topic_id', 'question'
+        'admission_id',
+        'department_id',
+        'group_id',
+        'subject_id',
+        'topic_id',
+        'model_test_id',
+        'paper_final_id',
+        'mcq_type', // 1=MCQ Topic Wise, 2=MCQ Study Question Topic Wise, 3=MCQ Paper Final Exam, 4=MCQ Model Test
+        'question',
+        'created_by',
+        'updated_by',
     ];
 
     public function answers()
@@ -26,6 +36,11 @@ class Mcq extends Model
     public function department()
     {
         return $this->belongsTo(Department::class);
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
     }
 
     public function subject()
@@ -47,5 +62,6 @@ class Mcq extends Model
     {
         return $this->belongsTo(PaperFinal::class);
     }
+
 
 }

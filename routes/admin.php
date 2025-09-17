@@ -26,6 +26,10 @@ use App\Http\Controllers\Admin\WithdrawController;
 use App\Http\Controllers\Admin\PaperFinalController;
 use App\Http\Controllers\Admin\ModelTestController;
 use App\Http\Controllers\Admin\GroupController;
+use App\Http\Controllers\Admin\TopicMcqController;
+use App\Http\Controllers\Admin\TopicStudyMcqController;
+use App\Http\Controllers\Admin\PaperFinalMcqController;
+use App\Http\Controllers\Admin\ModelTestMcqController;
 
 
 
@@ -203,6 +207,36 @@ Route::middleware('admin')->group(function () {
         Route::get('/get-subjects/{department_id}', [TopicController::class, 'getSubjects']);
     });
 
+    /* ============> Topic Wise MCQ<=========== */
+    Route::prefix('topic')->group(function () {
+        Route::get('/mcq/index', [TopicMcqController::class, 'index'])->name('topic.mcq.index');
+        Route::get('/mcq/create', [TopicMcqController::class, 'create'])->name('topic.mcq.create');
+        Route::post('/mcq/store', [TopicMcqController::class, 'store'])->name('topic.mcq.store');
+        Route::get('/mcq/edit/{id}', [TopicMcqController::class, 'edit'])->name('topic.mcq.edit');
+        Route::post('/mcq/update/{id}', [TopicMcqController::class, 'update'])->name('topic.mcq.update');
+        Route::get('/mcq/delete/{id}', [TopicMcqController::class, 'destroy'])->name('topic.mcq.delete');
+        Route::get('/mcq/show/{id}', [TopicMcqController::class,'show'])->name('topic.mcq.show');
+        Route::get('/mcq/get-departments/{admission_id}', [TopicMcqController::class, 'getDepartments'])->name('get.departments');
+        Route::get('/mcq/get-subjects/{department_id}', [TopicMcqController::class, 'getSubjects']);
+        Route::get('/mcq/get-topics/{subject_id}', [TopicMcqController::class, 'getTopics']);
+        Route::post('/mcq/delete-question', [TopicMcqController::class, 'deleteQuestion'])->name('mcq.delete-question');
+    });
+
+    /* ============> Topic Wise Study MCQ<=========== */
+    Route::prefix('topic')->group(function () {
+        Route::get('/study/mcq/index', [TopicMcqController::class, 'index'])->name('topic.study.mcq.index');
+        Route::get('/study/mcq/create', [TopicMcqController::class, 'create'])->name('topic.study.mcq.create');
+        Route::post('/study/mcq/store', [TopicMcqController::class, 'store'])->name('topic.study.mcq.store');
+        Route::get('/study/mcq/edit/{id}', [TopicMcqController::class, 'edit'])->name('topic.study.mcq.edit');
+        Route::post('/study/mcq/update/{id}', [TopicMcqController::class, 'update'])->name('topic.study.mcq.update');
+        Route::get('/study/mcq/delete/{id}', [TopicMcqController::class, 'destroy'])->name('topic.study.mcq.delete');
+        Route::get('/study/mcq/show/{id}', [TopicMcqController::class,'show'])->name('topic.study.mcq.show');
+        Route::get('/study/mcq/get-departments/{admission_id}', [TopicMcqController::class, 'getDepartments'])->name('get.departments');
+        Route::get('/study/mcq/get-subjects/{department_id}', [TopicMcqController::class, 'getSubjects']);
+        Route::get('/study/mcq/get-topics/{subject_id}', [TopicMcqController::class, 'getTopics']);
+        Route::post('/study/mcq/delete-question', [TopicMcqController::class, 'deleteQuestion'])->name('mcq.study.delete-question');
+    });
+
     /* ============> Paper Final <=========== */
     Route::prefix('paper')->group(function () {
         Route::get('/index', [PaperFinalController::class, 'index'])->name('paper.index');
@@ -217,6 +251,22 @@ Route::middleware('admin')->group(function () {
         Route::get('/get-subjects/{group_id}', [PaperFinalController::class, 'getSubjects']);
     });
 
+    /* ============> Paper Final MCQ <=========== */
+    Route::prefix('paper')->group(function () {
+        Route::get('/mcq/index', [PaperFinalMcqController::class, 'index'])->name('paper.mcq.index');
+        Route::get('/mcq/create', [PaperFinalMcqController::class, 'create'])->name('paper.mcq.create');
+        Route::post('/mcq/store', [PaperFinalMcqController::class, 'store'])->name('paper.mcq.store');
+        Route::get('/mcq/edit/{id}', [PaperFinalMcqController::class, 'edit'])->name('paper.mcq.edit');
+        Route::post('/mcq/update/{id}', [PaperFinalMcqController::class, 'update'])->name('paper.mcq.update');
+        Route::get('/mcq/delete/{id}', [PaperFinalMcqController::class, 'destroy'])->name('paper.mcq.delete');
+        Route::get('/mcq/show/{id}', [PaperFinalMcqController::class,'show'])->name('paper.mcq.show');
+        Route::get('/mcq/get-departments/{admission_id}', [PaperFinalMcqController::class, 'getDepartments'])->name('get.departments');
+        Route::get('/mcq/get-groups/{department_id}', [PaperFinalMcqController::class, 'getGroups']);
+        Route::get('/mcq/get-subjects/{group_id}', [PaperFinalMcqController::class, 'getSubjects']);
+        Route::get('/mcq/get-papers/{subject_id}', [PaperFinalMcqController::class, 'getPapers']);
+        Route::post('/mcq/delete-question', [PaperFinalMcqController::class, 'deleteQuestion'])->name('paper.mcq.delete-question');
+    });
+
     /* ============> Model Test <=========== */
     Route::prefix('model')->group(function () {
         Route::get('/index', [ModelTestController::class, 'index'])->name('model.index');
@@ -228,6 +278,21 @@ Route::middleware('admin')->group(function () {
         Route::get('/show/{id}', [ModelTestController::class,'show'])->name('model.show');
         Route::get('/get-departments/{admission_id}', [ModelTestController::class, 'getDepartments'])->name('get.departments');
         Route::get('/get-groups/{department_id}', [ModelTestController::class, 'getGroups']);
+    });
+
+    /* ============> Model Test MCQ <=========== */
+    Route::prefix('model')->group(function () {
+        Route::get('/mcq/index', [ModelTestMcqController::class, 'index'])->name('model.mcq.index');
+        Route::get('/mcq/create', [ModelTestMcqController::class, 'create'])->name('model.mcq.create');
+        Route::post('/mcq/store', [ModelTestMcqController::class, 'store'])->name('model.mcq.store');
+        Route::get('/mcq/edit/{id}', [ModelTestMcqController::class, 'edit'])->name('model.mcq.edit');
+        Route::post('/mcq/update/{id}', [ModelTestMcqController::class, 'update'])->name('model.mcq.update');
+        Route::get('/mcq/delete/{id}', [ModelTestMcqController::class, 'destroy'])->name('model.mcq.delete');
+        Route::get('/mcq/show/{id}', [ModelTestMcqController::class,'show'])->name('model.mcq.show');
+        Route::get('/mcq/get-departments/{admission_id}', [ModelTestMcqController::class, 'getDepartments'])->name('get.departments');
+        Route::get('/mcq/get-groups/{department_id}', [ModelTestMcqController::class, 'getGroups']);
+        Route::get('/mcq/get-models/{group_id}', [ModelTestMcqController::class, 'getModels']);
+        Route::post('/mcq/delete-question', [ModelTestMcqController::class, 'deleteQuestion'])->name('model.mcq.delete-question');
     });
 
     /* ============> MCQ <=========== */
