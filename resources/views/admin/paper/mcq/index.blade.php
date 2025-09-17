@@ -106,7 +106,7 @@
                                                     <br>
                                                     Subject: {{ $mcq->subject->name ?? '' }}
                                                     <br>
-                                                    Paper: {{ $mcq->paperFinal->title ?? '' }}
+                                                    Paper: {{ $mcq->paperFinal->name ?? '' }}
                                                 </div>
                                             </td>
                                             <td class="col-2">{{ $mcq->created_at->format('d M Y') }}</td>

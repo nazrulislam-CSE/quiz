@@ -75,7 +75,7 @@
                 </tr>
                 <tr>
                     <td>Paper</td>
-                    <td>{{ $mcq->paperFinal->title ?? '' }}</td>
+                    <td>{{ $mcq->paperFinal->name ?? '' }}</td>
                 </tr>
                 <tr>
                     <td>Question</td>

@@ -200,7 +200,7 @@
 
         });
 
-         /* ============== Dynamic Question Generation ============ */
+        /* ============== Dynamic Question Generation ============ */
         document.getElementById('total_questions').addEventListener('input', function() {
             let total = parseInt(this.value) || 0;
             let wrapper = document.getElementById('questions-wrapper');
@@ -238,6 +238,25 @@
                 wrapper.insertAdjacentHTML('beforeend', block);
             }
         });
+
+        // Helper functions for old values
+        function getOldValue(key) {
+            return `{{ old('${key}') }}`.replace(/&quot;/g, '"');
+        }
+
+        function getOldRadioChecked(key, value) {
+            return `{{ old('${key}') }}` == value ? 'checked' : '';
+        }
+
+        function errorMessage(key) {
+            return `@error('${key}')<span class="text-danger">{{ $message }}</span>@enderror`;
+        }
+
+        // Initialize questions if old values exist
+        @if(old('questions') && count(old('questions')) > 0)
+            document.getElementById('total_questions').value = {{ count(old('questions')) }};
+            document.getElementById('total_questions').dispatchEvent(new Event('input'));
+        @endif
 
     </script>
 @endpush

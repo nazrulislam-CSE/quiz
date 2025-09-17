@@ -49,7 +49,7 @@
     <div class="card-header border-bottom d-flex justify-content-between align-items-center">
        <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}}</p>
        <div class="d-flex">
-           <a href="{{ route('admin.mcq.index')}}" class="btn btn-danger me-2">
+           <a href="{{ route('admin.topic.study.mcq.index')}}" class="btn btn-danger me-2">
                <i class="fas fa-list d-inline"></i> MCQ  List
            </a>
        </div>

@@ -101,7 +101,7 @@
                                 <option value="">Select Paper</option>
                                 @foreach($papers as $paper)
                                     <option value="{{ $paper->id }}" {{ old('paper_final_id', $mcq->paper_final_id) == $paper->id ? 'selected' : '' }}>
-                                        {{ $paper->title }}
+                                        {{ $paper->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -278,7 +278,7 @@
                     success:function(data) {
                         $('#paper_final_id').html('<option value="">Select Paper</option>');
                         $.each(data, function(key, value) {
-                            $('#paper_final_id').append('<option value="'+ value.id +'">'+ value.title +'</option>');
+                            $('#paper_final_id').append('<option value="'+ value.id +'">'+ value.name +'</option>');
                         });
                     }
                 });

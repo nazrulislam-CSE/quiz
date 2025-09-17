@@ -199,5 +199,63 @@
             });
 
         });
+
+        /* ============== Dynamic Question Generation ============ */
+        document.getElementById('total_questions').addEventListener('input', function() {
+            let total = parseInt(this.value) || 0;
+            let wrapper = document.getElementById('questions-wrapper');
+            wrapper.innerHTML = ""; // clear old questions
+
+            for (let q = 0; q < total; q++) {
+                let block = `
+                    <div class="card mb-4 p-3 question-block">
+                        <h5>Question ${q + 1}</h5>
+                        <div class="form-group mb-2">
+                            <label>Question:</label>
+                            <textarea name="questions[${q}][text]" class="form-control" placeholder="Enter question" required>${getOldValue('questions.${q}.text')}</textarea>
+                            ${errorMessage('questions.${q}.text')}
+                        </div>
+
+                        <div class="row">
+                            ${[0,1,2,3].map(i => `
+                                <div class="col-md-6">
+                                    <div class="input-group mb-2 option-item">
+                                        <input type="text" name="questions[${q}][answers][${i}][answer]" 
+                                            class="form-control" placeholder="Option ${i+1}" 
+                                            value="${getOldValue(`questions.${q}.answers.${i}.answer`)}" required>
+                                        <div class="input-group-text">
+                                            <input type="radio" name="questions[${q}][correct_answer]" value="${i}" 
+                                                ${getOldRadioChecked(`questions.${q}.correct_answer`, i)}
+                                                style="cursor: pointer; margin-right:5px;"> Correct
+                                        </div>
+                                    </div>
+                                    ${errorMessage(`questions.${q}.answers.${i}.answer`)}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                wrapper.insertAdjacentHTML('beforeend', block);
+            }
+        });
+
+        // Helper functions for old values
+        function getOldValue(key) {
+            return `{{ old('${key}') }}`.replace(/&quot;/g, '"');
+        }
+
+        function getOldRadioChecked(key, value) {
+            return `{{ old('${key}') }}` == value ? 'checked' : '';
+        }
+
+        function errorMessage(key) {
+            return `@error('${key}')<span class="text-danger">{{ $message }}</span>@enderror`;
+        }
+
+        // Initialize questions if old values exist
+        @if(old('questions') && count(old('questions')) > 0)
+            document.getElementById('total_questions').value = {{ count(old('questions')) }};
+            document.getElementById('total_questions').dispatchEvent(new Event('input'));
+        @endif
     </script>
 @endpush

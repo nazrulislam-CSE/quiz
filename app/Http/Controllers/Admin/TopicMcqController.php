@@ -119,6 +119,7 @@ class TopicMcqController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        //  dd($request->all());
         $request->validate([
             'admission_id' => 'required|exists:admissions,id',
             'department_id' => 'required|exists:departments,id',
@@ -130,6 +131,7 @@ class TopicMcqController extends Controller
             'questions.*.answers.*.answer' => 'required|string', // Changed to match your input structure
             'questions.*.correct_answer' => 'required|integer|between:0,3', // Must be 0-3 (for 4 options)
         ]);
+        
 
         try {
             DB::beginTransaction();

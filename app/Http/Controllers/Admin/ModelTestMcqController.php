@@ -95,7 +95,7 @@ class ModelTestMcqController extends Controller
      */
     public function show(string $id)
     {
-        $mcq = Mcq::with(['answers', 'admission', 'department', 'groups', 'modelTest'])->findOrFail($id);
+        $mcq = Mcq::with(['answers', 'admission', 'department', 'group', 'modelTest'])->findOrFail($id);
         $pageTitle = 'Final Model Test Details';
         return view('admin.model.mcq.show', compact('mcq', 'pageTitle'));
     }
@@ -191,7 +191,7 @@ class ModelTestMcqController extends Controller
     // AJAX Methods for Dynamic Dropdowns
     public function getDepartments($admission_id)
     {
-        $departments = Department::whereHas('admissions', function ($query) use ($admission_id) {
+        $departments = Department::whereHas('admission', function ($query) use ($admission_id) {
             $query->where('admission_id', $admission_id);
         })->where('status', '1')->get();
 
@@ -200,7 +200,7 @@ class ModelTestMcqController extends Controller
 
     public function getGroups($department_id)
     {
-        $groups = Group::whereHas('departments', function ($query) use ($department_id) {
+        $groups = Group::whereHas('department', function ($query) use ($department_id) {
             $query->where('department_id', $department_id);
         })->where('status', '1')->get();
 
@@ -208,9 +208,11 @@ class ModelTestMcqController extends Controller
     }
     public function getModelTests($group_id)
     {
-        $models = ModelTest::whereHas('groups', function ($query) use ($group_id) {
+        $models = ModelTest::whereHas('group', function ($query) use ($group_id) {
             $query->where('group_id', $group_id);
         })->where('status', '1')->get();
+
+        // dd($models);
 
         return response()->json($models);
     }

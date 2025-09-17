@@ -190,7 +190,7 @@ class TopicStudyMcqController extends Controller
     // AJAX Methods for Dynamic Dropdowns
     public function getDepartments($admission_id)
     {
-        $departments = Department::whereHas('admissions', function ($query) use ($admission_id) {
+        $departments = Department::whereHas('admission', function ($query) use ($admission_id) {
             $query->where('admission_id', $admission_id);
         })->where('status', '1')->get();
 
@@ -198,7 +198,7 @@ class TopicStudyMcqController extends Controller
     }
     public function getSubjects($department_id)
     {
-        $subjects = Subject::whereHas('departments', function ($query) use ($department_id) {
+        $subjects = Subject::whereHas('department', function ($query) use ($department_id) {
             $query->where('department_id', $department_id);
         })->where('status', '1')->get();
 
@@ -206,7 +206,7 @@ class TopicStudyMcqController extends Controller
     }
     public function getTopics($subject_id)
     {
-        $topics = Topic::where('subject_id', $subject_id)->where('status', '1')->where('type',1)->get();
+        $topics = Topic::where('subject_id', $subject_id)->where('status', '1')->where('type',2)->get();
         return response()->json($topics);
     }
 }
