@@ -121,10 +121,10 @@
                                             @foreach($mcq->answers as $index => $answer)
                                                <div class="col-md-6">
                                                     <div class="input-group mb-3">
-                                                        <input type="text" name="questions[0][answers][{{ $index }}][text]" 
-                                                            class="form-control @error('questions.0.answers.'.$index.'.text') is-invalid @enderror" 
+                                                        <input type="text" name="questions[0][answers][{{ $index }}][answer]" 
+                                                            class="form-control @error('questions.0.answers.'.$index.'.answer') is-invalid @enderror" 
                                                             placeholder="Option {{ $index+1 }}" 
-                                                            value="{{ old('questions.0.answers.'.$index.'.text', $answer->answer) }}" 
+                                                            value="{{ old('questions.0.answers.'.$index.'.answer', $answer->answer) }}" 
                                                             required>
                                                         <input type="hidden" name="questions[0][answers][{{ $index }}][id]" value="{{ $answer->id }}">
                                                         <div class="input-group-text">
@@ -158,7 +158,7 @@
                         </div>
 
                         <div class="col-12 mt-4">
-                            <button type="submit" class="btn btn-primary px-5">
+                            <button type="submit" class="btn btn-primary px-5 text-end">
                                 <i class="fas fa-save mr-2"></i> Update MCQ
                             </button>
                         </div>
@@ -272,7 +272,7 @@
                                 ${Array(4).fill().map((_, i) => `
                                     <div class="col-md-6">
                                         <div class="input-group mb-3">
-                                            <input type="text" name="questions[${newIndex}][answers][${i}][text]" 
+                                            <input type="text" name="questions[${newIndex}][answers][${i}][answer]" 
                                                 class="form-control" 
                                                 placeholder="Option ${i+1}" 
                                                 required>
