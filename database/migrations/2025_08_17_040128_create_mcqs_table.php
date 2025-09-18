@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('mcqs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('admission_id')->constrained()->onDelete('cascade');
-            $table->foreignId('department_id')->constrained()->onDelete('cascade');
+            $table->foreignId('admission_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('department_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('group_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('subject_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('topic_id')->nullable()->constrained()->onDelete('cascade');
