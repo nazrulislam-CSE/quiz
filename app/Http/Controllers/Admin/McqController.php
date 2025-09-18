@@ -40,7 +40,7 @@ class McqController extends Controller
             'exam_duration' => 'required',
             'exam_mark' => 'required',
             'questions' => 'required|array|min:1',
-            'questions.*.text' => 'required|string',
+            'questions.*.answer' => 'required|string',
             'questions.*.answers' => 'required|array|min:4', // Ensure exactly 4 answers
             'questions.*.answers.*.answer' => 'required|string', // Changed to match your input structure
             'questions.*.correct_answer' => 'required|integer|between:0,3', // Must be 0-3 (for 4 options)
@@ -106,7 +106,7 @@ class McqController extends Controller
         'exam_duration' => 'required',
         'exam_mark' => 'required',
         'questions' => 'required|array|min:1',
-        'questions.*.text' => 'required|string|max:1000',
+        'questions.*.answer' => 'required|string|max:1000',
         'questions.*.answers' => 'required|array|min:2|max:6',
         'questions.*.answers.*' => 'required|string|max:255',
         'questions.*.correct_answer' => 'required|integer|min:0',
