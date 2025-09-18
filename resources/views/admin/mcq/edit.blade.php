@@ -30,102 +30,34 @@
                     @method('PUT')
                     
                     <div class="row">
-                        <!-- Admission Selection -->
-                        <div class="form-group col-xl-4 col-lg-4 col-md-6">
-                            <label for="admission_id">Admission <span class="text-danger">*</span></label>
-                            <select name="admission_id" id="admission_id" class="form-control select2 @error('admission_id') is-invalid @enderror" required>
-                                <option value="">Select Admission</option>
-                                @foreach ($admissions as $admission)
-                                    <option value="{{ $admission->id }}" {{ old('admission_id', $mcq->admission_id) == $admission->id ? 'selected' : '' }}>
-                                        {{ $admission->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('admission_id')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
+                        <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                            <div class="form-group">
+                            <label for="title">Title: <span class="text-danger">*</span></label>
+                                <input type="text"  name="title" value="{{ old('title',$mcq->title) }}" id="title" class="form-control" placeholder="Enter Title">
+                                @error('title')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                            <div class="form-group">
+                            <label for="name">Exam Duration/Time (In Minutes): <span class="text-danger">*</span></label>
+                                <input type="number" min="0" name="exam_duration" value="{{ old('exam_duration',$mcq->exam_duration) }}" id="exam_duration" class="form-control" placeholder="Ex:10 minutes">
+                                @error('exam_duration')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
 
-                        <!-- Department Selection -->
-                        <div class="form-group col-xl-4 col-lg-4 col-md-6">
-                            <label for="department_id">Department <span class="text-danger">*</span></label>
-                            <select name="department_id" id="department_id" class="form-control select2 @error('department_id') is-invalid @enderror" required>
-                                <option value="">Select Department</option>
-                                @foreach ($departments as $department)
-                                    <option value="{{ $department->id }}" {{ old('department_id', $mcq->department_id) == $department->id ? 'selected' : '' }}>
-                                        {{ $department->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('department_id')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
+                        <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                            <div class="form-group">
+                            <label for="exam_mark">Exam Mark: <span class="text-danger">*</span></label>
+                                <input type="number" min="0" name="exam_mark" value="{{ old('exam_mark',$mcq->exam_mark) }}" id="exam_mark" class="form-control" placeholder="Ex:25">
+                                @error('exam_mark')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
                         </div>
-
-                        <!-- Subject Selection -->
-                        <div class="form-group col-xl-4 col-lg-4 col-md-6">
-                            <label for="subject_id">Subject <span class="text-danger">*</span></label>
-                            <select name="subject_id" id="subject_id" class="form-control select2 @error('subject_id') is-invalid @enderror" required>
-                                <option value="">Select Subject</option>
-                                @foreach ($subjects as $subject)
-                                    <option value="{{ $subject->id }}" {{ old('subject_id', $mcq->subject_id) == $subject->id ? 'selected' : '' }}>
-                                        {{ $subject->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('subject_id')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <!-- Topic Selection -->
-                        <div class="form-group col-xl-4 col-lg-4 col-md-6">
-                            <label for="topic_id">Topic <span class="text-danger">*</span></label>
-                            <select name="topic_id" id="topic_id" class="form-control select2 @error('topic_id') is-invalid @enderror" required>
-                                <option value="">Select Topic</option>
-                                @foreach ($topics as $topic)
-                                    <option value="{{ $topic->id }}" {{ old('topic_id', $mcq->topic_id) == $topic->id ? 'selected' : '' }}>
-                                        {{ $topic->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('topic_id')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <!-- Paper Final Selection -->
-                        <div class="form-group col-xl-4 col-lg-4 col-md-6">
-                            <label for="paper_final_id">Paper Final <span class="text-danger">*</span></label>
-                            <select name="paper_final_id" id="paper_final_id" class="form-control select2 @error('paper_final_id') is-invalid @enderror" required>
-                                <option value="">Select Paper Final</option>
-                                @foreach ($papers as $paper)
-                                    <option value="{{ $paper->id }}" {{ old('paper_final_id', $mcq->paper_final_id) == $paper->id ? 'selected' : '' }}>
-                                        {{ $paper->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('paper_final_id')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        <!-- Model Test Selection -->
-                        <div class="form-group col-xl-4 col-lg-4 col-md-6">
-                            <label for="model_test_id">Model Test <span class="text-danger">*</span></label>
-                            <select name="model_test_id" id="model_test_id" class="form-control select2 @error('model_test_id') is-invalid @enderror" required>
-                                <option value="">Select Model Test</option>
-                                @foreach ($models as $model)
-                                    <option value="{{ $model->id }}" {{ old('model_test_id', $mcq->model_test_id) == $model->id ? 'selected' : '' }}>
-                                        {{ $model->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('model_test_id')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-
                         <!-- Questions Container -->
                         <div class="col-12 mt-4" id="questions-container">
                             <!-- Existing Question -->
@@ -153,10 +85,10 @@
                                             @foreach($mcq->answers as $index => $answer)
                                                <div class="col-md-6">
                                                     <div class="input-group mb-3">
-                                                        <input type="text" name="questions[0][answers][{{ $index }}][text]" 
-                                                            class="form-control @error('questions.0.answers.'.$index.'.text') is-invalid @enderror" 
+                                                        <input type="text" name="questions[0][answers][{{ $index }}][answer]" 
+                                                            class="form-control @error('questions.0.answers.'.$index.'.answer') is-invalid @enderror" 
                                                             placeholder="Option {{ $index+1 }}" 
-                                                            value="{{ old('questions.0.answers.'.$index.'.text', $answer->answer) }}" 
+                                                            value="{{ old('questions.0.answers.'.$index.'.answer', $answer->answer) }}" 
                                                             required>
                                                         <input type="hidden" name="questions[0][answers][{{ $index }}][id]" value="{{ $answer->id }}">
                                                         <div class="input-group-text">
@@ -208,86 +140,6 @@
         // Initialize select2
         $('.select2').select2({
             width: '100%'
-        });
-
-        // Load departments when admission changes
-        $('#admission_id').on('change', function() {
-            var admissionID = $(this).val();
-            $('#department_id').html('<option value="">Loading...</option>');
-            $('#subject_id').html('<option value="">Select Subject</option>');
-            $('#topic_id').html('<option value="">Select Topic</option>');
-            $('#paper_final_id').html('<option value="">Select Paper Final</option>');
-            $('#model_test_id').html('<option value="">Select Model Test</option>');
-
-            if (admissionID) {
-                $.ajax({
-                    url: "{{ url('/admin/mcq/get-departments') }}/" + admissionID,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        $('#department_id').html('<option value="">Select Department</option>');
-                        $.each(data, function(key, value) {
-                            $('#department_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-                        });
-                    },
-                    error: function() {
-                        $('#department_id').html('<option value="">Failed to load</option>');
-                    }
-                });
-            } else {
-                $('#department_id').html('<option value="">Select Department</option>');
-            }
-        });
-
-        // Load subjects when department changes
-        $('#department_id').on('change', function() {
-            var departmentID = $(this).val();
-            $('#subject_id').html('<option value="">Loading...</option>');
-            $('#topic_id').html('<option value="">Select Topic</option>');
-
-            if (departmentID) {
-                $.ajax({
-                    url: "{{ url('/admin/mcq/get-subjects') }}/" + departmentID,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        $('#subject_id').html('<option value="">Select Subject</option>');
-                        $.each(data, function(key, value) {
-                            $('#subject_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-                        });
-                    },
-                    error: function() {
-                        $('#subject_id').html('<option value="">Failed to load</option>');
-                    }
-                });
-            } else {
-                $('#subject_id').html('<option value="">Select Subject</option>');
-            }
-        });
-
-        // Load topics when subject changes
-        $('#subject_id').on('change', function() {
-            var subjectID = $(this).val();
-            $('#topic_id').html('<option value="">Loading...</option>');
-
-            if (subjectID) {
-                $.ajax({
-                    url: "{{ url('/admin/mcq/get-topics') }}/" + subjectID,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        $('#topic_id').html('<option value="">Select Topic</option>');
-                        $.each(data, function(key, value) {
-                            $('#topic_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-                        });
-                    },
-                    error: function() {
-                        $('#topic_id').html('<option value="">Failed to load</option>');
-                    }
-                });
-            } else {
-                $('#topic_id').html('<option value="">Select Topic</option>');
-            }
         });
 
         // Add new question

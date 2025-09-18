@@ -57,42 +57,18 @@
     <div class="card-body">
        <div class="table-responsive">
           <table class="table table-bordered">
-             <tr>
-                <td>Admission</td>
-                <td>{{ $mcq->admission->name ?? '' }}</td>
-             </tr>
                 <tr>
-                    <td>Department</td>
-                    <td>{{ $mcq->department->name ?? '' }}</td>
+                    <td>Title</td>
+                    <td>{{ $mcq->title }}</td>
                 </tr>
                 <tr>
-                    <td>Subject</td>
-                    <td>{{ $mcq->subject->name ?? '' }}</td>
+                    <td>Exam Duration</td>
+                    <td>{{ $mcq->exam_duration }}</td>
                 </tr>
-                {{-- Show Topic if it exists --}}
-                @if ($mcq->topic)
                 <tr>
-                    <td>Topic</td>
-                    <td>{{ $mcq->topic->name }}</td>
+                    <td>Exam Mark</td>
+                    <td>{{ $mcq->exam_mark }}</td>
                 </tr>
-                @endif
-
-                {{-- Show Paper Final if it exists --}}
-                @if ($mcq->paperFinal)
-                <tr>
-                    <td>Paper Final</td>
-                    <td>{{ $mcq->paperFinal->name }}</td>
-                </tr>
-                @endif
-
-                {{-- Show Model Test if it exists --}}
-                @if ($mcq->modelTest)
-                <tr>
-                    <td>Model Test</td>
-                    <td>{{ $mcq->modelTest->name }}</td>
-                </tr>
-                @endif
-
                 <tr>
                     <td>Question</td>
                     <td>{{ $mcq->question }}</td>

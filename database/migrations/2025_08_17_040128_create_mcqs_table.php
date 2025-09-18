@@ -20,7 +20,12 @@ return new class extends Migration
             $table->foreignId('topic_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('model_test_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('paper_final_id')->nullable()->constrained()->onDelete('cascade');
-            $table->string('mcq_type')->comment('1=MCQ Topic Wise, 2=MCQ Study Question Topic Wise, 3=MCQ Paper Final Exam, 4=MCQ Model Test');
+            $table->string('title')->nullable();
+            $table->integer('exam_duration')->nullable();
+            $table->integer('exam_mark')->nullable();
+            $table->integer('pass_mark')->nullable();
+            $table->decimal('fee', 8, 2)->default(0.00)->nullable();
+            $table->string('mcq_type')->comment('1=MCQ Topic Wise, 2=MCQ Study Question Topic Wise, 3=MCQ Paper Final Exam, 4=MCQ Model Test, 5=Manually MCQ');
             $table->text('question');
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

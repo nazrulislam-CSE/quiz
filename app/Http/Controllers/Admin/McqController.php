@@ -5,15 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Mcq;
-use App\Models\Department;
-use App\Models\Group;
-use App\Models\Subject;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use App\Models\Admission;
-use App\Models\Topic;
-use App\Models\PaperFinal;
-use App\Models\ModelTest;
 use Illuminate\Support\Facades\DB;
 
 class McqController extends Controller
@@ -34,15 +27,7 @@ class McqController extends Controller
     public function create()
     {
         $pageTitle = 'MCQ Create';
-        $admissions = Admission::where('status', '1')->get();
-        $departments = Department::where('status', '1')->get();
-        $groups = Group::where('status', '1')->get();
-        $subjects = Subject::where('status', '1')->get();
-        $topics = Topic::where('status', '1')->get();
-        $papers = PaperFinal::where('status', '1')->get();
-        $models = ModelTest::where('status', '1')->get();
-
-        return view('admin.mcq.create', compact('admissions', 'departments','groups', 'subjects','topics','papers','models', 'pageTitle'));
+        return view('admin.mcq.create', compact('pageTitle'));
     }
 
     /**
@@ -51,13 +36,9 @@ class McqController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'admission_id' => 'required|exists:admissions,id',
-            'department_id' => 'required|exists:departments,id',
-            'subject_id' => 'required|exists:subjects,id',
-            // One of these three must be present
-            'topic_id' => 'required_without_all:model_test_id,paper_final_id|exists:topics,id',
-            'model_test_id' => 'required_without_all:topic_id,paper_final_id|exists:model_tests,id',
-            'paper_final_id' => 'required_without_all:topic_id,model_test_id|exists:paper_finals,id',
+            'tile' => 'required',
+            'exam_duration' => 'required',
+            'exam_mark' => 'required',
             'questions' => 'required|array|min:1',
             'questions.*.text' => 'required|string',
             'questions.*.answers' => 'required|array|min:4', // Ensure exactly 4 answers
@@ -71,13 +52,6 @@ class McqController extends Controller
             foreach ($request->questions as $qData) {
                 // Create MCQ
                 $mcq = Mcq::create([
-                    'admission_id' => $request->admission_id,
-                    'department_id' => $request->department_id,
-                    'subject_id' => $request->subject_id,
-                    'topic_id' => $request->topic_id,
-                    'paper_final_id' => $request->paper_final_id,
-                    'model_test_id' => $request->model_test_id,
-                    'model_id' => $request->topic_id,
                     'question' => $qData['text'],
                     'created_by' => Auth::id(),
                 ]);
@@ -106,7 +80,7 @@ class McqController extends Controller
      */
     public function show(string $id)
     {
-        $mcq = Mcq::with(['answers', 'admission', 'department', 'subject', 'topic','modelTest','paperFinal'])->findOrFail($id);
+        $mcq = Mcq::with(['answers'])->findOrFail($id);
         $pageTitle = 'MCQ Details';
         return view('admin.mcq.show', compact('mcq', 'pageTitle'));
     }
@@ -117,28 +91,9 @@ class McqController extends Controller
     public function edit(string $id)
     {
         $mcq = Mcq::with(['answers'])->findOrFail($id);
-        
-        $admissions = Admission::where('status', '1')->get();
-        $departments = Department::where('status', '1')
-            ->where('admission_id', $mcq->admission_id)
-            ->get();
-        $subjects = Subject::where('status', '1')
-            ->where('department_id', $mcq->department_id)
-            ->get();
-        $topics = Topic::where('status', '1')
-            ->where('subject_id', $mcq->subject_id)
-            ->get();
-        $papers = PaperFinal::where('status', '1')
-            ->where('subject_id', $mcq->subject_id)
-            ->get();
-        $models = ModelTest::where('status', '1')
-            ->where('subject_id', $mcq->subject_id)
-            ->get();
-        
-        
         $pageTitle = 'Edit MCQ';
 
-        return view('admin.mcq.edit', compact('mcq', 'admissions', 'departments', 'subjects', 'topics','papers','models', 'pageTitle'));
+        return view('admin.mcq.edit', compact('mcq','pageTitle'));
     }
 
     /**
@@ -147,13 +102,9 @@ class McqController extends Controller
     public function update(Request $request, string $id)
     {
     $validated = $request->validate([
-        'admission_id' => 'required|exists:admissions,id',
-        'department_id' => 'required|exists:departments,id',
-        'subject_id' => 'required|exists:subjects,id',
-        // One of these three must be present
-        'topic_id' => 'required_without_all:model_test_id,paper_final_id|exists:topics,id',
-        'model_test_id' => 'required_without_all:topic_id,paper_final_id|exists:model_tests,id',
-        'paper_final_id' => 'required_without_all:topic_id,model_test_id|exists:paper_finals,id',
+        'tile' => 'required',
+        'exam_duration' => 'required',
+        'exam_mark' => 'required',
         'questions' => 'required|array|min:1',
         'questions.*.text' => 'required|string|max:1000',
         'questions.*.answers' => 'required|array|min:2|max:6',
@@ -166,12 +117,7 @@ class McqController extends Controller
         $mcq = Mcq::findOrFail($id);
         
         $mcq->update([
-            'admission_id' => $validated['admission_id'],
-            'department_id' => $validated['department_id'],
-            'subject_id' => $validated['subject_id'],
-            'topic_id' => $validated['topic_id'],
-            'paper_final_id' => $validated['paper_final_id'],
-            'model_test_id' => $validated['model_test_id'],
+
             'question' => $validated['questions'][0]['text'],
             'updated_by' => Auth::id(),
         ]);
@@ -209,23 +155,6 @@ class McqController extends Controller
         $mcq->delete(); // Delete the MCQ itself
 
         return redirect()->route('admin.mcq.index')->with('success', 'MCQ deleted successfully!');
-    }
-
-    public function getDepartments($admission_id)
-    {
-        $departments = Department::where('admission_id', $admission_id)->get();
-        return response()->json($departments);
-    }
-
-    public function getSubjects($department_id)
-    {
-        $subjects = Subject::where('department_id', $department_id)->get();
-        return response()->json($subjects);
-    }
-    public function getTopics($subject_id)
-    {
-        $topics = Topic::where('subject_id', $subject_id)->get();
-        return response()->json($topics);
     }
 
     public function deleteQuestion(Request $request)

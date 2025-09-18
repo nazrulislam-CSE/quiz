@@ -17,7 +17,12 @@ class Mcq extends Model
         'topic_id',
         'model_test_id',
         'paper_final_id',
-        'mcq_type', // 1=MCQ Topic Wise, 2=MCQ Study Question Topic Wise, 3=MCQ Paper Final Exam, 4=MCQ Model Test
+        'mcq_type', // 1=MCQ Topic Wise, 2=MCQ Study Question Topic Wise, 3=MCQ Paper Final Exam, 4=MCQ Model Test, 5=Manually MCQ
+        'title',
+        'exam_duration',
+        'exam_mark',
+        'pass_mark',
+        'fee',
         'question',
         'created_by',
         'updated_by',

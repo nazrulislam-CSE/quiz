@@ -98,21 +98,9 @@
                                             </td>
                                             <td class="col-2">
                                                 <div class="text-wrap">
-                                                    Admission: {{ $mcq->admission->name ?? '' }} 
-                                                    <br>
-                                                    Department: {{ $mcq->department->name ?? '' }}
-                                                    <br>
-                                                    Subject: {{ $mcq->subject->name ?? '' }}
-                                                    <br>
-                                                    @if ($mcq->topic)
-                                                        Topic: {{ $mcq->topic->name }}
-                                                    @elseif ($mcq->paperFinal)
-                                                        Paper Final: {{ $mcq->paperFinal->name }}
-                                                    @elseif ($mcq->modelTest)
-                                                        Model Test: {{ $mcq->modelTest->name }}
-                                                    @else
-                                                        N/A
-                                                    @endif
+                                                    Title: {{ $mcq->title ?? '' }} <br>
+                                                    Exam Duration: {{ $mcq->exam_duration ?? '' }} <br>
+                                                    Exam Mark: {{ $mcq->exam_mark ?? '' }} <br>
                                                 </div>
                                             </td>
                                             <td class="col-2">{{ $mcq->created_at->format('d M Y') }}</td>
