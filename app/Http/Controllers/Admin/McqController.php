@@ -52,8 +52,12 @@ class McqController extends Controller
             foreach ($request->questions as $qData) {
                 // Create MCQ
                 $mcq = Mcq::create([
-                    'question' => $qData['text'],
-                    'created_by' => Auth::id(),
+                    'title'         => $request->title,
+                    'exam_duration' => $request->exam_duration,
+                    'exam_mark'     => $request->exam_mark,
+                    'mcq_type'      => 5, // 5 Manually MCQ
+                    'question'      => $qData['text'],
+                    'created_by'    => Auth::id(),
                 ]);
 
                 // Save options
@@ -118,6 +122,9 @@ class McqController extends Controller
         
         $mcq->update([
 
+            'title'         => $request->title,
+            'exam_duration' => $request->exam_duration,
+            'exam_mark'     => $request->exam_mark,
             'question' => $validated['questions'][0]['text'],
             'updated_by' => Auth::id(),
         ]);
