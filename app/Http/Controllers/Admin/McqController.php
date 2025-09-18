@@ -36,7 +36,7 @@ class McqController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'tile' => 'required',
+            'title' => 'required',
             'exam_duration' => 'required',
             'exam_mark' => 'required',
             'questions' => 'required|array|min:1',
@@ -102,7 +102,7 @@ class McqController extends Controller
     public function update(Request $request, string $id)
     {
     $validated = $request->validate([
-        'tile' => 'required',
+        'title' => 'required',
         'exam_duration' => 'required',
         'exam_mark' => 'required',
         'questions' => 'required|array|min:1',
