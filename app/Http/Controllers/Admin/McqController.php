@@ -106,50 +106,50 @@ class McqController extends Controller
     public function update(Request $request, string $id)
     {
     $validated = $request->validate([
-        'title' => 'required',
-        'exam_duration' => 'required',
-        'exam_mark' => 'required',
+        'title' => 'required|string|max:255',
+        'exam_duration' => 'required|integer|min:1',
+        'exam_mark' => 'required|integer|min:1',
         'questions' => 'required|array|min:1',
-        'questions.*.answer' => 'required|string|max:1000',
-        'questions.*.answers' => 'required|array|min:2|max:6',
-        'questions.*.answers.*' => 'required|string|max:255',
-        'questions.*.correct_answer' => 'required|integer|min:0',
+        'questions.*.text' => 'required|string|max:1000',
+        'questions.*.answers' => 'required|array|size:4',
+        'questions.*.answers.*.answer' => 'required|string|max:255',
+        'questions.*.correct_answer' => 'required|integer|between:0,3',
     ]);
 
     DB::beginTransaction();
     try {
         $mcq = Mcq::findOrFail($id);
-        
-        $mcq->update([
 
+        $mcq->update([
             'title'         => $request->title,
             'exam_duration' => $request->exam_duration,
             'exam_mark'     => $request->exam_mark,
-            'question' => $validated['questions'][0]['text'],
-            'updated_by' => Auth::id(),
+            'question'      => $validated['questions'][0]['text'], 
+            'updated_by'    => Auth::id(),
         ]);
 
-        // Delete existing answers
+    
         $mcq->answers()->delete();
 
-        // Add new answers
-        foreach ($validated['questions'][0]['answers'] as $index => $answerText) {
+    
+        foreach ($validated['questions'][0]['answers'] as $index => $answerData) {
             $mcq->answers()->create([
-                'answer' => $answerText,
+                'answer'     => $answerData['answer'],
                 'is_correct' => $validated['questions'][0]['correct_answer'] == $index ? 1 : 0,
             ]);
         }
 
         DB::commit();
-        
+
         return redirect()->route('admin.mcq.index')
             ->with('success', 'MCQ updated successfully!');
-            
+
     } catch (\Exception $e) {
         DB::rollBack();
         return back()->withInput()
             ->with('error', 'Error updating MCQ: ' . $e->getMessage());
     }
+
 }
 
     /**
