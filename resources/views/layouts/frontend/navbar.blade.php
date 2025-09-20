@@ -44,12 +44,12 @@
                         {{ $menuitem->title ?? '' }}
                     </a>
                 @elseif($menuitem->url == 'demo-exam')
-                    <a class="btn bg-success text-white fw-bold ms-2"
+                    <a class="btn bg-success text-white fw-bold"
                       href="{{ route('menu.page', $menuitem->url) }}">
                         {{ $menuitem->title ?? 'Demo Exam' }}
                     </a>
                 @elseif($menuitem->url == 'online-quiz')
-                    <a class="btn bg-danger text-white fw-bold ms-2"
+                    <a class="btn bg-danger text-white fw-bold"
                       href="{{ route('menu.page', $menuitem->url) }}">
                         {{ $menuitem->title ?? 'Online Quiz' }}
                     </a>
