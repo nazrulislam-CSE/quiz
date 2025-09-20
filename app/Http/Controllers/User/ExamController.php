@@ -30,7 +30,6 @@ class ExamController extends Controller
 
         $admissions = Admission::where('status', 1)->orderBy('id', 'asc')->get();
 
-
         $selectedAdmission = $request->query('admission');
         $selectedDepartment = $request->query('department');
         $selectedSubject = $request->query('subject');
