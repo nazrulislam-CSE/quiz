@@ -61,14 +61,23 @@
                 @endif
             </li>
         @endforeach
+        <!-- Navigation Buttons -->
+        @guest
+            <!-- Guest: Login & Register -->
+            <li class="nav-item">
+                <a class="btn btn-primary" href="{{ route('login') }}">লগইন</a>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-gradient" href="{{ route('register') }}">রেজিস্ট্রেশন</a>
+            </li>
+        @endguest
 
-        <!-- Buttons -->
-        <li class="nav-item">
-          <a class="btn btn-primary" href="{{ route('login') }}">লগইন</a>
-        </li>
-        <li class="nav-item">
-          <a class="btn btn-gradient" href="{{ route('register') }}">রেজিস্ট্রেশন</a>
-        </li>
+        @auth
+            <!-- Authenticated User: Dashboard -->
+            <li class="nav-item">
+                <a class="btn btn-success" href="{{ route('user.user.home') }}">Dashboard</a>
+            </li>
+        @endauth
       </ul>
     </div>
   </div>

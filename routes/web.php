@@ -26,6 +26,8 @@ Auth::routes();
 
 /* =========> Sart Frontend All Routes <========= */
 Route::get('/', [FrontendController::class, 'index'])->name('frontend.home');
+Route::get('/online/quiz', [FrontendController::class, 'onlineQuiz'])->name('online.quiz')->middleware('auth');
+Route::get('/online/exam/{id}', [FrontendController::class, 'onlineExam'])->name('user.online.quiz.exam')->middleware('auth');
 // page all route
 Route::get('/page/{url}', [MenuPagesController::class, 'index'])->name('menu.page');
 Route::get('/pages/{page}', [MenuPagesController::class, 'FooterPages'])->name('footer.menu.page');

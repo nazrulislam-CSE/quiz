@@ -24,6 +24,7 @@ use App\Http\Controllers\User\GenerationController;
 use App\Http\Controllers\User\BalanceRequestController;
 use App\Http\Controllers\User\WithdrawController;
 use App\Http\Controllers\User\BalanceTransferController;
+use App\Http\Controllers\User\OnlineQuizController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth'], function () {

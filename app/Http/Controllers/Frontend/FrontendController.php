@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Mcq;
 use Illuminate\Support\Carbon;
 use App\Models\Slider;
 use App\Models\Counter;
@@ -30,5 +31,29 @@ class FrontendController extends Controller
         $pageTitle = 'Home';
         return view('frontend.index',compact('pageTitle','sliders','abouts','counters','teachers','students','admissions','features'));
     }
+
+    public function onlineQuiz(Request $request){
+        $pageTitle = 'Online Quiz';
+
+        if(!auth()->check()){
+            return redirect()->route('login')->with('error','অনুগ্রহ করে লগইন করুন।');
+        }
+        $quizs = Mcq::latest()->get();
+        return view('frontend.exam.online_quiz',compact('pageTitle','quizs'));
+    }
+
+    public function onlineExam($id){
+        $pageTitle = 'Online Quiz Exam';
+
+        if(!auth()->check()){
+            return redirect()->route('login')->with('error','অনুগ্রহ করে লগইন করুন।');
+        }
+        // quiz check
+        $mcq = Mcq::with('answers')->findOrFail($id);
+        return view('frontend.exam.online_quiz_exam', compact('pageTitle', 'mcq'));
+    }
+
+
+    
 
 }

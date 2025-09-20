@@ -458,6 +458,24 @@
 @elseif($page->page_slug == 'online-quiz')
 <section class="py-5">
     <div class="container">
+       @auth
+        <div class="card shadow-sm border-0 p-4">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6 mt-3">
+                    <div class="card shadow-lg border-0 text-center">
+                        <div class="card-body p-4">
+                            <h5 class="card-title mb-2 text-primary fw-bold">আপনাকে স্বাগতম</h5>
+                            <div class="me-sm-auto w-100 w-sm-auto">
+                                <a href="{{ route('online.quiz') }}" class="btn btn-primary w-sm-auto" role="button">
+                                    কুইজ শুরু করুন
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @else
         <div class="card shadow-sm border-0 p-4">
             <h2 class="fw-bold card-title mb-3 text-center text-success">অনলাইন কুইজ এক্সাম দিন</h2>
             <div class="row justify-content-center">
@@ -485,12 +503,12 @@
                                 </a>
                             </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        @endauth
     </div>
 </section>
 @else
