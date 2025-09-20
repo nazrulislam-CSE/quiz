@@ -36,15 +36,32 @@
                 </li>
             @endfor
         @endif
-        @foreach($menuitems as $key=> $menuitem)
-          <li class="nav-item {{ $loop->first ? 'active show' : '' }}">
-            @if($menuitem->url == 'home-page')
-                <a class="nav-item text-decoration-none text-secondary font-weight-bold" href="{{ route('frontend.home') }}">{{ $menuitem->title ?? '' }}</a>
-            @else
-                <a class="nav-item text-decoration-none text-secondary font-weight-bold" href="{{ route('menu.page',$menuitem->url)}}">{{ $menuitem->title ?? '' }}</a>
-            @endif
-          </li>
+        @foreach($menuitems as $key => $menuitem)
+            <li class="nav-item {{ $loop->first ? 'active show' : '' }}">
+                @if($menuitem->url == 'home-page')
+                    <a class="nav-item text-decoration-none text-secondary font-weight-bold"
+                      href="{{ route('frontend.home') }}">
+                        {{ $menuitem->title ?? '' }}
+                    </a>
+                @elseif($menuitem->url == 'demo-exam')
+                    <a class="btn bg-success text-white fw-bold ms-2"
+                      href="{{ route('menu.page', $menuitem->url) }}">
+                        {{ $menuitem->title ?? 'Demo Exam' }}
+                    </a>
+                @elseif($menuitem->url == 'online-quiz')
+                    <a class="btn bg-danger text-white fw-bold ms-2"
+                      href="{{ route('menu.page', $menuitem->url) }}">
+                        {{ $menuitem->title ?? 'Online Quiz' }}
+                    </a>
+                @else
+                    <a class="nav-item text-decoration-none text-secondary font-weight-bold"
+                      href="{{ route('menu.page', $menuitem->url) }}">
+                        {{ $menuitem->title ?? '' }}
+                    </a>
+                @endif
+            </li>
         @endforeach
+
         <!-- Buttons -->
         <li class="nav-item">
           <a class="btn btn-primary" href="{{ route('login') }}">লগইন</a>
