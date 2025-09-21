@@ -28,6 +28,8 @@ Auth::routes();
 Route::get('/', [FrontendController::class, 'index'])->name('frontend.home');
 Route::get('/online/quiz', [FrontendController::class, 'onlineQuiz'])->name('online.quiz')->middleware('auth');
 Route::get('/online/exam/{id}', [FrontendController::class, 'onlineExam'])->name('user.online.quiz.exam')->middleware('auth');
+Route::post('/exam/submit', [FrontendController::class, 'submitExam'])->name('exam.submit')->middleware('auth');
+Route::get('/exam/result/{quiz_id}', [FrontendController::class, 'result'])->name('exam.result')->middleware('auth');
 // page all route
 Route::get('/page/{url}', [MenuPagesController::class, 'index'])->name('menu.page');
 Route::get('/pages/{page}', [MenuPagesController::class, 'FooterPages'])->name('footer.menu.page');

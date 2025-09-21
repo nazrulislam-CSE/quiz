@@ -65,6 +65,14 @@
             </a>
         </div>
         <div class="col-md-4 col-sm-6">
+            <a href="{{ route('online.quiz') }}"
+                class="btn btn-danger w-100 text-white d-flex flex-column align-items-center py-4">
+                <i class="fas fa-question-circle fa-2x mb-2"></i>
+                <h5 class="mb-0 fw-bold">অনলাইন কুইজ</h5>
+            </a>
+        </div>
+
+        <div class="col-md-4 col-sm-6">
             <a href="{{ route('user.exam.reports')}}" class="btn btn-warning w-100 text-white d-flex flex-column align-items-center py-4">
                 <i class="fas fa-list fa-2x mb-2"></i>
                 <h5 class="mb-0 fw-bold">এক্সাম লিস্ট</h5>

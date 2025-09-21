@@ -14,6 +14,7 @@ use App\Models\Teacher;
 use App\Models\Student;
 use App\Models\Admission;
 use App\Models\Feature;
+use App\Models\McqQuizAnswer;
 
 class FrontendController extends Controller
 {
@@ -53,7 +54,61 @@ class FrontendController extends Controller
         return view('frontend.exam.online_quiz_exam', compact('pageTitle', 'mcq'));
     }
 
+    public function submitExam(Request $request){
 
-    
+        $pageTitle = 'Online Quiz Exam Result';
+        $request->validate([
+            'quiz_id' => 'required|exists:mcqs,id',
+            'answers' => 'required|array',
+            'time_taken' => 'nullable|integer',
+        ]);
 
+        $user_id = Auth::user()->id ?? '0';
+        $answers = $request->input('answers'); // [question_id => answer_id]
+        $time_taken = $request->input('time_taken');
+
+        foreach($answers as $question_id => $answer_id){
+            McqQuizAnswer::updateOrCreate(
+                ['user_id' => $user_id, 'question_id' => $question_id],
+                ['answer_id' => $answer_id, 'time_taken' => $time_taken]
+            );
+        }
+
+        // After submission, redirect to result page
+        return redirect()->route('exam.result', ['quiz_id' => $request->quiz_id]);
+    }
+
+    public function result($quiz_id)
+    {
+        $quiz = Mcq::with('questions.answers')->findOrFail($quiz_id);
+        $user_id = Auth::id();
+
+        $results = [];
+
+        foreach ($quiz->questions as $question) {
+            $userAnswer = McqQuizAnswer::where('user_id', $user_id)
+                ->where('question_id', $question->id)
+                ->first();
+
+            if(!$userAnswer) {
+                $status = 'notAnswered';
+            } else if($question->answers->where('is_correct',1)->first()->id == $userAnswer->answer_id) {
+                $status = 'correct';
+            } else {
+                $status = 'wrong';
+            }
+
+            $results[] = [
+                'question' => $question->question,
+                'status' => $status
+            ];
+        }
+
+        $total = $quiz->questions->count();
+        $correct = count(array_filter($results, fn($r)=>$r['status']=='correct'));
+        $wrong = count(array_filter($results, fn($r)=>$r['status']=='wrong'));
+        $notAnswered = count(array_filter($results, fn($r)=>$r['status']=='notAnswered'));
+
+        return view('frontend.exam.online_quiz_exam_result', compact('pageTitle','results', 'total', 'correct', 'wrong', 'notAnswered'));
+    }
 }

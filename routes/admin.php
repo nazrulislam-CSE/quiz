@@ -308,6 +308,10 @@ Route::middleware('admin')->group(function () {
         Route::get('/get-subjects/{department_id}', [McqController::class, 'getSubjects']);
         Route::get('/get-topics/{subject_id}', [McqController::class, 'getTopics']);
         Route::post('/mcq/delete-question', [McqController::class, 'deleteQuestion'])->name('mcq.delete-question');
+        Route::get('/online/quiz/report', [McqController::class, 'onlineQuiz'])->name('online.quiz.report');
+        Route::get('/online/quiz/delete/{id}', [McqController::class, 'OnlineQuizDestroy'])->name('online.quiz.delete');
+        Route::get('/online/quiz/show/{id}', [McqController::class,'onlineQuizShow'])->name('online.quiz.show');
+
     });
 
     /* ============> Teacher <=========== */

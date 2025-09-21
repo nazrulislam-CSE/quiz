@@ -184,6 +184,7 @@
                     <ul class="slide-menu">
                         <li class="side-menu__label1"><a href="javascript:void(0);">MCQ</a></li>
                         <li><a class="slide-item {{ Request::is('admin/mcq/index') ? 'active' : '' }}" href="{{ route('admin.mcq.index')}}">Manage MCQ</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/mcq/online/quiz/report') ? 'active' : '' }}" href="{{ route('admin.online.quiz.report')}}">Online Quiz Report</a></li>
                     </ul>
                 </li>
                 <li class="slide {{ Request::is('admin/slider*') ? 'is-expanded' : '' }}">

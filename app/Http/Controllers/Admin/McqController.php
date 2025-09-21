@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Mcq;
+use App\Models\McqQuizAnswer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,17 @@ class McqController extends Controller
         $mcqs = Mcq::latest()->get();
         return view('admin.mcq.index', compact('mcqs','pageTitle'));
     }
+
+    public function onlineQuiz()
+    {
+        $pageTitle = 'Online Quiz Report List';
+
+        // Fetch all quiz answers, latest first
+        $mcqs = McqQuizAnswer::latest()->get();
+
+        return view('admin.mcq.quiz.report', compact('mcqs', 'pageTitle'));
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -176,4 +188,27 @@ class McqController extends Controller
         
         return response()->json(['success' => true]);
     }
+
+    // Show Online Quiz Details
+    public function onlineQuizShow(string $id)
+    {
+        // Find the quiz answer with related user and quiz data
+        $mcq = McqQuizAnswer::with(['user', 'quiz'])->findOrFail($id);
+
+        $pageTitle = 'Online Quiz Details';
+
+        return view('admin.mcq.quiz.show', compact('mcq', 'pageTitle'));
+    }
+
+    // Delete Online Quiz Answer
+    public function onlineQuizDestroy(string $id)
+    {
+        $mcq = McqQuizAnswer::findOrFail($id);
+
+        // Optional: you can log or check before deleting
+        $mcq->delete();
+
+        return redirect()->route('admin.online.quiz.report')->with('success', 'Online Quiz deleted successfully!');
+    }
+
 }
