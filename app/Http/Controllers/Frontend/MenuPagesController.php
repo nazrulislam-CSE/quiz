@@ -38,7 +38,7 @@ class MenuPagesController extends Controller
         $score = 0;
         $total = 0;
 
-        $admissions = Admission::where('status', 1)->orderBy('id', 'asc')->get();
+        $admissions = Admission::where('status', 1)->orderBy('id', 'asc')->take(10)->get();
 
         $selectedAdmission = $request->query('admission');
         $selectedDepartment = $request->query('department');
