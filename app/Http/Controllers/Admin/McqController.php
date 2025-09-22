@@ -86,6 +86,7 @@ class McqController extends Controller
             return redirect()->route('admin.mcq.index')->with('success', 'MCQ Exam created successfully!');
 
         } catch (\Exception $e) {
+            // dd($e);
             DB::rollBack();
             return back()->withInput()->with('error', 'Failed: ' . $e->getMessage());
         }
@@ -118,56 +119,57 @@ class McqController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'exam_duration' => 'required|integer|min:1',
-            'exam_mark' => 'required|integer|min:1',
-            'questions' => 'required|array|min:1',
-            'questions.*.text' => 'required|string|max:1000',
-            'questions.*.answers' => 'required|array|size:4',
-            'questions.*.answers.*.answer' => 'required|string|max:255',
-            'questions.*.correct_answer' => 'required|integer|between:0,3',
+{
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'exam_duration' => 'required|integer|min:1',
+        'exam_mark' => 'required|integer|min:1',
+        'questions' => 'required|array|min:1',
+        'questions.*.text' => 'required|string|max:1000',
+        'questions.*.answers' => 'required|array|size:4',
+        'questions.*.answers.*.answer' => 'required|string|max:255',
+        'questions.*.correct_answer' => 'required|integer|between:0,3',
+    ]);
+
+    DB::beginTransaction();
+    try {
+        $mcq = Mcq::findOrFail($id);
+
+        // Update main MCQ info
+        $mcq->update([
+            'title'         => $validated['title'],
+            'exam_duration' => $validated['exam_duration'],
+            'exam_mark'     => $validated['exam_mark'],
+            'updated_by'    => Auth::id(),
         ]);
 
-        DB::beginTransaction();
-        try {
-            $mcq = Mcq::findOrFail($id);
+        // Delete old questions and answers
+        $mcq->questions()->delete();
 
-            // Update main MCQ info
-            $mcq->update([
-                'title'         => $validated['title'],
-                'exam_duration' => $validated['exam_duration'],
-                'exam_mark'     => $validated['exam_mark'],
-                'updated_by'    => Auth::id(),
+        // Create all questions again
+        foreach ($validated['questions'] as $questionData) {
+            $question = $mcq->questions()->create([
+                'question' => $questionData['text'],
             ]);
 
-            $mcq->questions()->delete();
-
-            foreach ($validated['questions'] as $questionData) {
-                $question = $mcq->questions()->create([
-                    'question' => $questionData['text'],
+            foreach ($questionData['answers'] as $index => $answerData) {
+                $question->answers()->create([
+                    'answer'     => $answerData['answer'],
+                    'is_correct' => $questionData['correct_answer'] == $index ? 1 : 0,
                 ]);
-
-                foreach ($questionData['answers'] as $index => $answerData) {
-                    $question->answers()->create([
-                        'answer'     => $answerData['answer'],
-                        'is_correct' => $questionData['correct_answer'] == $index ? 1 : 0,
-                    ]);
-                }
             }
-
-            DB::commit();
-
-            return redirect()->route('admin.mcq.index')
-                ->with('success', 'MCQ updated successfully!');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withInput()
-                ->with('error', 'Error updating MCQ: ' . $e->getMessage());
         }
+
+        DB::commit();
+
+        return redirect()->route('admin.mcq.index')
+            ->with('success', 'MCQ updated successfully!');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->withInput()->with('error', 'Error updating MCQ: ' . $e->getMessage());
     }
+}
+
 
 
     /**

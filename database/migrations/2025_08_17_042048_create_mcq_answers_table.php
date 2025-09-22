@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('mcq_answers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('mcq_id')->constrained('mcqs')->onDelete('cascade');
+            $table->foreignId('mcq_id')->nullable()->constrained('mcqs')->onDelete('cascade');
+            $table->foreignId('mcq_question_id')->nullable()->constrained('mcq_questions')->onDelete('cascade');
             $table->string('answer');
             $table->boolean('is_correct')->default(false);
             $table->timestamps();

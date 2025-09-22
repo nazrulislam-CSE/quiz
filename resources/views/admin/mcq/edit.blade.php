@@ -161,53 +161,54 @@
             });
 
             // Add new question
-            $('#add-question').click(function() {
-                const container = $('#questions-container');
-                const questionCount = container.children('.question-card').length;
-                const newIndex = questionCount;
+          $('#add-question').click(function () {
+    const container = $('#questions-container');
+    const questionCount = container.children('.question-card').length;
+    const newIndex = questionCount;
 
-                const newQuestion = `
-                <div class="card shadow-none border mb-3 question-card" data-question-index="${newIndex}">
-                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Question #${newIndex + 1}</h5>
-                        <button type="button" class="btn btn-danger btn-sm remove-question">
-                            <i class="fas fa-trash"></i> Remove
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label>Question Text <span class="text-danger">*</span></label>
-                            <textarea name="questions[${newIndex}][text]" class="form-control" 
-                                rows="3" placeholder="Enter question text" required></textarea>
-                        </div>
+    const newQuestion = `
+        <div class="card shadow-none border mb-3 question-card" data-question-index="${newIndex}">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Question #${newIndex + 1}</h5>
+                <button type="button" class="btn btn-danger btn-sm remove-question">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Question Text <span class="text-danger">*</span></label>
+                    <textarea name="questions[${newIndex}][text]" class="form-control" 
+                        rows="3" placeholder="Enter question text" required></textarea>
+                </div>
 
-                        <div class="mt-4">
-                            <label>Options <span class="text-danger">*</span> <small class="text-muted">(Select the correct answer)</small></label>
-                            <div class="row">
-                                ${Array(4).fill().map((_, i) => `
-                                        <div class="col-md-6">
-                                            <div class="input-group mb-3">
-                                                <input type="text" name="questions[${newIndex}][answers][${i}][text]" 
-                                                    class="form-control" 
-                                                    placeholder="Option ${i+1}" 
-                                                    required>
-                                                <div class="input-group-text">
-                                                    <input type="radio" name="questions[${newIndex}][correct_answer]" 
-                                                        value="${i}" 
-                                                        class="form-check-input" style="cursor: pointer; margin-right:5px;">
-                                                    Correct
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `).join('')}
+                <div class="mt-4">
+                    <label>Options <span class="text-danger">*</span> <small class="text-muted">(Select the correct answer)</small></label>
+                    <div class="row">
+                        ${Array(4).fill().map((_, i) => `
+                            <div class="col-md-6">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="questions[${newIndex}][answers][${i}][answer]" 
+                                        class="form-control" 
+                                        placeholder="Option ${i + 1}" 
+                                        required>
+                                    <div class="input-group-text">
+                                        <input type="radio" name="questions[${newIndex}][correct_answer]" 
+                                            value="${i}" 
+                                            class="form-check-input" style="cursor: pointer;">
+                                        Correct
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        `).join('')}
                     </div>
                 </div>
-            `;
+            </div>
+        </div>
+    `;
 
-                container.append(newQuestion);
-            });
+    container.append(newQuestion);
+});
+
 
             // Remove question
             $(document).on('click', '.remove-question', function() {
