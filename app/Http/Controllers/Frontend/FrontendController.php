@@ -50,7 +50,7 @@ class FrontendController extends Controller
             return redirect()->route('login')->with('error','অনুগ্রহ করে লগইন করুন।');
         }
         // quiz check
-        $mcq = Mcq::with('answers')->findOrFail($id);
+        $mcq = Mcq::with('questions.answers')->findOrFail($id);
         return view('frontend.exam.online_quiz_exam', compact('pageTitle', 'mcq'));
     }
 

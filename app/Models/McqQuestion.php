@@ -5,14 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class McqAnswer extends Model
+class McqQuestion extends Model
 {
     use HasFactory;
-    protected $fillable = ['mcq_id', 'answer', 'is_correct'];
-
+    protected $guarded = [];
+    
     public function mcq()
     {
         return $this->belongsTo(Mcq::class);
     }
-    
+
+    public function answers()
+    {
+        return $this->hasMany(McqAnswer::class);
+    }
 }

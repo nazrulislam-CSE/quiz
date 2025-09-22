@@ -61,32 +61,33 @@ class McqController extends Controller
         try {
             DB::beginTransaction();
 
+            $mcq = Mcq::create([
+                'title'         => $request->title,
+                'exam_duration' => $request->exam_duration,
+                'exam_mark'     => $request->exam_mark,
+                'mcq_type'      => 5, // 5 = manual
+                'created_by'    => Auth::id(),
+            ]);
+
             foreach ($request->questions as $qData) {
-                // Create MCQ
-                $mcq = Mcq::create([
-                    'title'         => $request->title,
-                    'exam_duration' => $request->exam_duration,
-                    'exam_mark'     => $request->exam_mark,
-                    'mcq_type'      => 5, // 5 Manually MCQ
-                    'question'      => $qData['text'],
-                    'created_by'    => Auth::id(),
+                $question = $mcq->questions()->create([
+                    'question' => $qData['text'],
                 ]);
 
-                // Save options
                 foreach ($qData['answers'] as $aIndex => $answerData) {
-                    $mcq->answers()->create([
+                    $question->answers()->create([
                         'answer' => $answerData['answer'],
-                        'is_correct' => ((int)$qData['correct_answer'] == $aIndex) ? 1 : 0,
+                        'is_correct' => ((int)$qData['correct_answer'] === $aIndex) ? 1 : 0,
                     ]);
                 }
             }
 
             DB::commit();
-            return redirect()->route('admin.mcq.index')->with('success', 'MCQs saved successfully!');
+            return redirect()->route('admin.mcq.index')->with('success', 'MCQ Exam created successfully!');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->with('error', 'Failed to save MCQs: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Failed: ' . $e->getMessage());
         }
     }
 
@@ -96,8 +97,9 @@ class McqController extends Controller
      */
     public function show(string $id)
     {
-        $mcq = Mcq::with(['answers'])->findOrFail($id);
+        $mcq = Mcq::with(['questions.answers'])->findOrFail($id); 
         $pageTitle = 'MCQ Details';
+
         return view('admin.mcq.show', compact('mcq', 'pageTitle'));
     }
 
@@ -106,10 +108,10 @@ class McqController extends Controller
      */
     public function edit(string $id)
     {
-        $mcq = Mcq::with(['answers'])->findOrFail($id);
+        $mcq = Mcq::with(['questions.answers'])->findOrFail($id); 
         $pageTitle = 'Edit MCQ';
 
-        return view('admin.mcq.edit', compact('mcq','pageTitle'));
+        return view('admin.mcq.edit', compact('mcq', 'pageTitle'));
     }
 
     /**
@@ -117,52 +119,56 @@ class McqController extends Controller
      */
     public function update(Request $request, string $id)
     {
-    $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'exam_duration' => 'required|integer|min:1',
-        'exam_mark' => 'required|integer|min:1',
-        'questions' => 'required|array|min:1',
-        'questions.*.text' => 'required|string|max:1000',
-        'questions.*.answers' => 'required|array|size:4',
-        'questions.*.answers.*.answer' => 'required|string|max:255',
-        'questions.*.correct_answer' => 'required|integer|between:0,3',
-    ]);
-
-    DB::beginTransaction();
-    try {
-        $mcq = Mcq::findOrFail($id);
-
-        $mcq->update([
-            'title'         => $request->title,
-            'exam_duration' => $request->exam_duration,
-            'exam_mark'     => $request->exam_mark,
-            'question'      => $validated['questions'][0]['text'], 
-            'updated_by'    => Auth::id(),
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'exam_duration' => 'required|integer|min:1',
+            'exam_mark' => 'required|integer|min:1',
+            'questions' => 'required|array|min:1',
+            'questions.*.text' => 'required|string|max:1000',
+            'questions.*.answers' => 'required|array|size:4',
+            'questions.*.answers.*.answer' => 'required|string|max:255',
+            'questions.*.correct_answer' => 'required|integer|between:0,3',
         ]);
 
-    
-        $mcq->answers()->delete();
+        DB::beginTransaction();
+        try {
+            $mcq = Mcq::findOrFail($id);
 
-    
-        foreach ($validated['questions'][0]['answers'] as $index => $answerData) {
-            $mcq->answers()->create([
-                'answer'     => $answerData['answer'],
-                'is_correct' => $validated['questions'][0]['correct_answer'] == $index ? 1 : 0,
+            // Update main MCQ info
+            $mcq->update([
+                'title'         => $validated['title'],
+                'exam_duration' => $validated['exam_duration'],
+                'exam_mark'     => $validated['exam_mark'],
+                'updated_by'    => Auth::id(),
             ]);
+
+            $mcq->questions()->delete();
+
+            foreach ($validated['questions'] as $questionData) {
+                $question = $mcq->questions()->create([
+                    'question' => $questionData['text'],
+                ]);
+
+                foreach ($questionData['answers'] as $index => $answerData) {
+                    $question->answers()->create([
+                        'answer'     => $answerData['answer'],
+                        'is_correct' => $questionData['correct_answer'] == $index ? 1 : 0,
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('admin.mcq.index')
+                ->with('success', 'MCQ updated successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()
+                ->with('error', 'Error updating MCQ: ' . $e->getMessage());
         }
-
-        DB::commit();
-
-        return redirect()->route('admin.mcq.index')
-            ->with('success', 'MCQ updated successfully!');
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return back()->withInput()
-            ->with('error', 'Error updating MCQ: ' . $e->getMessage());
     }
 
-}
 
     /**
      * Remove the specified resource from storage.
@@ -170,10 +176,16 @@ class McqController extends Controller
     public function destroy(string $id)
     {
         $mcq = Mcq::findOrFail($id);
-        $mcq->answers()->delete(); // Delete related answers
-        $mcq->delete(); // Delete the MCQ itself
 
-        return redirect()->route('admin.mcq.index')->with('success', 'MCQ deleted successfully!');
+        foreach ($mcq->questions as $question) {
+            $question->answers()->delete();
+            $question->delete();    
+        }
+
+        $mcq->delete();
+
+        return redirect()->route('admin.mcq.index')
+            ->with('success', 'MCQ deleted successfully!');
     }
 
     public function deleteQuestion(Request $request)

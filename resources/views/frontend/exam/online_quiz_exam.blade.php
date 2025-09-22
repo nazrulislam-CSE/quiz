@@ -36,31 +36,35 @@
         </div>
 
         <!-- MCQ Form -->
-       <form action="{{ route('exam.submit') }}" method="POST" id="mcq-form">
+        <form action="{{ route('exam.submit') }}" method="POST" id="mcq-form">
             @csrf
             <input type="hidden" name="quiz_id" value="{{ $mcq->id }}">
             <input type="hidden" name="time_taken" id="time_taken">
 
-            <div class="card shadow-sm mb-4 question-container">
-                <div class="card-header bg-success text-white">
-                    প্রশ্ন {{ $mcq->id }}
-                </div>
-                <div class="card-body">
-                    <p class="fw-bold">{{ $mcq->question }}</p>
-                    <div class="options-container">
-                        @foreach ($mcq->answers as $answer)
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="radio" name="answers[{{ $mcq->id }}]"
-                                    id="option{{ $answer->id }}" value="{{ $answer->id }}" required>
-                                <label class="form-check-label" for="option{{ $answer->id }}">
-                                    {{ $answer->answer }}
-                                </label>
+            <div id="questions-wrapper">
+                @foreach ($mcq->questions as $qIndex => $question)
+                    <div class="card shadow-sm mb-4 question-card" data-question-index="{{ $qIndex }}"
+                        style="{{ $qIndex > 0 ? 'display:none;' : '' }}">
+                        <div class="card-header bg-success text-white">
+                            প্রশ্ন {{ $qIndex + 1 }}
+                        </div>
+                        <div class="card-body">
+                            <p class="fw-bold">{{ $question->question }}</p>
+                            <div class="options-container">
+                                @foreach ($question->answers as $answer)
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="answers[{{ $question->id }}]"
+                                            id="option{{ $answer->id }}" value="{{ $answer->id }}" required>
+                                        <label class="form-check-label" for="option{{ $answer->id }}">
+                                            {{ $answer->answer }}
+                                        </label>
+                                    </div>
+                                @endforeach
                             </div>
-                        @endforeach
+                        </div>
                     </div>
-                </div>
+                @endforeach
             </div>
-
 
             <!-- Navigation -->
             <div class="d-flex justify-content-between mb-5">
@@ -70,52 +74,45 @@
                     দিন</button>
             </div>
         </form>
+
     </div>
 
     <!-- JS: Timer & Navigation -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Timer functionality
-            let duration = {{ $mcq->exam_duration }} * 60; // Convert minutes to seconds
+            let totalSeconds = {{ $mcq->exam_duration }} * 60;
+            let duration = totalSeconds;
             const timerEl = document.getElementById('exam-timer');
             const timeTakenEl = document.getElementById('time_taken');
             const form = document.getElementById('mcq-form');
-            
-            // Function to update timer display
+
             function updateTimer() {
                 if (duration <= 0) {
                     clearInterval(timerInterval);
-                    // Auto-submit the form when time is up
-                    form.submit();
+                    form.submit(); // Auto-submit when time is up
                     return;
                 }
-                
+
                 const minutes = Math.floor(duration / 60);
                 const seconds = duration % 60;
-                
-                // Update timer display
-                timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                
-                // Add warning class when less than 5 minutes remain
+
+                timerEl.textContent = `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+
                 if (minutes < 5) {
                     timerEl.classList.add('timer-warning');
                 }
-                
-                // Update the hidden time_taken field
-                timeTakenEl.value = ({{ $mcq->exam_duration }} * 60) - duration;
-                
-                duration--; // Decrement the timer
+
+                timeTakenEl.value = totalSeconds - duration;
+                duration--;
             }
-            
-            // Initial call to set the timer
+
             updateTimer();
-            
-            // Set interval to update timer every second
             const timerInterval = setInterval(updateTimer, 1000);
-            
-            // Question navigation (kept from original code)
+
+            // Question navigation
             let currentQuestion = 0;
-            const questions = document.querySelectorAll('.question-container');
+            const questions = document.querySelectorAll('.question-card'); // Updated selector
             const prevBtn = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
             const submitBtn = document.getElementById('submit-btn');
@@ -128,30 +125,27 @@
             }
 
             prevBtn.addEventListener('click', () => {
-                if (currentQuestion > 0) {
+                if(currentQuestion > 0){
                     currentQuestion--;
                     showQuestion(currentQuestion);
                 }
             });
-            
+
             nextBtn.addEventListener('click', () => {
-                if (currentQuestion < questions.length - 1) {
+                if(currentQuestion < questions.length - 1){
                     currentQuestion++;
                     showQuestion(currentQuestion);
                 }
             });
 
-            // Initialize question display
             showQuestion(currentQuestion);
-            
-            // Form submission handler
-            form.addEventListener('submit', function(e) {
-                // Stop the timer when form is submitted
+
+            // Stop timer on form submit
+            form.addEventListener('submit', function(){
                 clearInterval(timerInterval);
-                
-                // Make sure time_taken is updated with the final value
-                timeTakenEl.value = ({{ $mcq->exam_duration }} * 60) - duration;
+                timeTakenEl.value = totalSeconds - duration;
             });
         });
     </script>
+
 @endsection

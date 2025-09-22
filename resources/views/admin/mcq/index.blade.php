@@ -62,9 +62,9 @@
                                     <thead>
                                         <tr>
                                             <th class="border-bottom-0">SL</th>
-                                            <th class="border-bottom-0">Question</th>
-                                            <th class="border-bottom-0">Answer</th>
-                                            <th class="border-bottom-0">Dependency</th>
+                                            <th class="border-bottom-0">Title</th>
+                                            <th class="border-bottom-0">Exam Duration</th>
+                                            <th class="border-bottom-0">Exam Mark</th>
                                             <th class="border-bottom-0">Created At</th>
                                             <th class="border-bottom-0">Status</th>
                                             <th class="border-bottom-0">Actions</th>
@@ -74,37 +74,10 @@
                                         @foreach ($mcqs as $key=> $mcq)
                                         <tr>
                                             <td class="col-1">{{ $key+1 }}</td>
-                                            <td class="col-3">
-                                                <div class="text-wrap">
-                                                    Question: {{ $mcq->question }}
-                                                    <br>
-                                                    Correct Answer:
-                                                    @foreach ($mcq->answers as $answer)
-                                                        @if ($answer->is_correct)
-                                                            <strong>{{ $answer->answer }}</strong>
-                                                        @endif
-                                                    @endforeach
-                                                </div>
-                                            </td>
-                                            <td class="col-2">
-                                                @foreach ($mcq->answers as $answer)
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="answer_{{ $mcq->id }}" id="answer_{{ $mcq->id }}_{{ $loop->index }}" value="{{ $answer->id }}" {{ $answer->is_correct ? 'checked' : '' }} disabled>
-                                                        <label class="form-check-label" for="answer_{{ $mcq->id }}_{{ $loop->index }}">
-                                                            {{ $answer->answer }}
-                                                        </label>
-                                                    </div>
-                                                @endforeach
-                                            </td>
-                                            <td class="col-2">
-                                                <div class="text-wrap">
-                                                    Title: {{ $mcq->title ?? '' }} <br>
-                                                    Exam Duration: {{ $mcq->exam_duration ?? '' }} <br>
-                                                    Exam Mark: {{ $mcq->exam_mark ?? '' }} <br>
-                                                </div>
-                                            </td>
+                                            <td class="col-1">{{ $mcq->title ?? '' }}</td>
+                                            <td class="col-1">{{ $mcq->exam_duration ?? '' }}</td>
+                                            <td class="col-1">{{ $mcq->exam_mark ?? '' }}</td>
                                             <td class="col-2">{{ $mcq->created_at->format('d M Y') }}</td>
-                                           
                                             <td>
                                                 <a href="{{ route('admin.mcq.show',$mcq->id)}}" class="btn btn-success btn-sm mr-2"><i class="fas fa-eye"></i></a>
                                                 <a href="{{ route('admin.mcq.edit',$mcq->id)}}" class="btn btn-primary btn-sm mr-2"><i class="fas fa-edit"></i></a>
