@@ -59,11 +59,8 @@
                                     <tr>
                                         <th class="border-bottom-0">SL</th>
                                         <th class="border-bottom-0">User</th>
-                                        <th class="border-bottom-0">Quiz</th>
-                                        <th class="border-bottom-0">Score</th>
-                                        <th class="border-bottom-0">Date</th>
+                                        <th class="border-bottom-0">Topic</th>
                                         <th class="border-bottom-0">Created At</th>
-                                        <th class="border-bottom-0">Status</th>
                                         <th class="border-bottom-0">Actions</th>
                                     </tr>
                                 </thead>
@@ -72,20 +69,8 @@
                                         <tr>
                                             <td class="col-1">{{ $key + 1 }}</td>
                                             <td>{{ $mcq->user->full_name ?? '' }}</td>
-                                            <td>{{ $mcq->quiz->title ?? '' }}</td>
-                                            <td>{{ $mcq->score }}</td>
+                                            <td>{{ $mcq->question->mcq->title ?? '' }}</td>
                                             <td class="col-2">{{ $mcq->created_at->format('d M Y') }}</td>
-                                            <!-- Status -->
-                                            <td>
-                                                @php
-                                                    $passingScore = $mcq->quiz->passing_score ?? 50;
-                                                @endphp
-                                                @if ($mcq->score >= $passingScore)
-                                                    <span class="badge bg-success">Pass</span>
-                                                @else
-                                                    <span class="badge bg-danger">Fail</span>
-                                                @endif
-                                            </td>
                                             <td>
                                                 <a href="{{ route('admin.online.quiz.show', $mcq->id) }}"
                                                     class="btn btn-success btn-sm mr-2">

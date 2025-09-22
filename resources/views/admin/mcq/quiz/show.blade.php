@@ -36,22 +36,8 @@
                         <td>{{ $mcq->user->email ?? '' }}</td>
                     </tr>
                     <tr>
-                        <th>Quiz Title</th>
-                        <td>{{ $mcq->quiz->title ?? '' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Score</th>
-                        <td>{{ $mcq->score ?? 0 }}</td>
-                    </tr>
-                    <tr>
-                        <th>Status</th>
-                        <td>
-                            @if($mcq->score >= ($mcq->quiz->pass_mark ?? 0))
-                                <span class="badge bg-success">Pass</span>
-                            @else
-                                <span class="badge bg-danger">Fail</span>
-                            @endif
-                        </td>
+                        <th>Topics</th>
+                        <td>{{ $mcq->question->mcq->title ?? '' }}</td>
                     </tr>
                     <tr>
                         <th>Submitted At</th>
@@ -61,24 +47,54 @@
                         <th>Updated At</th>
                         <td>{{ $mcq->updated_at->format('d M Y, h:i A') }}</td>
                     </tr>
-                    @if($mcq->answers)
-                        <tr>
-                            <th>Answers</th>
-                            <td>
-                                <ul>
-                                    @foreach($mcq->answers as $key => $answer)
-                                        <li><strong>Q{{ $key + 1 }}:</strong> {{ $answer['question'] ?? '' }} <br>
-                                            <strong>Answer:</strong> {{ $answer['answer'] ?? '' }} <br>
-                                            <strong>Correct:</strong> {{ $answer['is_correct'] ? 'Yes' : 'No' }}
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </td>
-                        </tr>
-                    @endif
+
+
                 </tbody>
             </table>
         </div>
     </div>
+                        <!-- Question & Answers -->
+<div class="card card-secondary card-outline shadow-sm mb-4">
+    <div class="card-header">
+        <h5 class="my-0">প্রশ্ন এবং উত্তর</h5>
+    </div>
+    <div class="card-body">
+        @if ($mcq->question)
+            <h6 class="fw-bold">প্রশ্ন:</h6>
+            <p>{{ $mcq->question->question }}</p>
+
+            <h6 class="fw-bold mt-3">সব অপশন:</h6>
+            @foreach ($mcq->question->answers as $option)
+                @php
+                    $isCorrect = $option->is_correct;
+                    $isSelected = $option->id == $mcq->answer_id;
+                    $bgClass = '';
+
+                    if ($isSelected && $isCorrect) {
+                        $bgClass = 'bg-success text-white'; // সঠিক উত্তর, ইউজার সিলেক্ট করেছে
+                    } elseif ($isSelected && !$isCorrect) {
+                        $bgClass = 'bg-danger text-white'; // ভুল উত্তর
+                    } elseif ($isCorrect) {
+                        $bgClass = 'bg-success text-white'; // সঠিক উত্তর, ইউজার সিলেক্ট করেনি
+                    } else {
+                        $bgClass = 'bg-light'; // সাধারণ অপশন
+                    }
+                @endphp
+
+                <p class="p-2 rounded {{ $bgClass }}">
+                    {{ $option->answer }}
+                    @if ($isSelected)
+                        <span class="badge bg-dark">আপনার উত্তর</span>
+                    @endif
+                    @if ($isCorrect)
+                        <span class="badge bg-success">সঠিক উত্তর</span>
+                    @endif
+                </p>
+            @endforeach
+        @else
+            <p class="text-danger">প্রশ্ন খুঁজে পাওয়া যায়নি।</p>
+        @endif
+    </div>
+</div>
 </div>
 @endsection

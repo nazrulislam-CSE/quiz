@@ -205,14 +205,18 @@ class McqController extends Controller
 
     // Show Online Quiz Details
     public function onlineQuizShow(string $id)
-    {
-        // Find the quiz answer with related user and quiz data
-        $mcq = McqQuizAnswer::with(['user', 'quiz'])->findOrFail($id);
+{
+    $mcq = McqQuizAnswer::with([
+        'user',
+        'question.answers', 
+        'question.mcq'      
+    ])->findOrFail($id);
 
-        $pageTitle = 'Online Quiz Details';
+    $pageTitle = 'Online Quiz Details';
 
-        return view('admin.mcq.quiz.show', compact('mcq', 'pageTitle'));
-    }
+    return view('admin.mcq.quiz.show', compact('mcq', 'pageTitle'));
+}
+
 
     // Delete Online Quiz Answer
     public function onlineQuizDestroy(string $id)
