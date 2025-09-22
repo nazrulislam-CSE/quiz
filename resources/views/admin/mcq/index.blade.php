@@ -66,7 +66,6 @@
                                             <th class="border-bottom-0">Exam Duration</th>
                                             <th class="border-bottom-0">Exam Mark</th>
                                             <th class="border-bottom-0">Created At</th>
-                                            <th class="border-bottom-0">Status</th>
                                             <th class="border-bottom-0">Actions</th>
                                         </tr>
                                     </thead>

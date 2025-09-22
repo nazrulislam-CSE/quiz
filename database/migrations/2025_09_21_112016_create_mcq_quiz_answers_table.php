@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('mcq_id')->constrained('mcqs')->onDelete('cascade'); // question from mcqs table
             $table->foreignId('answer_id')->nullable()->constrained('mcq_answers')->onDelete('set null'); // user's selected answer
+            $table->foreignId('question_id')->nullable()->constrained('mcq_questions')->onDelete('set null'); // user's selected question
             $table->integer('time_taken')->nullable(); // time in seconds
             $table->timestamps();
         });

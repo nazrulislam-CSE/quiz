@@ -15,6 +15,7 @@ use App\Models\Student;
 use App\Models\Admission;
 use App\Models\Feature;
 use App\Models\McqQuizAnswer;
+use Auth;
 
 class FrontendController extends Controller
 {
@@ -56,7 +57,8 @@ class FrontendController extends Controller
 
     public function submitExam(Request $request){
 
-        $pageTitle = 'Online Quiz Exam Result';
+        // dd($request->all());
+     
         $request->validate([
             'quiz_id' => 'required|exists:mcqs,id',
             'answers' => 'required|array',
@@ -66,10 +68,11 @@ class FrontendController extends Controller
         $user_id = Auth::user()->id ?? '0';
         $answers = $request->input('answers'); // [question_id => answer_id]
         $time_taken = $request->input('time_taken');
+        $quiz_id = $request->quiz_id;
 
         foreach($answers as $question_id => $answer_id){
             McqQuizAnswer::updateOrCreate(
-                ['user_id' => $user_id, 'question_id' => $question_id],
+                ['user_id' => $user_id, 'question_id' => $question_id,'mcq_id' => $quiz_id],
                 ['answer_id' => $answer_id, 'time_taken' => $time_taken]
             );
         }
@@ -86,29 +89,56 @@ class FrontendController extends Controller
         $results = [];
 
         foreach ($quiz->questions as $question) {
-            $userAnswer = McqQuizAnswer::where('user_id', $user_id)
-                ->where('question_id', $question->id)
-                ->first();
+    $userAnswer = McqQuizAnswer::where('user_id', $user_id)
+        ->where('question_id', $question->id)
+        ->first();
 
-            if(!$userAnswer) {
-                $status = 'notAnswered';
-            } else if($question->answers->where('is_correct',1)->first()->id == $userAnswer->answer_id) {
-                $status = 'correct';
-            } else {
-                $status = 'wrong';
-            }
+    $correctAnswer = $question->answers->where('is_correct', 1)->first();
+    $correctAnswerText = $correctAnswer?->answer;
+    $correctAnswerId = $correctAnswer?->id;
 
-            $results[] = [
-                'question' => $question->question,
-                'status' => $status
-            ];
-        }
+    $userAnswerText = null;
+    $userAnswerId = null;
+
+    if (!$userAnswer) {
+        $status = 'notAnswered';
+    } else {
+        $userAnswerId = $userAnswer->answer_id;
+        $selectedAnswer = $question->answers->where('id', $userAnswerId)->first();
+        $userAnswerText = $selectedAnswer?->answer;
+        $status = ($userAnswerId == $correctAnswerId) ? 'correct' : 'wrong';
+    }
+
+    $results[] = [
+        'question' => $question->question,
+        'status' => $status,
+        'user_answer' => $userAnswerText,
+        'user_answer_id' => $userAnswerId,
+        'correct_answer' => $correctAnswerText,
+        'correct_answer_id' => $correctAnswerId,
+        'options' => $question->answers->map(fn($a) => [
+            'id' => $a->id,
+            'answer' => $a->answer,
+        ])->toArray(),
+    ];
+}
+
 
         $total = $quiz->questions->count();
-        $correct = count(array_filter($results, fn($r)=>$r['status']=='correct'));
-        $wrong = count(array_filter($results, fn($r)=>$r['status']=='wrong'));
-        $notAnswered = count(array_filter($results, fn($r)=>$r['status']=='notAnswered'));
+        $correct = count(array_filter($results, fn($r) => $r['status'] == 'correct'));
+        $wrong = count(array_filter($results, fn($r) => $r['status'] == 'wrong'));
+        $notAnswered = count(array_filter($results, fn($r) => $r['status'] == 'notAnswered'));
 
-        return view('frontend.exam.online_quiz_exam_result', compact('pageTitle','results', 'total', 'correct', 'wrong', 'notAnswered'));
+        $pageTitle = 'Online Quiz Exam Result';
+
+        return view('frontend.exam.online_quiz_exam_result', compact(
+            'pageTitle',
+            'results',
+            'total',
+            'correct',
+            'wrong',
+            'notAnswered'
+        ))->with('totalQuestions', $total);
     }
+
 }
