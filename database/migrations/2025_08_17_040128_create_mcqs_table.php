@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('model_test_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('paper_final_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('title')->nullable();
+            $table->string('exam_datetime')->nullable();
             $table->integer('exam_duration')->nullable();
             $table->integer('exam_mark')->nullable();
             $table->integer('pass_mark')->nullable();

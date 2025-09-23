@@ -62,6 +62,10 @@
                         <td>{{ $mcq->title }}</td>
                     </tr>
                     <tr>
+                        <td>Exam Date & Time</td>
+                        <td>{{ \Carbon\Carbon::parse($mcq->exam_datetime)->format('d M, Y h:i A') }}</td>
+                    </tr>
+                     <tr>
                         <td>Exam Duration</td>
                         <td>{{ $mcq->exam_duration }} minutes</td>
                     </tr>

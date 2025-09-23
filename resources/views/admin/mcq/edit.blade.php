@@ -40,6 +40,15 @@
                                 @enderror
                             </div>
 
+                            <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                                <label for="exam_datetime">Exam Date & Time: <span class="text-danger">*</span></label>
+                                <input type="datetime-local" name="exam_datetime" id="exam_datetime" class="form-control"
+                                    value="{{ old('exam_datetime', $mcq->exam_datetime) }}">
+                                @error('exam_datetime')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
                             <!-- Exam Duration -->
                             <div class="form-group col-md-4">
                                 <label for="exam_duration">Exam Duration (Minutes): <span
@@ -161,12 +170,12 @@
             });
 
             // Add new question
-          $('#add-question').click(function () {
-    const container = $('#questions-container');
-    const questionCount = container.children('.question-card').length;
-    const newIndex = questionCount;
+            $('#add-question').click(function() {
+                const container = $('#questions-container');
+                const questionCount = container.children('.question-card').length;
+                const newIndex = questionCount;
 
-    const newQuestion = `
+                const newQuestion = `
         <div class="card shadow-none border mb-3 question-card" data-question-index="${newIndex}">
             <div class="card-header bg-light d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Question #${newIndex + 1}</h5>
@@ -185,29 +194,29 @@
                     <label>Options <span class="text-danger">*</span> <small class="text-muted">(Select the correct answer)</small></label>
                     <div class="row">
                         ${Array(4).fill().map((_, i) => `
-                            <div class="col-md-6">
-                                <div class="input-group mb-3">
-                                    <input type="text" name="questions[${newIndex}][answers][${i}][answer]" 
-                                        class="form-control" 
-                                        placeholder="Option ${i + 1}" 
-                                        required>
-                                    <div class="input-group-text">
-                                        <input type="radio" name="questions[${newIndex}][correct_answer]" 
-                                            value="${i}" 
-                                            class="form-check-input" style="cursor: pointer;">
-                                        Correct
+                                <div class="col-md-6">
+                                    <div class="input-group mb-3">
+                                        <input type="text" name="questions[${newIndex}][answers][${i}][answer]" 
+                                            class="form-control" 
+                                            placeholder="Option ${i + 1}" 
+                                            required>
+                                        <div class="input-group-text">
+                                            <input type="radio" name="questions[${newIndex}][correct_answer]" 
+                                                value="${i}" 
+                                                class="form-check-input" style="cursor: pointer;">
+                                            Correct
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        `).join('')}
+                            `).join('')}
                     </div>
                 </div>
             </div>
         </div>
     `;
 
-    container.append(newQuestion);
-});
+                container.append(newQuestion);
+            });
 
 
             // Remove question
@@ -218,7 +227,7 @@
                 if (questionId) {
                     if (confirm(
                             'Are you sure you want to delete this question? This action cannot be undone.'
-                            )) {
+                        )) {
                         // Send AJAX request to delete the question
                         $.ajax({
                             url: "{{ route('admin.mcq.delete-question') }}",

@@ -9,7 +9,8 @@ use App\Models\McqQuizAnswer;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 class McqController extends Controller
 {
     /**
@@ -49,6 +50,7 @@ class McqController extends Controller
     {
         $request->validate([
             'title' => 'required',
+            'exam_datetime' => 'required',
             'exam_duration' => 'required',
             'exam_mark' => 'required',
             'questions' => 'required|array|min:1',
@@ -61,8 +63,10 @@ class McqController extends Controller
         try {
             DB::beginTransaction();
 
+            $examDateTime = Carbon::parse($request->exam_datetime);
             $mcq = Mcq::create([
                 'title'         => $request->title,
+                'exam_datetime' => $examDateTime,
                 'exam_duration' => $request->exam_duration,
                 'exam_mark'     => $request->exam_mark,
                 'mcq_type'      => 5, // 5 = manual
@@ -119,56 +123,64 @@ class McqController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-{
-    $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'exam_duration' => 'required|integer|min:1',
-        'exam_mark' => 'required|integer|min:1',
-        'questions' => 'required|array|min:1',
-        'questions.*.text' => 'required|string|max:1000',
-        'questions.*.answers' => 'required|array|size:4',
-        'questions.*.answers.*.answer' => 'required|string|max:255',
-        'questions.*.correct_answer' => 'required|integer|between:0,3',
-    ]);
-
-    DB::beginTransaction();
-    try {
-        $mcq = Mcq::findOrFail($id);
-
-        // Update main MCQ info
-        $mcq->update([
-            'title'         => $validated['title'],
-            'exam_duration' => $validated['exam_duration'],
-            'exam_mark'     => $validated['exam_mark'],
-            'updated_by'    => Auth::id(),
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'exam_datetime' => 'required',
+            'exam_duration' => 'required|integer|min:1',
+            'exam_mark' => 'required|integer|min:1',
+            'questions' => 'required|array|min:1',
+            'questions.*.text' => 'required|string|max:1000',
+            'questions.*.answers' => 'required|array|size:4',
+            'questions.*.answers.*.answer' => 'required|string|max:255',
+            'questions.*.correct_answer' => 'required|integer|between:0,3',
         ]);
 
-        // Delete old questions and answers
-        $mcq->questions()->delete();
+        // Validate and get the clean data
+        $validated = $validator->validated();
 
-        // Create all questions again
-        foreach ($validated['questions'] as $questionData) {
-            $question = $mcq->questions()->create([
-                'question' => $questionData['text'],
+        DB::beginTransaction();
+
+        try {
+            $mcq = Mcq::findOrFail($id);
+
+            $examDateTime = Carbon::parse($validated['exam_datetime']);
+
+            // Update MCQ
+            $mcq->update([
+                'title'         => $validated['title'],
+                'exam_datetime' => $examDateTime,
+                'exam_duration' => $validated['exam_duration'],
+                'exam_mark'     => $validated['exam_mark'],
+                'updated_by'    => Auth::id(),
             ]);
 
-            foreach ($questionData['answers'] as $index => $answerData) {
-                $question->answers()->create([
-                    'answer'     => $answerData['answer'],
-                    'is_correct' => $questionData['correct_answer'] == $index ? 1 : 0,
+            // Delete old questions and answers
+            $mcq->questions()->delete();
+
+            // Insert new questions and answers
+            foreach ($validated['questions'] as $questionData) {
+                $question = $mcq->questions()->create([
+                    'question' => $questionData['text'],
                 ]);
+
+                foreach ($questionData['answers'] as $index => $answerData) {
+                    $question->answers()->create([
+                        'answer'     => $answerData['answer'],
+                        'is_correct' => $questionData['correct_answer'] == $index ? 1 : 0,
+                    ]);
+                }
             }
+
+            DB::commit();
+
+            return redirect()->route('admin.mcq.index')
+                ->with('success', 'MCQ updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->with('error', 'Error updating MCQ: ' . $e->getMessage());
         }
-
-        DB::commit();
-
-        return redirect()->route('admin.mcq.index')
-            ->with('success', 'MCQ updated successfully!');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return back()->withInput()->with('error', 'Error updating MCQ: ' . $e->getMessage());
     }
-}
 
 
 
@@ -203,18 +215,32 @@ class McqController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // Show Online Quiz Details
-    public function onlineQuizShow(string $id)
+  public function onlineQuizShow(string $id)
 {
     $mcq = McqQuizAnswer::with([
         'user',
-        'question.answers', 
-        'question.mcq'      
+        'question.answers',
+        'question.mcq',
+        'answer' // answer relation must be defined
     ])->findOrFail($id);
 
     $pageTitle = 'Online Quiz Details';
 
-    return view('admin.mcq.quiz.show', compact('mcq', 'pageTitle'));
+    $answer = $mcq->answer;
+
+    $correct = $answer && $answer->is_correct ? 1 : 0;
+    $wrong = $answer && !$answer->is_correct ? 1 : 0;
+    $totalQuestions = $mcq->question ? 1 : 0;
+    $notAnswered = $answer ? 0 : 1;
+
+    return view('admin.mcq.quiz.show', compact(
+        'mcq',
+        'pageTitle',
+        'correct',
+        'wrong',
+        'notAnswered',
+        'totalQuestions'
+    ));
 }
 
 

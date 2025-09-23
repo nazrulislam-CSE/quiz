@@ -17,7 +17,16 @@
         </button>
     </div>
 </div>
-
+<!-- পরীক্ষার ফলাফল -->
+<div class="row mb-3">
+    <div class="col-lg-12 text-center">
+        <div class="card shadow-sm border-success p-3">
+            <h5 class="text-success fw-bold">পরীক্ষার ফলাফল</h5>
+            <h6>স্কোর: {{ $correct }} এর মধ্যে {{ $totalQuestions }}</h6>
+            <p>সঠিক: {{ $correct }} | ভুল: {{ $wrong }} | উত্তর দেননি: {{ $notAnswered }}</p>
+        </div>
+    </div>
+</div>
 <!-- Quiz Details Table -->
 <div class="card card-primary card-outline shadow-lg mb-4">
     <div class="card-header border-bottom">

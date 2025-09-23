@@ -63,6 +63,7 @@
                                         <tr>
                                             <th class="border-bottom-0">SL</th>
                                             <th class="border-bottom-0">Title</th>
+                                            <th class="border-bottom-0">Time Date & Time</th>
                                             <th class="border-bottom-0">Exam Duration</th>
                                             <th class="border-bottom-0">Exam Mark</th>
                                             <th class="border-bottom-0">Created At</th>
@@ -74,6 +75,7 @@
                                         <tr>
                                             <td class="col-1">{{ $key+1 }}</td>
                                             <td class="col-1">{{ $mcq->title ?? '' }}</td>
+                                            <td class="col-1">{{ \Carbon\Carbon::parse($mcq->exam_datetime)->format('d M, Y h:i A') }}</td>
                                             <td class="col-1">{{ $mcq->exam_duration ?? '' }}</td>
                                             <td class="col-1">{{ $mcq->exam_mark ?? '' }}</td>
                                             <td class="col-2">{{ $mcq->created_at->format('d M Y') }}</td>
