@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\TopicMcqController;
 use App\Http\Controllers\Admin\TopicStudyMcqController;
 use App\Http\Controllers\Admin\PaperFinalMcqController;
 use App\Http\Controllers\Admin\ModelTestMcqController;
+use App\Http\Controllers\Admin\ProgramController;
 
 
 
@@ -107,6 +108,19 @@ Route::middleware('admin')->group(function () {
         Route::get('/show/{id}', [SliderController::class,'show'])->name('slider.show');
 
     });
+
+    /* ============> Manage Program   <=========== */
+    Route::prefix('program')->group(function () {
+        Route::get('/index', [ProgramController::class, 'index'])->name('program.index');
+        Route::get('/create', [ProgramController::class, 'create'])->name('program.create');
+        Route::post('/store', [ProgramController::class, 'store'])->name('program.store');
+        Route::get('/edit/{id}', [ProgramController::class, 'edit'])->name('program.edit');
+        Route::post('/update/{id}', [ProgramController::class, 'update'])->name('program.update');
+        Route::get('/delete/{id}', [ProgramController::class, 'destroy'])->name('program.delete');
+        Route::get('/show/{id}', [ProgramController::class,'show'])->name('program.show');
+    });
+
+    
 
     /* ============> Manage Counter   <=========== */
     Route::prefix('counters')->group(function () {
