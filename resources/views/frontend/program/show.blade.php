@@ -3,8 +3,7 @@
 <section class="py-5">
     <div class="container">
         <div class="card shadow border-0 p-4">
-            <!-- Program Name -->
-            <h2 class="fw-bold mb-3">{{ $program->name }}</h2>
+           
 
             <!-- Program Photo -->
             @if($program->image)
@@ -12,6 +11,9 @@
                      alt="{{ $program->name }}" 
                      class="img-fluid rounded mb-4">
             @endif
+
+             <!-- Program Name -->
+            <h2 class="fw-bold mb-3">{{ $program->name }}</h2>
 
             <!-- Program Description -->
             <div class="mb-4 description-html">
