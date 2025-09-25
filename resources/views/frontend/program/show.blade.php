@@ -43,7 +43,7 @@
     <table class="table table-bordered table-striped align-middle">
         <thead class="table-light">
             <tr>
-                <th>Subject</th>
+                {{-- <th>Subject</th> --}}
                 <th>Topic Name</th>
                 <th>Total MCQ</th>
                 <th>Time (mins)</th>
@@ -55,7 +55,7 @@
                 <tr 
                     data-subject="{{ $topic->program_subject_id }}" 
                     style="display: {{ $loop->first ? 'table-row' : 'none' }};">
-                    <td>{{ $topic->subject->name ?? 'N/A' }}</td>
+                    {{-- <td>{{ $topic->subject->name ?? 'N/A' }}</td> --}}
                     <td>{{ $topic->topic_name }}</td>
                     <td>{{ $topic->total_mcq }}</td>
                     <td>{{ $topic->time }}</td>
