@@ -43,6 +43,11 @@
                       href="{{ route('frontend.home') }}">
                         {{ $menuitem->title ?? '' }}
                     </a>
+                @elseif($menuitem->url == 'program-list')
+                    <a class="btn bg-info text-white fw-bold"
+                      href="{{ route('menu.page', $menuitem->url) }}">
+                        {{ $menuitem->title ?? 'Program List' }}
+                    </a>
                 @elseif($menuitem->url == 'demo-exam')
                     <a class="btn bg-success text-white fw-bold"
                       href="{{ route('menu.page', $menuitem->url) }}">

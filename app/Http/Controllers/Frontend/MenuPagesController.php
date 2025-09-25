@@ -16,6 +16,7 @@ use App\Models\Department;
 use App\Models\Mcq;
 use App\Models\ExamResult;
 use App\Models\BalanceRequest;
+use App\Models\Program;
 use Illuminate\Support\Carbon;
 
 class MenuPagesController extends Controller
@@ -29,6 +30,7 @@ class MenuPagesController extends Controller
         $page = Page::where('page_slug',$url)->first();
         $pageTitle = $page->page_name;
         $abouts = About::where('status',1)->latest()->get();
+        $programs = Program::where('status',1)->latest()->get();
         // dd($tours);
 
         // mcq exam //
@@ -120,7 +122,7 @@ class MenuPagesController extends Controller
 
 
         return view('frontend.menu.index',compact('page','pageTitle','abouts','admissions','departments','subjects','topics',
-            'selectedAdmission','selectedDepartment','selectedSubject','selectedTopic','mcqs','examStart','studyMode'));
+            'selectedAdmission','selectedDepartment','selectedSubject','selectedTopic','mcqs','examStart','studyMode','programs'));
     }
 
     public function submit(Request $request)
@@ -257,6 +259,19 @@ class MenuPagesController extends Controller
         $url = '/pages/contact-us';
         return redirect($url);
     }
+
+    public function programShow($slug)
+    {
+        $program = Program::with('topics.subject')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        $pageTitle = $program->name . ' - Program Details';
+
+        return view('frontend.program.show', compact('program', 'pageTitle'));
+    }
+
+
 
     /**
      * Show the form for creating a new resource.
