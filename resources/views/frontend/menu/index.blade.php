@@ -70,13 +70,12 @@
                             <div class="col-md-4 mb-4">
                                 <div class="card h-100 border-0 shadow-sm">
                                     <div class="card-body">
-                                        <!-- Program Name -->
-                                        <h4 class="card-title">{{ $program->name }}</h4>
-
                                         <!-- Program Photo -->
                                         <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}"
                                             class="img-fluid mb-3" alt="{{ $program->name }}">
 
+                                        <!-- Program Name -->
+                                        <h4 class="card-title">{{ $program->name }}</h4>
                                         <!-- Blade -->
                                         <div class="description-html">
                                             {!! Str::limit($program->description, 1000) !!}
