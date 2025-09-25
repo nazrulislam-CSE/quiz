@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Program;
+use App\Models\ProgramSubject;
+use App\Models\ProgramTopic;
 use Illuminate\Support\Carbon;
 use Session;
 use Illuminate\Support\Str;
@@ -27,7 +29,8 @@ class ProgramController extends Controller
     public function create()
     {
         $pageTitle = 'Program Create';
-        return view('admin.program.create',compact('pageTitle'));
+        $subjects = ProgramSubject::where('status',1)->latest()->get();
+        return view('admin.program.create',compact('pageTitle','subjects'));
     }
 
     /**
@@ -35,40 +38,61 @@ class ProgramController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'status' => 'nullable|in:0,1',
             'image' => 'required|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
-            // 'description' => 'required',
-        ]);
 
+            // subjects validation
+            'subjects' => 'required|array|min:1',
+            'subjects.*.program_subject_id' => 'required|exists:program_subjects,id',
+            'subjects.*.topic_name' => 'required|string|max:255',
+            'subjects.*.total_mcq' => 'required|integer|min:1',
+            'subjects.*.time' => 'required|integer|min:1',
+            'subjects.*.exam_fee' => 'required|numeric|min:0',
+        ]);
 
         $program = new Program;
 
-        if($request->status == Null){
-            $request->status = 0;
-        }
-      
-        $program->status = $request->status;
+        $program->status = $request->status ?? 0;
         $program->name = $request->name;
         $program->slug = Str::slug($request->name);
         $program->description = $request->description;
         $program->created_at = Carbon::now();
         $program->save();
 
-
+        // Image upload
         if ($request->file('image')) {
             $file = $request->file('image');
-            @unlink(public_path('upload/program/'.$program->image));
-            $filename = date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('upload/program'),$filename);
-            $program['image'] = $filename;
+            @unlink(public_path('upload/program/' . $program->image));
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $file->move(public_path('upload/program'), $filename);
+            $program->image = $filename;
         }
 
         $program->save();
 
+        // Save related ProgramTopics
+        if ($request->has('subjects')) {
+            foreach ($request->subjects as $subjectData) {
+                ProgramTopic::create([
+                    'program_id' => $program->id,
+                    'program_subject_id' => $subjectData['program_subject_id'],
+                    'topic_name' => $subjectData['topic_name'],
+                    'total_mcq' => $subjectData['total_mcq'],
+                    'time' => $subjectData['time'],
+                    'exam_fee' => $subjectData['exam_fee'],
+                ]);
+            }
+        }
+
         flash()->addSuccess("Program Created Successfully.");
-        $url = '/admin/program/index';
-        return redirect($url);
+        return redirect('/admin/program/index');
     }
+
+
 
     /**
      * Display the specified resource.
@@ -76,7 +100,7 @@ class ProgramController extends Controller
     public function show(string $id)
     {
         $pageTitle = 'Program Show';
-        $program = Program::find($id);
+        $program = Program::with('topics')->find($id);
         return view('admin.program.show',compact('pageTitle','program'));
     }
 
@@ -85,45 +109,78 @@ class ProgramController extends Controller
      */
     public function edit(string $id)
     {
-        $program = Program::find($id);
+        $program = Program::with('topics')->findOrFail($id);
         $pageTitle = 'Program Edit';
-        return view('admin.program.edit', compact('program','pageTitle'));
+        $subjects = ProgramSubject::where('status', 1)->latest()->get();
+        return view('admin.program.edit', compact('program', 'pageTitle', 'subjects'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        $program = Program::find($id);
+        $program = Program::findOrFail($id);
 
-        if($request->status == Null){
-            $request->status = 0;
-        }
-       
-        $program->status = $request->status;
+        // Validation
+        $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'status' => 'nullable|in:0,1',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
+
+            // subjects validation
+            'subjects' => 'nullable|array|min:1',
+            'subjects.*.program_subject_id' => 'required_with:subjects|exists:program_subjects,id',
+            'subjects.*.topic_name' => 'required_with:subjects|string|max:255',
+            'subjects.*.total_mcq' => 'required_with:subjects|integer|min:1',
+            'subjects.*.time' => 'required_with:subjects|integer|min:1',
+            'subjects.*.exam_fee' => 'required_with:subjects|numeric|min:0',
+        ]);
+
+        // Program fields update
+        $program->status = $request->status ?? 0;
         $program->name = $request->name;
         $program->slug = Str::slug($request->name);
         $program->description = $request->description;
         $program->updated_at = Carbon::now();
 
-        $program->save();
-
+        // Image update
         if ($request->file('image')) {
             $file = $request->file('image');
-            @unlink(public_path('upload/program/'.$slider->image));
-            $filename = date('YmdHi').$file->getClientOriginalName();
-            $file->move(public_path('upload/program'),$filename);
-            $program['image'] = $filename;
+            if ($program->image && file_exists(public_path('upload/program/' . $program->image))) {
+                @unlink(public_path('upload/program/' . $program->image));
+            }
+            $filename = date('YmdHi') . $file->getClientOriginalName();
+            $file->move(public_path('upload/program'), $filename);
+            $program->image = $filename;
         }
 
         $program->save();
 
+        // Update ProgramTopics
+        if ($request->has('subjects')) {
+            // Delete old topics
+            ProgramTopic::where('program_id', $program->id)->delete();
+
+            // Insert new topics
+            foreach ($request->subjects as $subjectData) {
+                ProgramTopic::create([
+                    'program_id' => $program->id,
+                    'program_subject_id' => $subjectData['program_subject_id'],
+                    'topic_name' => $subjectData['topic_name'],
+                    'total_mcq' => $subjectData['total_mcq'],
+                    'time' => $subjectData['time'],
+                    'exam_fee' => $subjectData['exam_fee'],
+                ]);
+            }
+        }
 
         flash()->addSuccess("Program Updated Successfully.");
-        $url = '/admin/program/index';
-        return redirect($url);
+        return redirect('/admin/program/index');
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -140,6 +197,10 @@ class ProgramController extends Controller
 
         }
 
+        // Delete related ProgramTopics
+        ProgramTopic::where('program_id', $program->id)->delete();
+
+        // Delete program
         $program->delete();
 
 

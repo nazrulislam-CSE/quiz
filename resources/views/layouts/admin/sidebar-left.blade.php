@@ -207,7 +207,7 @@
                     </a>
                     <ul class="slide-menu">
                         <li class="side-menu__label1"><a href="javascript:void(0);">Program</a></li>
-                        <li><a class="slide-item {{ Request::is('admin/program/create') ? 'active' : '' }}" href="{{ route('admin.program.create')}}">Program Add</a></li>
+                        <li><a class="slide-item {{ Request::is('admin/program/subject/create') ? 'active' : '' }}" href="{{ route('admin.program.subject.index')}}">Program Subject List</a></li>
                         <li><a class="slide-item {{ Request::is('admin/program/index') ? 'active' : '' }}" href="{{ route('admin.program.index')}}">Program List</a></li>
                     </ul>
                 </li>

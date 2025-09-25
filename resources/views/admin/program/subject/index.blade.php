@@ -51,8 +51,8 @@
                             <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}} <span class="badge bg-danger side-badge" style="font-size:17px;">{{ count($programs) }}</span> </p>
 
                             <div class="d-flex">
-                                <a href="{{ route('admin.program.create')}}" class="btn btn-success me-2">
-                                    <i class="fas fa-plus d-inline"></i> Add Now Program
+                                <a href="{{ route('admin.program.subject.create')}}" class="btn btn-success me-2">
+                                    <i class="fas fa-plus d-inline"></i> Add Now Program Subject
                                 </a>
                             </div>
                         </div>
@@ -62,8 +62,7 @@
                                     <thead>
                                         <tr>
                                             <th class="border-bottom-0">SL</th>
-                                            <th class="border-bottom-0">Program Name</th>
-                                            <th class="border-bottom-0">Photo</th>
+                                            <th class="border-bottom-0">Name</th>
                                             <th class="border-bottom-0">Status</th>
                                             <th class="border-bottom-0">Actions</th>
                                         </tr>
@@ -74,9 +73,6 @@
                                             <td class="col-1">{{ $key+1 }}</td>
                                             <td>{{ $program->name }}</td>
                                             <td>
-                                                <img src="{{ (!empty($program->image)) ? url('upload/program/'.$program->image):url('upload/no_image.jpg') }}" width="50" alt="image" class="img-fluid">
-                                            </td>
-                                            <td>
                                                 @if($program->status == 1)
                                                     <a href="#" class="badge bg-pill bg-success">Active</a>
                                                 @else
@@ -84,9 +80,9 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('admin.program.show',$program->id)}}" class="btn btn-success btn-sm mr-2"><i class="fas fa-eye"></i></a>
-                                                <a href="{{ route('admin.program.edit',$program->id)}}" class="btn btn-primary btn-sm mr-2"><i class="fas fa-edit"></i></a>
-                                                <a href="{{ route('admin.program.delete',$program->id)}}" class="btn btn-danger btn-sm" title="Delete Data" id="delete"><i class="fa fa-trash"></i></a>
+                                                <a href="{{ route('admin.program.subject.show',$program->id)}}" class="btn btn-success btn-sm mr-2"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ route('admin.program.subject.edit',$program->id)}}" class="btn btn-primary btn-sm mr-2"><i class="fas fa-edit"></i></a>
+                                                <a href="{{ route('admin.program.subject.delete',$program->id)}}" class="btn btn-danger btn-sm" title="Delete Data" id="delete"><i class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
                                         @endforeach

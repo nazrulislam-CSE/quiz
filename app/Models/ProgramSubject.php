@@ -5,18 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Program extends Model
+class ProgramSubject extends Model
 {
     use HasFactory;
     protected $guarded = [];
     
-    // Program.php
+    public function programs()
+    {
+        return $this->hasMany(Program::class, 'program_subject_id');
+    }
+    
     public function topics()
     {
-        return $this->hasMany(ProgramTopic::class);
+        return $this->hasMany(ProgramTopic::class, 'program_subject_id');
     }
-
-
 
 
 }

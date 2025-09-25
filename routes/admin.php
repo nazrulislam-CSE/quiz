@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\TopicStudyMcqController;
 use App\Http\Controllers\Admin\PaperFinalMcqController;
 use App\Http\Controllers\Admin\ModelTestMcqController;
 use App\Http\Controllers\Admin\ProgramController;
+use App\Http\Controllers\Admin\ProgramSubjectController;
 
 
 
@@ -107,6 +108,17 @@ Route::middleware('admin')->group(function () {
         Route::get('/delete/{id}', [SliderController::class, 'destroy'])->name('slider.delete');
         Route::get('/show/{id}', [SliderController::class,'show'])->name('slider.show');
 
+    });
+
+    /* ============> Manage Program Subject   <=========== */
+    Route::prefix('program')->group(function () {
+        Route::get('/subject/index', [ProgramSubjectController::class, 'index'])->name('program.subject.index');
+        Route::get('/subject/create', [ProgramSubjectController::class, 'create'])->name('program.subject.create');
+        Route::post('/subject/store', [ProgramSubjectController::class, 'store'])->name('program.subject.store');
+        Route::get('/subject/edit/{id}', [ProgramSubjectController::class, 'edit'])->name('program.subject.edit');
+        Route::post('/subject/update/{id}', [ProgramSubjectController::class, 'update'])->name('program.subject.update');
+        Route::get('/subject/delete/{id}', [ProgramSubjectController::class, 'destroy'])->name('program.subject.delete');
+        Route::get('/subject/show/{id}', [ProgramSubjectController::class,'show'])->name('program.subject.show');
     });
 
     /* ============> Manage Program   <=========== */
