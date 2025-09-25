@@ -23,18 +23,20 @@
 @php
     $colors = ['primary','success','warning','danger','info','secondary','dark'];
 @endphp
+
 <!-- Subject Buttons -->
 <div class="mb-3">
-     @foreach($program->subjects as $index => $subject)
+    @foreach($program->subjects as $index => $subject)
         @php
             $color = $colors[$index % count($colors)];
         @endphp
         <button class="btn btn-{{ $color }} me-2 mb-2 subject-btn" data-subject="{{ $subject->id }}">
             {{ $subject->name }}
         </button>
-         @endforeach
+    @endforeach
 </div>
 
+<!-- Topics Table -->
 <div class="table-responsive">
     <table class="table table-bordered table-striped align-middle">
         <thead class="table-light">
@@ -48,7 +50,7 @@
         </thead>
         <tbody id="topicTableBody">
             @foreach($program->topics as $topic)
-                <tr data-subject="{{ $topic->subject_id }}" style="display:none;">
+                <tr data-subject="{{ $topic->program_subject_id }}" style="display:none;">
                     <td>{{ $topic->subject->name ?? 'N/A' }}</td>
                     <td>{{ $topic->topic_name }}</td>
                     <td>{{ $topic->total_mcq }}</td>
@@ -60,7 +62,6 @@
     </table>
 </div>
 
-<!-- যদি কোন subject select না থাকে -->
 <p id="noSubjectMsg" class="text-center text-muted mt-3">
     Please select a subject to view topics.
 </p>
@@ -95,7 +96,6 @@
                     }
                 });
 
-                // Show/hide "no data" message
                 noMsg.style.display = found ? "none" : "block";
             });
         });

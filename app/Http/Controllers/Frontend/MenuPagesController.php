@@ -262,7 +262,7 @@ class MenuPagesController extends Controller
 
     public function programShow($slug)
     {
-        $program = Program::with('topics.subject')
+        $program = Program::with('subjects', 'topics.subject')
             ->where('slug', $slug)
             ->firstOrFail();
 
