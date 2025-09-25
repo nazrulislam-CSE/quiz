@@ -18,53 +18,65 @@
                 {!! $program->description !!}
             </div>
 
-            <!-- Subject-wise Topics -->
-           <h4 class="fw-bold mt-4 mb-3">Exam Plan</h4>
-@php
-    $colors = ['primary','success','warning','danger','info','secondary','dark'];
-@endphp
+           
 
-<!-- Subject Buttons -->
-<div class="mb-3">
+<h4 class="fw-bold mt-4 mb-3">Exam Plan</h4>
+
+<!-- Subject Tabs -->
+<ul class="nav nav-tabs mb-3" id="subjectTabs" role="tablist">
     @foreach($program->subjects as $index => $subject)
-        @php
-            $color = $colors[$index % count($colors)];
-        @endphp
-        <button class="btn btn-{{ $color }} me-2 mb-2 subject-btn" data-subject="{{ $subject->id }}">
-            {{ $subject->name }}
-        </button>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @if($index === 0) active @endif" 
+                id="subject-{{ $subject->id }}-tab" 
+                data-bs-toggle="tab" 
+                data-bs-target="#subject-{{ $subject->id }}" 
+                type="button" role="tab">
+                {{ $subject->name }}
+            </button>
+        </li>
+    @endforeach
+</ul>
+
+<!-- Tab Content -->
+<div class="tab-content" id="subjectTabsContent">
+    @foreach($program->subjects as $index => $subject)
+        <div class="tab-pane fade @if($index === 0) show active @endif" 
+             id="subject-{{ $subject->id }}" 
+             role="tabpanel">
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Topic Name</th>
+                            <th>Total MCQ</th>
+                            <th>Time (mins)</th>
+                            <th>Exam Fee</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($subject->topics as $topic)
+                            <tr>
+                                <td>{{ $topic->topic_name }}</td>
+                                <td>{{ $topic->total_mcq }}</td>
+                                <td>{{ $topic->time }}</td>
+                                <td>{{ $topic->exam_fee }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">
+                                    No topics available for {{ $subject->name }}
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
     @endforeach
 </div>
-
-<!-- Topics Table -->
-<div class="table-responsive">
-    <table class="table table-bordered table-striped align-middle">
-        <thead class="table-light">
-            <tr>
-                <th>Subject</th>
-                <th>Topic Name</th>
-                <th>Total MCQ</th>
-                <th>Time (mins)</th>
-                <th>Exam Fee</th>
-            </tr>
-        </thead>
-        <tbody id="topicTableBody">
-            @foreach($program->topics as $topic)
-                <tr data-subject="{{ $topic->program_subject_id }}" style="display:none;">
-                    <td>{{ $topic->subject->name ?? 'N/A' }}</td>
-                    <td>{{ $topic->topic_name }}</td>
-                    <td>{{ $topic->total_mcq }}</td>
-                    <td>{{ $topic->time }}</td>
-                    <td>{{ $topic->exam_fee }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
-
-<p id="noSubjectMsg" class="text-center text-muted mt-3">
-    Please select a subject to view topics.
-</p>
+s
 
 
             <!-- Back Button -->
