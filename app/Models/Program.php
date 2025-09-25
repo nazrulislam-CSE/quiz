@@ -16,11 +16,18 @@ class Program extends Model
         return $this->hasMany(ProgramTopic::class);
     }
 
-   // Program.php
-public function subjects()
-{
-    return $this->hasMany(ProgramSubject::class);
-}
+     public function subjects()
+    {
+        return $this->hasManyThrough(
+            ProgramSubject::class,
+            ProgramTopic::class,
+            'program_id',           // Foreign key on program_topics
+            'id',                   // Local key on program_subjects
+            'id',                   // Local key on programs
+            'program_subject_id'    // Foreign key on program_topics
+        )->distinct();
+    }
+
 
 
 

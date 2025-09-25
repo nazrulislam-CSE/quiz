@@ -18,65 +18,60 @@
                 {!! $program->description !!}
             </div>
 
-           
+            <!-- Subject-wise Topics -->
+           <h4 class="fw-bold mt-4 mb-3">Exam Plan</h4>
+@php
+    $colors = ['primary','success','warning','danger','info','secondary','dark'];
+@endphp
 
-<h4 class="fw-bold mt-4 mb-3">Exam Plan</h4>
-
-<!-- Subject Tabs -->
-<ul class="nav nav-tabs mb-3" id="subjectTabs" role="tablist">
+<!-- Subject Buttons -->
+<div class="mb-3">
     @foreach($program->subjects as $index => $subject)
-        <li class="nav-item" role="presentation">
-            <button class="nav-link @if($index === 0) active @endif" 
-                id="subject-{{ $subject->id }}-tab" 
-                data-bs-toggle="tab" 
-                data-bs-target="#subject-{{ $subject->id }}" 
-                type="button" role="tab">
-                {{ $subject->name }}
-            </button>
-        </li>
-    @endforeach
-</ul>
-
-<!-- Tab Content -->
-<div class="tab-content" id="subjectTabsContent">
-    @foreach($program->subjects as $index => $subject)
-        <div class="tab-pane fade @if($index === 0) show active @endif" 
-             id="subject-{{ $subject->id }}" 
-             role="tabpanel">
-
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Topic Name</th>
-                            <th>Total MCQ</th>
-                            <th>Time (mins)</th>
-                            <th>Exam Fee</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($subject->topics as $topic)
-                            <tr>
-                                <td>{{ $topic->topic_name }}</td>
-                                <td>{{ $topic->total_mcq }}</td>
-                                <td>{{ $topic->time }}</td>
-                                <td>{{ $topic->exam_fee }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center text-muted">
-                                    No topics available for {{ $subject->name }}
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
+        @php
+            $color = $colors[$index % count($colors)];
+        @endphp
+        <button 
+            class="btn btn-{{ $color }} me-2 mb-2 subject-btn @if($index === 0) active @endif" 
+            data-subject="{{ $subject->id }}">
+            {{ $subject->name }}
+        </button>
     @endforeach
 </div>
-s
+
+<!-- Topics Table -->
+<div class="table-responsive">
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Subject</th>
+                <th>Topic Name</th>
+                <th>Total MCQ</th>
+                <th>Time (mins)</th>
+                <th>Exam Fee</th>
+            </tr>
+        </thead>
+        <tbody id="topicTableBody">
+            @foreach($program->topics as $topic)
+                <tr 
+                    data-subject="{{ $topic->program_subject_id }}" 
+                    style="display: {{ $loop->first ? 'table-row' : 'none' }};">
+                    <td>{{ $topic->subject->name ?? 'N/A' }}</td>
+                    <td>{{ $topic->topic_name }}</td>
+                    <td>{{ $topic->total_mcq }}</td>
+                    <td>{{ $topic->time }}</td>
+                    <td>{{ $topic->exam_fee }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+
+
+
+
+<p id="noSubjectMsg" class="text-center text-muted mt-3">
+    Please select a subject to view topics.
+</p>
 
 
             <!-- Back Button -->
@@ -86,29 +81,30 @@ s
         </div>
     </div>
 </section>
+<!-- Script -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const buttons = document.querySelectorAll(".subject-btn");
         const rows = document.querySelectorAll("#topicTableBody tr");
-        const noMsg = document.getElementById("noSubjectMsg");
 
-        buttons.forEach(btn => {
-            btn.addEventListener("click", function () {
-                const subjectId = this.getAttribute("data-subject");
+        buttons.forEach(button => {
+            button.addEventListener("click", function () {
+                const subjectId = this.dataset.subject;
 
-                // Hide all rows
-                rows.forEach(row => row.style.display = "none");
+                // remove active class from all buttons
+                buttons.forEach(btn => btn.classList.remove("active"));
 
-                // Show only selected subject rows
-                let found = false;
+                // add active class to clicked button
+                this.classList.add("active");
+
+                // show only selected subject's rows
                 rows.forEach(row => {
-                    if (row.getAttribute("data-subject") === subjectId) {
-                        row.style.display = "";
-                        found = true;
+                    if (row.dataset.subject === subjectId) {
+                        row.style.display = "table-row";
+                    } else {
+                        row.style.display = "none";
                     }
                 });
-
-                noMsg.style.display = found ? "none" : "block";
             });
         });
     });
