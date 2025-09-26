@@ -5,9 +5,9 @@
     <div class="card text-white bg-primary mb-4">
         <div class="card-body">
             <h4 class="card-title">
-                Welcome back, {{ ucfirst(Auth::user()->username ?? '') }}!
+                চকবোর্ড এক্সাম সেন্টার এ স্বাগতম <br>{{ ucfirst(Auth::user()->username ?? '') }}!
             </h4>
-            <p class="card-text">Here's what's happening with your platform today.</p>
+            {{-- <p class="card-text">Here's what's happening with your platform today.</p> --}}
         </div>
     </div>
 
@@ -19,7 +19,7 @@
 
     <div class="card border-success shadow-sm mb-4">
         <div class="card-header bg-success text-white fw-bold">
-            Your Refer Link
+            আপনার রেফার লিংক
         </div>
         <div class="card-body">
             <p class="mb-2">Share this link and earn rewards!</p>
@@ -27,7 +27,7 @@
                 <input type="text" id="referLinkInput" class="form-control"
                     value="{{ url('register') }}?refer_id={{ Auth::user()->username }}" readonly>
                 <button class="btn btn-success" type="button" onclick="copyReferLink()">
-                    <i class="fas fa-copy me-1"></i> Copy
+                    <i class="fas fa-copy me-1"></i> কপি
                 </button>
             </div>
         </div>

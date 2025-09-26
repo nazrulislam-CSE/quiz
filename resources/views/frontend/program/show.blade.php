@@ -42,7 +42,7 @@
 
 <!-- Topics Table -->
 <div class="table-responsive">
-    <table class="table table-bordered table-striped align-middle">
+    <table class="table table-bordered table-striped table-hover text-center align-middle shadow-sm rounded">
         <thead class="table-light">
             <tr>
                 {{-- <th>Subject</th> --}}
