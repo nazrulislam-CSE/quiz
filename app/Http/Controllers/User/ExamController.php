@@ -82,9 +82,12 @@ class ExamController extends Controller
 
             // study start for ভার্সিটি এডমিশন
             if ($selectedTopic && $studyMode) {
+                // dd('ok');
                 $mcqs = Mcq::with('answers')
                             ->where('topic_id', $selectedTopic)
                             ->get();
+
+                            // dd($mcqs);
 
                 if ($mcqs->isEmpty()) {
                     return redirect()->route('user.mcq.exam', [
@@ -98,6 +101,7 @@ class ExamController extends Controller
 
             // exam start for ভার্সিটি এডমিশন
             if ($selectedTopic && $examStart) {
+                dd('ok');
                 $selectedTopicData = Topic::find($selectedTopic);
 
                 if (!$selectedTopicData) {
@@ -115,6 +119,8 @@ class ExamController extends Controller
                 $mcqs = Mcq::with('answers')
                             ->where('topic_id', $selectedTopic)
                             ->get();
+
+                            dd($mcqs);
 
                 if ($mcqs->isEmpty()) {
                     return redirect()->route('user.mcq.exam', [

@@ -447,7 +447,68 @@
                             @endif
                         @endif
                     </form>
-                    
+
+                    <!-- Exam and Study modes remain the same as your original code -->
+                    @if ($examStart && $mcqs->isNotEmpty())
+                        <!-- Exam mode code... -->
+                        <!-- ✅ Exam Header with Countdown -->
+                            <div class="card shadow-sm border-success mb-4">
+                                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-clock me-2"></i> পরীক্ষার সময় চলছে</span>
+                                    <span id="exam-timer" class="fw-bold">00:00</span>
+                                </div>
+                            </div>
+
+                            <!-- ✅ MCQ Form -->
+                            <form action="{{ route('user.exam.submit') }}" method="POST" id="mcq-form">
+                                @csrf
+                                <input type="hidden" name="time_taken" id="time_taken">
+                                <input type="hidden" name="admission" value="{{ $selectedAdmission }}">
+                                <input type="hidden" name="department" value="{{ $selectedDepartment }}">
+                                <input type="hidden" name="subject" value="{{ $selectedSubject }}">
+                                <input type="hidden" name="topic" value="{{ $selectedTopic }}">
+
+                                @foreach ($mcqs as $index => $mcq)
+                                    <div class="question-container" data-question="{{ $index + 1 }}" @if ($index != 0) style="display:none;" @endif>
+                                        <div class="d-flex align-items-center mb-4">
+                                            <div class="question-number">{{ $index + 1 }}</div>
+                                            <h5 class="m-0">{{ $mcq->question }}</h5>
+                                        </div>
+                                        <div class="options-container">
+                                            @foreach ($mcq->answers as $answer)
+                                                <div class="option-item p-2 rounded mb-2" style="cursor:pointer;"
+                                                    data-correct="{{ $answer->is_correct ? '1' : '0' }}">
+                                                    <div class="d-flex align-items-center">
+                                                        <input class="form-check-input me-2" type="radio"
+                                                            name="answers[{{ $mcq->id }}]"
+                                                            id="option{{ $answer->id }}"
+                                                            value="{{ $answer->id }}" required hidden>
+                                                        <label class="form-check-label flex-grow-1 mb-0"
+                                                            for="option{{ $answer->id }}">
+                                                            {{ $answer->answer }}
+                                                        </label>
+                                                        <span class="feedback ms-2" style="display:none;"></span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                                <!-- Navigation Buttons -->
+                                <div class="navigation-buttons mt-4">
+                                    <button type="button" class="btn btn-outline-secondary" id="prev-btn" disabled>
+                                        <i class="fas fa-arrow-left me-2"></i>Previous
+                                    </button>
+                                    <button type="button" class="btn btn-primary" id="next-btn">
+                                        Next<i class="fas fa-arrow-right ms-2"></i>
+                                    </button>
+                                    <button type="submit" class="btn btn-success" id="submit-btn" style="display: none;">
+                                        Submit Exam<i class="fas fa-check-circle ms-2"></i>
+                                    </button>
+                                </div>
+                            </form>
+                    @endif
 
                     @if ($studyMode && $mcqs->isNotEmpty())
                         <!-- Study mode code... -->
