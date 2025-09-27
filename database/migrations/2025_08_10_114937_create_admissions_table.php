@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('image')->nullable();
+            $table->unsignedTinyInteger('admission_type')->nullable()->default(1)->comment('1=>Versity Admission, 2=>Paper Final Exam,3=>Final Model Test Exam');
             $table->unsignedTinyInteger('type')->default(1)->comment('1=>All, 2=>Front Page');
             $table->unsignedTinyInteger('status')->default(1)->comment('1=>Active, 0=>Inactive');
             $table->integer('created_by')->nullable();

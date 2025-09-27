@@ -35,101 +35,249 @@ class ExamController extends Controller
 
         $selectedAdmission = $request->query('admission');
         $selectedDepartment = $request->query('department');
-        $selectedGroup = $request->query('group');
         $selectedSubject = $request->query('subject');
         $selectedTopic = $request->query('topic');
+        $selectedGroup = $request->query('group');
         $selectedPaperFinal = $request->query('paper_final');
         $selectedModelTest = $request->query('model_test');
         $examStart = $request->query('exam');
         $studyMode = $request->query('study'); 
 
         $departments = collect();
-        $groups = collect();
         $subjects = collect();
         $topics = collect();
+        $groups = collect();
         $paperFinals = collect();
         $modelTests = collect();
         $mcqs = collect();
 
+        // Get selected admission data
+        $selectedAdmissionData = null;
         if ($selectedAdmission) {
-            $departments = Department::where('admission_id', $selectedAdmission)
-                ->where('status',1)->orderBy('id', 'asc')->get();
+            $selectedAdmissionData = Admission::find($selectedAdmission);
         }
 
-        if ($selectedDepartment) {
-            $groups = Group::where('department_id', $selectedDepartment)
-                ->where('status',1)->orderBy('id', 'asc')->get();
-            $subjects = Subject::where('department_id', $selectedDepartment)
-                ->where('status',1)->orderBy('id', 'asc')->get();
-        }
+        // ভার্সিটি এডমিশন workflow
+        if ($selectedAdmissionData && $selectedAdmissionData->name == 'ভার্সিটি এডমিশন') {
+            if ($selectedAdmission) {
+                $departments = Department::where('admission_id', $selectedAdmission)->where('status',1)->orderBy('id', 'asc')->get();
+                if ($departments->isEmpty() && !$selectedDepartment) {
+                    return redirect()->route('user.mcq.exam')->with('error', 'No departments available for this admission.');
+                }
+            }
 
-        if ($selectedGroup) {
-            $subjects = Subject::where('group_id', $selectedGroup)
-                ->where('status',1)->orderBy('id', 'asc')->get();
-            $modelTests = ModelTest::where('group_id', $selectedGroup)
-                ->where('status',1)->orderBy('id', 'asc')->get();
-        }
+            if ($selectedDepartment) {
+                $subjects = Subject::where('department_id', $selectedDepartment)->where('status',1)->orderBy('id', 'asc')->get();
+                if ($subjects->isEmpty() && !$selectedSubject) {
+                    return redirect()->route('user.mcq.exam')->with('error', 'No subjects available for this department.');
+                }
+            }
 
-        if ($selectedSubject) {
-            $topics = Topic::where('subject_id', $selectedSubject)
-                ->where('status',1)->orderBy('id', 'asc')->get();
-            $paperFinals = PaperFinal::where('subject_id', $selectedSubject)
-                ->where('status',1)->orderBy('id', 'asc')->get();
-        }
+            if ($selectedSubject) {
+                $topics = Topic::where('subject_id', $selectedSubject)->where('status',1)->orderBy('id', 'asc')->get();
+                if ($topics->isEmpty() && !$selectedTopic) {
+                    return redirect()->route('user.mcq.exam')->with('error', 'No topics available for this subject.');
+                }
+            }
 
-        // Study mode (Topic ভিত্তিক)
-        if ($selectedTopic && $studyMode) {
-            $mcqs = Mcq::with('answers')
-                ->where('topic_id', $selectedTopic)
-                ->get();
-        }
+            // study start for ভার্সিটি এডমিশন
+            if ($selectedTopic && $studyMode) {
+                $mcqs = Mcq::with('answers')
+                            ->where('topic_id', $selectedTopic)
+                            ->get();
 
-        // Exam start
-        if ($examStart) {
-            $user = Auth::user();
+                if ($mcqs->isEmpty()) {
+                    return redirect()->route('user.mcq.exam', [
+                        'admission' => $selectedAdmission,
+                        'department' => $selectedDepartment,
+                        'subject' => $selectedSubject,
+                        'topic' => $selectedTopic,
+                    ])->with('error', 'This topic has no questions.');
+                }
+            }
 
-            if ($selectedTopic) {
+            // exam start for ভার্সিটি এডমিশন
+            if ($selectedTopic && $examStart) {
                 $selectedTopicData = Topic::find($selectedTopic);
+
                 if (!$selectedTopicData) {
                     return redirect()->back()->with('error', 'টপিক পাওয়া যায়নি।');
                 }
+
                 $examFee = $selectedTopicData->fee;
-                if ($user->main_wallet < $examFee) {
+                $user = Auth::user();
+                $userBalance = $user->main_wallet;
+
+                if ($userBalance < $examFee) {
                     return redirect()->back()->with('error', 'আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালান্স নেই। অনুগ্রহ করে রিচার্জ করুন।');
                 }
-                $mcqs = Mcq::with('answers')->where('topic_id', $selectedTopic)->get();
+
+                $mcqs = Mcq::with('answers')
+                            ->where('topic_id', $selectedTopic)
+                            ->get();
+
+                if ($mcqs->isEmpty()) {
+                    return redirect()->route('user.mcq.exam', [
+                        'admission' => $selectedAdmission,
+                        'department' => $selectedDepartment,
+                        'subject' => $selectedSubject,
+                        'topic' => $selectedTopic,
+                    ])->with('error', 'This topic has no questions.');
+                }
+            }
+        }
+        // পেপার ফাইনাল এক্সাম workflow - UPDATED
+        elseif ($selectedAdmissionData && $selectedAdmissionData->name == 'পেপার ফাইনাল এক্সাম') {
+            if ($selectedAdmission) {
+                $departments = Department::where('admission_id', $selectedAdmission)->where('status',1)->orderBy('id', 'asc')->get();
+                if ($departments->isEmpty() && !$selectedDepartment) {
+                    return redirect()->route('user.mcq.exam')->with('error', 'No departments available for this admission.');
+                }
             }
 
-            if ($selectedPaperFinal) {
-                $selectedPaper = PaperFinal::find($selectedPaperFinal);
-                if (!$selectedPaper) {
+            if ($selectedDepartment) {
+                $groups = Group::where('department_id', $selectedDepartment)->where('status',1)->orderBy('id', 'asc')->get();
+                if ($groups->isEmpty() && !$selectedGroup) {
+                    return redirect()->route('user.mcq.exam')->with('error', 'No groups available for this department.');
+                }
+            }
+
+            if ($selectedGroup) {
+                $subjects = Subject::where('group_id', $selectedGroup)->where('status',1)->orderBy('id', 'asc')->get();
+                if ($subjects->isEmpty() && !$selectedSubject) {
+                    return redirect()->route('user.mcq.exam')->with('error', 'No subjects available for this group.');
+                }
+            }
+
+            if ($selectedSubject) {
+                $paperFinals = PaperFinal::where('subject_id', $selectedSubject)->where('status',1)->orderBy('id', 'asc')->get();
+                if ($paperFinals->isEmpty() && !$selectedPaperFinal) {
+                    return redirect()->route('user.mcq.exam')->with('error', 'No paper finals available for this subject.');
+                }
+            }
+
+            // study start for পেপার ফাইনাল এক্সাম
+            if ($selectedPaperFinal && $studyMode) {
+                $mcqs = Mcq::with('answers')
+                            ->where('paper_final_id', $selectedPaperFinal)
+                            ->get();
+
+                if ($mcqs->isEmpty()) {
+                    return redirect()->route('user.mcq.exam', [
+                        'admission' => $selectedAdmission,
+                        'department' => $selectedDepartment,
+                        'group' => $selectedGroup,
+                        'subject' => $selectedSubject,
+                        'paper_final' => $selectedPaperFinal,
+                    ])->with('error', 'This paper final has no questions.');
+                }
+            }
+
+            // exam start for পেপার ফাইনাল এক্সাম
+            if ($selectedPaperFinal && $examStart) {
+                $selectedPaperFinalData = PaperFinal::find($selectedPaperFinal);
+
+                if (!$selectedPaperFinalData) {
                     return redirect()->back()->with('error', 'পেপার ফাইনাল পাওয়া যায়নি।');
                 }
-                $examFee = $selectedPaper->fee;
-                if ($user->main_wallet < $examFee) {
+
+                $examFee = $selectedPaperFinalData->fee;
+                $user = Auth::user();
+                $userBalance = $user->main_wallet;
+
+                if ($userBalance < $examFee) {
                     return redirect()->back()->with('error', 'আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালান্স নেই। অনুগ্রহ করে রিচার্জ করুন।');
                 }
-                $mcqs = $selectedPaper->mcqs()->with('answers')->get();
+
+                $mcqs = Mcq::with('answers')
+                            ->where('paper_final_id', $selectedPaperFinal)
+                            ->get();
+
+                if ($mcqs->isEmpty()) {
+                    return redirect()->route('user.mcq.exam', [
+                        'admission' => $selectedAdmission,
+                        'department' => $selectedDepartment,
+                        'group' => $selectedGroup,
+                        'subject' => $selectedSubject,
+                        'paper_final' => $selectedPaperFinal,
+                    ])->with('error', 'This paper final has no questions.');
+                }
+            }
+        }
+        // ফাইনাল মডেল টেস্ট এক্সাম workflow
+        elseif ($selectedAdmissionData && $selectedAdmissionData->name == 'ফাইনাল মডেল টেস্ট এক্সাম') {
+            if ($selectedAdmission) {
+                $departments = Department::where('admission_id', $selectedAdmission)->where('status',1)->orderBy('id', 'asc')->get();
+                if ($departments->isEmpty() && !$selectedDepartment) {
+                    return redirect()->route('user.mcq.exam')->with('error', 'No departments available for this admission.');
+                }
             }
 
-            if ($selectedModelTest) {
-                $selectedModel = ModelTest::find($selectedModelTest);
-                if (!$selectedModel) {
+            if ($selectedDepartment) {
+                $groups = Group::where('department_id', $selectedDepartment)->where('status',1)->orderBy('id', 'asc')->get();
+                if ($groups->isEmpty() && !$selectedGroup) {
+                    return redirect()->route('user.mcq.exam')->with('error', 'No groups available for this department.');
+                }
+            }
+
+            if ($selectedGroup) {
+                $modelTests = ModelTest::where('group_id', $selectedGroup)->where('status',1)->orderBy('id', 'asc')->get();
+                if ($modelTests->isEmpty() && !$selectedModelTest) {
+                    return redirect()->route('user.mcq.exam')->with('error', 'No model tests available for this group.');
+                }
+            }
+
+            // study start for ফাইনাল মডেল টেস্ট এক্সাম
+            if ($selectedModelTest && $studyMode) {
+                $mcqs = Mcq::with('answers')
+                            ->where('model_test_id', $selectedModelTest)
+                            ->get();
+
+                if ($mcqs->isEmpty()) {
+                    return redirect()->route('user.mcq.exam', [
+                        'admission' => $selectedAdmission,
+                        'department' => $selectedDepartment,
+                        'group' => $selectedGroup,
+                        'model_test' => $selectedModelTest,
+                    ])->with('error', 'This model test has no questions.');
+                }
+            }
+
+            // exam start for ফাইনাল মডেল টেস্ট এক্সাম
+            if ($selectedModelTest && $examStart) {
+                $selectedModelTestData = ModelTest::find($selectedModelTest);
+
+                if (!$selectedModelTestData) {
                     return redirect()->back()->with('error', 'মডেল টেস্ট পাওয়া যায়নি।');
                 }
-                $examFee = $selectedModel->fee;
-                if ($user->main_wallet < $examFee) {
+
+                $examFee = $selectedModelTestData->fee;
+                $user = Auth::user();
+                $userBalance = $user->main_wallet;
+
+                if ($userBalance < $examFee) {
                     return redirect()->back()->with('error', 'আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালান্স নেই। অনুগ্রহ করে রিচার্জ করুন।');
                 }
-                $mcqs = $selectedModel->mcqs()->with('answers')->get();
+
+                $mcqs = Mcq::with('answers')
+                            ->where('model_test_id', $selectedModelTest)
+                            ->get();
+
+                if ($mcqs->isEmpty()) {
+                    return redirect()->route('user.mcq.exam', [
+                        'admission' => $selectedAdmission,
+                        'department' => $selectedDepartment,
+                        'group' => $selectedGroup,
+                        'model_test' => $selectedModelTest,
+                    ])->with('error', 'This model test has no questions.');
+                }
             }
         }
 
         return view('user.exam.mcq', compact(
-            'pageTitle','admissions','departments','groups','subjects','topics',
-            'paperFinals','modelTests','selectedAdmission','selectedDepartment',
-            'selectedGroup','selectedSubject','selectedTopic','selectedPaperFinal',
-            'selectedModelTest','mcqs','examStart','studyMode'
+            'pageTitle','admissions','departments','subjects','topics','groups','paperFinals','modelTests',
+            'selectedAdmission','selectedDepartment','selectedSubject','selectedTopic','selectedGroup',
+            'selectedPaperFinal','selectedModelTest','mcqs','examStart','studyMode','selectedAdmissionData'
         ));
     }
 
