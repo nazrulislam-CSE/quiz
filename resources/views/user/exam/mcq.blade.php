@@ -323,7 +323,7 @@
                                 }
                             @endphp
 
-                            @if (!$mcqs->isEmpty())
+                            @if ($selectedTopic && $mcqs->isEmpty())
                                 <div class="card border-success shadow-sm mb-4">
                                     <div class="card-header bg-success text-white fw-bold">
                                         <i class="fa fa-info-circle me-2"></i> পরীক্ষার নোটিশ
