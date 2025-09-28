@@ -52,10 +52,14 @@
     <!-- Dashboard Buttons -->
     <div class="row mb-4 g-3">
         <div class="col-md-4 col-sm-6">
-            <a href="{{ route('user.balance.request.report') }}" class="btn btn-primary w-100 text-white d-flex flex-column align-items-center py-4">
-                <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
-                <h5 class="mb-0 fw-bold">ব্যালেন্স ট্রান্সফার রিপোর্ট</h5>
-            </a>
+            <div class="card h-100">
+                <div class="card-body">
+                    <a href="{{ route('user.balance.request.report') }}" class="btn btn-primary w-100 text-white d-flex flex-column align-items-center py-4">
+                        <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
+                        <h5 class="mb-0 fw-bold">ব্যালেন্স ট্রান্সফার রিপোর্ট</h5>
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="col-md-4 col-sm-6">
             <a href="{{ route('user.mcq.exam') }}"
