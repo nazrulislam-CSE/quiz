@@ -52,32 +52,10 @@
     <!-- Dashboard Buttons -->
     <div class="row mb-4 g-3">
         <div class="col-md-4 col-sm-6">
-            <div class="card overflow-hidden project-card">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="my-auto">
-                            <img src="https://ecoachingdemo.speakupbd.com/dashboard/img/icons/deposit1.png" alt="" class="me-5 ht-70 wd-70 my-auto border shadow-sm rounded-lg p-2 bg-light">
-                        </div>
-                        <div class="project-content d-grid align-items-center">
-                            <h5>Total Income</h5>
-                            <ul>
-                                <li>
-                                    <strong class="d-inline-flex mb-0" style="font-size: 15px !important;">Total:</strong>
-                                    <span><strong style="font-size: 15px !important;">৳ 3001</strong></span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card h-100">
-                <div class="card-body">
-                    <a href="{{ route('user.balance.request.report') }}" class="btn btn-primary w-100 text-white d-flex flex-column align-items-center py-4">
-                        <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
-                        <h5 class="mb-0 fw-bold">ব্যালেন্স ট্রান্সফার রিপোর্ট</h5>
-                    </a>
-                </div>
-            </div>
+            <a href="{{ route('user.balance.request.report') }}" class="btn btn-primary w-100 text-white d-flex flex-column align-items-center py-4">
+                <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
+                <h5 class="mb-0 fw-bold">ব্যালেন্স ট্রান্সফার রিপোর্ট</h5>
+            </a>
         </div>
         <div class="col-md-4 col-sm-6">
             <a href="{{ route('user.mcq.exam') }}"
