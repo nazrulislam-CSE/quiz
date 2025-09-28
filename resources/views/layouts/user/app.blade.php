@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('dashboard/auth/css/dashboard.css') }}">
     <!-- Include Toastr CSS & JS (if not already included) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://ecoachingdemo.speakupbd.com/dashboard/css/custom-animated.css">
 </head>
 
 <body>
