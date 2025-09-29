@@ -60,6 +60,9 @@ class ExamController extends Controller
             $selectedAdmissionData = Admission::find($selectedAdmission);
         }
 
+        $user = Auth::user();
+        $userHasAttempted = false;
+
         // ভার্সিটি এডমিশন workflow
         if ($selectedAdmissionData && $selectedAdmissionData->name == 'ভার্সিটি এডমিশন') {
             if ($selectedAdmission) {
@@ -81,6 +84,13 @@ class ExamController extends Controller
                 if ($topics->isEmpty() && !$selectedTopic) {
                     return redirect()->route('user.mcq.exam')->with('error', 'No topics available for this subject.');
                 }
+            }
+
+            // Check if user has already attempted this topic
+            if ($selectedTopic) {
+                $userHasAttempted = ExamResult::where('user_id', $user->id)
+                    ->where('topic_id', $selectedTopic)
+                    ->exists();
             }
 
             // study start for ভার্সিটি এডমিশন
@@ -175,6 +185,13 @@ class ExamController extends Controller
                 }
             }
 
+            // Check if user has already attempted this paper final
+            if ($selectedPaperFinal) {
+                $userHasAttempted = ExamResult::where('user_id', $user->id)
+                    ->where('paper_final_id', $selectedPaperFinal)
+                    ->exists();
+            }
+
             // study start for পেপার ফাইনাল এক্সাম
             if ($selectedPaperFinal && $studyMode) {
                 $mcqs = Mcq::with('answers')
@@ -261,6 +278,14 @@ class ExamController extends Controller
                 }
             }
 
+            // Check if user has already attempted this model test
+            if ($selectedModelTest) {
+                $userHasAttempted = ExamResult::where('user_id', $user->id)
+                    ->where('model_test_id', $selectedModelTest)
+                    ->exists();
+            }
+            
+
             // study start for ফাইনাল মডেল টেস্ট এক্সাম
             if ($selectedModelTest && $studyMode) {
                 $mcqs = Mcq::with('answers')
@@ -343,6 +368,13 @@ class ExamController extends Controller
                 }
             }
 
+            // Check if user has already attempted this topic for default case
+            if ($selectedTopic) {
+                $userHasAttempted = ExamResult::where('user_id', $user->id)
+                    ->where('topic_id', $selectedTopic)
+                    ->exists();
+            }
+
             // study start for ভার্সিটি এডমিশন
             if ($selectedTopic && $studyMode) {
                 $mcqs = Mcq::with('answers')
@@ -408,7 +440,7 @@ class ExamController extends Controller
         return view('user.exam.mcq', compact(
             'pageTitle','admissions','departments','subjects','topics','groups','paperFinals','modelTests',
             'selectedAdmission','selectedDepartment','selectedSubject','selectedTopic','selectedGroup',
-            'selectedPaperFinal','selectedModelTest','mcqs','examStart','studyMode','selectedAdmissionData'
+            'selectedPaperFinal','selectedModelTest','mcqs','examStart','studyMode','selectedAdmissionData','userHasAttempted'
         ));
     }
 
