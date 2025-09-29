@@ -19,6 +19,7 @@
                             <th>Department</th>
                             <th>Subject</th>
                             <th>Topic</th>
+                            <th>Fee</th>
                             <th>Total</th>
                             <th class="text-success">Correct</th>
                             <th class="text-danger">Wrong</th>
@@ -35,6 +36,7 @@
                                 <td>{{ $result->department->name ?? 'N/A' }}</td>
                                 <td>{{ $result->subject->name ?? 'N/A' }}</td>
                                 <td>{{ $result->topic->name ?? 'N/A' }}</td>
+                                <td>{{ number_format($result->topic->fee ?? '', 2) }} টাকা</td>
                                 <td>{{ $result->total }}</td>
                                 <td class="text-success fw-bold">{{ $result->correct }}</td>
                                 <td class="text-danger fw-bold">{{ $result->wrong }}</td>
