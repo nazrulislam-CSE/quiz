@@ -69,7 +69,7 @@
                                         <tr>
                                             <td class="col-1">{{ $key + 1 }}</td>
                                             <td>{{ $mcq->user->full_name ?? '' }}</td>
-                                            <td>{{ $mcq->question->mcq->title ?? '' }}</td>
+                                            <td>{{ $mcq->title ?? '' }}</td>
                                             <td class="col-2">{{ $mcq->created_at->format('d M Y') }}</td>
                                             <td>
                                                 <a href="{{ route('admin.online.quiz.show', $mcq->id) }}"

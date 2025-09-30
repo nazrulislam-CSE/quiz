@@ -28,7 +28,7 @@ class McqController extends Controller
         $pageTitle = 'Online Quiz Report List';
 
         // Fetch all quiz answers, latest first
-        $mcqs = McqQuizAnswer::latest()->get();
+        $mcqs = Mcq::where('mcq_type',5)->latest()->get();
 
         return view('admin.mcq.quiz.report', compact('mcqs', 'pageTitle'));
     }
