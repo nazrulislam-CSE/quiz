@@ -26,12 +26,9 @@ class McqController extends Controller
     public function onlineQuiz()
     {
         $pageTitle = 'Online Quiz Report List';
-        $mcqs = Mcq::where('mcq_type', 5)
-                ->whereHas('quizAnswers') 
-                ->with('quizAnswers.user')
-                ->latest()
-                ->get();
 
+        // Fetch all quiz answers, latest first
+        $mcqs = McqQuizAnswer::latest()->get();
 
         return view('admin.mcq.quiz.report', compact('mcqs', 'pageTitle'));
     }
@@ -218,18 +215,21 @@ class McqController extends Controller
         return response()->json(['success' => true]);
     }
 
- public function onlineQuizShow(string $id)
+  public function onlineQuizShow(string $id)
 {
-    $mcq = Mcq::with(['quizAnswers.user', 'question.answers'])->findOrFail($id);
+    $mcq = McqQuizAnswer::with([
+        'user',
+        'question.answers',
+        'question.mcq',
+        'answer' // answer relation must be defined
+    ])->findOrFail($id);
 
     $pageTitle = 'Online Quiz Details';
 
-    // ধরছি এক MCQ এক user এর জন্য
-    // যদি একাধিক উত্তর থাকে, তাহলে adjust করতে হবে
-    $answer = $mcq->quizAnswers->first(); 
+    $answer = $mcq->answer;
 
-    $correct = $answer && $answer->answer && $answer->answer->is_correct ? 1 : 0;
-    $wrong = $answer && $answer->answer && !$answer->answer->is_correct ? 1 : 0;
+    $correct = $answer && $answer->is_correct ? 1 : 0;
+    $wrong = $answer && !$answer->is_correct ? 1 : 0;
     $totalQuestions = $mcq->question ? 1 : 0;
     $notAnswered = $answer ? 0 : 1;
 
