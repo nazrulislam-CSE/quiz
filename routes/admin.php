@@ -32,6 +32,7 @@ use App\Http\Controllers\Admin\PaperFinalMcqController;
 use App\Http\Controllers\Admin\ModelTestMcqController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\ProgramSubjectController;
+use App\Http\Controllers\Admin\AdmissionInfoController;
 
 
 
@@ -130,6 +131,17 @@ Route::middleware('admin')->group(function () {
         Route::post('/update/{id}', [ProgramController::class, 'update'])->name('program.update');
         Route::get('/delete/{id}', [ProgramController::class, 'destroy'])->name('program.delete');
         Route::get('/show/{id}', [ProgramController::class,'show'])->name('program.show');
+    });
+
+    /* ============> Manage Admission Info   <=========== */
+    Route::prefix('/info')->group(function () {
+        Route::get('/index', [AdmissionInfoController::class, 'index'])->name('admission.info.index');
+        Route::get('/create', [AdmissionInfoController::class, 'create'])->name('admission.info.create');
+        Route::post('/store', [AdmissionInfoController::class, 'store'])->name('admission.info.store');
+        Route::get('/edit/{id}', [AdmissionInfoController::class, 'edit'])->name('admission.info.edit');
+        Route::put('/update/{id}', [AdmissionInfoController::class, 'update'])->name('admission.info.update');
+        Route::get('/delete/{id}', [AdmissionInfoController::class, 'destroy'])->name('admission.info.delete');
+        Route::get('/show/{id}', [AdmissionInfoController::class,'show'])->name('admission.info.show');
     });
 
     
