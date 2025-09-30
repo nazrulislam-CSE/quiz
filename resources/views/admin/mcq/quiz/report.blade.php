@@ -58,7 +58,6 @@
                                 <thead>
                                     <tr>
                                         <th class="border-bottom-0">SL</th>
-                                        <th class="border-bottom-0">User</th>
                                         <th class="border-bottom-0">Topic</th>
                                         <th class="border-bottom-0">Created At</th>
                                         <th class="border-bottom-0">Actions</th>
@@ -68,11 +67,6 @@
                                    @foreach ($mcqs as $key => $mcq)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>
-                                            @foreach($mcq->quizAnswers as $answer)
-                                                {{ optional($answer->user)->full_name ?? 'N/A' }}<br>
-                                            @endforeach
-                                        </td>
                                         <td>{{ $mcq->title ?? '' }}</td>
                                         <td>{{ $mcq->created_at->format('d M Y') }}</td>
                                         <td>
