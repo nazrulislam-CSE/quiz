@@ -218,22 +218,18 @@ class McqController extends Controller
         return response()->json(['success' => true]);
     }
 
-  public function onlineQuizShow(string $id)
+ public function onlineQuizShow(string $id)
 {
-    $mcq = McqQuizAnswer::with([
-        'user',
-        'question.answers',
-        'question.mcq',
-        'answer' // answer relation must be defined
-    ])->findOrFail($id);
-    
+    $mcq = Mcq::with(['quizAnswers.user', 'question.answers'])->findOrFail($id);
 
     $pageTitle = 'Online Quiz Details';
 
-    $answer = $mcq->answer;
+    // ধরছি এক MCQ এক user এর জন্য
+    // যদি একাধিক উত্তর থাকে, তাহলে adjust করতে হবে
+    $answer = $mcq->quizAnswers->first(); 
 
-    $correct = $answer && $answer->is_correct ? 1 : 0;
-    $wrong = $answer && !$answer->is_correct ? 1 : 0;
+    $correct = $answer && $answer->answer && $answer->answer->is_correct ? 1 : 0;
+    $wrong = $answer && $answer->answer && !$answer->answer->is_correct ? 1 : 0;
     $totalQuestions = $mcq->question ? 1 : 0;
     $notAnswered = $answer ? 0 : 1;
 
