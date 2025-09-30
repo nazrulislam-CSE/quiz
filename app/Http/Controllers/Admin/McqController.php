@@ -26,11 +26,9 @@ class McqController extends Controller
     public function onlineQuiz()
     {
         $pageTitle = 'Online Quiz Report List';
-        $answeredMcqIds = McqQuizAnswer::distinct()->pluck('mcq_id');
-
         $mcqs = Mcq::where('mcq_type', 5)
-                    ->whereIn('id', $answeredMcqIds)
-                    ->with('user')
+                ->whereHas('quizAnswers') 
+                ->with('quizAnswers.user')
                 ->latest()
                 ->get();
 

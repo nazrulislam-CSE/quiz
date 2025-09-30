@@ -67,22 +67,24 @@
                                 <tbody>
                                    @foreach ($mcqs as $key => $mcq)
                                     <tr>
-                                        <td class="col-1">{{ $key + 1 }}</td>
-                                        <td>{{ optional($mcq->user)->full_name ?? 'N/A' }}</td>
-                                        <td>{{ $mcq->title ?? '' }}</td>
-                                        <td class="col-2">{{ $mcq->created_at->format('d M Y') }}</td>
+                                        <td>{{ $key + 1 }}</td>
                                         <td>
-                                            <a href="{{ route('admin.online.quiz.show', $mcq->id) }}"
-                                                class="btn btn-success btn-sm mr-2">
+                                            @foreach($mcq->quizAnswers as $answer)
+                                                {{ optional($answer->user)->full_name ?? 'N/A' }}<br>
+                                            @endforeach
+                                        </td>
+                                        <td>{{ $mcq->title ?? '' }}</td>
+                                        <td>{{ $mcq->created_at->format('d M Y') }}</td>
+                                        <td>
+                                            <a href="{{ route('admin.online.quiz.show', $mcq->id) }}" class="btn btn-success btn-sm mr-2">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('admin.online.quiz.delete', $mcq->id) }}"
-                                                class="btn btn-danger btn-sm" title="Delete Data" id="delete">
+                                            <a href="{{ route('admin.online.quiz.delete', $mcq->id) }}" class="btn btn-danger btn-sm" id="delete">
                                                 <i class="fa fa-trash"></i>
                                             </a>
                                         </td>
                                     </tr>
-                                @endforeach
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

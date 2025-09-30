@@ -77,7 +77,7 @@ class Mcq extends Model
 
     public function quizAnswers()
     {
-        return $this->hasMany(McqQuizAnswer::class);
+        return $this->hasMany(McqQuizAnswer::class, 'mcq_id');
     }
     public function user()
     {
