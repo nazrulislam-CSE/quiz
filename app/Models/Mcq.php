@@ -39,6 +39,11 @@ class Mcq extends Model
         return $this->hasMany(McqQuestion::class);
     }
 
+    public function question()
+{
+    return $this->belongsTo(McqQuestion::class, 'question_id');
+}
+
 
     public function admission()
     {
