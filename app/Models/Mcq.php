@@ -75,5 +75,11 @@ class Mcq extends Model
         return $this->belongsTo(PaperFinal::class);
     }
 
+    public function quizAnswers()
+    {
+        return $this->hasMany(McqQuizAnswer::class);
+    }
+
+
 
 }

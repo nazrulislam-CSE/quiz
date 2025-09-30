@@ -26,9 +26,14 @@ class McqController extends Controller
     public function onlineQuiz()
     {
         $pageTitle = 'Online Quiz Report List';
+        $answeredMcqIds = McqQuizAnswer::distinct()->pluck('mcq_id');
 
-        // Fetch all quiz answers, latest first
-        $mcqs = Mcq::where('mcq_type',5)->latest()->get();
+        $mcqs = Mcq::where('mcq_type', 5)
+                    ->whereIn('id', $answeredMcqIds)
+                    ->with('user')
+                ->latest()
+                ->get();
+
 
         return view('admin.mcq.quiz.report', compact('mcqs', 'pageTitle'));
     }
@@ -223,6 +228,7 @@ class McqController extends Controller
         'question.mcq',
         'answer' // answer relation must be defined
     ])->findOrFail($id);
+    
 
     $pageTitle = 'Online Quiz Details';
 
