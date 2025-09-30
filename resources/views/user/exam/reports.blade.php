@@ -32,11 +32,11 @@
                         @forelse($examResults as $index => $result)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $result->admission->name ?? 'N/A' }}</td>
-                                <td>{{ $result->department->name ?? 'N/A' }}</td>
-                                <td>{{ $result->subject->name ?? 'N/A' }}</td>
-                                <td>{{ $result->topic->name ?? 'N/A' }}</td>
-                                <td>{{ number_format($result->topic->fee ?? '', 2) }} টাকা</td>
+                                <td>{{ $result->admission->name ?? '' }}</td>
+                                <td>{{ $result->department->name ?? '' }}</td>
+                                <td>{{ $result->subject->name ?? '' }}</td>
+                                <td>{{ $result->topic->name ?? '' }}</td>
+                               <td>{{ number_format((float)($result->topic->fee ?? 0), 2) }} টাকা</td>
                                 <td>{{ $result->total }}</td>
                                 <td class="text-success fw-bold">{{ $result->correct }}</td>
                                 <td class="text-danger fw-bold">{{ $result->wrong }}</td>
