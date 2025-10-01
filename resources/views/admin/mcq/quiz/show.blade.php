@@ -62,6 +62,10 @@
                             <td>{{ $user->full_name ?? '' }}</td>
                         </tr>
                         <tr>
+                            <th>Phone No</th>
+                            <td>{{ $user->phone ?? '' }}</td>
+                        </tr>
+                        <tr>
                             <th>User Email</th>
                             <td>{{ $user->email ?? '' }}</td>
                         </tr>
