@@ -523,8 +523,12 @@
                                 <input type="hidden" name="time_taken" id="time_taken">
                                 <input type="hidden" name="admission" value="{{ $selectedAdmission }}">
                                 <input type="hidden" name="department" value="{{ $selectedDepartment }}">
+                                <input type="hidden" name="group" value="{{ $selectedGroup }}">
                                 <input type="hidden" name="subject" value="{{ $selectedSubject }}">
                                 <input type="hidden" name="topic" value="{{ $selectedTopic }}">
+                                <input type="hidden" name="model_test" value="{{ $selectedModelTest }}">
+                                <input type="hidden" name="paper_final" value="{{ $selectedPaperFinal }}">
+                                <input type="hidden" name="admission_data" value="{{ $selectedAdmissionData->name }}">
 
                                 @foreach ($mcqs as $index => $mcq)
                                     <div class="question-container" data-question="{{ $index + 1 }}"

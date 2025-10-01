@@ -16,8 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');   
             $table->unsignedBigInteger('admission_id')->nullable();
             $table->unsignedBigInteger('department_id')->nullable();
+            $table->unsignedBigInteger('group_id')->nullable();
             $table->unsignedBigInteger('subject_id')->nullable();
             $table->unsignedBigInteger('topic_id')->nullable();
+            $table->unsignedBigInteger('model_test_id')->nullable();
+            $table->unsignedBigInteger('paper_final_id')->nullable();
             $table->integer('total');
             $table->integer('correct');
             $table->integer('wrong');
@@ -29,7 +32,6 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
-
     /**
      * Reverse the migrations.
      */

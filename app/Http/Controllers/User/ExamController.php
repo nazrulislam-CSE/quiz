@@ -292,6 +292,8 @@ class ExamController extends Controller
                             ->where('model_test_id', $selectedModelTest)
                             ->get();
 
+                
+
                 if ($mcqs->isEmpty()) {
                     return redirect()->route('user.mcq.exam', [
                         'admission' => $selectedAdmission,
@@ -547,7 +549,6 @@ class ExamController extends Controller
 
     public function submit(Request $request)
     {
-        // dd($request->all());
         $pageTitle = "Exam Result";
         $answers = $request->input('answers', []);
         $mcqs = Mcq::with('answers')->whereIn('id', array_keys($answers))->get();
@@ -568,26 +569,54 @@ class ExamController extends Controller
         }
 
         $score = $total > 0 ? round(($correct/$total)*100, 2) : 0;
-
-        // Calculate time taken using session
         $timeTaken = $request->time_taken;
-        
+        $userId = Auth::id();
 
-        $alreadyExists = ExamResult::where('user_id', Auth::id())
-            ->where('admission_id', $request->admission)
-            ->where('department_id', $request->department)
-            ->where('subject_id', $request->subject)
-            ->where('topic_id', $request->topic)
-            ->first();
+        $examType = $request->admission_data; // এখানে exam type পাঠানো হয়েছে
 
-        // ✅ Only insert if not already exists
+        // Conditional alreadyExists check
+        if($examType == 'ভার্সিটি এডমিশন') {
+            $alreadyExists = ExamResult::where('user_id', $userId)
+                ->where('admission_id', $request->admission)
+                ->where('department_id', $request->department)
+                ->where('subject_id', $request->subject)
+                ->where('topic_id', $request->topic)
+                ->first();
+        } elseif($examType == 'পেপার ফাইনাল এক্সাম') {
+            $alreadyExists = ExamResult::where('user_id', $userId)
+                ->where('admission_id', $request->admission)
+                ->where('department_id', $request->department)
+                ->where('group_id', $request->group)
+                ->where('subject_id', $request->subject)
+                ->where('paper_final_id', $request->paper_final)
+                ->first();
+        } elseif($examType == 'ফাইনাল মডেল টেস্ট এক্সাম') {
+            $alreadyExists = ExamResult::where('user_id', $userId)
+                ->where('admission_id', $request->admission)
+                ->where('department_id', $request->department)
+                ->where('group_id', $request->group)
+                ->where('model_test_id', $request->model_test)
+                ->first();
+        } else {
+            $alreadyExists = ExamResult::where('user_id', $userId)
+                ->where('admission_id', $request->admission)
+                ->where('department_id', $request->department)
+                ->where('subject_id', $request->subject)
+                ->where('topic_id', $request->topic)
+                ->first();
+        }
+
+        // Only insert if not exists
         if (!$alreadyExists) {
             $examResult = ExamResult::create([
-                'user_id'       => Auth::id(),
+                'user_id'       => $userId,
                 'admission_id'  => $request->admission,
                 'department_id' => $request->department,
+                'group_id'      => $request->group,
                 'subject_id'    => $request->subject,
                 'topic_id'      => $request->topic,
+                'model_test_id' => $request->model_test,
+                'paper_final_id'=> $request->paper_final,
                 'total'         => $total,
                 'correct'       => $correct,
                 'wrong'         => $wrong,
@@ -599,28 +628,28 @@ class ExamController extends Controller
             $examResult = $alreadyExists;
         }
 
-        $examResult = ExamResult::with(['user','admission','department','subject','topic'])->find($examResult->id);
-
-        $givenAnswers = $examResult->given_answers;
+        $examResult = ExamResult::with(['user','admission','department','subject','topic','group','modelTest','paperFinal'])
+            ->find($examResult->id);
 
         return view('user.exam.result', [
-            'pageTitle' => "Exam Result",
+            'pageTitle' => $pageTitle,
             'examResult' => $examResult,
             'total' => $examResult->total,
             'correct' => $examResult->correct,
             'wrong' => $examResult->wrong,
             'score' => $examResult->score,
             'timeTaken' => $examResult->time_taken,
-            'mcqs' => Mcq::with('answers')->whereIn('id', array_keys($givenAnswers ?? []))->get(),
-            'answers' => $givenAnswers,
+            'mcqs' => Mcq::with('answers')->whereIn('id', array_keys($answers ?? []))->get(),
+            'answers' => $answers,
         ]);
     }
+
 
     public function examView($id)
     {
         $pageTitle = "Exam Result";
 
-        $examResult = ExamResult::with(['user','admission','department','subject','topic'])->findOrFail($id);
+        $examResult = ExamResult::with(['user','admission','department','subject','topic','group','modelTest','paperFinal'])->findOrFail($id);
 
         $givenAnswers = $examResult->given_answers;
 
@@ -634,7 +663,7 @@ class ExamController extends Controller
     {
         $pageTitle = "Exam Reports";
 
-        $examResults = ExamResult::with(['admission','department','subject','topic'])
+        $examResults = ExamResult::with(['admission','department','subject','topic','group','modelTest','paperFinal'])
             ->where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
