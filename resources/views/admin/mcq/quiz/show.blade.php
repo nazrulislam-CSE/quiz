@@ -43,7 +43,7 @@
             <div class="col-lg-12 text-center">
                 <div class="card shadow-sm border-success p-3">
                     <h5 class="text-success fw-bold">পরীক্ষার ফলাফল</h5>
-                    <h6>স্কোর: {{ $correct }} এর মধ্যে {{ $totalQuestions }}</h6>
+                    <h6>স্কোর: {{ $totalQuestions }} এর মধ্যে  {{ $correct }} </h6>
                     <p>সঠিক: {{ $correct }} | ভুল: {{ $wrong }} | উত্তর দেননি: {{ $notAnswered }}</p>
                 </div>
             </div>
