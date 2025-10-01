@@ -86,8 +86,7 @@
                 </div>
                 <div class="card-body">
                     @if ($ans->question)
-                        <h6 class="fw-bold">প্রশ্ন:</h6>
-                        <p>{{ $ans->question->question }}</p>
+                        <h5 class="my-0">প্রশ্ন {{ $loop->iteration }} : {{ $ans->question->question }}</h5>
 
                         <h6 class="fw-bold mt-3">সব অপশন:</h6>
                         @foreach ($ans->question->answers as $option)
