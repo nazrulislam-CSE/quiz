@@ -27,11 +27,14 @@ class McqController extends Controller
     {
         $pageTitle = 'Online Quiz Report List';
 
-        // Fetch all quiz answers, latest first
-        $mcqs = McqQuizAnswer::latest()->get();
+        $mcqs = Mcq::where('mcq_type', 5)
+            ->whereHas('quizAnswers') 
+            ->latest()
+            ->get();
 
         return view('admin.mcq.quiz.report', compact('mcqs', 'pageTitle'));
     }
+
 
 
     /**
@@ -215,33 +218,17 @@ class McqController extends Controller
         return response()->json(['success' => true]);
     }
 
-  public function onlineQuizShow(string $id)
-{
-    $mcq = McqQuizAnswer::with([
-        'user',
-        'question.answers',
-        'question.mcq',
-        'answer' // answer relation must be defined
-    ])->findOrFail($id);
+    public function onlineQuizShow(string $id)
+    {
+        $pageTitle = 'Online Quiz Details';
 
-    $pageTitle = 'Online Quiz Details';
+        $mcq = Mcq::with([
+            'quizAnswers.user',
+            'quizAnswers.question.answers'
+        ])->findOrFail($id);
 
-    $answer = $mcq->answer;
-
-    $correct = $answer && $answer->is_correct ? 1 : 0;
-    $wrong = $answer && !$answer->is_correct ? 1 : 0;
-    $totalQuestions = $mcq->question ? 1 : 0;
-    $notAnswered = $answer ? 0 : 1;
-
-    return view('admin.mcq.quiz.show', compact(
-        'mcq',
-        'pageTitle',
-        'correct',
-        'wrong',
-        'notAnswered',
-        'totalQuestions'
-    ));
-}
+        return view('admin.mcq.quiz.show', compact('mcq', 'pageTitle'));
+    }
 
 
     // Delete Online Quiz Answer
