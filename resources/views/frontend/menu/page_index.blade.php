@@ -188,7 +188,7 @@ $branches = App\Models\Branch::where('status',1)->latest()->get();
                     </div>
                    <div class="row">
                         @foreach ($branches as $branch)
-                            <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="col-md-6 col-lg-3 mb-4 mt-5">
                                 <div class="card h-100 shadow-lg border-0">
                                     <div class="card-header bg-success text-center">
                                         <h5 class="card-title fw-bold text-light"><i class="fa-solid fa-address-card me-2"></i> {{ $branch->branch_name }}</h5>
@@ -197,14 +197,14 @@ $branches = App\Models\Branch::where('status',1)->latest()->get();
                                         {{-- Primary Contact --}}
                                         <p class="mb-2">
                                             <i class="fas fa-phone-alt text-primary me-2"></i>
-                                            <a href="tel:{{ $branch->contact_no }}">{{ $branch->contact_no }}</a>
+                                            <a class="text-decoration-none" href="tel:{{ $branch->contact_no }}">{{ $branch->contact_no }}</a>
                                         </p>
 
                                         {{-- Optional Contact --}}
                                         @if($branch->contact_no_optional)
                                             <p class="mb-2">
                                                 <i class="fas fa-phone-alt text-primary me-2"></i>
-                                                <a href="tel:{{ $branch->contact_no_optional }}">{{ $branch->contact_no_optional }}</a>
+                                                <a class="text-decoration-none" href="tel:{{ $branch->contact_no_optional }}">{{ $branch->contact_no_optional }}</a>
                                             </p>
                                         @endif
                                         {{-- Area Location Link --}}
