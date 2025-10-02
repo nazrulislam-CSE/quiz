@@ -226,7 +226,6 @@
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                         <i class="side-menu__icon fas fa-store-alt"></i>
                         <span class="side-menu__label">Branch</span>
-                        <span class="badge bg-success side-badge">{{ count($branchs ?? '0') }}</span>
                         <i class="angle fe fe-chevron-down hor-angle"></i>
                     </a>
                     <ul class="slide-menu">
