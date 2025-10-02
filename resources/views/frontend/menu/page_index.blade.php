@@ -10,6 +10,7 @@
 </style>
 @php
 $currentUrl = url()->current();
+$branches = App\Models\Branch::where('status',1)->latest()->get();
 @endphp
 <!--================ PAGE TITLE  ================== -->
 <!--================ POPULAR PAGES ================== -->
@@ -176,14 +177,46 @@ $currentUrl = url()->current();
                     </section>
                 </div>
             @else
-                <div class="col-lg-12 mb-5 mb-lg-0">
+                 <div class="col-lg-12 mb-5 mb-lg-0">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="wow fadeIn" data-wow-delay="200ms">
-                                <h2 class="mb-3 h3">{{ $page->page_title ?? ''}}</h2></h2>
-                                <p class="mb-1-9" style="text-align:justify;">{!! $page->page_description ?? '' !!}</p>
+                                <h2 class="mb-3 h3">{{ $page->page_title ?? 'Null'}}</h2></h2>
+                                <p class="mb-1-9" style="text-align:justify;">{!! $page->page_description ?? 'Null' !!}</p>
                             </div>
                         </div>
+                    </div>
+                   <div class="row">
+                        @foreach ($branches as $branch)
+                            <div class="col-md-6 col-lg-3 mb-4">
+                                <div class="card h-100 shadow-lg border-0">
+                                    <div class="card-header bg-success text-center">
+                                        <h5 class="card-title fw-bold text-light"><i class="fa-solid fa-address-card me-2"></i> {{ $branch->branch_name }}</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        {{-- Primary Contact --}}
+                                        <p class="mb-2">
+                                            <i class="fas fa-phone-alt text-primary me-2"></i>
+                                            <a href="tel:{{ $branch->contact_no }}">{{ $branch->contact_no }}</a>
+                                        </p>
+
+                                        {{-- Optional Contact --}}
+                                        @if($branch->contact_no_optional)
+                                            <p class="mb-2">
+                                                <i class="fas fa-phone-alt text-primary me-2"></i>
+                                                <a href="tel:{{ $branch->contact_no_optional }}">{{ $branch->contact_no_optional }}</a>
+                                            </p>
+                                        @endif
+                                        {{-- Area Location Link --}}
+                                        {{-- @if($branch->area_link)
+                                            <div class="mb-2" style="height: auto; overflow: auto;">
+                                                {!! $branch->area_link !!}
+                                            </div>
+                                        @endif --}}
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             @endif

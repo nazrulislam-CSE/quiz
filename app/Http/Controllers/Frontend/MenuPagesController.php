@@ -17,6 +17,7 @@ use App\Models\Mcq;
 use App\Models\ExamResult;
 use App\Models\BalanceRequest;
 use App\Models\Program;
+use App\Models\AdmissionInfo;
 use Illuminate\Support\Carbon;
 
 class MenuPagesController extends Controller
@@ -31,6 +32,7 @@ class MenuPagesController extends Controller
         $pageTitle = $page->page_name;
         $abouts = About::where('status',1)->latest()->get();
         $programs = Program::where('status',1)->latest()->get();
+        $admissioninfos = AdmissionInfo::where('status',1)->latest()->get();
         // dd($tours);
 
         // mcq exam //
@@ -122,7 +124,7 @@ class MenuPagesController extends Controller
 
 
         return view('frontend.menu.index',compact('page','pageTitle','abouts','admissions','departments','subjects','topics',
-            'selectedAdmission','selectedDepartment','selectedSubject','selectedTopic','mcqs','examStart','studyMode','programs'));
+            'selectedAdmission','selectedDepartment','selectedSubject','selectedTopic','mcqs','examStart','studyMode','programs','admissioninfos'));
     }
 
     public function submit(Request $request)

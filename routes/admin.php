@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\ModelTestMcqController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\ProgramSubjectController;
 use App\Http\Controllers\Admin\AdmissionInfoController;
+use App\Http\Controllers\Admin\BranchController;
 
 
 
@@ -142,6 +143,18 @@ Route::middleware('admin')->group(function () {
         Route::put('/update/{id}', [AdmissionInfoController::class, 'update'])->name('admission.info.update');
         Route::get('/delete/{id}', [AdmissionInfoController::class, 'destroy'])->name('admission.info.delete');
         Route::get('/show/{id}', [AdmissionInfoController::class,'show'])->name('admission.info.show');
+    });
+
+    /* ============> Manage Branch   <=========== */
+    Route::prefix('branch')->group(function () {
+        Route::get('/index', [BranchController::class, 'index'])->name('branch.index');
+        Route::get('/create', [BranchController::class, 'create'])->name('branch.create');
+        Route::post('/store', [BranchController::class, 'store'])->name('branch.store');
+        Route::get('/edit/{id}', [BranchController::class, 'edit'])->name('branch.edit');
+        Route::post('/update/{id}', [BranchController::class, 'update'])->name('branch.update');
+        Route::get('/delete/{id}', [BranchController::class, 'destroy'])->name('branch.delete');
+        Route::get('/show/{id}', [BranchController::class,'show'])->name('branch.show');
+
     });
 
     

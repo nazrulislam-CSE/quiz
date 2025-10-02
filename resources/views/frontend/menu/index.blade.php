@@ -60,6 +60,71 @@
                 </div>
             </div>
         </section>
+    @elseif($page->page_slug == 'admission-info')
+        <section class="py-5">
+            <div class="container">
+                <div class="card shadow-sm border-0 p-4">
+                    <h2 class="fw-bold card-title mb-3 text-center text-light bg-danger p-2">ভর্তি তথ্য</h2>
+
+                    <div class="accordion" id="admissionAccordion">
+                        @foreach($admissioninfos as $info)
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header" id="heading{{ $info->id }}">
+                                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapse{{ $info->id }}" aria-expanded="false"
+                                            aria-controls="collapse{{ $info->id }}">
+                                        {{ $info->institute_name }} (সেশন: {{ $info->session }})
+                                    </button>
+                                </h2>
+
+                                <div id="collapse{{ $info->id }}" class="accordion-collapse collapse"
+                                    aria-labelledby="heading{{ $info->id }}" data-bs-parent="#admissionAccordion">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <img src="{{ (!empty($info->image)) ? url($info->image) : 'https://via.placeholder.com/600x400' }}"
+                                                    class="img-fluid rounded shadow-sm mb-3" alt="{{ $info->institute_name }}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><b>ফর্ম শুরুর তারিখ:</b> {{ $info->form_start_date }}</p>
+                                                <p><b>আবেদনের শেষ তারিখ:</b> {{ $info->application_last_date }}</p>
+                                            </div>
+                                        </div>
+
+                                        <hr>
+                                        <h5 class="fw-bold mb-3">ইউনিট বিস্তারিত</h5>
+                                        <table class="table table-bordered">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>ইউনিট</th>
+                                                    <th>ডেসক্রিপশন</th>
+                                                    <th>নোট</th>
+                                                    <th>পরীক্ষার তারিখ</th>
+                                                    <th>পরীক্ষার সময়</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($info->units as $unit)
+                                                    <tr>
+                                                        <td>{{ $unit->unit }}</td>
+                                                        <td>{{ $unit->description ?? '-' }}</td>
+                                                        <td>{{ $unit->note ?? '-' }}</td>
+                                                        <td>{{ $unit->exam_date ?? '-' }}</td>
+                                                        <td>{{ $unit->exam_time ?? '-' }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
     @elseif($page->page_slug == 'program-list')
         <section class="py-5">
             <div class="container">
