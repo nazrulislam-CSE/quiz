@@ -178,7 +178,7 @@ $branches = App\Models\Branch::where('status',1)->latest()->get();
                 </div>
             @else
                 <div class="col-lg-12 mb-5 mb-lg-0 mt-5">
-                    <div class="row text-center">
+                    <div class="row">
                         <div class="col-lg-12">
                             <div class="wow fadeIn" data-wow-delay="200ms">
                                 <h2 class="mb-3 h3">{{ $page->page_title ?? ''}}</h2></h2>
