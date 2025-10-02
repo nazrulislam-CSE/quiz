@@ -197,14 +197,14 @@ $branches = App\Models\Branch::where('status',1)->latest()->get();
                                         {{-- Primary Contact --}}
                                         <p class="mb-2">
                                             <i class="fas fa-phone-alt text-primary me-2"></i>
-                                            <a class="text-decoration-none" href="tel:{{ $branch->contact_no }}">{{ $branch->contact_no }}</a>
+                                            <a class="text-decoration-none text-dark" href="tel:{{ $branch->contact_no }}">{{ $branch->contact_no }}</a>
                                         </p>
 
                                         {{-- Optional Contact --}}
                                         @if($branch->contact_no_optional)
                                             <p class="mb-2">
                                                 <i class="fas fa-phone-alt text-primary me-2"></i>
-                                                <a class="text-decoration-none" href="tel:{{ $branch->contact_no_optional }}">{{ $branch->contact_no_optional }}</a>
+                                                <a class="text-decoration-none text-dark" href="tel:{{ $branch->contact_no_optional }}">{{ $branch->contact_no_optional }}</a>
                                             </p>
                                         @endif
                                         {{-- Area Location Link --}}
