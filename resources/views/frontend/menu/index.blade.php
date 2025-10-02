@@ -93,28 +93,30 @@
 
                                         <hr>
                                         <h5 class="fw-bold mb-3">ইউনিট বিস্তারিত</h5>
-                                        <table class="table table-bordered">
-                                            <thead class="table-dark">
-                                                <tr>
-                                                    <th>ইউনিট</th>
-                                                    <th>ডেসক্রিপশন</th>
-                                                    <th>নোট</th>
-                                                    <th>পরীক্ষার তারিখ</th>
-                                                    <th>পরীক্ষার সময়</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($info->units as $unit)
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead class="table-dark">
                                                     <tr>
-                                                        <td>{{ $unit->unit }}</td>
-                                                        <td>{{ $unit->description ?? '-' }}</td>
-                                                        <td>{{ $unit->note ?? '-' }}</td>
-                                                        <td>{{ $unit->exam_date ?? '-' }}</td>
-                                                        <td>{{ $unit->exam_time ?? '-' }}</td>
+                                                        <th>ইউনিট</th>
+                                                        <th>ডেসক্রিপশন</th>
+                                                        <th>নোট</th>
+                                                        <th>পরীক্ষার তারিখ</th>
+                                                        <th>পরীক্ষার সময়</th>
                                                     </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($info->units as $unit)
+                                                        <tr>
+                                                            <td>{{ $unit->unit }}</td>
+                                                            <td>{{ $unit->description ?? '-' }}</td>
+                                                            <td>{{ $unit->note ?? '-' }}</td>
+                                                            <td>{{ $unit->exam_date ?? '-' }}</td>
+                                                            <td>{{ $unit->exam_time ?? '-' }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
