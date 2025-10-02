@@ -177,18 +177,18 @@ $branches = App\Models\Branch::where('status',1)->latest()->get();
                     </section>
                 </div>
             @else
-                 <div class="col-lg-12 mb-5 mb-lg-0">
-                    <div class="row">
+                <div class="col-lg-12 mb-5 mb-lg-0 mt-5">
+                    <div class="row text-center">
                         <div class="col-lg-12">
                             <div class="wow fadeIn" data-wow-delay="200ms">
-                                <h2 class="mb-3 h3">{{ $page->page_title ?? 'Null'}}</h2></h2>
-                                <p class="mb-1-9" style="text-align:justify;">{!! $page->page_description ?? 'Null' !!}</p>
+                                <h2 class="mb-3 h3">{{ $page->page_title ?? ''}}</h2></h2>
+                                <p class="mb-1-9" style="text-align:justify;">{!! $page->page_description ?? '' !!}</p>
                             </div>
                         </div>
                     </div>
                    <div class="row">
                         @foreach ($branches as $branch)
-                            <div class="col-md-6 col-lg-3 mb-4 mt-5">
+                            <div class="col-md-6 col-lg-3 mb-4">
                                 <div class="card h-100 shadow-lg border-0">
                                     <div class="card-header bg-success text-center">
                                         <h5 class="card-title fw-bold text-light"><i class="fa-solid fa-address-card me-2"></i> {{ $branch->branch_name }}</h5>
