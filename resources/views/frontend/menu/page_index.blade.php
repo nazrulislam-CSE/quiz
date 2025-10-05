@@ -35,7 +35,7 @@
     </style>
     @php
         $currentUrl = url()->current();
-        $abouts = About::where('status',1)->latest()->get();
+        $abouts = App\Models\About::where('status',1)->latest()->get();
     @endphp
     <!--================ PAGE TITLE  ================== -->
     <!--================ POPULAR PAGES ================== -->
