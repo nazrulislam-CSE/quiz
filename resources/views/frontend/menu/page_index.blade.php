@@ -243,14 +243,14 @@
                             <div class="row justify-content-center">
                                 @foreach ($branches as $branch)
                                     <div class="col-md-4 mt-4">
-                                        <div class="card shadow-lg">
+                                        <div class="card p-3  shadow-lg">
                                             <div class="card-block">
                                                 <div class="container">
                                                     <div class="row">
-                                                        <div class="col">
+                                                        <div class="col-10">
                                                             <h4 class="card-title font-weight-bold">{{ $branch->branch_name }}</h4>
                                                         </div>
-                                                        <div class="col text-right">
+                                                        <div class="col-2 text-right">
                                                             <h4 class="card-title right"><a
                                                                     href="https://www.google.com/search?q=google+translate&amp;oq=google&amp;gs_lcrp=EgZjaHJvbWUqDggAEEUYJxg7GIAEGIoFMg4IABBFGCcYOxiABBiKBTIYCAEQLhhDGIMBGMcBGLEDGNEDGIAEGIoFMgYIAhBFGDwyBggDEEUYQTIGCAQQRRhBMgYIBRAFGEAyBggGEEUYPDIGCAcQRRg80gEHODc0ajBqN6gCCLACAQ&amp;sourceid=chrome&amp;ie=UTF-8">
                                                                     <img src="https://unicarebd.org/mapicon.png"
@@ -261,7 +261,7 @@
                                                 </div>
                                                 <div class="container">
                                                     <div class="row">
-                                                        <div class="col">
+                                                        <div class="col-6">
                                                             <h4 class="card-title d-inline">
                                                                 <a href="#">
                                                                     <i class="fa-solid fa-phone"></i>
@@ -270,7 +270,7 @@
                                                             <p class="d-inline">{{ $branch->contact_no }}</p>
                                                         </div>
                                                         @if ($branch->contact_no_optional)
-                                                            <div class="col text-left">
+                                                            <div class="col-6 text-left">
                                                                 <h4 class="card-title d-inline">
                                                                     <a href="facebook.com">
                                                                         <i class="fa-solid fa-phone"></i>
