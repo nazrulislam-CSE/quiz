@@ -243,12 +243,12 @@
                             <div class="row justify-content-center">
                                 @foreach ($branches as $branch)
                                     <div class="col-md-4 mt-4">
-                                        <div class="card p-3 shadow-lg">
+                                        <div class="card shadow-lg">
                                             <div class="card-block">
                                                 <div class="container">
                                                     <div class="row">
                                                         <div class="col">
-                                                            <h4 class="card-title font-weight-bold">Cox Bazar</h4>
+                                                            <h4 class="card-title font-weight-bold">{{ $branch->branch_name }}</h4>
                                                         </div>
                                                         <div class="col text-right">
                                                             <h4 class="card-title right"><a
@@ -263,26 +263,28 @@
                                                     <div class="row">
                                                         <div class="col">
                                                             <h4 class="card-title d-inline">
-                                                                <a href="facebook.com">
+                                                                <a href="#">
                                                                     <i class="fa-solid fa-phone"></i>
                                                                 </a>
                                                             </h4>
-                                                            <p class="d-inline">01647143340</p>
+                                                            <p class="d-inline">{{ $branch->contact_no }}</p>
                                                         </div>
-                                                        <div class="col text-left">
-                                                            <h4 class="card-title d-inline">
-                                                                <a href="facebook.com">
-                                                                    <i class="fa-solid fa-phone"></i>
-                                                                </a>
-                                                            </h4>
-                                                            <p class="d-inline">01843599191</p>
-                                                        </div>
+                                                        @if ($branch->contact_no_optional)
+                                                            <div class="col text-left">
+                                                                <h4 class="card-title d-inline">
+                                                                    <a href="facebook.com">
+                                                                        <i class="fa-solid fa-phone"></i>
+                                                                    </a>
+                                                                </h4>
+                                                                <p class="d-inline">{{ $branch->contact_no_optional }}</p>
+                                                            </div>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 col-lg-3 mb-4">
+                                    {{-- <div class="col-md-6 col-lg-3 mb-4">
                                         <div class="branch-card text-center shadow-sm border-0 p-3 rounded-4">
                                             <h6 class="fw-bold mb-3">{{ $branch->branch_name }}</h6>
                                             <div class="d-flex justify-content-between align-items-center mb-2 px-3">
@@ -304,7 +306,7 @@
                                                 </div>
                                             @endif
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 @endforeach
                             </div>
 
