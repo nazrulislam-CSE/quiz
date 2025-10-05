@@ -242,6 +242,46 @@
                         <div class="row">
                             <div class="row justify-content-center">
                                 @foreach ($branches as $branch)
+                                    <div class="col-md-4 mt-4">
+                                        <div class="card p-3 shadow-lg">
+                                            <div class="card-block">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <h4 class="card-title font-weight-bold">Cox Bazar</h4>
+                                                        </div>
+                                                        <div class="col text-right">
+                                                            <h4 class="card-title right"><a
+                                                                    href="https://www.google.com/search?q=google+translate&amp;oq=google&amp;gs_lcrp=EgZjaHJvbWUqDggAEEUYJxg7GIAEGIoFMg4IABBFGCcYOxiABBiKBTIYCAEQLhhDGIMBGMcBGLEDGNEDGIAEGIoFMgYIAhBFGDwyBggDEEUYQTIGCAQQRRhBMgYIBRAFGEAyBggGEEUYPDIGCAcQRRg80gEHODc0ajBqN6gCCLACAQ&amp;sourceid=chrome&amp;ie=UTF-8">
+                                                                    <img src="https://unicarebd.org/mapicon.png"
+                                                                        alt="">
+                                                                </a></h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <h4 class="card-title d-inline">
+                                                                <a href="facebook.com">
+                                                                    <i class="fa-solid fa-phone"></i>
+                                                                </a>
+                                                            </h4>
+                                                            <p class="d-inline">01647143340</p>
+                                                        </div>
+                                                        <div class="col text-left">
+                                                            <h4 class="card-title d-inline">
+                                                                <a href="facebook.com">
+                                                                    <i class="fa-solid fa-phone"></i>
+                                                                </a>
+                                                            </h4>
+                                                            <p class="d-inline">01843599191</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6 col-lg-3 mb-4">
                                         <div class="branch-card text-center shadow-sm border-0 p-3 rounded-4">
                                             <h6 class="fw-bold mb-3">{{ $branch->branch_name }}</h6>
