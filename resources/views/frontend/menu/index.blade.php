@@ -128,7 +128,7 @@
         <section class="py-5">
             <div class="container">
                 <div class="card shadow-sm border-0 p-4">
-                    <h2 class="fw-bold card-title mb-3 text-center text-light bg-danger p-2">আমাদের শাখা সমূহ</h2>
+                    <h2 class="fw-bold card-title mb-3 text-center text-light bg-danger p-2">শাখা সমূহ</h2>
                     <div class="row justify-content-center">
                                 @foreach ($branches as $branch)
                                     <div class="col-md-4 mt-4 mb-4">
