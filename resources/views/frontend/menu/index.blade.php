@@ -64,7 +64,7 @@
         <section class="py-5">
             <div class="container">
                 <div class="card shadow-sm border-0 p-4">
-                    <h2 class="fw-bold card-title mb-3 text-center text-light bg-danger p-2">ভর্তি তথ্য</h2>
+                    <h2 class="fw-bold card-title mb-3 text-center text-light bg-danger p-2">ভর্তি তথ্য বিস্তারিত</h2>
 
                     <div class="accordion" id="admissionAccordion">
                         @foreach($admissioninfos as $info)
@@ -81,16 +81,14 @@
                                     aria-labelledby="heading{{ $info->id }}" data-bs-parent="#admissionAccordion">
                                     <div class="accordion-body">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <img src="{{ (!empty($info->image)) ? url($info->image) : 'https://via.placeholder.com/600x400' }}"
                                                     class="img-fluid rounded shadow-sm mb-3" alt="{{ $info->institute_name }}">
                                             </div>
-                                            <div class="col-md-6">
-                                                <p><b>ফর্ম শুরুর তারিখ:</b> {{ $info->form_start_date }}</p>
-                                                <p><b>আবেদনের শেষ তারিখ:</b> {{ $info->application_last_date }}</p>
-                                            </div>
                                         </div>
-
+                                        <p><b>সেশন:</b> {{ $info->session }}</p>
+                                        <p><b>ফর্ম শুরুর তারিখ:</b> {{ $info->form_start_date }}</p>
+                                        <p><b>আবেদনের শেষ তারিখ:</b> {{ $info->application_last_date }}</p>
                                         <hr>
                                         <h5 class="fw-bold mb-3">ইউনিট বিস্তারিত</h5>
                                         <div class="table-responsive">
