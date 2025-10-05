@@ -81,7 +81,7 @@
 
                             <div class="form-group col-xl-6 col-lg-6 col-md-6">
                                 <label for="image">ছবি <span
-                                        class="text-danger font-weight-bolder">(Size:900,900px)</span>:</label>
+                                        class="text-danger font-weight-bolder">(Size:570,569px)</span>:</label>
                                 @error('image')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror

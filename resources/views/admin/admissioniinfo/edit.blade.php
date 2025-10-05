@@ -85,7 +85,8 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="image">ছবি</label>
+                                <label for="image">ছবি <span
+                                        class="text-danger font-weight-bolder">(Size:570,569px)</span>:</label>
                                 <input type="file" name="image" class="form-control">
                             </div>
                             <div class="form-group col-md-2">
