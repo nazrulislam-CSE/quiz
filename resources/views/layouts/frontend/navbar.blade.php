@@ -1,3 +1,53 @@
+<style>
+  /* Navbar Background & Text Styling */
+.navbar {
+  background-color: #13557c !important; /* Primary Header Color */
+  transition: background-color 0.3s ease;
+}
+
+.navbar .navbar-brand img {
+  height: 40px;
+}
+
+/* Nav items spacing and styling */
+.navbar-nav .nav-item {
+  margin: 0 8px; /* gap between items */
+}
+
+/* Nav links default state */
+.navbar-nav .nav-item a {
+  color: #ffffff !important;
+  font-weight: 600;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  padding: 8px 14px;
+  border-radius: 5px;
+}
+
+/* Hover effect on links */
+.navbar-nav .nav-item a:hover {
+  color: #4a90e2 !important;
+  background-color: #ffffff;
+  text-decoration: none;
+}
+
+/* Special Buttons (already styled, override if needed) */
+.navbar-nav .btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.navbar-nav .btn:hover {
+  opacity: 0.9;
+}
+
+/* Responsive behavior tweak for mobile view */
+.navbar-collapse {
+  text-align: center;
+}
+
+</style>
 @php
   $menuitems = App\Models\Menuitem::with(['subMenus.childMenus'])->whereNull('parent_id')->whereHas('get_menu', function($query){ $query->where('location','main_header');})->orderby('position', 'asc')->where('status',1)->get();
   $currentUrl = request()->url();
