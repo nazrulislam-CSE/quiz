@@ -62,7 +62,7 @@
     <!-- MCQ Admission Section -->
     <section class="py-5 bg-light">
         <div class="container text-center">
-            <h4 class="mb-4 fw-bold reveal">MCQ এডমিশন এক প্লাটফর্মে</h4>
+            {{-- <h4 class="mb-4 fw-bold reveal">MCQ এডমিশন এক প্লাটফর্মে</h4> --}}
             <div class="row g-4">
 
                 @php

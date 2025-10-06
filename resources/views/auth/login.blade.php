@@ -26,9 +26,11 @@
         <div class="login-container">
             <div class="login-header">
                 <div class="logo">
-                    <i class="fas fa-user-graduate"></i>MCQ Admission
+                    <a class="navbar-brand fw-bold" href="{{ route('frontend.home') }}">
+      <img src="{{ asset(get_setting('site_logo')->value ?? 'upload/MCQ Logo.png')}}" height="40">
+    </a>
                 </div>
-                <h2>Welcome Back!</h2>
+                <h2>চকবোর্ড এক্সাম সেন্টারে স্বাগতম</h2>
                 <p class="mb-0">Sign in to continue your learning journey</p>
             </div>
             

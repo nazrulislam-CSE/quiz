@@ -26,9 +26,11 @@
         <div class="register-container">
             <div class="register-header">
                 <div class="logo">
-                    <i class="fas fa-user-graduate"></i>MCQ Admission
+                   <a class="navbar-brand fw-bold" href="{{ route('frontend.home') }}">
+      <img src="{{ asset(get_setting('site_logo')->value ?? 'upload/MCQ Logo.png')}}" height="40">
+    </a>
                 </div>
-                <h2>Create an Account</h2>
+                <h2>আপনার একাউন্ট করুন</h2>
                 <p class="mb-0">Join our learning community today</p>
             </div>
             
