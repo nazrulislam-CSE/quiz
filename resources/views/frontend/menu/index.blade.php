@@ -668,6 +668,10 @@
 @elseif($page->page_slug == 'online-quiz')
     <section class="py-5">
         <div class="container">
+            <!-- ✅ Banner Image -->
+            <div class="text-center mb-4">
+                <img src="{{ (!empty($page->image)) ? url('upload/page/'.$page->image):url('upload/page-title.jpg') }}" alt="Quiz Banner" class="img-fluid rounded shadow-sm">
+            </div>
             @auth
                 <div class="card shadow-sm border-0 p-4">
                     <div class="row justify-content-center">
