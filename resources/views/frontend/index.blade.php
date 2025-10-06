@@ -203,31 +203,41 @@
         </div>
     </section>
 
-    <!-- Students Section with Slick Carousel -->
-    <section class="py-5 bg-light position-relative">
-        <div class="container text-center">
-            <h2 class="mb-5">শিক্ষার্থীদের মতামত</h2>
-            @if($students->count() > 0)
-            <div class="student-slider">
-                @foreach($students as $student)
-                <div class="px-2">
-                    <div class="p-4 border rounded shadow-sm h-100 bg-white">
-                        <img src="{{ (!empty($student->image)) ? url('upload/student/'.$student->image):url('upload/no_image.jpg') }}" 
-                             alt="{{ $student->name }}" 
-                             class="img-fluid rounded-circle mb-3 mx-auto d-block" 
-                             style="width:80px; height:80px; object-fit:cover;">
-                        <p class="fst-italic text-center">{!! $student->description !!}</p>
-                        <h5 class="card-title mb-1">{{ $student->name }}</h5>
-                        @if($student->versity)
-                        <p class="text-success mb-1">{{ $student->versity }}</p>
-                        @endif
-                    </div>
-                </div>
-                @endforeach
-            </div>
+   <!-- Students Section with Bootstrap Card & Slick Carousel -->
+<section class="py-5 bg-light position-relative">
+  <div class="container">
+    <h2 class="mb-5 text-center text-primary fw-bold">শিক্ষার্থীদের মতামত</h2>
+
+    @if($students->count() > 0)
+    <div class="student-slider">
+      @foreach($students as $student)
+      <div class="px-2">
+        <div class="card border-0 shadow-sm h-100 text-center">
+          <div class="card-body p-4">
+            <!-- Profile Image -->
+            <img
+              src="{{ (!empty($student->image)) ? url('upload/student/'.$student->image):url('upload/no_image.jpg') }}"
+              alt="{{ $student->name }}"
+              class="rounded-circle mb-3 mx-auto"
+              style="width: 80px; height: 80px; object-fit: cover; border: 3px solid #4a90e2;">
+
+            <!-- Student Info -->
+            <h5 class="card-title text-dark fw-semibold mb-1">{{ $student->name }}</h5>
+
+            @if($student->versity)
+            <p class="text-success small mb-2">{{ $student->versity }}</p>
             @endif
+
+            <p class="card-text fst-italic text-muted small">{!! $student->description !!}</p>
+          </div>
         </div>
-    </section>
+      </div>
+      @endforeach
+    </div>
+    @endif
+  </div>
+</section>
+
 
     <!-- Call to Action -->
     <section class="py-5 text-center text-white" style="background: linear-gradient(135deg, #6f42c1, #007bff);">
