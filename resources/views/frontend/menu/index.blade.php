@@ -193,35 +193,45 @@
             </div>
         </section>
     @elseif($page->page_slug == 'program-list')
-    <section class="py-5 bg-light position-relative">
-        <div class="container text-center">
-            <h2 class="mb-5">Program List</h2>
-            @if($programs->count() > 0)
-            <div class="program-slider">
-                @foreach($programs as $program)
-                <div class="px-2">
-                    <div class="p-4 border rounded shadow-sm h-100 bg-white">
-                        <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}" 
-                             alt="{{ $program->name }}" 
-                             class="img-fluid rounded-circle mb-3 mx-auto d-block" 
-                             style="width:80px; height:80px; object-fit:cover;">
-                        <!-- Program Name -->
-                        <h4 class="card-title">{{ $program->name }}</h4>
-                        <!-- Blade -->
-                        <div class="description-html">
-                            {!! Str::limit($program->description, 1000) !!}
+        <section class="py-5">
+            <div class="container">
+                <div class="card shadow-sm border-0">
+                    <h2 class="fw-bold card-title mb-3">Program List</h2>
+                    <div class="row mt-4">
+                        @forelse($programs as $program)
+                        <div class="program-slider">
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body">
+                                        <!-- Program Photo -->
+                                        <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}"
+                                            class="img-fluid mb-3" alt="{{ $program->name }}">
+
+                                        <!-- Program Name -->
+                                        <h4 class="card-title">{{ $program->name }}</h4>
+                                        <!-- Blade -->
+                                        <div class="description-html">
+                                            {!! Str::limit($program->description, 1000) !!}
+                                        </div>
+
+
+                                        <!-- Details Button -->
+                                        <a href="{{ route('program.show', $program->slug) }}" class="btn btn-primary mb-3">
+                                            বিস্তারিত দেখুন
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <!-- Details Button -->
-                        <a href="{{ route('program.show', $program->slug) }}" class="btn btn-primary mb-3">
-                            বিস্তারিত দেখুন
-                        </a>
+                        @empty
+                            <div class="col-12">
+                                <p>No programs found.</p>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
-                @endforeach
             </div>
-            @endif
-        </div>
-    </section>
+        </section>
     @elseif($page->page_slug == 'demo-exam')
         <section class="py-5">
             <div class="container">
