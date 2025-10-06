@@ -21,87 +21,83 @@
     @endphp
 <section class="py-5">
     <div class="container">
-        <div class="card shadow border-0 p-4">
-           
-
+        <div class="card shadow border-0">
             <!-- Program Photo -->
             @if($program->image)
                 <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}" 
                      alt="{{ $program->name }}" 
                      class="img-fluid rounded mb-4">
             @endif
+            {{-- Card Body --}}
+            <div class="card-body p-4">
+                <!-- Program Name -->
+                <h2 class="fw-bold mb-3">{{ $program->name }}</h2>
 
-             <!-- Program Name -->
-            <h2 class="fw-bold mb-3">{{ $program->name }}</h2>
+                <!-- Program Description -->
+                <div class="mb-4 description-html">
+                    {!! $program->description !!}
+                </div>
 
-            <!-- Program Description -->
-            <div class="mb-4 description-html">
-                {!! $program->description !!}
-            </div>
-
-            <!-- Subject-wise Topics -->
-           <h4 class="fw-bold mt-4 mb-3">Exam Plan</h4>
-@php
-    $colors = ['primary','success','warning','danger','info','secondary','dark'];
-@endphp
-
-<!-- Subject Buttons -->
-<div class="mb-3">
-    @foreach($program->subjects as $index => $subject)
-        @php
-            $color = $colors[$index % count($colors)];
-        @endphp
-        <button 
-            class="btn btn-{{ $color }} me-2 mb-2 subject-btn @if($index === 0) active @endif" 
-            data-subject="{{ $subject->id }}">
-            {{ $subject->name }}
-        </button>
-    @endforeach
-</div>
-
-<!-- Topics Table -->
-<div class="table-responsive">
-    <table class="table table-bordered table-striped table-hover text-center align-middle shadow-sm rounded">
-        <thead class="table-light">
-            <tr>
-                {{-- <th>Subject</th> --}}
-                <th>Topic Name</th>
-                <th>Total MCQ</th>
-                <th>Time (mins)</th>
-                <th>Exam Fee</th>
-            </tr>
-        </thead>
-        <tbody id="topicTableBody">
-            @foreach($program->topics as $topic)
+                <!-- Subject-wise Topics -->
+                <h4 class="fw-bold mt-4 mb-3">Exam Plan</h4>
                 @php
-                    shuffle($colors1);
+                    $colors = ['primary','success','warning','danger','info','secondary','dark'];
                 @endphp
-                <tr 
-                    data-subject="{{ $topic->program_subject_id }}" 
-                    style="display: {{ $loop->first ? 'table-row' : 'none' }};">
-                    {{-- <td>{{ $topic->subject->name ?? 'N/A' }}</td> --}}
-                    <td  style="background-color: {{ $colors1[0] }}">{{ $topic->topic_name }}</td>
-                    <td  style="background-color: {{ $colors1[1] }}">{{ $topic->total_mcq }}</td>
-                    <td  style="background-color: {{ $colors1[2] }}">{{ $topic->time }}</td>
-                    <td  style="background-color: {{ $colors1[3] }}">{{ $topic->exam_fee }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
 
+                <!-- Subject Buttons -->
+                <div class="mb-3">
+                    @foreach($program->subjects as $index => $subject)
+                        @php
+                            $color = $colors[$index % count($colors)];
+                        @endphp
+                        <button 
+                            class="btn btn-{{ $color }} me-2 mb-2 subject-btn @if($index === 0) active @endif" 
+                            data-subject="{{ $subject->id }}">
+                            {{ $subject->name }}
+                        </button>
+                    @endforeach
+                </div>
 
+                <!-- Topics Table -->
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover text-center align-middle shadow-sm rounded">
+                        <thead class="table-light">
+                            <tr>
+                                {{-- <th>Subject</th> --}}
+                                <th>Topic Name</th>
+                                <th>Total MCQ</th>
+                                <th>Time (mins)</th>
+                                <th>Exam Fee</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topicTableBody">
+                            @foreach($program->topics as $topic)
+                                @php
+                                    shuffle($colors1);
+                                @endphp
+                                <tr 
+                                    data-subject="{{ $topic->program_subject_id }}" 
+                                    style="display: {{ $loop->first ? 'table-row' : 'none' }};">
+                                    {{-- <td>{{ $topic->subject->name ?? 'N/A' }}</td> --}}
+                                    <td  style="background-color: {{ $colors1[0] }}">{{ $topic->topic_name }}</td>
+                                    <td  style="background-color: {{ $colors1[1] }}">{{ $topic->total_mcq }}</td>
+                                    <td  style="background-color: {{ $colors1[2] }}">{{ $topic->time }}</td>
+                                    <td  style="background-color: {{ $colors1[3] }}">{{ $topic->exam_fee }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
+                <p id="noSubjectMsg" class="text-center text-muted mt-3">
+                    Please select a subject to view topics.
+                </p>
 
-<p id="noSubjectMsg" class="text-center text-muted mt-3">
-    Please select a subject to view topics.
-</p>
-
-
-            <!-- Back Button -->
-            <a href="{{ url()->previous() }}" class="btn btn-secondary mt-3">
-                ← Back to Program List
-            </a>
+                <!-- Back Button -->
+                <a href="{{ url()->previous() }}" class="btn btn-secondary mt-3">
+                    ← Back to Program List
+                </a>
+            </div>
         </div>
     </div>
 </section>
