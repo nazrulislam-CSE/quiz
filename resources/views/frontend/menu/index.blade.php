@@ -86,11 +86,6 @@
                                                     class="img-fluid rounded shadow-sm mb-3" alt="{{ $info->institute_name }}">
                                             </div>
                                         </div>
-                                        <p><b>সেশন:</b> {{ $info->session }}</p>
-                                        <p><b>ফর্ম শুরুর তারিখ:</b> {{ $info->form_start_date }}</p>
-                                        <p><b>আবেদনের শেষ তারিখ:</b> {{ $info->application_last_date }}</p>
-                                        <hr>
-                                        <h5 class="fw-bold mb-3">ইউনিট বিস্তারিত</h5>
                                         <div class="table-responsive">
                                             <table class="table table-bordered">
                                                 <thead class="table-dark">
@@ -108,6 +103,29 @@
                                                             <td>{{ $unit->unit }}</td>
                                                             <td>{{ $unit->description ?? '-' }}</td>
                                                             <td>{{ $unit->note ?? '-' }}</td>
+                                                            <td>{{ $unit->exam_date ?? '-' }}</td>
+                                                            <td>{{ $unit->exam_time ?? '-' }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <p><b>সেশন:</b> {{ $info->session }}</p>
+                                        <p><b>ফর্ম শুরুর তারিখ:</b> {{ $info->form_start_date }}</p>
+                                        <p><b>আবেদনের শেষ তারিখ:</b> {{ $info->application_last_date }}</p>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead class="table-dark">
+                                                    <tr>
+                                                        <th>ইউনিট</th>
+                                                        <th>পরীক্ষার তারিখ</th>
+                                                        <th>পরীক্ষার সময়</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($info->units as $unit)
+                                                        <tr>
+                                                            <td>{{ $unit->unit }}</td>
                                                             <td>{{ $unit->exam_date ?? '-' }}</td>
                                                             <td>{{ $unit->exam_time ?? '-' }}</td>
                                                         </tr>
