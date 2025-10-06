@@ -106,7 +106,7 @@
                     <!-- Slick Slider Container -->
                     <div class="program-slider">
                         @foreach ($programs as $program)
-                            <div class="px-0"> <!-- Optional spacing -->
+                            <div class="px-2"> <!-- Optional spacing -->
                                 <div class="card h-100 border-0 shadow-sm">
                                     <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}"
                                             class="img-fluid mb-3" alt="{{ $program->name }}">
