@@ -93,8 +93,6 @@
                                                         <th>ইউনিট</th>
                                                         <th>ডেসক্রিপশন</th>
                                                         <th>নোট</th>
-                                                        <th>পরীক্ষার তারিখ</th>
-                                                        <th>পরীক্ষার সময়</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -103,8 +101,6 @@
                                                             <td>{{ $unit->unit }}</td>
                                                             <td>{{ $unit->description ?? '-' }}</td>
                                                             <td>{{ $unit->note ?? '-' }}</td>
-                                                            <td>{{ $unit->exam_date ?? '-' }}</td>
-                                                            <td>{{ $unit->exam_time ?? '-' }}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
