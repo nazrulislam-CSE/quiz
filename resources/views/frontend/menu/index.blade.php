@@ -193,45 +193,50 @@
             </div>
         </section>
     @elseif($page->page_slug == 'program-list')
-        <section class="py-5">
-            <div class="container">
-                <div class="card shadow-sm border-0">
-                    <h2 class="fw-bold card-title mb-3">Program List</h2>
-                    <div class="row mt-4">
-                        @forelse($programs as $program)
-                        <div class="program-slider">
-                            <div class="col-md-4 mb-4">
-                                <div class="card h-100 border-0 shadow-sm">
-                                    <div class="card-body">
-                                        <!-- Program Photo -->
-                                        <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}"
-                                            class="img-fluid mb-3" alt="{{ $program->name }}">
+      <section class="py-5">
+    <div class="container">
+        <div class="card shadow-sm border-0">
+            <h2 class="fw-bold card-title mb-3">Program List</h2>
 
-                                        <!-- Program Name -->
-                                        <h4 class="card-title">{{ $program->name }}</h4>
-                                        <!-- Blade -->
-                                        <div class="description-html">
-                                            {!! Str::limit($program->description, 1000) !!}
-                                        </div>
+            @if($programs->count() > 0)
+            <!-- Slider wrapper (optional if you're using Slick later) -->
+            <div class="row mt-4 program-slider">
+                @foreach($programs as $program)
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <!-- Program Photo -->
+                            <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}"
+                                class="img-fluid mb-3" alt="{{ $program->name }}">
 
+                            <!-- Program Name -->
+                            <h4 class="card-title">{{ $program->name }}</h4>
 
-                                        <!-- Details Button -->
-                                        <a href="{{ route('program.show', $program->slug) }}" class="btn btn-primary mb-3">
-                                            বিস্তারিত দেখুন
-                                        </a>
-                                    </div>
-                                </div>
+                            <!-- Program Description -->
+                            <div class="description-html">
+                                {!! Str::limit($program->description, 1000) !!}
                             </div>
+
+                            <!-- Details Button -->
+                            <a href="{{ route('program.show', $program->slug) }}" class="btn btn-primary mt-3">
+                                বিস্তারিত দেখুন
+                            </a>
                         </div>
-                        @empty
-                            <div class="col-12">
-                                <p>No programs found.</p>
-                            </div>
-                        @endforelse
                     </div>
                 </div>
+                @endforeach
             </div>
-        </section>
+            @else
+            <div class="row">
+                <div class="col-12">
+                    <p>No programs found.</p>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+</section>
+
     @elseif($page->page_slug == 'demo-exam')
         <section class="py-5">
             <div class="container">
