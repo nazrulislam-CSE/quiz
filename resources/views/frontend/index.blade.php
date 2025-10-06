@@ -106,11 +106,11 @@
                     <!-- Slick Slider Container -->
                     <div class="program-slider">
                         @foreach ($programs as $program)
-                            <div class="px-2"> <!-- Optional spacing -->
+                            <div class="px-0"> <!-- Optional spacing -->
                                 <div class="card h-100 border-0 shadow-sm">
-                                    <div class="card-body">
-                                        <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}"
+                                    <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}"
                                             class="img-fluid mb-3" alt="{{ $program->name }}">
+                                    <div class="card-body">
                                         <h4 class="card-title">{{ $program->name }}</h4>
                                         <p>
                                             {!! Str::limit($program->description, 1000) !!}
