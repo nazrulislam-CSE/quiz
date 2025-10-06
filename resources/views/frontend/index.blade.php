@@ -100,7 +100,7 @@
     <section class="py-5">
         <div class="container">
             <div class="card shadow-sm border-0">
-                <h2 class="fw-bold card-title mb-3 text-center">Program List</h2>
+                {{-- <h2 class="fw-bold card-title mb-3 text-center">Program List</h2> --}}
 
                 @if ($programs->count() > 0)
                     <!-- Slick Slider Container -->
