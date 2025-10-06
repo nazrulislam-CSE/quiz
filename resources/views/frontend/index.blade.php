@@ -170,18 +170,35 @@
     <!-- Features Section -->
     <section class="py-5 bg-light">
         <div class="container text-center">
-            <h2 class="mb-4 reveal">কেন চক বোর্ড এক্সাম সেন্টার সেরা?</h2>
-            <div class="row g-4">
-                @foreach ($features as $index => $feature)
-                    <div class="col-md-3">
-                        <div class="p-4 border rounded shadow-sm h-100 reveal">
-                            <i class="{{ $feature->icon }} {{ $colors[$index % count($colors)] }} fa-2x mb-3"></i>
-                            <h5>{{ $feature->title }}</h5>
-                            <p>{{ $feature->description }}</p>
-                        </div>
-                    </div>
-                @endforeach
+            <h2 class="mb-4 reveal">কেন চকবোর্ড এক্সাম সেন্টার সেরা?</h2>
+           @php
+    // হালকা রঙের অ্যারে (প্যাস্টেল / লাইট কালার)
+    $colors = [
+        '#f2f2f2',  // Light Gray
+        '#e6f7ff',  // Light Blue
+        '#fff0f5',  // Lavender Blush
+        '#fef9e7',  // Light Yellow
+        '#e8f5e9',  // Light Green
+        '#f3e5f5',  // Light Purple
+        '#fff3e0',  // Light Orange
+        '#f1f8e9',  // Light Lime
+        '#e0f7fa',  // Light Cyan
+        '#ede7f6',  // Light Indigo
+    ];
+@endphp
+
+<div class="row">
+    @foreach ($features as $index => $feature)
+        <div class="col-md-3">
+            <div class="p-4 border rounded shadow-sm h-100 reveal" style="background-color: {{ $colors[$index % count($colors)] }};">
+                <i class="{{ $feature->icon }} fa-2x mb-3"></i>
+                <h5>{{ $feature->title }}</h5>
+                <p>{{ $feature->description }}</p>
             </div>
+        </div>
+    @endforeach
+</div>
+
         </div>
     </section>
 
@@ -241,7 +258,7 @@
         <div class="container reveal">
             <h2>তোমার ভর্তি পরীক্ষার যাত্রা শুরু করো আজই</h2>
             <p class="mb-4">সেরা শিক্ষকদের গাইডলাইন ও স্মার্ট প্র্যাকটিস টুলস একসাথে।</p>
-            <a href="#" class="btn btn-light btn-lg">এখনই রেজিস্ট্রেশন করুন</a>
+            <a href="/register" class="btn btn-light btn-lg">এখনই রেজিস্ট্রেশন করুন</a>
         </div>
     </section>
 
