@@ -98,7 +98,6 @@
     <!-- Teacher Section with Slick Carousel -->
     <section class="py-5 bg-light position-relative">
         <div class="container text-center">
-            <h4 class="mb-4 fw-bold">Program List</h4>
                 <div class="card shadow-sm border-0">
                     <h2 class="fw-bold card-title mb-3">Program List</h2>
                     <div class="row mt-4">
