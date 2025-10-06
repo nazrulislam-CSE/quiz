@@ -190,7 +190,7 @@
 <div class="row">
     @foreach ($features as $index => $feature)
         <div class="col-md-3">
-            <div class="p-4 border rounded shadow-sm h-100 reveal" style="background-color: {{ $colors[$index % count($colors)] }};">
+            <div class="p-4 border rounded shadow-sm h-100 reveal mt-2" style="background-color: {{ $colors[$index % count($colors)] }};">
                 <i class="{{ $feature->icon }} fa-2x mb-3"></i>
                 <h5>{{ $feature->title }}</h5>
                 <p>{{ $feature->description }}</p>
