@@ -67,12 +67,12 @@
                     <h2 class="fw-bold card-title mb-3 text-center text-light bg-danger p-2">ভর্তি তথ্য বিস্তারিত</h2>
 
                     <div class="accordion" id="admissionAccordion">
-                        @foreach($admissioninfos as $info)
+                        @foreach ($admissioninfos as $info)
                             <div class="accordion-item mb-3">
                                 <h2 class="accordion-header" id="heading{{ $info->id }}">
-                                    <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse"
-                                            data-bs-target="#collapse{{ $info->id }}" aria-expanded="false"
-                                            aria-controls="collapse{{ $info->id }}">
+                                    <button class="accordion-button collapsed fw-bold" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapse{{ $info->id }}"
+                                        aria-expanded="false" aria-controls="collapse{{ $info->id }}">
                                         {{ $info->institute_name }} (সেশন: {{ $info->session }})
                                     </button>
                                 </h2>
@@ -82,8 +82,9 @@
                                     <div class="accordion-body">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <img src="{{ (!empty($info->image)) ? url($info->image) : 'https://via.placeholder.com/600x400' }}"
-                                                    class="img-fluid rounded shadow-sm mb-3" alt="{{ $info->institute_name }}">
+                                                <img src="{{ !empty($info->image) ? url($info->image) : 'https://via.placeholder.com/600x400' }}"
+                                                    class="img-fluid rounded shadow-sm mb-3"
+                                                    alt="{{ $info->institute_name }}">
                                             </div>
                                         </div>
                                         <div class="table-responsive">
@@ -96,7 +97,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach($info->units as $unit)
+                                                    @foreach ($info->units as $unit)
                                                         <tr>
                                                             <td>{{ $unit->unit }}</td>
                                                             <td>{{ $unit->description ?? '-' }}</td>
@@ -119,7 +120,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach($info->units as $unit)
+                                                    @foreach ($info->units as $unit)
                                                         <tr>
                                                             <td>{{ $unit->unit }}</td>
                                                             <td>{{ $unit->exam_date ?? '-' }}</td>
@@ -138,96 +139,95 @@
                 </div>
             </div>
         </section>
- @elseif($page->page_slug == 'our-branch')
+    @elseif($page->page_slug == 'our-branch')
         <section class="py-5">
             <div class="container">
                 <div class="card shadow-sm border-0 p-4">
                     <h2 class="fw-bold card-title mb-3 text-center text-light bg-danger p-2">শাখা সমূহ</h2>
                     <div class="row justify-content-center">
-                                @foreach ($branches as $branch)
-                                    <div class="col-md-4 mt-4 mb-4">
-                                        <div class="card border-0 p-3  shadow-lg">
-                                            <div class="card-block">
-                                                <div class="container">
-                                                    <div class="row">
-                                                        <div class="col-10">
-                                                            <h4 class="card-title font-weight-bold">{{ $branch->branch_name ?? '' }}</h4>
-                                                        </div>
-                                                        <div class="col-2 text-right">
-                                                            <h4 class="card-title right"><a
-                                                                    href="https://www.google.com/search?q=google+translate&amp;oq=google&amp;gs_lcrp=EgZjaHJvbWUqDggAEEUYJxg7GIAEGIoFMg4IABBFGCcYOxiABBiKBTIYCAEQLhhDGIMBGMcBGLEDGNEDGIAEGIoFMgYIAhBFGDwyBggDEEUYQTIGCAQQRRhBMgYIBRAFGEAyBggGEEUYPDIGCAcQRRg80gEHODc0ajBqN6gCCLACAQ&amp;sourceid=chrome&amp;ie=UTF-8">
-                                                                    <img src="{{ asset('upload/mapicon.png') }}"
-                                                                        alt="">
-                                                                </a></h4>
-                                                        </div>
-                                                    </div>
+                        @foreach ($branches as $branch)
+                            <div class="col-md-4 mt-4 mb-4">
+                                <div class="card border-0 p-3  shadow-lg">
+                                    <div class="card-block">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-10">
+                                                    <h4 class="card-title font-weight-bold">
+                                                        {{ $branch->branch_name ?? '' }}</h4>
                                                 </div>
-                                                <div class="container">
-                                                    <div class="row">
-                                                        <div class="col-6">
-                                                            <h4 class="card-title d-inline">
-                                                                <a href="#">
-                                                                    <i class="fa-solid fa-phone"></i>
-                                                                </a>
-                                                            </h4>
-                                                            <p class="d-inline">{{ $branch->contact_no ?? '' }}</p>
-                                                        </div>
-                                                        @if ($branch->contact_no_optional)
-                                                            <div class="col-6 text-left">
-                                                                <h4 class="card-title d-inline">
-                                                                    <a href="facebook.com">
-                                                                        <i class="fa-solid fa-phone"></i>
-                                                                    </a>
-                                                                </h4>
-                                                                <p class="d-inline">{{ $branch->contact_no_optional ?? '' }}</p>
-                                                            </div>
-                                                        @endif
-                                                    </div>
+                                                <div class="col-2 text-right">
+                                                    <h4 class="card-title right"><a
+                                                            href="https://www.google.com/search?q=google+translate&amp;oq=google&amp;gs_lcrp=EgZjaHJvbWUqDggAEEUYJxg7GIAEGIoFMg4IABBFGCcYOxiABBiKBTIYCAEQLhhDGIMBGMcBGLEDGNEDGIAEGIoFMgYIAhBFGDwyBggDEEUYQTIGCAQQRRhBMgYIBRAFGEAyBggGEEUYPDIGCAcQRRg80gEHODc0ajBqN6gCCLACAQ&amp;sourceid=chrome&amp;ie=UTF-8">
+                                                            <img src="{{ asset('upload/mapicon.png') }}" alt="">
+                                                        </a></h4>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h4 class="card-title d-inline">
+                                                        <a href="#">
+                                                            <i class="fa-solid fa-phone"></i>
+                                                        </a>
+                                                    </h4>
+                                                    <p class="d-inline">{{ $branch->contact_no ?? '' }}</p>
+                                                </div>
+                                                @if ($branch->contact_no_optional)
+                                                    <div class="col-6 text-left">
+                                                        <h4 class="card-title d-inline">
+                                                            <a href="facebook.com">
+                                                                <i class="fa-solid fa-phone"></i>
+                                                            </a>
+                                                        </h4>
+                                                        <p class="d-inline">{{ $branch->contact_no_optional ?? '' }}</p>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
-                                @endforeach
+                                </div>
                             </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </section>
     @elseif($page->page_slug == 'program-list')
-    <section class="py-5">
-  <div class="container">
-    <div class="card shadow-sm border-0">
-      <h2 class="fw-bold card-title mb-3">Program List</h2>
+        <section class="py-5">
+            <div class="container">
+                <div class="card shadow-sm border-0">
+                    <h2 class="fw-bold card-title mb-3 text-center">Program List</h2>
 
-      @if($programs->count() > 0)
-      <!-- Slick Slider Container -->
-      <div class="program-slider">
-        @foreach($programs as $program)
-        <div class="px-2"> <!-- Optional spacing -->
-          <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body">
-              <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}"
-                  class="img-fluid mb-3" alt="{{ $program->name }}">
-              <h4 class="card-title">{{ $program->name }}</h4>
-              <div class="description-html">
-                {!! Str::limit($program->description, 1000) !!}
-              </div>
-              <a href="{{ route('program.show', $program->slug) }}" class="btn btn-primary mt-3">
-                বিস্তারিত দেখুন
-              </a>
+                    @if ($programs->count() > 0)
+                        <!-- Slick Slider Container -->
+                        <div class="program-slider">
+                            @foreach ($programs as $program)
+                                <div class="px-2"> <!-- Optional spacing -->
+                                    <div class="card h-100 border-0 shadow-sm">
+                                        <div class="card-body">
+                                            <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}"
+                                                class="img-fluid mb-3" alt="{{ $program->name }}">
+                                            <h4 class="card-title">{{ $program->name }}</h4>
+                                            <p>
+                                                {!! Str::limit($program->description, 1000) !!}
+                                            </p>
+                                            <a href="{{ route('program.show', $program->slug) }}"
+                                                class="btn btn-primary mt-3 w-100 text-center">
+                                                বিস্তারিত দেখুন
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p>No programs found.</p>
+                    @endif
+
+                </div>
             </div>
-          </div>
-        </div>
-        @endforeach
-      </div>
-      @else
-      <p>No programs found.</p>
-      @endif
-
-    </div>
-  </div>
-</section>
-
-
+        </section>
     @elseif($page->page_slug == 'demo-exam')
         <section class="py-5">
             <div class="container">
@@ -666,7 +666,8 @@
         <div class="container">
             <!-- ✅ Banner Image -->
             <div class="text-center mb-4">
-                <img src="{{ (!empty($page->image)) ? url('upload/page/'.$page->image):url('upload/page-title.jpg') }}" alt="Quiz Banner" class="img-fluid rounded shadow-sm">
+                <img src="{{ !empty($page->image) ? url('upload/page/' . $page->image) : url('upload/page-title.jpg') }}"
+                    alt="Quiz Banner" class="img-fluid rounded shadow-sm">
             </div>
             @auth
                 <div class="card shadow-sm border-0 p-4">
