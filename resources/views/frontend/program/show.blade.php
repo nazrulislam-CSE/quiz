@@ -1,5 +1,24 @@
 @extends('layouts.frontend.app', [$pageTitle => ''])
 @section('content')
+@php
+        $colors1 = [
+            '#f2f2f2',  // Light Gray
+            '#e6f7ff',  // Light Blue
+            '#fff0f5',  // Lavender Blush
+            '#fef9e7',  // Light Yellow
+            '#e8f5e9',  // Light Green
+            '#f3e5f5',  // Light Purple
+            '#fff3e0',  // Light Orange
+            '#f1f8e9',  // Light Lime
+            '#e0f7fa',  // Light Cyan
+            '#ede7f6',  // Light Indigo
+            '#fce4ec',  // Light Pink
+            '#f9fbe7',  // Light Lime-Yellow
+            '#fbe9e7',  // Light Coral
+            '#e0f2f1',  // Aqua Light
+            '#f3f3f3',  // Extra Light Gray
+        ];
+    @endphp
 <section class="py-5">
     <div class="container">
         <div class="card shadow border-0 p-4">
@@ -54,14 +73,17 @@
         </thead>
         <tbody id="topicTableBody">
             @foreach($program->topics as $topic)
+                @php
+                    shuffle($colors1);
+                @endphp
                 <tr 
                     data-subject="{{ $topic->program_subject_id }}" 
                     style="display: {{ $loop->first ? 'table-row' : 'none' }};">
                     {{-- <td>{{ $topic->subject->name ?? 'N/A' }}</td> --}}
-                    <td>{{ $topic->topic_name }}</td>
-                    <td>{{ $topic->total_mcq }}</td>
-                    <td>{{ $topic->time }}</td>
-                    <td>{{ $topic->exam_fee }}</td>
+                    <td  style="background-color: {{ $colors1[0] }}">{{ $topic->topic_name }}</td>
+                    <td  style="background-color: {{ $colors1[1] }}">{{ $topic->total_mcq }}</td>
+                    <td  style="background-color: {{ $colors1[2] }}">{{ $topic->time }}</td>
+                    <td  style="background-color: {{ $colors1[3] }}">{{ $topic->exam_fee }}</td>
                 </tr>
             @endforeach
         </tbody>

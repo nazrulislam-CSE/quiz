@@ -1,6 +1,25 @@
 @extends('layouts.frontend.app', [$pageTitle => $page->title])
 @section('content')
     <link rel="stylesheet" href="{{ asset('dashboard/auth/css/dashboard.css') }}">
+    @php
+        $colors = [
+            '#f2f2f2',  // Light Gray
+            '#e6f7ff',  // Light Blue
+            '#fff0f5',  // Lavender Blush
+            '#fef9e7',  // Light Yellow
+            '#e8f5e9',  // Light Green
+            '#f3e5f5',  // Light Purple
+            '#fff3e0',  // Light Orange
+            '#f1f8e9',  // Light Lime
+            '#e0f7fa',  // Light Cyan
+            '#ede7f6',  // Light Indigo
+            '#fce4ec',  // Light Pink
+            '#f9fbe7',  // Light Lime-Yellow
+            '#fbe9e7',  // Light Coral
+            '#e0f2f1',  // Aqua Light
+            '#f3f3f3',  // Extra Light Gray
+        ];
+    @endphp
     @if ($page->page_slug == 'about-us')
         <section class="py-5 bg-light" id="about">
             <div class="container">
@@ -87,25 +106,6 @@
                                                     alt="{{ $info->institute_name }}">
                                             </div>
                                         </div>
-                                        @php
-                                            $colors = [
-                                                '#f2f2f2',  // Light Gray
-                                                '#e6f7ff',  // Light Blue
-                                                '#fff0f5',  // Lavender Blush
-                                                '#fef9e7',  // Light Yellow
-                                                '#e8f5e9',  // Light Green
-                                                '#f3e5f5',  // Light Purple
-                                                '#fff3e0',  // Light Orange
-                                                '#f1f8e9',  // Light Lime
-                                                '#e0f7fa',  // Light Cyan
-                                                '#ede7f6',  // Light Indigo
-                                                '#fce4ec',  // Light Pink
-                                                '#f9fbe7',  // Light Lime-Yellow
-                                                '#fbe9e7',  // Light Coral
-                                                '#e0f2f1',  // Aqua Light
-                                                '#f3f3f3',  // Extra Light Gray
-                                            ];
-                                        @endphp
                                         <div class="table-responsive">
                                             <table class="table table-bordered">
                                                 <thead class="table-dark">
