@@ -170,7 +170,7 @@
     <!-- Features Section -->
     <section class="py-5 bg-light">
         <div class="container text-center">
-            <h2 class="mb-4 reveal">কেন MCQ Admission বেছে নিবেন?</h2>
+            <h2 class="mb-4 reveal">কেন চক বোর্ড এক্সাম সেন্টার সেরা?</h2>
             <div class="row g-4">
                 @foreach ($features as $index => $feature)
                     <div class="col-md-3">
