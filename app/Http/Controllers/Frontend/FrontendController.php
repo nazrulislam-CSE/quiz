@@ -15,6 +15,7 @@ use App\Models\Student;
 use App\Models\Admission;
 use App\Models\Feature;
 use App\Models\McqQuizAnswer;
+use App\Models\Program;
 use Auth;
 
 class FrontendController extends Controller
@@ -29,6 +30,7 @@ class FrontendController extends Controller
         $students = Student::where('status',1)->latest()->get();
         $admissions = Admission::where('status',1)->where('type',2)->latest()->get();
         $features = Feature::where('status',1)->latest()->get();
+        $programs = Program::where('status',1)->latest()->get();
     
         $pageTitle = 'Home';
         return view('frontend.index',compact('pageTitle','sliders','abouts','counters','teachers','students','admissions','features'));
