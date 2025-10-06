@@ -33,7 +33,7 @@ class FrontendController extends Controller
         $programs = Program::where('status',1)->latest()->get();
     
         $pageTitle = 'Home';
-        return view('frontend.index',compact('pageTitle','sliders','abouts','counters','teachers','students','admissions','features'));
+        return view('frontend.index',compact('pageTitle','sliders','abouts','counters','teachers','students','admissions','features','programs'));
     }
 
     public function onlineQuiz(Request $request){
