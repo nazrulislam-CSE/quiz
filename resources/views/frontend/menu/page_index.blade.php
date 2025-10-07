@@ -47,7 +47,7 @@
     <!-- Contact Info Section -->
     <div class="row text-center mb-5">
         <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm border-0">
+            <div class="card h-100 shadow-lg border-0">
                 <div class="card-body">
                     <div class="mb-3 text-primary fs-1">
                         <i class="ti-mobile"></i>
@@ -58,7 +58,7 @@
             </div>
         </div>
         <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm border-0">
+            <div class="card h-100 shadow-lg border-0">
                 <div class="card-body">
                     <div class="mb-3 text-success fs-1">
                         <i class="ti-location-pin"></i>
@@ -69,7 +69,7 @@
             </div>
         </div>
         <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm border-0">
+            <div class="card h-100 shadow-lg border-0">
                 <div class="card-body">
                     <div class="mb-3 text-danger fs-1">
                         <i class="ti-email"></i>
