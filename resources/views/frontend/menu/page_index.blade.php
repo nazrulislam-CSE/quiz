@@ -43,191 +43,104 @@
         <div class="container">
             <div class="row">
                 @if (\Str::contains($currentUrl, 'contact-us'))
-                    <div class="col-lg-12">
-                        <!--============= CONTACT INFO ============= -->
-                        <section>
-                            <div class="container">
-                                <div class="row mt-n1-9">
-                                    <div class="col-md-6 col-xl-4 mt-1-9 wow fadeIn" data-wow-delay="200ms">
-                                        <div class="card-style-02 h-100">
-                                            <div class="d-flex">
-                                                <div class="flex-shrink-0">
-                                                    <div class="card-icon">
-                                                        <i class="ti-mobile text-primary display-20"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow-1 ms-3 ms-lg-4">
-                                                    <h3 class="h5">Phone Number</h3>
-                                                    <p class="mb-0">{{ get_setting('phone')->value ?? 'null' }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-xl-4 mt-1-9 wow fadeIn" data-wow-delay="400ms">
-                                        <div class="card-style-02 h-100">
-                                            <div class="d-flex">
-                                                <div class="flex-shrink-0">
-                                                    <div class="card-icon">
-                                                        <i class="ti-location-pin text-primary display-20"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow-1 ms-3 ms-lg-4">
-                                                    <h3 class="h5">Location</h3>
-                                                    <p class="mb-0 w-lg-80">
-                                                        {{ get_setting('business_address')->value ?? 'null' }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-xl-4 mt-1-9 wow fadeIn" data-wow-delay="600ms">
-                                        <div class="card-style-02 h-100">
-                                            <div class="d-flex">
-                                                <div class="flex-shrink-0">
-                                                    <div class="card-icon">
-                                                        <i class="ti-email text-primary display-20"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow-1 ms-3 ms-lg-4">
-                                                    <h3 class="h5">Email Address</h3>
-                                                    <p class="mb-0">{{ get_setting('email')->value ?? 'null' }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- ============= CONTACT FORM =========== -->
-                        <section class="p-0">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-xl-5 mb-1-6 mb-xl-0 wow fadeIn" data-wow-delay="200ms">
-                                        <div class="pe-xl-1-9">
-                                            <div class="section-title left mb-1-9">
-                                                <span class="sm-title">Contact Us</span>
-                                                <h2 class="mb-0 h1 mt-2">Write Us Any Message</h2>
-                                            </div>
-                                            <p class="mb-1-9">These are the phrases we stay via way of means of in the whole
-                                                lot we do. Each brand we build, and we create.</p>
-                                            <ul class="social-icon-style3 ps-0">
-                                                <li class="me-1"><a target="_blank"
-                                                        href="{{ get_setting('facebook_url')->value ?? 'null' }}"><i
-                                                            class="fab fa-facebook-f"></i></a></li>
-                                                <li class="me-1"><a target="_blank"
-                                                        href="{{ get_setting('twitter_url')->value ?? 'null' }}"><i
-                                                            class="fab fa-twitter"></i></a></li>
-                                                <li class="me-1"><a target="_blank"
-                                                        href="{{ get_setting('instagram_url')->value ?? 'null' }}"><i
-                                                            class="fab fa-instagram"></i></a></li>
-                                                <li class="me-0"><a target="_blank"
-                                                        href="{{ get_setting('linkedin_url')->value ?? 'null' }}"><i
-                                                            class="fab fa-linkedin-in"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-7 wow fadeIn" data-wow-delay="400ms">
-                                        <form class="" action="{{ route('contact.store') }}" method="post"
-                                            enctype="multipart/form-data">
-                                            @csrf
-                                            <div class="quform-elements">
-                                                <div class="row">
-
-                                                    <!-- Begin Text input element -->
-                                                    <div class="col-md-6">
-                                                        <div class="quform-element form-group">
-                                                            <label for="name">Your Name <span
-                                                                    class="quform-required">*</span></label>
-                                                            <div class="quform-input">
-                                                                <input class="form-control" id="name" type="text"
-                                                                    name="name" placeholder="Your name here" required />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- End Text input element -->
-
-                                                    <!-- Begin Text input element -->
-                                                    <div class="col-md-6">
-                                                        <div class="quform-element form-group">
-                                                            <label for="email">Your Email <span
-                                                                    class="quform-required">*</span></label>
-                                                            <div class="quform-input">
-                                                                <input class="form-control" id="email" type="email"
-                                                                    name="email" placeholder="Your email here" required />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- End Text input element -->
-
-                                                    <!-- Begin Text input element -->
-                                                    <div class="col-md-6">
-                                                        <div class="quform-element form-group">
-                                                            <label for="subject">Your Subject <span
-                                                                    class="quform-required">*</span></label>
-                                                            <div class="quform-input">
-                                                                <input class="form-control" id="subject" type="text"
-                                                                    name="subject" placeholder="Your subject here"
-                                                                    required />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- End Text input element -->
-
-                                                    <!-- Begin Text input element -->
-                                                    <div class="col-md-6">
-                                                        <div class="quform-element form-group">
-                                                            <label for="phone">Contact Number</label>
-                                                            <div class="quform-input">
-                                                                <input class="form-control" id="phone" type="text"
-                                                                    name="phone" placeholder="Your phone here"
-                                                                    required />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- End Text input element -->
-
-                                                    <!-- Begin Textarea element -->
-                                                    <div class="col-md-12">
-                                                        <div class="quform-element form-group">
-                                                            <label for="message">Message <span
-                                                                    class="quform-required">*</span></label>
-                                                            <div class="quform-input">
-                                                                <textarea class="form-control" id="message" name="message" rows="3" placeholder="Tell us a few words"
-                                                                    required></textarea>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- End Textarea element -->
-
-                                                    <!-- Begin Submit button -->
-                                                    <div class="col-md-12">
-                                                        <div class="quform-submit-inner">
-                                                            <button class="btn-style1 border-0" type="submit"><span>Send
-                                                                    Message</span></button>
-                                                        </div>
-                                                        <div class="quform-loading-wrap text-start"><span
-                                                                class="quform-loading"></span></div>
-                                                    </div>
-                                                    <!-- End Submit button -->
-
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- ============= MAP ================ -->
-                        <section class="pb-0">
-                            <div class="container-fuild">
-                                <iframe class="contact-map" id="gmap_canvas"
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d58144.75383524952!2d88.56496025705981!3d24.37966436014817!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39fbefa96a38d031%3A0x10f93a950ed6f410!2sRajshahi!5e0!3m2!1sen!2sbd!4v1710832605416!5m2!1sen!2sbd"
-                                    style="border:0;" allowfullscreen="" loading="lazy"
-                                    referrerpolicy="no-referrer-when-downgrade"></iframe>
-                            </div>
-                        </section>
+                  <div class="container py-5">
+    <!-- Contact Info Section -->
+    <div class="row text-center mb-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="mb-3 text-primary fs-1">
+                        <i class="ti-mobile"></i>
                     </div>
+                    <h5 class="card-title fw-bold">Phone Number</h5>
+                    <p class="card-text">{{ get_setting('phone')->value ?? 'N/A' }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="mb-3 text-success fs-1">
+                        <i class="ti-location-pin"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Location</h5>
+                    <p class="card-text">{{ get_setting('business_address')->value ?? 'N/A' }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <div class="mb-3 text-danger fs-1">
+                        <i class="ti-email"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Email Address</h5>
+                    <p class="card-text">{{ get_setting('email')->value ?? 'N/A' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Form Section -->
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-5 mb-4 mb-lg-0">
+            <h2 class="fw-bold">Write Us Any Message</h2>
+            <p class="text-muted">Let us know how we can help you. Fill in the form and we’ll get back to you shortly.</p>
+
+            <!-- Social Media Links -->
+            <div class="d-flex mt-3">
+                <a href="{{ get_setting('facebook_url')->value ?? '#' }}" class="me-3 text-primary fs-4"><i class="fab fa-facebook-f"></i></a>
+                <a href="{{ get_setting('twitter_url')->value ?? '#' }}" class="me-3 text-info fs-4"><i class="fab fa-twitter"></i></a>
+                <a href="{{ get_setting('instagram_url')->value ?? '#' }}" class="me-3 text-danger fs-4"><i class="fab fa-instagram"></i></a>
+                <a href="{{ get_setting('linkedin_url')->value ?? '#' }}" class="text-primary fs-4"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <form action="{{ route('contact.store') }}" method="POST" class="bg-light p-4 shadow-sm rounded">
+                @csrf
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="name" class="form-label">Your Name *</label>
+                        <input type="text" class="form-control" id="name" name="name" required placeholder="Enter your name">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Your Email *</label>
+                        <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="subject" class="form-label">Your Subject *</label>
+                        <input type="text" class="form-control" id="subject" name="subject" required placeholder="Enter subject">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter phone number">
+                    </div>
+                    <div class="col-12">
+                        <label for="message" class="form-label">Message *</label>
+                        <textarea class="form-control" id="message" name="message" rows="4" required placeholder="Your message here..."></textarea>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary px-4">Send Message</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Google Map Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="ratio ratio-16x9">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d58144.75383524952!2d88.56496025705981!3d24.37966436014817!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39fbefa96a38d031%3A0x10f93a950ed6f410!2sRajshahi!5e0!3m2!1sen!2sbd!4v1710832605416!5m2!1sen!2sbd"
+                    style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
                 @else
                     <div class="col-lg-12 mb-5 mb-lg-0 mt-5">
                         <div class="row">

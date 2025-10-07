@@ -162,6 +162,32 @@
         </div>
     </section>
 
+    <section class="py-5 bg-light position-relative">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-md-4 mb-4">
+                <div class="single-counter">
+                    <h2 class="count display-4 text-primary" data-count="{{ $teacherCount }}"></h2>
+                    <h5 class="fw-bold">মোট শিক্ষার্থী</h5>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="single-counter">
+                    <h2 class="count display-4 text-danger" data-count="{{ $mentorCount }}"></h2>
+                    <h5 class="fw-bold">মোট মেন্টর</h5>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="single-counter">
+                    <h2 class="count display-4 text-success" data-count="{{ $programCount }}"></h2>
+                    <h5 class="fw-bold">মোট প্রোগ্রাম</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
 
     @php
         $colors = ['text-primary', 'text-success', 'text-warning', 'text-danger'];
@@ -271,4 +297,27 @@
             <button type="submit" class="btn btn-gradient">Subscribe</button>
         </form>
     </section>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $('.count').each(function () {
+            let $this = $(this);
+            let countTo = $this.attr('data-count');
+
+            $({ countNum: 0 }).animate(
+                { countNum: countTo },
+                {
+                    duration: 2000,
+                    easing: 'swing',
+                    step: function () {
+                        $this.text(Math.ceil(this.countNum));
+                    },
+                    complete: function () {
+                        $this.text(countTo);
+                    }
+                }
+            );
+        });
+    });
+</script>
 @endsection
