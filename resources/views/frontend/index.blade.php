@@ -217,7 +217,7 @@
     @foreach ($features as $index => $feature)
         <div class="col-12 col-sm-6 col-md-3 mb-4">
             <div class="p-4 border rounded shadow-sm h-100 reveal" style="background-color: {{ $colors[$index % count($colors)] }};">
-                <i style="color: {{ $colors[$index % count($colors)] }};" class="{{ $feature->icon }} fa-2x mb-3"></i>
+                <i class="{{ $feature->icon }} fa-2x mb-3"></i>
                 <h5>{{ $feature->title }}</h5>
                 <p>{{ $feature->description }}</p>
             </div>
