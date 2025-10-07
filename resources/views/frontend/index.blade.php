@@ -248,7 +248,7 @@
     <!-- Students Section with Bootstrap Card & Slick Carousel -->
     <section class="py-5 bg-light position-relative">
         <div class="container">
-            <h2 class="mb-5 text-center text-primary fw-bold">শিক্ষার্থীদের মতামত</h2>
+            <h2 class="mb-5 text-center text-primary fw-bold">সফল যারা,কেমন তারা</h2>
 
             @if ($students->count() > 0)
                 <div class="student-slider">
