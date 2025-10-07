@@ -53,15 +53,12 @@
   $currentUrl = request()->url();
 @endphp
 <!-- Top Bar -->
-<div class="bg-dark text-white py-2">
+<div class="bg-danger text-white py-2">
   <div class="container d-flex justify-content-between align-items-center">
-    <small>যেকোনো প্রশ্নের জন্য কল করুন: <span class="text-success fw-bold">{{ get_setting('phone')->value ?? ''}}</span></small>
+    <small>যেকোনো প্রশ্নের জন্য কল করুন: <span class="text-light fw-bold">{{ get_setting('phone')->value ?? ''}}</span></small>
     <div>
       <a target="_blank" href="{{ get_setting('facebook_url')->value ?? '' }}" class="text-white mx-2"><i class="fab fa-facebook"></i></a>
-      <a target="_blank" href="{{ get_setting('instagram_url')->value ?? '' }}" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
-      <a target="_blank" href="{{ get_setting('twitter_url')->value ?? '' }}" class="text-white mx-2"><i class="fab fa-twitter"></i></a>
       <a target="_blank" href="{{ get_setting('youtube_url')->value ?? '' }}" class="text-white mx-2"><i class="fab fa-youtube"></i></a>
-      <a target="_blank" href="{{ get_setting('linkedin_url')->value ?? '' }}" class="text-white mx-2"><i class="fab fa-linkedin"></i></a>
       <a target="_blank" href="{{ get_setting('whatsapp_url')->value ?? '' }}" class="text-white mx-2"><i class="fab fa-whatsapp"></i></a>
     </div>
   </div>
