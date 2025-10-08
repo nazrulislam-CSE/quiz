@@ -191,24 +191,24 @@
         </div>
     </section>
 
-    <section class="py-5 bg-light position-relative">
+    <section class="py-5 position-relative" style="background:linear-gradient(-45deg, #0b2545, #1d3557, #457b9d, #0b2545);">
         <div class="container text-center">
             <div class="row justify-content-center">
                 <div class="col-md-4 mb-4">
                     <div class="single-counter">
-                        <h2 class="count display-4 text-primary" data-count="{{ $studentCount }}"></h2>
+                        <h2 class="count display-4 text-light" data-count="{{ $studentCount }}"></h2>
                         <h5 class="fw-bold reveal">মোট শিক্ষার্থী</h5>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="single-counter">
-                        <h2 class="count display-4 text-danger" data-count="{{ $teacherCount }}"></h2>
+                        <h2 class="count display-4 text-light" data-count="{{ $teacherCount }}"></h2>
                         <h5 class="fw-bold reveal">মোট মেন্টর</h5>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="single-counter">
-                        <h2 class="count display-4 text-success" data-count="{{ $programCount }}"></h2>
+                        <h2 class="count display-4 text-light" data-count="{{ $programCount }}"></h2>
                         <h5 class="fw-bold reveal">মোট প্রোগ্রাম</h5>
                     </div>
                 </div>
