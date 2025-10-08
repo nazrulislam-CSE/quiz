@@ -41,7 +41,7 @@ class ProgramController extends Controller
         // dd($request->all());
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
+            'description' => 'nullable|string',
             'status' => 'nullable|in:0,1',
             'image' => 'required|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
 
@@ -126,7 +126,7 @@ class ProgramController extends Controller
         // Validation
         $this->validate($request, [
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
+            'description' => 'nullable|string',
             'status' => 'nullable|in:0,1',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
 
