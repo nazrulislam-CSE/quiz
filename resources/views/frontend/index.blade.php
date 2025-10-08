@@ -1,5 +1,14 @@
 @extends('layouts.frontend.app')
 @section('content')
+<style>
+  .single-counter {
+    border: 2px solid red;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  }
+</style>
     <!-- Hero Image Slider -->
     <section id="heroSlider" class="carousel slide" data-bs-ride="carousel">
 
