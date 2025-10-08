@@ -139,7 +139,7 @@
                                     <div class="card-body">
                                         <h4 class="card-title">{{ $program->name }}</h4>
                                         <p>
-                                            {!! Str::limit($program->description, 1000) !!}
+                                            {!! Str::limit($program->description) !!}
                                         </p>
                                         <a href="{{ route('program.show', $program->slug) }}"
                                             class="btn btn-primary mt-3 w-100 text-center">
