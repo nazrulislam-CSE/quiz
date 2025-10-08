@@ -32,6 +32,23 @@
         .branch-card i.fa-phone-alt {
             color: #0d6efd;
         }
+          .about-description ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .about-description ul li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+        }
+
+        .about-description ul li::before {
+            content: '✔️';
+            position: absolute;
+            left: 0;
+            color: green; /* or your preferred color */
+        }
     </style>
     @php
         $currentUrl = url()->current();
@@ -167,7 +184,7 @@
                                     <div class="col-md-6">
                                         <div class="card shadow-sm border-0 p-4 h-100">
                                             <h2 class="fw-bold card-title">{{ $about->title }}</h2>
-                                            <p class="card-text mt-3">{!! $about->description !!}</p>
+                                              <div class="mt-3 about-description">{!! $about->description !!}</div>
                                             @if ($about->video_link && $about->video_link != '#')
                                                 <a href="{{ $about->video_link }}" class="btn btn-primary mt-3">ভিডিও দেখুন</a>
                                             @endif
