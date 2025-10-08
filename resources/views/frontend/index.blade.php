@@ -1,14 +1,14 @@
 @extends('layouts.frontend.app')
 @section('content')
-<style>
-  .single-counter {
-    border: 2px solid red;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
-  }
-</style>
+    <style>
+        .single-counter {
+            border: 2px solid red;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+    </style>
     <!-- Hero Image Slider -->
     <section id="heroSlider" class="carousel slide" data-bs-ride="carousel">
 
@@ -109,7 +109,7 @@
     <section class="py-5">
         <div class="container">
             <div class="card shadow-sm border-0">
-                {{-- <h2 class="fw-bold card-title mb-3 text-center">Program List</h2> --}}
+                <h2 class="fw-bold card-title mb-3 text-center">আমাদের কোর্স সমূহ</h2>
 
                 @if ($programs->count() > 0)
                     <!-- Slick Slider Container -->
@@ -118,7 +118,7 @@
                             <div class="px-2"> <!-- Optional spacing -->
                                 <div class="card h-100 border-0 shadow-sm">
                                     <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}"
-                                            class="img-fluid mb-3" alt="{{ $program->name }}">
+                                        class="img-fluid mb-3" alt="{{ $program->name }}">
                                     <div class="card-body">
                                         <h4 class="card-title">{{ $program->name }}</h4>
                                         <p>
@@ -172,29 +172,29 @@
     </section>
 
     <section class="py-5 bg-light position-relative">
-    <div class="container text-center">
-        <div class="row justify-content-center">
-            <div class="col-md-4 mb-4">
-                <div class="single-counter">
-                    <h2 class="count display-4 text-primary" data-count="{{ $teacherCount }}"></h2>
-                    <h5 class="fw-bold">মোট শিক্ষার্থী</h5>
+        <div class="container text-center">
+            <div class="row justify-content-center">
+                <div class="col-md-4 mb-4">
+                    <div class="single-counter">
+                        <h2 class="count display-4 text-primary" data-count="{{ $teacherCount }}"></h2>
+                        <h5 class="fw-bold">মোট শিক্ষার্থী</h5>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="single-counter">
-                    <h2 class="count display-4 text-danger" data-count="{{ $mentorCount }}"></h2>
-                    <h5 class="fw-bold">মোট মেন্টর</h5>
+                <div class="col-md-4 mb-4">
+                    <div class="single-counter">
+                        <h2 class="count display-4 text-danger" data-count="{{ $mentorCount }}"></h2>
+                        <h5 class="fw-bold">মোট মেন্টর</h5>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="single-counter">
-                    <h2 class="count display-4 text-success" data-count="{{ $programCount }}"></h2>
-                    <h5 class="fw-bold">মোট প্রোগ্রাম</h5>
+                <div class="col-md-4 mb-4">
+                    <div class="single-counter">
+                        <h2 class="count display-4 text-success" data-count="{{ $programCount }}"></h2>
+                        <h5 class="fw-bold">মোট প্রোগ্রাম</h5>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 
 
@@ -206,33 +206,50 @@
     <section class="py-5 bg-light">
         <div class="container text-center">
             <h2 class="mb-4 reveal">কেন চকবোর্ড এক্সাম সেন্টার সেরা?</h2>
-           @php
-    // হালকা রঙের অ্যারে (প্যাস্টেল / লাইট কালার)
-    $colors = [
-        '#f2f2f2',  // Light Gray
-        '#e6f7ff',  // Light Blue
-        '#fff0f5',  // Lavender Blush
-        '#fef9e7',  // Light Yellow
-        '#e8f5e9',  // Light Green
-        '#f3e5f5',  // Light Purple
-        '#fff3e0',  // Light Orange
-        '#f1f8e9',  // Light Lime
-        '#e0f7fa',  // Light Cyan
-        '#ede7f6',  // Light Indigo
-    ];
-@endphp
+            @php
+                // Light colors for background
+                $bgColors = [
+                    '#f2f2f2',
+                    '#e6f7ff',
+                    '#fff0f5',
+                    '#fef9e7',
+                    '#e8f5e9',
+                    '#f3e5f5',
+                    '#fff3e0',
+                    '#f1f8e9',
+                    '#e0f7fa',
+                    '#ede7f6',
+                ];
 
-<div class="row">
-    @foreach ($features as $index => $feature)
-        <div class="col-12 col-sm-6 col-md-3 mb-4">
-            <div class="p-4 border rounded shadow-sm h-100 reveal" style="background-color: {{ $colors[$index % count($colors)] }};">
-                <i class="{{ $feature->icon }} fa-2x mb-3"></i>
-                <h5>{{ $feature->title }}</h5>
-                <p>{{ $feature->description }}</p>
+                // More vivid colors for icons
+                $iconColors = [
+                    '#ff4d4f', // Red
+                    '#1890ff', // Blue
+                    '#52c41a', // Green
+                    '#faad14', // Gold
+                    '#722ed1', // Purple
+                    '#eb2f96', // Pink
+                    '#13c2c2', // Teal
+                    '#a0d911', // Lime
+                    '#fa541c', // Volcano
+                    '#2f54eb', // Indigo
+                ];
+            @endphp
+
+            <div class="row">
+                @foreach ($features as $index => $feature)
+                    <div class="col-12 col-sm-6 col-md-3 mb-4">
+                        <div class="p-4 border rounded shadow-sm h-100 reveal"
+                            style="background-color: {{ $bgColors[$index % count($bgColors)] }};">
+                            <i class="{{ $feature->icon }} fa-2x mb-3"
+                                style="color: {{ $iconColors[$index % count($iconColors)] }};"></i>
+                            <h5>{{ $feature->title }}</h5>
+                            <p>{{ $feature->description }}</p>
+                        </div>
+                    </div>
+                @endforeach
+
             </div>
-        </div>
-    @endforeach
-</div>
 
         </div>
     </section>
@@ -308,25 +325,26 @@
     </section>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      $(document).ready(function () {
-        $('.count').each(function () {
-            let $this = $(this);
-            let countTo = $this.attr('data-count');
+        $(document).ready(function() {
+            $('.count').each(function() {
+                let $this = $(this);
+                let countTo = $this.attr('data-count');
 
-            $({ countNum: 0 }).animate(
-                { countNum: countTo },
-                {
+                $({
+                    countNum: 0
+                }).animate({
+                    countNum: countTo
+                }, {
                     duration: 2000,
                     easing: 'swing',
-                    step: function () {
+                    step: function() {
                         $this.text(Math.ceil(this.countNum));
                     },
-                    complete: function () {
+                    complete: function() {
                         $this.text(countTo);
                     }
-                }
-            );
+                });
+            });
         });
-    });
-</script>
+    </script>
 @endsection
