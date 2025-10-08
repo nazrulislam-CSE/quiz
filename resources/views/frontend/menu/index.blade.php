@@ -253,9 +253,9 @@
                                                 class="img-fluid mb-3" alt="{{ $program->name }}">
                                         <div class="card-body">
                                             <h4 class="card-title">{{ $program->name }}</h4>
-                                            <p>
-                                                {!! Str::limit($program->description, 1000) !!}
-                                            </p>
+                                            <div class="about-description reveal mt-3" style="max-height: 400px; overflow-y: auto;">
+                                                {!! $program->description !!}
+                                            </div>
                                             <a href="{{ route('program.show', $program->slug) }}"
                                                 class="btn btn-primary mt-3 w-100 text-center">
                                                 বিস্তারিত দেখুন

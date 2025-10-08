@@ -1,5 +1,24 @@
 @extends('layouts.frontend.app', [$pageTitle => ''])
 @section('content')
+ <style>
+      .about-description ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .about-description ul li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+        }
+
+        .about-description ul li::before {
+            content: '✔️';
+            position: absolute;
+            left: 0;
+            color: green; /* or your preferred color */
+        }
+    </style>
 @php
         $colors1 = [
             '#f2f2f2',  // Light Gray
@@ -34,7 +53,7 @@
                 <h2 class="fw-bold mb-3">{{ $program->name }}</h2>
 
                 <!-- Program Description -->
-                <div class="mb-4 description-html">
+                <div class="about-description reveal mt-3" style="max-height: 400px; overflow-y: auto;">
                     {!! $program->description !!}
                 </div>
 
