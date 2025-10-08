@@ -72,11 +72,11 @@
 
                     <!-- Right: Content -->
                     <div class="col-md-6 mt-3">
-                        <h2 class="fw-bold">{{ $about->title }}</h2>
-                        <div class="mt-3 about-description">{!! $about->description !!}</div>
+                        <h2 class="fw-bold reveal">{{ $about->title }}</h2>
+                        <div class="mt-3 about-description reveal">{!! $about->description !!}</div>
 
                         @if ($about->video_link && $about->video_link != '#')
-                            <a href="{{ $about->video_link }}" class="btn btn-primary mt-3">ভিডিও দেখুন</a>
+                            <a href="{{ $about->video_link }}" class="btn btn-primary mt-3 reveal">ভিডিও দেখুন</a>
                         @endif
                     </div>
                 </div>
