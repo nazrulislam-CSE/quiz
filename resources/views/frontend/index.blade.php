@@ -164,7 +164,7 @@
     <!-- Teacher Section with Slick Carousel -->
     <section class="py-5 bg-light position-relative">
         <div class="container text-center">
-            <h4 class="mb-4 fw-bold">দেশ সেরা মেন্টর</h4>
+            <h4 class="mb-4 fw-bold reveal">দেশ সেরা মেন্টর</h4>
 
             @if ($teachers->count() > 0)
                 <div class="teacher-slider">
@@ -194,19 +194,19 @@
                 <div class="col-md-4 mb-4">
                     <div class="single-counter">
                         <h2 class="count display-4 text-primary" data-count="{{ $teacherCount }}"></h2>
-                        <h5 class="fw-bold">মোট শিক্ষার্থী</h5>
+                        <h5 class="fw-bold reveal">মোট শিক্ষার্থী</h5>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="single-counter">
                         <h2 class="count display-4 text-danger" data-count="{{ $mentorCount }}"></h2>
-                        <h5 class="fw-bold">মোট মেন্টর</h5>
+                        <h5 class="fw-bold reveal">মোট মেন্টর</h5>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="single-counter">
                         <h2 class="count display-4 text-success" data-count="{{ $programCount }}"></h2>
-                        <h5 class="fw-bold">মোট প্রোগ্রাম</h5>
+                        <h5 class="fw-bold reveal">মোট প্রোগ্রাম</h5>
                     </div>
                 </div>
             </div>
@@ -291,7 +291,7 @@
     <!-- Students Section with Bootstrap Card & Slick Carousel -->
     <section class="py-5 bg-light position-relative">
         <div class="container">
-            <h2 class="mb-5 text-center text-primary fw-bold">সফল যারা,কেমন তারা</h2>
+            <h2 class="mb-5 text-center text-primary fw-bold reveal">সফল যারা,কেমন তারা</h2>
 
             @if ($students->count() > 0)
                 <div class="student-slider">
@@ -325,9 +325,9 @@
     <!-- Call to Action -->
     <section class="py-5 text-center text-white" style="background: linear-gradient(135deg, #6f42c1, #007bff);">
         <div class="container reveal">
-            <h2>তোমার ভর্তি পরীক্ষার যাত্রা শুরু করো আজই</h2>
-            <p class="mb-4">সেরা শিক্ষকদের গাইডলাইন ও স্মার্ট প্র্যাকটিস টুলস একসাথে।</p>
-            <a href="/register" class="btn btn-light btn-lg">এখনই রেজিস্ট্রেশন করুন</a>
+            <h2 class="reveal">তোমার ভর্তি পরীক্ষার যাত্রা শুরু করো আজই</h2>
+            <p class="mb-4 reveal">সেরা শিক্ষকদের গাইডলাইন ও স্মার্ট প্র্যাকটিস টুলস একসাথে।</p>
+            <a href="/register" class="btn btn-light btn-lg reveal">এখনই রেজিস্ট্রেশন করুন</a>
         </div>
     </section>
 
