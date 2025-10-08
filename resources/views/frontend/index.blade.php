@@ -140,9 +140,10 @@
                                         class="img-fluid mb-3" alt="{{ $program->name }}">
                                     <div class="card-body">
                                         <h4 class="card-title">{{ $program->name }}</h4>
-                                        <div class="mt-3 about-description reveal" style="max-height: 400px; overflow-y: auto;">
+                                        <div class="mt-3 about-description reveal">
                                             {!! $program->description !!}
                                         </div>
+
 
                                         <a href="{{ route('program.show', $program->slug) }}"
                                             class="btn btn-primary mt-3 w-100 text-center">
