@@ -191,19 +191,19 @@
                 <div class="col-md-4 mb-4">
                     <div class="single-counter">
                         <h2 class="count display-4 text-light" data-count="{{ $studentCount }}"></h2>
-                        <h5 class="fw-bold reveal">মোট শিক্ষার্থী</h5>
+                        <h5 class="fw-bold text-light">মোট শিক্ষার্থী</h5>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="single-counter">
                         <h2 class="count display-4 text-light" data-count="{{ $teacherCount }}"></h2>
-                        <h5 class="fw-bold reveal">মোট মেন্টর</h5>
+                        <h5 class="fw-bold text-light">মোট মেন্টর</h5>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="single-counter">
-                        <h2 class="count display-4 text-light" data-count="{{ $programCount }}"></h2>
-                        <h5 class="fw-bold reveal">মোট প্রোগ্রাম</h5>
+                        <h2 class="count display-4" data-count="{{ $programCount }}"></h2>
+                        <h5 class="fw-bold text-light">মোট প্রোগ্রাম</h5>
                     </div>
                 </div>
             </div>
