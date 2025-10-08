@@ -140,19 +140,9 @@
                                         class="img-fluid mb-3" alt="{{ $program->name }}">
                                     <div class="card-body">
                                         <h4 class="card-title">{{ $program->name }}</h4>
-                                       <div style="max-height: 400px; overflow-y: auto; padding: 10px; border: 1px solid #ccc; border-radius: 6px; background-color: #f9f9f9;">
-    <ul style="list-style: none; padding-left: 0; margin: 0;">
-        @foreach(explode("\n", strip_tags($program->description)) as $line)
-            @if(trim($line) !== '')
-                <li style="position: relative; padding-left: 25px; margin-bottom: 10px; font-family: Arial, sans-serif; font-size: 14px; color: #333;">
-                    <span style="position: absolute; left: 0; top: 0; color: green;">✔️</span>
-                    {{ $line }}
-                </li>
-            @endif
-        @endforeach
-    </ul>
-</div>
-
+                                        <div class="about-description reveal mt-3" style="max-height: 400px; overflow-y: auto;">
+                                            {!! $program->description !!}
+                                        </div>
 
                                         <a href="{{ route('program.show', $program->slug) }}"
                                             class="btn btn-primary mt-3 w-100 text-center">
