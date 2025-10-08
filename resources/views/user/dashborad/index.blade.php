@@ -92,9 +92,15 @@
         </div>
 
         <!-- এমসিকিউ এক্সাম -->
+       @php
+            $user = auth()->user();
+            $isDisabled = ($user->main_wallet < 100 || $user->status != 1);
+        @endphp
+
         <div class="col-md-4 col-sm-6">
-            <a href="{{ route('user.mcq.exam') }}" class="text-decoration-none">
-                <div class="card shadow-sm border-0 rounded-3 h-100" style="background:#ffbfbfdd !important;">
+            <a href="{{ $isDisabled ? 'javascript:void(0)' : route('user.mcq.exam') }}"
+            class="text-decoration-none {{ $isDisabled ? 'disabled-link' : '' }}">
+                <div class="card shadow-sm border-0 rounded-3 h-100" style="background:#ffbfbfdd !important; {{ $isDisabled ? 'opacity:0.6; pointer-events:none;' : '' }}">
                     <div class="card-body d-flex align-items-center">
                         <div class="me-3">
                             <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center"
@@ -109,6 +115,7 @@
                 </div>
             </a>
         </div>
+
 
         <!-- অনলাইন কুইজ -->
         <div class="col-md-4 col-sm-6">
