@@ -8,7 +8,6 @@
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
         }
-
         .about-description ul {
             list-style: none;
             padding-left: 0;
@@ -24,8 +23,7 @@
             content: '✔️';
             position: absolute;
             left: 0;
-            color: green;
-            /* or your preferred color */
+            color: green; /* or your preferred color */
         }
     </style>
     <!-- Hero Image Slider -->
@@ -128,11 +126,7 @@
     <section class="py-5">
         <div class="container">
             <div class="card shadow-sm border-0">
-                <h2 class="fw-bold card-title mb-3 text-center animate__animated animate__fadeInLeft">
-                    আমাদের কোর্স সমূহ
-                </h2>
-
-
+                <h2 class="fw-bold card-title mb-3 text-center reveal">আমাদের কোর্স সমূহ</h2>
 
                 @if ($programs->count() > 0)
                     <!-- Slick Slider Container -->

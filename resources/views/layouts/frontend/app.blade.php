@@ -217,27 +217,7 @@
             });
         });
     </script>
-
-    <script>
-        // Observe elements with class 'animate-on-scroll'
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const el = entry.target;
-                    el.classList.add('animate__animated', 'animate__fadeInLeft');
-                    el.style.setProperty('--animate-duration', '1s'); // Optional: Set duration
-                    observer.unobserve(el); // Animate only once
-                }
-            });
-        }, {
-            threshold: 0.1 // Trigger when 10% visible
-        });
-
-        document.querySelectorAll('.animate-on-scroll').forEach(el => {
-            observer.observe(el);
-        });
-    </script>
-
+    
 
     @stack('frontend-js')
 </body>
