@@ -8,6 +8,23 @@
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
         }
+        .about-description ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .about-description ul li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+        }
+
+        .about-description ul li::before {
+            content: '✔️';
+            position: absolute;
+            left: 0;
+            color: green; /* or your preferred color */
+        }
     </style>
     <!-- Hero Image Slider -->
     <section id="heroSlider" class="carousel slide" data-bs-ride="carousel">
@@ -56,7 +73,7 @@
                     <!-- Right: Content -->
                     <div class="col-md-6 mt-3">
                         <h2 class="fw-bold">{{ $about->title }}</h2>
-                        <p class="mt-3">{!! $about->description !!}</p>
+                        <div class="mt-3 about-description">{!! $about->description !!}</div>
 
                         @if ($about->video_link && $about->video_link != '#')
                             <a href="{{ $about->video_link }}" class="btn btn-primary mt-3">ভিডিও দেখুন</a>
