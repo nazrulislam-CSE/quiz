@@ -128,9 +128,10 @@
     <section class="py-5">
         <div class="container">
             <div class="card shadow-sm border-0">
-                <h2 class="fw-bold card-title mb-3 text-center animate__animated animate__fadeInUp">
+                <h2 class="fw-bold card-title mb-3 text-center animate__animated animate__fadeInLeft">
                     আমাদের কোর্স সমূহ
                 </h2>
+
 
 
                 @if ($programs->count() > 0)
