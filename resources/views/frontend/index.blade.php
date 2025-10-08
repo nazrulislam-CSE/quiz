@@ -140,7 +140,7 @@
                                         class="img-fluid mb-3" alt="{{ $program->name }}">
                                     <div class="card-body">
                                         <h4 class="card-title">{{ $program->name }}</h4>
-                                        <div style="max-height: 400px; overflow-y: auto;">
+                                        <div class="mt-3 about-description reveal" style="max-height: 400px; overflow-y: auto;">
                                             {!! $program->description !!}
                                         </div>
 
@@ -196,13 +196,13 @@
             <div class="row justify-content-center">
                 <div class="col-md-4 mb-4">
                     <div class="single-counter">
-                        <h2 class="count display-4 text-primary" data-count="{{ $teacherCount }}"></h2>
+                        <h2 class="count display-4 text-primary" data-count="{{ $studentCount }}"></h2>
                         <h5 class="fw-bold reveal">মোট শিক্ষার্থী</h5>
                     </div>
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="single-counter">
-                        <h2 class="count display-4 text-danger" data-count="{{ $mentorCount }}"></h2>
+                        <h2 class="count display-4 text-danger" data-count="{{ $teacherCount }}"></h2>
                         <h5 class="fw-bold reveal">মোট মেন্টর</h5>
                     </div>
                 </div>

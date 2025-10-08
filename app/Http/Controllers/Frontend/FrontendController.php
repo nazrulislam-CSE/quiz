@@ -31,15 +31,15 @@ class FrontendController extends Controller
         $admissions = Admission::where('status',1)->where('type',2)->latest()->get();
         $features = Feature::where('status',1)->latest()->get();
         $programs = Program::where('status',1)->latest()->get();
-        // $users = User::whereNot('username', 'chalkboardbd')->where('status',1)->latest()->get();
-        $users = User::where('status',1)->latest()->get();
+        $users = User::whereNot('username', 'chalkboardbd')->where('status',1)->latest()->get();
+        // $users = User::where('status',1)->latest()->get();
 
         $teacherCount = $teachers->count();
         $programCount = $programs->count();
-        $mentorCount = $users->count();
+        $studentCount = $users->count();
     
         $pageTitle = 'Home';
-        return view('frontend.index',compact('pageTitle','sliders','abouts','counters','teachers','students','admissions','features','programs','teacherCount','programCount','mentorCount'));
+        return view('frontend.index',compact('pageTitle','sliders','abouts','counters','teachers','students','admissions','features','programs','teacherCount','programCount','studentCount'));
     }
 
     public function onlineQuiz(Request $request){
