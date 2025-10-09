@@ -19,7 +19,7 @@ class AdmissionInfoController extends Controller
     public function index()
     {
         $pageTitle = 'Admission Info List';
-        $infos = AdmissionInfo::latest()->get();
+        $infos = AdmissionInfo::with('units.subjects')->latest()->get(); 
         return view('admin.admissioniinfo.index',compact('pageTitle','infos'));
     }
 
@@ -67,17 +67,35 @@ class AdmissionInfoController extends Controller
             ]);
 
             // 4. Save Units (if any)
-            if ($request->has('units')) {
-                foreach ($request->units as $unit) {
-                    if (!empty($unit['unit'])) {
-                        AdmissionUnit::create([
-                            'admission_info_id' => $admissionInfo->id,
-                            'unit'        => $unit['unit'] ?? null,
-                            'description' => $unit['description'] ?? null,
-                            'note'        => $unit['note'] ?? null,
-                            'exam_date'   => $unit['exam_date'] ?? null,
-                            'exam_time'   => $unit['exam_time'] ?? null,
-                            'mark'        => $unit['mark'] ?? null,
+            // if ($request->has('units')) {
+            //     foreach ($request->units as $unit) {
+            //         if (!empty($unit['unit'])) {
+            //             AdmissionUnit::create([
+            //                 'admission_info_id' => $admissionInfo->id,
+            //                 'unit'        => $unit['unit'] ?? null,
+            //                 'description' => $unit['description'] ?? null,
+            //                 'note'        => $unit['note'] ?? null,
+            //                 'exam_date'   => $unit['exam_date'] ?? null,
+            //                 'exam_time'   => $unit['exam_time'] ?? null,
+            //             ]);
+            //         }
+            //     }
+            // }
+
+            foreach ($request->units as $unitData) {
+                $unit = $admission->units()->create([
+                    'unit' => $unitData['unit'],
+                    'description' => $unitData['description'],
+                    'note' => $unitData['note'],
+                    'exam_date' => $unitData['exam_date'],
+                    'exam_time' => $unitData['exam_time'],
+                ]);
+
+                if (isset($unitData['subjects'])) {
+                    foreach ($unitData['subjects'] as $subjectData) {
+                        $unit->subjects()->create([
+                            'subject' => $subjectData['subject'],
+                            'mark' => $subjectData['mark'],
                         ]);
                     }
                 }
@@ -102,7 +120,7 @@ class AdmissionInfoController extends Controller
     {
         
         $pageTitle = 'Admission Info Show';
-        $info = AdmissionInfo::find($id);
+        $info = AdmissionInfo::with('units.subjects')->findOrFail($id);
         return view('admin.admissioniinfo.show',compact('pageTitle','info'));
     }
 
@@ -111,7 +129,7 @@ class AdmissionInfoController extends Controller
      */
     public function edit(string $id)
     {
-        $info = AdmissionInfo::with('units')->findOrFail($id);
+        $info = AdmissionInfo::with('units.subjects')->findOrFail($id);
         $pageTitle = 'Admission Info Edit';
         return view('admin.admissioniinfo.edit', compact('info','pageTitle'));
     }
@@ -151,20 +169,41 @@ class AdmissionInfoController extends Controller
         // 🔹 update units (simple way: delete old & insert new)
         $info->units()->delete();
 
-        if ($request->has('units')) {
-            foreach ($request->units as $unitData) {
-                if (!empty($unitData['unit'])) {
-                    $info->units()->create([
-                        'unit' => $unitData['unit'],
-                        'description' => $unitData['description'] ?? null,
-                        'note' => $unitData['note'] ?? null,
-                        'exam_date' => $unitData['exam_date'] ?? null,
-                        'exam_time' => $unitData['exam_time'] ?? null,
-                        'mark' => $unitData['mark'] ?? null,
+        // Re-insert all
+        foreach ($request->units as $unitData) {
+            $unit = $admission->units()->create([
+                'unit' => $unitData['unit'],
+                'description' => $unitData['description'],
+                'note' => $unitData['note'],
+                'exam_date' => $unitData['exam_date'],
+                'exam_time' => $unitData['exam_time'],
+            ]);
+
+            if (!empty($unitData['subjects'])) {
+                foreach ($unitData['subjects'] as $subjectData) {
+                    $unit->subjects()->create([
+                        'subject' => $subjectData['subject'],
+                        'mark' => $subjectData['mark'],
                     ]);
                 }
             }
         }
+
+        // if ($request->has('units')) {
+        //     foreach ($request->units as $unitData) {
+        //         if (!empty($unitData['unit'])) {
+        //             $info->units()->create([
+        //                 'unit' => $unitData['unit'],
+        //                 'description' => $unitData['description'] ?? null,
+        //                 'note' => $unitData['note'] ?? null,
+        //                 'exam_date' => $unitData['exam_date'] ?? null,
+        //                 'exam_time' => $unitData['exam_time'] ?? null,
+        //             ]);
+        //         }
+        //     }
+        // }
+
+
 
         return redirect()->route('admin.admission.info.index')->with('success','Admission Info Updated Successfully');
     }
@@ -175,18 +214,14 @@ class AdmissionInfoController extends Controller
     public function destroy(string $id)
     {
         try {
-            $info = AdmissionInfo::findOrFail($id);
+            $info = AdmissionInfo::with('units.subjects')->findOrFail($id);
 
-            // 🔹 Delete Image if exists
+            // 🔹 Delete image from storage if exists
             if (!empty($info->image) && file_exists(public_path($info->image))) {
                 @unlink(public_path($info->image));
             }
 
-            // 🔹 Delete related units if relation exists
-            if (method_exists($info, 'units')) {
-                $info->units()->delete();
-            }
-
+            // 🔹 Delete Admission Info (units and subjects will cascade delete automatically)
             $info->delete();
 
             flash()->addSuccess("Admission Info Deleted Successfully.");

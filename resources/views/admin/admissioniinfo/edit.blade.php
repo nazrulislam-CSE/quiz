@@ -104,47 +104,63 @@
                         </div>
 
                         <hr>
-                        <h5>ইউনিট তথ্য</h5>
-                        <table class="table table-bordered" id="unit-table">
-                            <thead class="table-dark">
+                        <!-- UNIT TABLE START -->
+    <h5>ইউনিট তথ্য</h5>
+    <table class="table table-bordered" id="unit-table">
+        <thead class="table-dark">
+            <tr>
+                <th>ইউনিট</th>
+                <th>ডেসক্রিপশন</th>
+                <th>নোট</th>
+                <th>পরীক্ষার তারিখ</th>
+                <th>পরীক্ষার সময়</th>
+                <th>অ্যাকশন</th>
+            </tr>
+        </thead>
+        <tbody id="unit-table-body">
+            @foreach ($admission->units as $uIndex => $unit)
+                <tr class="unit-block" data-unit-index="{{ $uIndex }}">
+                    <td><input type="text" name="units[{{ $uIndex }}][unit]" value="{{ $unit->unit }}" class="form-control"></td>
+                    <td><input type="text" name="units[{{ $uIndex }}][description]" value="{{ $unit->description }}" class="form-control"></td>
+                    <td><input type="text" name="units[{{ $uIndex }}][note]" value="{{ $unit->note }}" class="form-control"></td>
+                    <td><input type="date" name="units[{{ $uIndex }}][exam_date]" value="{{ $unit->exam_date }}" class="form-control"></td>
+                    <td><input type="time" name="units[{{ $uIndex }}][exam_time]" value="{{ $unit->exam_time }}" class="form-control"></td>
+                    <td>
+                        <button type="button" class="btn btn-outline-danger btn-sm remove-unit">Remove</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        <table class="table table-bordered subject-table">
+                            <thead>
                                 <tr>
-                                    <th>ইউনিট</th>
-                                    <th>ডেসক্রিপশন</th>
-                                    <th>নোট</th>
-                                    <th>পরীক্ষার তারিখ</th>
-                                    <th>পরীক্ষার সময়</th>
-                                    <th>মার্ক</th>
-                                    <th>অ্যাকশন</th>
+                                    <th>Subject</th>
+                                    <th>Mark</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach ($info->units as $key => $unit)
+                            <tbody class="subject-body">
+                                @foreach ($unit->subjects as $sIndex => $subject)
                                     <tr>
-                                        <td><input type="text" name="units[{{ $key }}][unit]"
-                                                class="form-control" value="{{ $unit->unit }}"></td>
-                                        <td><input type="text" name="units[{{ $key }}][description]"
-                                                class="form-control" value="{{ $unit->description }}"></td>
-                                        <td><input type="text" name="units[{{ $key }}][note]"
-                                                class="form-control" value="{{ $unit->note }}"></td>
-                                        <td><input type="date" name="units[{{ $key }}][exam_date]"
-                                                class="form-control" value="{{ $unit->exam_date }}"></td>
-                                        <td><input type="time" name="units[{{ $key }}][exam_time]"
-                                                class="form-control" value="{{ $unit->exam_time }}"></td>
-                                        <td><input type="text" name="units[{{ $key }}][mark]"
-                                                class="form-control" placeholder="মার্ক" value="{{ $unit->mark }}"></td>
-                                        <td class="text-center">
-                                            <button type="button" class="btn btn-outline-danger btn-sm remove-unit">
-                                                <i class="bi bi-x-lg"></i>
-                                            </button>
-                                        </td>
+                                        <td><input type="text" name="units[{{ $uIndex }}][subjects][{{ $sIndex }}][subject]" value="{{ $subject->subject }}" class="form-control"></td>
+                                        <td><input type="number" name="units[{{ $uIndex }}][subjects][{{ $sIndex }}][mark]" value="{{ $subject->mark }}" class="form-control"></td>
+                                        <td><button type="button" class="btn btn-danger btn-sm remove-subject">Remove</button></td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-
-                        <button type="button" id="add-unit" class="btn btn-success mb-3">
-                            <i class="bi bi-plus-lg"></i> Add New
+                        <button type="button" class="btn btn-sm btn-success add-subject" data-unit-index="{{ $uIndex }}">
+                            Add Subject
                         </button>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+                         <button type="button" id="add-unit" class="btn btn-success mb-3">
+        Add New Unit
+    </button>
 
                         <button type="submit" class="btn btn-primary w-100">Update</button>
                     </form>
@@ -177,31 +193,70 @@
         /* ============== Summernote Added ============ */
     </script>
 
-    <script>
-        let unitIndex = 1;
-        document.getElementById('add-unit').addEventListener('click', function() {
-            let tableBody = document.querySelector('#unit-table tbody');
-            let newRow = `
-        <tr>
-            <td><input type="text" name="units[${unitIndex}][unit]" class="form-control" placeholder="ইউনিট"></td>
-            <td><input type="text" name="units[${unitIndex}][description]" class="form-control" placeholder="ডেসক্রিপশন"></td>
-            <td><input type="text" name="units[${unitIndex}][note]" class="form-control" placeholder="নোট"></td>
-            <td><input type="date" name="units[${unitIndex}][exam_date]" class="form-control"></td>
-            <td><input type="time" name="units[${unitIndex}][exam_time]" class="form-control"></td>
-            <td class="text-center">
-                <button type="button" class="btn btn-outline-danger btn-sm remove-unit">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </td>
-        </tr>`;
-            tableBody.insertAdjacentHTML('beforeend', newRow);
-            unitIndex++;
-        });
+<script>
+    let unitIndex = {{ $admission->units->count() }};
+    
+    function getUnitRow(index) {
+        return `
+<tr class="unit-block" data-unit-index="${index}">
+    <td><input type="text" name="units[${index}][unit]" class="form-control" placeholder="ইউনিট"></td>
+    <td><input type="text" name="units[${index}][description]" class="form-control" placeholder="ডেসক্রিপশন"></td>
+    <td><input type="text" name="units[${index}][note]" class="form-control" placeholder="নোট"></td>
+    <td><input type="date" name="units[${index}][exam_date]" class="form-control"></td>
+    <td><input type="time" name="units[${index}][exam_time]" class="form-control"></td>
+    <td class="text-center">
+        <button type="button" class="btn btn-outline-danger btn-sm remove-unit">Remove</button>
+    </td>
+</tr>
+<tr>
+    <td colspan="6">
+        <table class="table table-bordered subject-table">
+            <thead>
+                <tr><th>Subject</th><th>Mark</th><th>Action</th></tr>
+            </thead>
+            <tbody class="subject-body">
+                ${getSubjectRow(index, 0)}
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-sm btn-success add-subject" data-unit-index="${index}">Add Subject</button>
+    </td>
+</tr>`;
+    }
 
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.remove-unit')) {
-                e.target.closest('tr').remove();
-            }
-        });
-    </script>
+    function getSubjectRow(unitIndex, subjectIndex) {
+        return `
+<tr>
+    <td><input type="text" name="units[${unitIndex}][subjects][${subjectIndex}][subject]" class="form-control" placeholder="Subject Name"></td>
+    <td><input type="number" name="units[${unitIndex}][subjects][${subjectIndex}][mark]" class="form-control" placeholder="Mark"></td>
+    <td><button type="button" class="btn btn-sm btn-danger remove-subject">Remove</button></td>
+</tr>`;
+    }
+
+    document.getElementById('add-unit').addEventListener('click', function () {
+        const tbody = document.getElementById('unit-table-body');
+        tbody.insertAdjacentHTML('beforeend', getUnitRow(unitIndex));
+        unitIndex++;
+    });
+
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.remove-unit')) {
+            let row = e.target.closest('tr');
+            row.nextElementSibling.remove();
+            row.remove();
+        }
+
+        if (e.target.closest('.remove-subject')) {
+            e.target.closest('tr').remove();
+        }
+
+        if (e.target.classList.contains('add-subject')) {
+            const unitIndex = e.target.dataset.unitIndex;
+            const tbody = e.target.previousElementSibling.querySelector('.subject-body');
+            const subjectIndex = tbody.children.length;
+            tbody.insertAdjacentHTML('beforeend', getSubjectRow(unitIndex, subjectIndex));
+        }
+    });
+</script>
+
+
 @endpush

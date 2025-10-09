@@ -176,23 +176,40 @@
                                         </div>
                                         <!-- Subject Mark Distribution Show -->
                                         <h4 class="fw-bold mt-4 mb-3">Mark Distribution</h4>
-                                         <div class="table-responsive">
+                                        <div class="table-responsive">
                                             <table class="table table-bordered">
                                                 <thead class="table-dark">
                                                     <tr>
                                                         <th>ইউনিট</th>
+                                                        <th>সাবজেক্ট</th>
                                                         <th>মার্ক</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($info->units as $unit)
-                                                        @php
-                                                            shuffle($colors);
-                                                        @endphp
-                                                        <tr>
-                                                            <td style="background-color: {{ $colors[0] }}">{{ $unit->unit }}</td>
-                                                            <td style="background-color: {{ $colors[1] }}">{{ $unit->mark ?? '-' }}</td>
-                                                        </tr>
+                                                        @if ($unit->subjects->count() > 0)
+                                                            @foreach ($unit->subjects as $key => $subject)
+                                                                <tr>
+                                                                    {{-- ইউনিট নাম শুধু প্রথম সাবজেক্টের সময় দেখাবে --}}
+                                                                    @if ($key == 0)
+                                                                        <td rowspan="{{ $unit->subjects->count() }}" style="vertical-align: middle; background-color: {{ $colors[0] ?? '#e9ecef' }}">
+                                                                            {{ $unit->unit }}
+                                                                        </td>
+                                                                    @endif
+                                                                    <td style="background-color: {{ $colors[1] ?? '#f8f9fa' }}">
+                                                                        {{ $subject->subject }}
+                                                                    </td>
+                                                                    <td style="background-color: {{ $colors[2] ?? '#f8f9fa' }}">
+                                                                        {{ $subject->mark }}
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        @else
+                                                            <tr>
+                                                                <td style="background-color: {{ $colors[0] ?? '#e9ecef' }}">{{ $unit->unit }}</td>
+                                                                <td colspan="2" class="text-muted">No subjects found</td>
+                                                            </tr>
+                                                        @endif
                                                     @endforeach
                                                 </tbody>
                                             </table>

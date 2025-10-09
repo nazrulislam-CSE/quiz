@@ -101,29 +101,40 @@
                         <th>নোট</th>
                         <th>পরীক্ষার তারিখ</th>
                         <th>পরীক্ষার সময়</th>
-                        <th>মার্ক</th>
+                        <th>সাবজেক্টসমূহ</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($info->units as $key => $unit)
                         <tr>
-                            <td>{{ $key+1 }}</td>
+                            <td>{{ $key + 1 }}</td>
                             <td>{{ $unit->unit }}</td>
                             <td>{{ $unit->description }}</td>
                             <td>{{ $unit->note }}</td>
                             <td>{{ \Carbon\Carbon::parse($unit->exam_date)->format('d/m/Y') }}</td>
-                            <td>{{ $unit->exam_time }}</td>
-                            <td>{{ $unit->mark }}</td>
+                            <td>{{ \Carbon\Carbon::parse($unit->exam_time)->format('h:i A') }}</td>
+                            <td>
+                                @if($unit->subjects && $unit->subjects->count())
+                                    <ul class="list-unstyled mb-0">
+                                        @foreach($unit->subjects as $subject)
+                                            <li>
+                                                <strong>{{ $subject->subject }}</strong> — {{ $subject->mark }} মার্কস
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <span class="text-muted">কোন সাবজেক্ট নেই</span>
+                                @endif
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center text-muted">কোন ইউনিট তথ্য পাওয়া যায়নি</td>
+                            <td colspan="7" class="text-center text-muted">কোন ইউনিট তথ্য পাওয়া যায়নি</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-
     </div>
 </div>
 @endsection

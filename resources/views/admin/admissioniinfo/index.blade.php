@@ -97,7 +97,7 @@
                                                                 <th>বিবরণ</th>
                                                                 <th>পরীক্ষার তারিখ</th>
                                                                 <th>সময়</th>
-                                                                <th>মার্ক</th>
+                                                                <th>সাবজেক্টস</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -105,11 +105,24 @@
                                                                 <tr>
                                                                     <td>{{ $unit->unit }}</td>
                                                                     <td>{{ $unit->description ?? '-' }}</td>
-                                                                    <td>{{ $unit->exam_date ? \Carbon\Carbon::parse($unit->exam_date)->format('d/m/Y') : '-' }}
+                                                                    <td>
+                                                                        {{ $unit->exam_date ? \Carbon\Carbon::parse($unit->exam_date)->format('d/m/Y') : '-' }}
                                                                     </td>
-                                                                    <td>{{ $unit->exam_time ? \Carbon\Carbon::parse($unit->exam_time)->format('h:i A') : '-' }}
+                                                                    <td>
+                                                                        {{ $unit->exam_time ? \Carbon\Carbon::parse($unit->exam_time)->format('h:i A') : '-' }}
                                                                     </td>
-                                                                    <td>{{ $unit->mark ?? '' }}
+                                                                    <td>
+                                                                        @if ($unit->subjects->count() > 0)
+                                                                            <ul class="mb-0 ps-3">
+                                                                                @foreach ($unit->subjects as $subject)
+                                                                                    <li>
+                                                                                        {{ $subject->subject }} — {{ $subject->mark }} মার্ক
+                                                                                    </li>
+                                                                                @endforeach
+                                                                            </ul>
+                                                                        @else
+                                                                            <span class="text-muted">No Subject</span>
+                                                                        @endif
                                                                     </td>
                                                                 </tr>
                                                             @endforeach
@@ -119,6 +132,7 @@
                                                     <span class="text-muted">No Unit Info</span>
                                                 @endif
                                             </td>
+
                                             <td>
                                                 @if ($info->status == 1)
                                                     <a href="#" class="badge bg-pill bg-success">Active</a>

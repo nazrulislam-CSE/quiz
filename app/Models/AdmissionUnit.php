@@ -22,4 +22,10 @@ class AdmissionUnit extends Model
     {
         return $this->belongsTo(AdmissionInfo::class);
     }
+
+    public function subjects()
+    {
+        return $this->hasMany(AdmissionUnitSubject::class);
+    }
+
 }
