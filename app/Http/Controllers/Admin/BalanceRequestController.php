@@ -69,7 +69,7 @@ class BalanceRequestController extends Controller
             $commission_bonus = ($balanceRequest->amount * $commission->refer1) / 100;
 
             $balanceRequest->update([
-                'status' => $request->status,
+                'status' => 1,
                 // 'amount' => $balanceRequest->amount + $commission_bonus,
             ]);
 
