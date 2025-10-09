@@ -110,28 +110,45 @@
                                     <th>নোট</th>
                                     <th>পরীক্ষার তারিখ</th>
                                     <th>পরীক্ষার সময়</th>
-                                    <th>মার্ক</th>
                                     <th>অ্যাকশন</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input type="text" name="units[0][unit]" class="form-control"
-                                            placeholder="ইউনিট"></td>
-                                    <td><input type="text" name="units[0][description]" class="form-control"
-                                            placeholder="ডেসক্রিপশন"></td>
-                                    <td><input type="text" name="units[0][note]" class="form-control" placeholder="নোট">
-                                    </td>
-                                    <td><input type="date" name="units[0][exam_date]" class="form-control"></td>
-                                    <td><input type="time" name="units[0][exam_time]" class="form-control"></td>
-                                    <td><input type="text" name="units[0][mark]" class="form-control" placeholder="মার্ক"></td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-outline-danger btn-sm remove-unit">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
+                           <tbody id="unit-table-body">
+    <tr class="unit-row" data-index="0">
+        <td><input type="text" name="units[0][unit]" class="form-control" placeholder="ইউনিট"></td>
+        <td><input type="text" name="units[0][description]" class="form-control" placeholder="ডেসক্রিপশন"></td>
+        <td><input type="text" name="units[0][note]" class="form-control" placeholder="নোট"></td>
+        <td><input type="date" name="units[0][exam_date]" class="form-control"></td>
+        <td><input type="time" name="units[0][exam_time]" class="form-control"></td>
+        <td class="text-center">
+            <button type="button" class="btn btn-outline-danger btn-sm remove-unit">Remove</button>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            <table class="table table-bordered subject-table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Mark</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="subject-body">
+                    <tr>
+                        <td><input type="text" name="units[0][subjects][0][subject]" class="form-control"></td>
+                        <td><input type="number" name="units[0][subjects][0][mark]" class="form-control"></td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger remove-subject">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-sm btn-success add-subject">Add Subject</button>
+        </td>
+    </tr>
+</tbody>
+
                         </table>
 
                         <!-- Add Button -->
