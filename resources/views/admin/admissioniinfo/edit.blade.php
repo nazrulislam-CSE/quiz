@@ -5,7 +5,7 @@
             {{-- <h4 class="content-title mb-2">Hi, welcome back!</h4> --}}
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page">{{ $pageTitle ?? 'Dashboard' }}</li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ $pageTitle ?? '' }}</li>
                     <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
                 </ol>
             </nav>
@@ -159,8 +159,8 @@
     </table>
 
                          <button type="button" id="add-unit" class="btn btn-success mb-3">
-        Add New Unit
-    </button>
+                Add New Unit
+            </button>
 
                         <button type="submit" class="btn btn-primary w-100">Update</button>
                     </form>
@@ -193,8 +193,9 @@
         /* ============== Summernote Added ============ */
     </script>
 
+
 <script>
-    let unitIndex = {{ $admission->units->count() }};
+    let unitIndex = {{ $info->units->count() }};
     
     function getUnitRow(index) {
         return `
