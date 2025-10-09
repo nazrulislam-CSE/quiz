@@ -113,47 +113,14 @@
                                     <th>অ্যাকশন</th>
                                 </tr>
                             </thead>
-                           <tbody id="unit-table-body">
-    <tr class="unit-row" data-index="0">
-        <td><input type="text" name="units[0][unit]" class="form-control" placeholder="ইউনিট"></td>
-        <td><input type="text" name="units[0][description]" class="form-control" placeholder="ডেসক্রিপশন"></td>
-        <td><input type="text" name="units[0][note]" class="form-control" placeholder="নোট"></td>
-        <td><input type="date" name="units[0][exam_date]" class="form-control"></td>
-        <td><input type="time" name="units[0][exam_time]" class="form-control"></td>
-        <td class="text-center">
-            <button type="button" class="btn btn-outline-danger btn-sm remove-unit">Remove</button>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="6">
-            <table class="table table-bordered subject-table">
-                <thead>
-                    <tr>
-                        <th>Subject</th>
-                        <th>Mark</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody class="subject-body">
-                    <tr>
-                        <td><input type="text" name="units[0][subjects][0][subject]" class="form-control"></td>
-                        <td><input type="number" name="units[0][subjects][0][mark]" class="form-control"></td>
-                        <td>
-                            <button type="button" class="btn btn-sm btn-danger remove-subject">Remove</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <button type="button" class="btn btn-sm btn-success add-subject">Add Subject</button>
-        </td>
-    </tr>
-</tbody>
-
+                            <tbody id="unit-table-body">
+                                <!-- Initial Unit Row -->
+                            </tbody>
                         </table>
 
                         <!-- Add Button -->
                         <button type="button" id="add-unit" class="btn btn-success mb-3">
-                            <i class="bi bi-plus-lg"></i> Add New
+                            <i class="bi bi-plus-lg"></i> Add New Unit
                         </button>
 
                         <!-- Submit -->
@@ -189,31 +156,107 @@
         /* ============== Summernote Added ============ */
     </script>
 
-    <script>
-        let unitIndex = 1;
-        document.getElementById('add-unit').addEventListener('click', function() {
-            let tableBody = document.querySelector('#unit-table tbody');
-            let newRow = `
-        <tr>
-            <td><input type="text" name="units[${unitIndex}][unit]" class="form-control" placeholder="ইউনিট"></td>
-            <td><input type="text" name="units[${unitIndex}][description]" class="form-control" placeholder="ডেসক্রিপশন"></td>
-            <td><input type="text" name="units[${unitIndex}][note]" class="form-control" placeholder="নোট"></td>
-            <td><input type="date" name="units[${unitIndex}][exam_date]" class="form-control"></td>
-            <td><input type="time" name="units[${unitIndex}][exam_time]" class="form-control"></td>
-            <td class="text-center">
-                <button type="button" class="btn btn-outline-danger btn-sm remove-unit">
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </td>
-        </tr>`;
-            tableBody.insertAdjacentHTML('beforeend', newRow);
-            unitIndex++;
-        });
+    @push('admin')
+<script>
+    let unitIndex = 0;
 
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.remove-unit')) {
+    // Function to return a Unit Row with nested Subject Table
+    function getUnitRow(index) {
+        return `
+<tr class="unit-block" data-unit-index="${index}">
+    <tr>
+        <td><input type="text" name="units[${index}][unit]" class="form-control" placeholder="ইউনিট"></td>
+        <td><input type="text" name="units[${index}][description]" class="form-control" placeholder="ডেসক্রিপশন"></td>
+        <td><input type="text" name="units[${index}][note]" class="form-control" placeholder="নোট"></td>
+        <td><input type="date" name="units[${index}][exam_date]" class="form-control"></td>
+        <td><input type="time" name="units[${index}][exam_time]" class="form-control"></td>
+        <td class="text-center">
+            <button type="button" class="btn btn-outline-danger btn-sm remove-unit">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            <table class="table table-bordered subject-table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Mark</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="subject-body">
+                    ${getSubjectRow(index, 0)}
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-sm btn-success add-subject" data-unit-index="${index}">
+                Add Subject
+            </button>
+        </td>
+    </tr>
+`;
+    }
+
+    // Function to return a Subject Row
+    function getSubjectRow(unitIndex, subjectIndex) {
+        return `
+<tr>
+    <td><input type="text" name="units[${unitIndex}][subjects][${subjectIndex}][subject]" class="form-control" placeholder="Subject Name"></td>
+    <td><input type="number" name="units[${unitIndex}][subjects][${subjectIndex}][mark]" class="form-control" placeholder="Mark"></td>
+    <td>
+        <button type="button" class="btn btn-sm btn-danger remove-subject">Remove</button>
+    </td>
+</tr>`;
+    }
+
+    // Add Unit Button
+    document.getElementById('add-unit').addEventListener('click', function () {
+        const tbody = document.getElementById('unit-table-body');
+        const unitRowHTML = getUnitRow(unitIndex);
+        tbody.insertAdjacentHTML('beforeend', unitRowHTML);
+        unitIndex++;
+    });
+
+    // Remove Unit
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.remove-unit')) {
+            const unitBlock = e.target.closest('tr').previousElementSibling?.classList?.contains('unit-block') 
+                ? e.target.closest('tr').previousElementSibling 
+                : null;
+            if (unitBlock) {
+                unitBlock.nextElementSibling.remove(); // remove subject table row
+                unitBlock.remove(); // remove unit row
+            } else {
+                // fallback
                 e.target.closest('tr').remove();
+                e.target.closest('tr').nextElementSibling?.remove();
             }
-        });
-    </script>
+        }
+    });
+
+    // Add Subject inside a unit
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('add-subject')) {
+            const unitIndex = e.target.getAttribute('data-unit-index');
+            const subjectTbody = e.target.previousElementSibling.querySelector('.subject-body');
+            const subjectCount = subjectTbody.children.length;
+            subjectTbody.insertAdjacentHTML('beforeend', getSubjectRow(unitIndex, subjectCount));
+        }
+    });
+
+    // Remove subject
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.remove-subject')) {
+            e.target.closest('tr').remove();
+        }
+    });
+
+    // Load first unit by default
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('add-unit').click();
+    });
+</script>
+@endpush
+
 @endpush
