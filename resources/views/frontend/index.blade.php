@@ -56,7 +56,7 @@
 
 
     <!-- Dynamic About Section -->
-    <section class="py-5 bg-light" id="about">
+    <section class="py-2 bg-light" id="about">
         <div class="container">
             @foreach ($abouts as $about)
                 <div class="row align-items-center mb-5">
@@ -82,7 +82,7 @@
 
 
     <!-- MCQ Admission Section -->
-    <section class="py-5 bg-light">
+    <section class="py-3 bg-light">
         <div class="container text-center">
             {{-- <h4 class="mb-4 fw-bold reveal">MCQ এডমিশন এক প্লাটফর্মে</h4> --}}
             <div class="row g-4">
