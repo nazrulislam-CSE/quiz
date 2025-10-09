@@ -108,6 +108,8 @@
                                                                     </td>
                                                                     <td>{{ $unit->exam_time ? \Carbon\Carbon::parse($unit->exam_time)->format('h:i A') : '-' }}
                                                                     </td>
+                                                                    <td>{{ $unit->mark ?? '' }}
+                                                                    </td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>

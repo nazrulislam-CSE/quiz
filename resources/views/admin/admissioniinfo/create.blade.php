@@ -110,6 +110,7 @@
                                     <th>নোট</th>
                                     <th>পরীক্ষার তারিখ</th>
                                     <th>পরীক্ষার সময়</th>
+                                    <th>মার্ক</th>
                                     <th>অ্যাকশন</th>
                                 </tr>
                             </thead>
@@ -123,6 +124,7 @@
                                     </td>
                                     <td><input type="date" name="units[0][exam_date]" class="form-control"></td>
                                     <td><input type="time" name="units[0][exam_time]" class="form-control"></td>
+                                    <td><input type="time" name="units[0][mark]" class="form-control"></td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-outline-danger btn-sm remove-unit">
                                             <i class="bi bi-x-lg"></i>

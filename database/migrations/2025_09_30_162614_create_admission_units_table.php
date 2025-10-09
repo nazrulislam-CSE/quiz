@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('note')->nullable();
             $table->date('exam_date')->nullable(); 
             $table->time('exam_time')->nullable();
+            $table->string('mark')->nullable();
             $table->timestamps();
         });
     }

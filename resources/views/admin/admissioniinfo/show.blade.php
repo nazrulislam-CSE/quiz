@@ -101,6 +101,7 @@
                         <th>নোট</th>
                         <th>পরীক্ষার তারিখ</th>
                         <th>পরীক্ষার সময়</th>
+                        <th>মার্ক</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -112,6 +113,7 @@
                             <td>{{ $unit->note }}</td>
                             <td>{{ \Carbon\Carbon::parse($unit->exam_date)->format('d/m/Y') }}</td>
                             <td>{{ $unit->exam_time }}</td>
+                            <td>{{ $unit->mark }}</td>
                         </tr>
                     @empty
                         <tr>

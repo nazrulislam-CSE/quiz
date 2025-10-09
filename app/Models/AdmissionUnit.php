@@ -15,6 +15,7 @@ class AdmissionUnit extends Model
         'note',
         'exam_date',
         'exam_time',
+        'mark',
     ];
 
     public function admissionInfo()

@@ -77,6 +77,7 @@ class AdmissionInfoController extends Controller
                             'note'        => $unit['note'] ?? null,
                             'exam_date'   => $unit['exam_date'] ?? null,
                             'exam_time'   => $unit['exam_time'] ?? null,
+                            'mark'        => $unit['mark'] ?? null,
                         ]);
                     }
                 }
@@ -159,6 +160,7 @@ class AdmissionInfoController extends Controller
                         'note' => $unitData['note'] ?? null,
                         'exam_date' => $unitData['exam_date'] ?? null,
                         'exam_time' => $unitData['exam_time'] ?? null,
+                        'mark' => $unitData['mark'] ?? null,
                     ]);
                 }
             }
