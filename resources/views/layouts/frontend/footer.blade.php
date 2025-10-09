@@ -3,39 +3,89 @@
 @endphp
 <!-- Footer -->
 <style>
-  .custom-footer {
+  .footer-area {
+    background-color: #111d5e;
     position: relative;
-    color: #fff; /* White text */
-    padding: 40px 0;
-  }
-  .custom-footer a {
-    color: #fff; /* White links */
-    text-decoration: none;
-  }
-  .custom-footer a:hover {
-    text-decoration: underline;
-  }
-  .custom-footer .footer-link span,
-  .custom-footer h5 {
-    color: #fff;
-  }
-  /* Make sure container content is above overlay */
-  .custom-footer .container {
-    position: relative;
-    z-index: 2;
-  }
-  /* Overlay */
-  .custom-footer::before {
-    content: "";
-    position: absolute;
-    top:0; left:0; width:100%; height:100%;
-    background-color: rgba(0,0,0,0.5); /* Dark semi-transparent overlay */
-    z-index: 1;
-  }
-</style>
+    z-index: 1
+}
 
-<footer class="footer reveal custom-footer"
-        style="background-image: url('{{ asset('upload/man.jpg') }}'); background-size: cover; background-position: center;">
+.footer-area .shape {
+    position: absolute;
+    top: 50px;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    left: 0;
+    right: 0;
+    z-index: -1
+}
+
+.footer-logo-area {
+    margin-bottom: 30px
+}
+
+.footer-logo-area img {
+    margin-bottom: 20px
+}
+
+.footer-logo-area p {
+    margin-bottom: 25px;
+    color: #fff
+}
+
+.footer-logo-area .contact-list ul {
+    padding-left: 0;
+    margin-bottom: 0
+}
+
+.footer-logo-area .contact-list ul li {
+    list-style-type: none;
+    margin-bottom: 10px
+}
+
+.footer-logo-area .contact-list ul li:last-child {
+    margin-bottom: 0
+}
+
+.footer-logo-area .contact-list ul li a {
+    color: #fff
+}
+
+.footer-widjet {
+    margin-bottom: 30px
+}
+
+.footer-widjet h3 {
+    font-size: 22px;
+    color: #fff;
+    margin-bottom: 30px
+}
+
+.footer-widjet .list ul {
+    padding-left: 0;
+    margin-bottom: 0
+}
+
+.footer-widjet .list ul li {
+    list-style-type: none;
+    margin-bottom: 10px
+}
+
+.footer-widjet .list ul li:last-child {
+    margin-bottom: 0
+}
+
+.footer-widjet .list ul li a {
+    color: #fff;
+    transition: all ease .5s
+}
+
+.footer-widjet .list ul li a:hover {
+    color: #e32845
+}
+</style>
+<footer class="footer footer-area reveal custom-footer" style="background-color:#111d5e;">
   <div class="container">
     <div class="row">
       <div class="col-md-4 text-center text-md-start mb-4">
@@ -79,5 +129,8 @@
         </ul>
       </div>
     </div>
+     <div class="shape">
+         <img class="img-fluid" src="{{ asset('upload/footer-shape.png') }}" alt="Image">
+      </div>
   </div>
 </footer>
