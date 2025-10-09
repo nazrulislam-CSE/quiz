@@ -167,11 +167,11 @@
             $('.program-slider').slick({
                 dots: true,
                 infinite: true,
-                speed: 150,
+                speed: 300,
                 slidesToShow: 3,
                 slidesToScroll: 1,
                 autoplay: true,
-                autoplaySpeed: 4000,
+                autoplaySpeed: 1000,
                 arrows: true,
                 responsive: [{
                         breakpoint: 1024,
