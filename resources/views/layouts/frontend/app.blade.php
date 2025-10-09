@@ -167,7 +167,7 @@
             $('.program-slider').slick({
                 dots: true,
                 infinite: true,
-                speed: 300,
+                speed: 150,
                 slidesToShow: 3,
                 slidesToScroll: 1,
                 autoplay: true,

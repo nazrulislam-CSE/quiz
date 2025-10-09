@@ -299,7 +299,7 @@
                                     <!-- Profile Image -->
                                     <img src="{{ !empty($student->image) ? url('upload/student/' . $student->image) : url('upload/no_image.jpg') }}"
                                         alt="{{ $student->name }}" class="rounded-circle mb-3 mx-auto"
-                                        style="width: 100px; height: 100px; object-fit: cover; border: 3px solid #4a90e2;">
+                                        style="width: 110px; height: 110px; object-fit: cover; border: 3px solid #4a90e2;">
 
                                     <!-- Student Info -->
                                     <h5 class="card-title text-dark fw-semibold mb-1">{{ $student->name }}</h5>
