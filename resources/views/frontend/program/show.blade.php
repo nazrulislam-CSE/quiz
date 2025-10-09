@@ -121,7 +121,6 @@
                             <tr>
                                 <th>Subject Name</th>
                                 <th>Marks</th>
-                                <th>Exam Fee</th>
                             </tr>
                         </thead>
                         <tbody>
