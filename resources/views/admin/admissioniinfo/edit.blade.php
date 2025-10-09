@@ -118,7 +118,7 @@
             </tr>
         </thead>
         <tbody id="unit-table-body">
-            @foreach ($admission->units as $uIndex => $unit)
+            @foreach ($info->units as $uIndex => $unit)
                 <tr class="unit-block" data-unit-index="{{ $uIndex }}">
                     <td><input type="text" name="units[{{ $uIndex }}][unit]" value="{{ $unit->unit }}" class="form-control"></td>
                     <td><input type="text" name="units[{{ $uIndex }}][description]" value="{{ $unit->description }}" class="form-control"></td>
