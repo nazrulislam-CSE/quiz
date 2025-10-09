@@ -171,7 +171,7 @@ class AdmissionInfoController extends Controller
 
         // Re-insert all
         foreach ($request->units as $unitData) {
-            $unit = $admission->units()->create([
+            $unit = $info->units()->create([
                 'unit' => $unitData['unit'],
                 'description' => $unitData['description'],
                 'note' => $unitData['note'],
