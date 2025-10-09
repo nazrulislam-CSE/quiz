@@ -48,6 +48,7 @@ class ProgramSubjectController extends Controller
       
         $program->status = $request->status;
         $program->name = $request->name;
+        $program->mark = $request->mark;
         $program->slug = Str::slug($request->name);
         $program->description = $request->description;
         $program->created_at = Carbon::now();
@@ -91,6 +92,7 @@ class ProgramSubjectController extends Controller
        
         $program->status = $request->status;
         $program->name = $request->name;
+        $program->mark = $request->mark;
         $program->slug = Str::slug($request->name);
         $program->description = $request->description;
         $program->updated_at = Carbon::now();

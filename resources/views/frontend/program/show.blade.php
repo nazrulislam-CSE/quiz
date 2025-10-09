@@ -116,8 +116,8 @@
                 <h4 class="fw-bold mt-4 mb-3">Mark Distribution</h4>
 
                 <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
+                    <table class="table table-bordered table-striped table-hover text-center align-middle shadow-sm rounded">
+                        <thead class="table-light">
                             <tr>
                                 <th>Subject Name</th>
                                 <th>Marks</th>
@@ -125,9 +125,12 @@
                         </thead>
                         <tbody>
                             @foreach($program->subjects as $subject)
-                                <tr>
-                                    <td>{{ $subject->name }}</td>
-                                    <td>50</td>
+                                @php
+                                    shuffle($colors1);
+                                @endphp
+                                <tr style="display: {{ $loop->first ? 'table-row' : 'none' }};">
+                                    <td style="background-color: {{ $colors1[0] }}">{{ $subject->name ?? '' }}</td>
+                                    <td style="background-color: {{ $colors1[1] }}">{{ $subject->mark ?? '' }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

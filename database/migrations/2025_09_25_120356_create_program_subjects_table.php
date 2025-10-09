@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('program_subjects', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('mark')->nullable();
             $table->string('slug')->nullable();
             $table->text('description')->nullable();
             $table->unsignedTinyInteger('status')->default(1)->comment('1=>Active, 0=>Inactive');

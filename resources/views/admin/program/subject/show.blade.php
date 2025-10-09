@@ -62,6 +62,10 @@
                 <td>{{ $program->name ?? '' }}</td>
              </tr>
              <tr>
+                <td>Mark</td>
+                <td>{{ $program->mark ?? '' }}</td>
+             </tr>
+             <tr>
                 <td>Description</td>
                 <td>{!! $program->description ?? '' !!}</td>
              </tr>

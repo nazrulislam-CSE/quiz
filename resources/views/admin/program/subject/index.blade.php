@@ -63,6 +63,7 @@
                                         <tr>
                                             <th class="border-bottom-0">SL</th>
                                             <th class="border-bottom-0">Name</th>
+                                            <th class="border-bottom-0">Mark</th>
                                             <th class="border-bottom-0">Status</th>
                                             <th class="border-bottom-0">Actions</th>
                                         </tr>
@@ -72,6 +73,7 @@
                                         <tr>
                                             <td class="col-1">{{ $key+1 }}</td>
                                             <td>{{ $program->name }}</td>
+                                            <td>{{ $program->mark }}</td>
                                             <td>
                                                 @if($program->status == 1)
                                                     <a href="#" class="badge bg-pill bg-success">Active</a>

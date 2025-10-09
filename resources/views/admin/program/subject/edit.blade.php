@@ -67,6 +67,15 @@
                         </div>
                     </div>
 
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                       <label for="mark">Marks: <span class="text-danger"></span></label>
+                       @error('mark') <span class="text-danger">{{ $message }}</span> @enderror
+                        <div class="input-group">
+                            <span class="input-group-text" title="Mark" id="basic-addon1"><i class="fas fa-users"></i></span>
+                            <input type="number" min="0" value="{{ old('mark',$program->mark) }}" class=" form-control" name="mark" placeholder="Enter Mark">
+                        </div>
+                    </div>
+
                     <div class="form-group col-xl-12 col-lg-12  col-md-6">
                         <label for="description">Description:</label>
                         @error('description') <span class="text-danger">{{ $message }}</span> @enderror

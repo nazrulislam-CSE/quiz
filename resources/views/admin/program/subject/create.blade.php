@@ -59,12 +59,21 @@
                 @csrf
               <div class="row">
 
-                  <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
                        <label for="name">Name: <span class="text-danger"></span></label>
                        @error('name') <span class="text-danger">{{ $message }}</span> @enderror
                         <div class="input-group">
                             <span class="input-group-text" title="Name" id="basic-addon1"><i class="fas fa-users"></i></span>
                             <input type="text" value="{{ old('name') }}" class=" form-control" name="name" placeholder="Enter Name">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                       <label for="mark">Marks: <span class="text-danger"></span></label>
+                       @error('mark') <span class="text-danger">{{ $message }}</span> @enderror
+                        <div class="input-group">
+                            <span class="input-group-text" title="Mark" id="basic-addon1"><i class="fas fa-users"></i></span>
+                            <input type="number" min="0" value="{{ old('mark') }}" class=" form-control" name="mark" placeholder="Enter Mark">
                         </div>
                     </div>
 
