@@ -112,6 +112,30 @@
                     Please select a subject to view topics.
                 </p>
 
+                <!-- Subject Mark Distribution Show -->
+                <h4 class="fw-bold mt-4 mb-3">Mark Distribution</h4>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Subject Name</th>
+                                <th>Marks</th>
+                                <th>Exam Fee</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($program->subjects as $subject)
+                                <tr>
+                                    <td>{{ $subject->name }}</td>
+                                    <td>50</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+
                 <!-- Back Button -->
                 <a href="{{ url()->previous() }}" class="btn btn-secondary mt-3">
                     ← Back to Program List
