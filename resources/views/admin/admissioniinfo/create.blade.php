@@ -124,7 +124,7 @@
                                     </td>
                                     <td><input type="date" name="units[0][exam_date]" class="form-control"></td>
                                     <td><input type="time" name="units[0][exam_time]" class="form-control"></td>
-                                    <td><input type="text" name="units[0][mark]" class="form-control"></td>
+                                    <td><input type="text" name="units[0][mark]" class="form-control" placeholder="মার্ক"></td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-outline-danger btn-sm remove-unit">
                                             <i class="bi bi-x-lg"></i>

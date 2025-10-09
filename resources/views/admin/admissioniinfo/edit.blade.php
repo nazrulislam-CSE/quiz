@@ -131,7 +131,7 @@
                                         <td><input type="time" name="units[{{ $key }}][exam_time]"
                                                 class="form-control" value="{{ $unit->exam_time }}"></td>
                                         <td><input type="text" name="units[{{ $key }}][mark]"
-                                                class="form-control" value="{{ $unit->mark }}"></td>
+                                                class="form-control" placeholder="মার্ক" value="{{ $unit->mark }}"></td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-outline-danger btn-sm remove-unit">
                                                 <i class="bi bi-x-lg"></i>

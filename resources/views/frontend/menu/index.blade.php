@@ -174,6 +174,29 @@
                                                 </tbody>
                                             </table>
                                         </div>
+                                        <!-- Subject Mark Distribution Show -->
+                                        <h4 class="fw-bold mt-4 mb-3">Mark Distribution</h4>
+                                         <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead class="table-dark">
+                                                    <tr>
+                                                        <th>ইউনিট</th>
+                                                        <th>মার্ক</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($info->units as $unit)
+                                                        @php
+                                                            shuffle($colors);
+                                                        @endphp
+                                                        <tr>
+                                                            <td style="background-color: {{ $colors[0] }}">{{ $unit->unit }}</td>
+                                                            <td style="background-color: {{ $colors[1] }}">{{ $unit->mark ?? '-' }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
