@@ -83,7 +83,7 @@ class AdmissionInfoController extends Controller
             // }
 
             foreach ($request->units as $unitData) {
-                $unit = $admission->units()->create([
+                $unit = $admissionInfo->units()->create([
                     'unit' => $unitData['unit'],
                     'description' => $unitData['description'],
                     'note' => $unitData['note'],
