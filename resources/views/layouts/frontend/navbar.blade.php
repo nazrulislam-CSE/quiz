@@ -75,7 +75,7 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto align-items-lg-center d-flex flex-column flex-lg-row gap-2">
+      <ul class="navbar-nav text-start align-items-lg-center d-flex flex-column flex-lg-row gap-2">
         @if(count($menuitems) == 0)
             @for($i=1;$i < 6;$i++)
                 <li>

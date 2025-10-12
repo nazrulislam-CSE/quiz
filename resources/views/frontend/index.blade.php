@@ -23,7 +23,7 @@
         }
     </style>
     <!-- Hero Image Slider -->
-    <section id="heroSlider" class="carousel slide" data-bs-ride="carousel">
+    <section id="heroSlider" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
 
         <!-- Indicators -->
         <div class="carousel-indicators">
@@ -303,6 +303,9 @@
 
                                     <!-- Student Info -->
                                     <h5 class="card-title text-dark fw-semibold mb-1">{{ $student->name }}</h5>
+
+                                    <!-- Student Info -->
+                                    <h5 class="card-title text-success fw-semibold mb-1">{{ $student->merit }}</h5>
 
                                     @if ($student->versity)
                                         <p class="text-success small mb-2">{{ $student->versity }}</p>
