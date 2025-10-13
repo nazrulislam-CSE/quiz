@@ -21,14 +21,15 @@
         }
     </style>
     <!-- Hero Image Slider -->
-    <section id="heroSlider" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+    <section id="heroSlider" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
 
         <!-- Indicators -->
         <div class="carousel-indicators">
-            <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="0" class="active" aria-current="true"
-                aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            @foreach ($sliders as $key => $slider)
+                <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="{{ $key }}"
+                    class="{{ $key == 0 ? 'active' : '' }}" aria-current="{{ $key == 0 ? 'true' : 'false' }}"
+                    aria-label="Slide {{ $key + 1 }}"></button>
+            @endforeach
         </div>
 
         <!-- Slides -->
@@ -41,7 +42,6 @@
             @endforeach
         </div>
 
-
         <!-- Controls -->
         <button class="carousel-control-prev" type="button" data-bs-target="#heroSlider" data-bs-slide="prev">
             <span class="carousel-control-prev-icon"></span>
@@ -52,6 +52,7 @@
             <span class="visually-hidden">Next</span>
         </button>
     </section>
+
 
 
     <!-- Dynamic About Section -->
