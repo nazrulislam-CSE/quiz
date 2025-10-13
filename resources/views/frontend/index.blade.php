@@ -1,8 +1,6 @@
 @extends('layouts.frontend.app')
 @section('content')
     <style>
-
-
         .about-description ul {
             list-style: none;
             padding-left: 0;
@@ -35,13 +33,14 @@
 
         <!-- Slides -->
         <div class="carousel-inner">
-            @foreach ($sliders as $slider)
-                <div class="carousel-item active">
+            @foreach ($sliders as $key => $slider)
+                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
                     <img src="{{ !empty($slider->image) ? url('upload/slider/' . $slider->image) : url('upload/no_image.jpg') }}"
-                        class="d-block w-100 img-fluid" alt="Slide 1">
+                        class="d-block w-100 img-fluid" alt="Slide {{ $key + 1 }}">
                 </div>
             @endforeach
         </div>
+
 
         <!-- Controls -->
         <button class="carousel-control-prev" type="button" data-bs-target="#heroSlider" data-bs-slide="prev">
@@ -134,7 +133,8 @@
                                         class="img-fluid mb-3" alt="{{ $program->name }}">
                                     <div class="card-body">
                                         <h4 class="card-title">{{ $program->name }}</h4>
-                                        <div class="about-description reveal mt-3" style="max-height: 400px; overflow-y: auto;">
+                                        <div class="about-description reveal mt-3"
+                                            style="max-height: 400px; overflow-y: auto;">
                                             {!! $program->description !!}
                                         </div>
 
