@@ -96,9 +96,9 @@ class BalanceRequestController extends Controller
         // Step 1: Direct Referrer
         $directReferrer = User::find($refer_id);
 
-        // if (!$directReferrer || !$directReferrer->refer_by) {
-        //     return back()->with('error', 'Direct referrer not found.');
-        // }
+        if (!$directReferrer || !$directReferrer->refer_by) {
+            return back()->with('error', 'Direct referrer not found.');
+        }
 
         // 💰 Pay Direct Referrer (20%)
         $directCommission = ($amount * $commission->refer1) / 100;
@@ -182,7 +182,7 @@ class BalanceRequestController extends Controller
             }
         }
 
-        // return true;
+        return true;
     }
 
 
