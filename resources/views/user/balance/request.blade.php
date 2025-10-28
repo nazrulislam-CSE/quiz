@@ -15,18 +15,23 @@
                 <p class="fw-bold mb-2">টাকা পাঠাবেন যে নম্বর এ……….</p>
 
                 <p class="text-danger fw-bold">
+                    বিকাশ নম্বর 01841714651 (মার্চেন্ট) 
+                    <button type="button" class="btn btn-success btn-sm" onclick="copyText('01841714651')">কপি করুন</button>
+                </p>
+
+                <p class="text-danger fw-bold">
                     বিকাশ নম্বর 01316017328 (পার্সোনাল) 
                     <button type="button" class="btn btn-success btn-sm" onclick="copyText('01316017328')">কপি করুন</button>
                 </p>
 
                 <p class="text-danger fw-bold">
-                    নগদ নম্বর 01521420274 (পার্সোনাল) 
-                    <button type="button" class="btn btn-success btn-sm" onclick="copyText('01521420274')">কপি করুন</button>
+                    নগদ নম্বর 01976017328 (পার্সোনাল) 
+                    <button type="button" class="btn btn-success btn-sm" onclick="copyText('01976017328')">কপি করুন</button>
                 </p>
 
-                <p class="text-warning fw-bold">
-                    রকেট লিংক 
-                    <button type="button" class="btn btn-success btn-sm" onclick="copyText('rocket-link')">কপি করুন</button>
+                <p class="text-danger fw-bold">
+                    রকেট নম্বর 01841714651 (পার্সোনাল) 
+                    <button type="button" class="btn btn-success btn-sm" onclick="copyText('01841714651')">কপি করুন</button>
                 </p>
             </div>
 
