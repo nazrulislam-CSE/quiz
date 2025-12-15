@@ -19,7 +19,7 @@ class McqController extends Controller
     public function index()
     {
         $pageTitle = 'MCQ List';
-        $mcqs = Mcq::latest()->get();
+        $mcqs = Mcq::whereHas('quizAnswers')->latest()->get();
         return view('admin.mcq.index', compact('mcqs','pageTitle'));
     }
 
