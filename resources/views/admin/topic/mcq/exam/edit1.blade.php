@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <div class="mt-2">
-                            <strong>Total Questions:</strong> {{ $questions->count() }}
+                            <strong>Existing Questions:</strong> {{ $questions->count() }}
                         </div>
                     </div>
 
@@ -67,12 +67,19 @@
                         @csrf
                         @method('PUT')
 
-                        <div class="questions-wrapper">
+                        <!-- ============ EXISTING QUESTIONS SECTION ============ -->
+                        <div class="section-title mb-3">
+                            <h4><i class="fas fa-edit text-primary"></i> Edit Existing Questions</h4>
+                            <p class="text-muted">Edit the questions below. Changes will be saved when you click "Update All Questions".</p>
+                        </div>
+
+                        <div class="questions-wrapper mb-5">
                             @foreach ($questions as $index => $question)
                                 <div class="card mb-4 question-block">
                                     <div class="card-header bg-light d-flex justify-content-between align-items-center">
                                         <h5 class="mb-0">Question {{ $index + 1 }}</h5>
                                         <span class="badge bg-primary">ID: {{ $question->id }}</span>
+                                        <!-- Debug: Correct Answer: {{ $question->correct_answer ?? 'NULL' }} -->
                                     </div>
                                     <div class="card-body">
                                         <!-- Question Text -->
@@ -84,137 +91,107 @@
                                             @enderror
                                         </div>
 
-                                        <!-- Options (Using answers table) -->
-                                        @if ($question->answers->count() > 0)
-                                            <div class="row">
-                                                @foreach ($question->answers as $answer)
-                                                    <div class="col-md-6 mb-2">
-                                                        <div class="input-group">
-                                                            <span
-                                                                class="input-group-text">{{ chr(65 + $loop->index) }})</span>
-                                                            <input type="text"
-                                                                name="questions[{{ $question->id }}][answers][{{ $answer->id }}]"
-                                                                class="form-control"
-                                                                value="{{ old("questions.$question->id.answers.$answer->id", $answer->answer) }}"
-                                                                placeholder="Option {{ $loop->iteration }}" required>
-                                                            <div class="input-group-text">
-                                                                <input type="radio"
-                                                                    name="questions[{{ $question->id }}][correct_answer]"
-                                                                    value="{{ $answer->id }}"
-                                                                    {{ old("questions.$question->id.correct_answer", $answer->is_correct) ? 'checked' : '' }}
-                                                                    class="form-check-input">
-                                                                <label class="form-check-label ms-2">Correct</label>
-                                                            </div>
-                                                        </div>
-                                                        @error("questions.$question->id.answers.$answer->id")
-                                                            <span class="text-danger">{{ $message }}</span>
-                                                        @enderror
+                                        <!-- Options - FIXED VERSION -->
+                                        <div class="row">
+                                            <div class="col-md-6 mb-2">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">A)</span>
+                                                    <input type="text"
+                                                        name="questions[{{ $question->id }}][option_a]"
+                                                        class="form-control"
+                                                        value="{{ old("questions.$question->id.option_a", $question->option_a) }}"
+                                                        placeholder="Option A" required>
+                                                    <div class="input-group-text">
+                                                        @php
+                                                            $oldCorrect = old("questions.$question->id.correct_answer");
+                                                            $correctAnswer = $oldCorrect ? $oldCorrect : ($question->correct_answer ?? '');
+                                                        @endphp
+                                                        <input type="radio"
+                                                            name="questions[{{ $question->id }}][correct_answer]"
+                                                            value="a"
+                                                            @if($correctAnswer == 'a') checked @endif
+                                                            class="correct-radio">
+                                                        <label class="form-check-label ms-2">Correct</label>
                                                     </div>
-                                                @endforeach
+                                                </div>
+                                                @error("questions.$question->id.option_a")
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
-                                            <!-- Delete existing question button -->
-                                            <div class="mt-3 d-flex justify-content-end">
-                                                <a href="{{ route('admin.single.topic.mcq.destroy', $question->id) }}" id="delete"
-                                                class="btn btn-sm btn-outline-danger">
-                                                    <i class="fas fa-trash"></i> Delete Question
-                                                </a>
+
+                                            <div class="col-md-6 mb-2">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">B)</span>
+                                                    <input type="text"
+                                                        name="questions[{{ $question->id }}][option_b]"
+                                                        class="form-control"
+                                                        value="{{ old("questions.$question->id.option_b", $question->option_b) }}"
+                                                        placeholder="Option B" required>
+                                                    <div class="input-group-text">
+                                                        <input type="radio"
+                                                            name="questions[{{ $question->id }}][correct_answer]"
+                                                            value="b"
+                                                            @if($correctAnswer == 'b') checked @endif
+                                                            class="correct-radio">
+                                                        <label class="form-check-label ms-2">Correct</label>
+                                                    </div>
+                                                </div>
+                                                @error("questions.$question->id.option_b")
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
-                                        @else
-                                            <!-- Options (Using direct columns - option_a, option_b, etc.) -->
-                                            <div class="row">
-                                                <div class="col-md-6 mb-2">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">A)</span>
-                                                        <input type="text"
-                                                            name="questions[{{ $question->id }}][option_a]"
-                                                            class="form-control"
-                                                            value="{{ old("questions.$question->id.option_a", $question->option_a) }}"
-                                                            placeholder="Option A" required>
-                                                        <div class="input-group-text">
-                                                            <input type="radio"
-                                                                name="questions[{{ $question->id }}][correct_answer]"
-                                                                value="a"
-                                                                {{ old("questions.$question->id.correct_answer", $question->correct_answer) == 'a' ? 'checked' : '' }}
-                                                                class="form-check-input">
-                                                            <label class="form-check-label ms-2">Correct</label>
-                                                        </div>
-                                                    </div>
-                                                    @error("questions.$question->id.option_a")
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
 
-                                                <div class="col-md-6 mb-2">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">B)</span>
-                                                        <input type="text"
-                                                            name="questions[{{ $question->id }}][option_b]"
-                                                            class="form-control"
-                                                            value="{{ old("questions.$question->id.option_b", $question->option_b) }}"
-                                                            placeholder="Option B" required>
-                                                        <div class="input-group-text">
-                                                            <input type="radio"
-                                                                name="questions[{{ $question->id }}][correct_answer]"
-                                                                value="b"
-                                                                {{ old("questions.$question->id.correct_answer", $question->correct_answer) == 'b' ? 'checked' : '' }}
-                                                                class="form-check-input">
-                                                            <label class="form-check-label ms-2">Correct</label>
-                                                        </div>
+                                            <div class="col-md-6 mb-2">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">C)</span>
+                                                    <input type="text"
+                                                        name="questions[{{ $question->id }}][option_c]"
+                                                        class="form-control"
+                                                        value="{{ old("questions.$question->id.option_c", $question->option_c) }}"
+                                                        placeholder="Option C" required>
+                                                    <div class="input-group-text">
+                                                        <input type="radio"
+                                                            name="questions[{{ $question->id }}][correct_answer]"
+                                                            value="c"
+                                                            @if($correctAnswer == 'c') checked @endif
+                                                            class="correct-radio">
+                                                        <label class="form-check-label ms-2">Correct</label>
                                                     </div>
-                                                    @error("questions.$question->id.option_b")
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
                                                 </div>
-
-                                                <div class="col-md-6 mb-2">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">C)</span>
-                                                        <input type="text"
-                                                            name="questions[{{ $question->id }}][option_c]"
-                                                            class="form-control"
-                                                            value="{{ old("questions.$question->id.option_c", $question->option_c) }}"
-                                                            placeholder="Option C" required>
-                                                        <div class="input-group-text">
-                                                            <input type="radio"
-                                                                name="questions[{{ $question->id }}][correct_answer]"
-                                                                value="c"
-                                                                {{ old("questions.$question->id.correct_answer", $question->correct_answer) == 'c' ? 'checked' : '' }}
-                                                                class="form-check-input">
-                                                            <label class="form-check-label ms-2">Correct</label>
-                                                        </div>
-                                                    </div>
-                                                    @error("questions.$question->id.option_c")
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-
-                                                <div class="col-md-6 mb-2">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text">D)</span>
-                                                        <input type="text"
-                                                            name="questions[{{ $question->id }}][option_d]"
-                                                            class="form-control"
-                                                            value="{{ old("questions.$question->id.option_d", $question->option_d) }}"
-                                                            placeholder="Option D" required>
-                                                        <div class="input-group-text">
-                                                            <input type="radio"
-                                                                name="questions[{{ $question->id }}][correct_answer]"
-                                                                value="d"
-                                                                {{ old("questions.$question->id.correct_answer", $question->correct_answer) == 'd' ? 'checked' : '' }}
-                                                                class="form-check-input">
-                                                            <label class="form-check-label ms-2">Correct</label>
-                                                        </div>
-                                                    </div>
-                                                    @error("questions.$question->id.option_d")
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
+                                                @error("questions.$question->id.option_c")
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
-                                        @endif
 
-                                        <!-- Individual question actions -->
+                                            <div class="col-md-6 mb-2">
+                                                <div class="input-group">
+                                                    <span class="input-group-text">D)</span>
+                                                    <input type="text"
+                                                        name="questions[{{ $question->id }}][option_d]"
+                                                        class="form-control"
+                                                        value="{{ old("questions.$question->id.option_d", $question->option_d) }}"
+                                                        placeholder="Option D" required>
+                                                    <div class="input-group-text">
+                                                        <input type="radio"
+                                                            name="questions[{{ $question->id }}][correct_answer]"
+                                                            value="d"
+                                                            @if($correctAnswer == 'd') checked @endif
+                                                            class="correct-radio">
+                                                        <label class="form-check-label ms-2">Correct</label>
+                                                    </div>
+                                                </div>
+                                                @error("questions.$question->id.option_d")
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <!-- Delete existing question button -->
                                         <div class="mt-3 d-flex justify-content-end">
-
+                                            <button type="button" class="btn btn-sm btn-outline-danger delete-question-btn" 
+                                                    data-question-id="{{ $question->id }}">
+                                                <i class="fas fa-trash"></i> Delete Question
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -353,12 +330,17 @@
                         </div>
 
                         <!-- Submit Button -->
-                        <div class="form-group mt-4 d-flex justify-content-end gap-2">
-                            <button type="submit" class="btn btn-success btn-lg">
-                                <i class="fas fa-save"></i> Update All Questions
-                            </button>
+                        <div class="form-group mt-4 d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-primary me-2">Existing: {{ $questions->count() }}</span>
+                                <span class="badge bg-success" id="newQuestionCount">New: 0</span>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-save"></i> Update All Questions
+                                </button>
+                            </div>
                         </div>
-                        
                     </form>
                 </div>
             </div>
@@ -367,18 +349,6 @@
 
     <style>
         .question-block {
-            border-left: 4px solid #007bff;
-        }
-
-        .input-group-text {
-            background-color: #f8f9fa;
-        }
-
-        .form-check-input {
-            margin-top: 0;
-        }
-
-          .question-block {
             border-left: 4px solid #007bff;
         }
         .new-question-block {
@@ -401,23 +371,6 @@
 
 @push('admin')
     <script>
-        $(document).ready(function() {
-            // Auto focus first textarea
-            $('textarea').first().focus();
-
-            // Make radio buttons easier to click
-            $('.form-check-input').on('click', function() {
-                $(this).closest('.input-group').find('.form-check-input').prop('checked', false);
-                $(this).prop('checked', true);
-            });
-
-            // Confirmation before submit
-            $('form').on('submit', function() {
-                return confirm('Are you sure you want to update all questions?');
-            });
-        });
-    </script>
-     <script>
         $(document).ready(function() {
             let newQuestionCount = {{ count(old('new_questions') ?? []) }};
             updateNewQuestionCount();
@@ -586,6 +539,25 @@
                 });
             }
             
+            // Optional: Remove existing question
+            $(document).on('click', '.delete-question-btn', function() {
+                if (confirm('Are you sure you want to delete this question?')) {
+                    let questionId = $(this).data('question-id');
+                    $.ajax({
+                        url: "{{ route('admin.topic.mcq.destroy', '') }}/" + questionId,
+                        type: 'DELETE',
+                        data: {
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            location.reload();
+                        },
+                        error: function() {
+                            alert('Error deleting question');
+                        }
+                    });
+                }
+            });
         });
     </script>
 @endpush

@@ -260,7 +260,7 @@ Route::middleware('admin')->group(function () {
 
     /* ============> Topic Wise MCQ<=========== */
     Route::prefix('topic')->group(function () {
-        Route::get('/mcq/index', [TopicMcqController::class, 'index'])->name('topic.mcq.index');
+        Route::get('/topic/mcq/index', [TopicMcqController::class, 'index'])->name('topic.mcq.index');
         Route::get('/mcq/create', [TopicMcqController::class, 'create'])->name('topic.mcq.create');
         Route::post('/mcq/store', [TopicMcqController::class, 'store'])->name('topic.mcq.store');
         Route::get('/mcq/edit/{admission}/{department}/{subject}/{topic}', [TopicMcqController::class, 'edit'])->name('topic.mcq.edit');
