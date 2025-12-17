@@ -19,7 +19,9 @@
 
                         // Determine current step based on selected values and admission type
                         if ($selectedAdmissionData) {
-                            if ($selectedAdmissionData->name == 'ভার্সিটি এডমিশন') {
+                            $admissionName = $selectedAdmissionData->name;
+                            
+                            if ($admissionName == 'ভার্সিটি এডমিশন') {
                                 if ($selectedAdmission && !$selectedDepartment) {
                                     $currentStep = 2;
                                 } elseif ($selectedDepartment && !$selectedSubject) {
@@ -29,7 +31,8 @@
                                 } elseif ($selectedTopic) {
                                     $currentStep = 5;
                                 }
-                            } elseif ($selectedAdmissionData->name == 'পেপার ফাইনাল এক্সাম') {
+                            } 
+                            elseif ($admissionName == 'পেপার ফাইনাল এক্সাম') {
                                 if ($selectedAdmission && !$selectedDepartment) {
                                     $currentStep = 2;
                                 } elseif ($selectedDepartment && !$selectedGroup) {
@@ -41,7 +44,8 @@
                                 } elseif ($selectedPaperFinal) {
                                     $currentStep = 5;
                                 }
-                            } elseif ($selectedAdmissionData->name == 'ফাইনাল মডেল টেস্ট এক্সাম') {
+                            } 
+                            elseif ($admissionName == 'ফাইনাল মডেল টেস্ট এক্সাম') {
                                 if ($selectedAdmission && !$selectedDepartment) {
                                     $currentStep = 2;
                                 } elseif ($selectedDepartment && !$selectedGroup) {
@@ -49,6 +53,18 @@
                                 } elseif ($selectedGroup && !$selectedModelTest) {
                                     $currentStep = 4;
                                 } elseif ($selectedModelTest) {
+                                    $currentStep = 5;
+                                }
+                            }
+                            // DEFAULT WORKFLOW FOR OTHER ADMISSIONS
+                            else {
+                                if ($selectedAdmission && !$selectedDepartment) {
+                                    $currentStep = 2;
+                                } elseif ($selectedDepartment && !$selectedSubject) {
+                                    $currentStep = 3;
+                                } elseif ($selectedSubject && !$selectedTopic) {
+                                    $currentStep = 4;
+                                } elseif ($selectedTopic) {
                                     $currentStep = 5;
                                 }
                             }
@@ -129,8 +145,12 @@
 
                             <!-- Step 3: Different workflows based on admission type -->
                             @if ($selectedAdmission && $selectedDepartment)
+                                @php
+                                    $admissionName = $selectedAdmissionData ? $selectedAdmissionData->name : '';
+                                @endphp
+                                
                                 <!-- ভার্সিটি এডমিশন workflow -->
-                                @if ($selectedAdmissionData && $selectedAdmissionData->name == 'ভার্সিটি এডমিশন')
+                                @if ($admissionName == 'ভার্সিটি এডমিশন')
                                     @if (!$selectedSubject)
                                         <div class="step-content active" id="step-subject">
                                             <h5 class="step-title"><i class="fas fa-book me-2"></i>Select Subject</h5>
@@ -180,8 +200,8 @@
                                     @endif
                                 @endif
 
-                                <!-- পেপার ফাইনাল এক্সাম workflow - UPDATED -->
-                                @if ($selectedAdmissionData && $selectedAdmissionData->name == 'পেপার ফাইনাল এক্সাম')
+                                <!-- পেপার ফাইনাল এক্সাম workflow -->
+                                @if ($admissionName == 'পেপার ফাইনাল এক্সাম')
                                     @if (!$selectedGroup)
                                         <div class="step-content active" id="step-group">
                                             <h5 class="step-title"><i class="fas fa-users me-2"></i>Select Group</h5>
@@ -260,7 +280,7 @@
                                 @endif
 
                                 <!-- ফাইনাল মডেল টেস্ট এক্সাম workflow -->
-                                @if ($selectedAdmissionData && $selectedAdmissionData->name == 'ফাইনাল মডেল টেস্ট এক্সাম')
+                                @if ($admissionName == 'ফাইনাল মডেল টেস্ট এক্সাম')
                                     @if (!$selectedGroup)
                                         <div class="step-content active" id="step-group">
                                             <h5 class="step-title"><i class="fas fa-users me-2"></i>Select Group</h5>
@@ -310,39 +330,104 @@
                                         </div>
                                     @endif
                                 @endif
+
+                                <!-- DEFAULT WORKFLOW FOR OTHER ADMISSIONS (এইচএসসি একাডেমিক প্রস্তুতি ইত্যাদি) -->
+                                @if (!in_array($admissionName, ['ভার্সিটি এডমিশন', 'পেপার ফাইনাল এক্সাম', 'ফাইনাল মডেল টেস্ট এক্সাম']))
+                                    @if (!$selectedSubject)
+                                        <div class="step-content active" id="step-subject">
+                                            <h5 class="step-title"><i class="fas fa-book me-2"></i>Select Subject</h5>
+                                            <input type="hidden" name="admission" value="{{ $selectedAdmission }}">
+                                            <input type="hidden" name="department" value="{{ $selectedDepartment }}">
+                                            <div class="mb-4">
+                                                @foreach ($subjects as $subject)
+                                                    <label for="subject{{ $subject->id }}"
+                                                        class="selection-item d-flex align-items-center p-2 border rounded mb-2"
+                                                        style="cursor: pointer;"
+                                                        onclick="document.getElementById('subject{{ $subject->id }}').checked = true; this.closest('form').submit();">
+                                                        <img src="{{ !empty($subject->image) ? url('upload/subject/' . $subject->image) : url('upload/mcq.png') }}"
+                                                            alt="ICON" style="width:40px;height:40px;object-fit:cover;">
+                                                        <input type="radio" name="subject"
+                                                            id="subject{{ $subject->id }}" value="{{ $subject->id }}"
+                                                            class="d-none">
+                                                        <span>{{ $subject->name }}</span>
+                                                    </label>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    @if ($selectedSubject && !$selectedTopic)
+                                        <div class="step-content active" id="step-topic">
+                                            <h5 class="step-title"><i class="fas fa-tag me-2"></i>Select Topic</h5>
+                                            <input type="hidden" name="admission" value="{{ $selectedAdmission }}">
+                                            <input type="hidden" name="department" value="{{ $selectedDepartment }}">
+                                            <input type="hidden" name="subject" value="{{ $selectedSubject }}">
+                                            <div class="mb-4">
+                                                @foreach ($topics as $topic)
+                                                    <label for="topic{{ $topic->id }}"
+                                                        class="selection-item d-flex align-items-center p-2 border rounded mb-2"
+                                                        style="cursor: pointer;"
+                                                        onclick="document.getElementById('topic{{ $topic->id }}').checked = true; this.closest('form').submit();">
+                                                        <img src="{{ !empty($topic->image) ? url('upload/topic/' . $topic->image) : url('upload/mcq.png') }}"
+                                                            alt="ICON"
+                                                            style="width:40px;height:40px;object-fit:cover;">
+                                                        <input type="radio" name="topic"
+                                                            id="topic{{ $topic->id }}" value="{{ $topic->id }}"
+                                                            class="d-none">
+                                                        <span>{{ $topic->name }}</span>
+                                                    </label>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endif
                             @endif
 
                             <!-- Final Step: Exam/Study Options -->
-                            @if (
-                                ($selectedTopic && $selectedAdmissionData && $selectedAdmissionData->name == 'ভার্সিটি এডমিশন') ||
-                                    ($selectedPaperFinal && $selectedAdmissionData && $selectedAdmissionData->name == 'পেপার ফাইনাল এক্সাম') ||
-                                    ($selectedModelTest && $selectedAdmissionData && $selectedAdmissionData->name == 'ফাইনাল মডেল টেস্ট এক্সাম'))
-
-                                @php
-                                    $selectedItem = null;
-                                    $itemType = '';
-                                    $itemName = '';
-
-                                    if ($selectedAdmissionData->name == 'ভার্সিটি এডমিশন') {
+                            @php
+                                $showFinalOptions = false;
+                                $selectedItem = null;
+                                $itemType = '';
+                                $itemName = '';
+                                $itemId = null;
+                                
+                                if ($selectedAdmissionData && !$examStart && !$studyMode) {
+                                    $admissionName = $selectedAdmissionData->name;
+                                    
+                                    if ($admissionName == 'ভার্সিটি এডমিশন' && $selectedTopic) {
+                                        $showFinalOptions = true;
                                         $selectedItem = $topics->where('id', $selectedTopic)->first();
                                         $itemType = 'topic';
                                         $itemName = 'টপিক';
-                                    } elseif ($selectedAdmissionData->name == 'পেপার ফাইনাল এক্সাম') {
+                                        $itemId = $selectedTopic;
+                                    } 
+                                    elseif ($admissionName == 'পেপার ফাইনাল এক্সাম' && $selectedPaperFinal) {
+                                        $showFinalOptions = true;
                                         $selectedItem = $paperFinals->where('id', $selectedPaperFinal)->first();
                                         $itemType = 'paper_final';
                                         $itemName = 'পেপার ফাইনাল';
-                                    } elseif ($selectedAdmissionData->name == 'ফাইনাল মডেল টেস্ট এক্সাম') {
+                                        $itemId = $selectedPaperFinal;
+                                    } 
+                                    elseif ($admissionName == 'ফাইনাল মডেল টেস্ট এক্সাম' && $selectedModelTest) {
+                                        $showFinalOptions = true;
                                         $selectedItem = $modelTests->where('id', $selectedModelTest)->first();
                                         $itemType = 'model_test';
                                         $itemName = 'মডেল টেস্ট';
+                                        $itemId = $selectedModelTest;
                                     }
-                                @endphp
+                                    // DEFAULT: For other admissions with topic selected
+                                    elseif (!in_array($admissionName, ['ভার্সিটি এডমিশন', 'পেপার ফাইনাল এক্সাম', 'ফাইনাল মডেল টেস্ট এক্সাম']) && $selectedTopic) {
+                                        $showFinalOptions = true;
+                                        $selectedItem = $topics->where('id', $selectedTopic)->first();
+                                        $itemType = 'topic';
+                                        $itemName = 'টপিক';
+                                        $itemId = $selectedTopic;
+                                    }
+                                }
+                            @endphp
 
-                                @if (
-                                    (($selectedTopic && $selectedAdmissionData && $selectedAdmissionData->name == 'ভার্সিটি এডমিশন') ||
-                                        ($selectedPaperFinal && $selectedAdmissionData && $selectedAdmissionData->name == 'পেপার ফাইনাল এক্সাম') ||
-                                        ($selectedModelTest && $selectedAdmissionData && $selectedAdmissionData->name == 'ফাইনাল মডেল টেস্ট এক্সাম')) &&
-                                        $mcqs->isEmpty())
+                            @if ($showFinalOptions)
+                                @if ($selectedItem)
                                     <div class="card border-success shadow-sm mb-4">
                                         <div class="card-header bg-success text-white fw-bold">
                                             <i class="fa fa-info-circle me-2"></i> পরীক্ষার নোটিশ
@@ -417,97 +502,96 @@
                                             <h6 class="fw-bold text-success mb-3 text-center">সিলেক্টেড
                                                 {{ $itemName }} → MCQ শুরু</h6>
 
-                                            @if ($selectedItem)
-                                                <div class="border rounded p-3">
-                                                    <div class="row align-items-center">
-                                                        {{-- Image column --}}
-                                                        <div class="col-auto">
-                                                            <img src="{{ !empty($selectedItem->image) ? url('upload/' . $itemType . '/' . $selectedItem->image) : url('upload/mcq.png') }}"
-                                                                class="rounded-circle" width="60"
-                                                                alt="{{ $itemName }} icon">
-                                                        </div>
-
-                                                        {{-- Details column --}}
-                                                        <div class="col">
-                                                            <h6 class="mb-1">{{ $selectedItem->name }}</h6>
-                                                            <small class="d-block">⏱️ সময়:
-                                                                {{ $selectedItem->exam_duration ?? 'N/A' }} মিনিট</small>
-                                                            <small class="d-block">📊 মার্ক:
-                                                                {{ $selectedItem->exam_mark ?? 'N/A' }}</small>
-                                                            <small class="d-block">💰 পরীক্ষার ফি:
-                                                                {{ number_format($selectedItem->fee, 2) }} টাকা</small>
-                                                            {{-- 🔴 If user has already attempted this topic --}}
-                                                            @if ($userHasAttempted)
-                                                                <small class="d-block text-danger fw-bold mt-1">
-                                                                    ⚠️ আপনি এই {{ $itemName }} এর উপর পূর্বে পরীক্ষা
-                                                                    দিয়েছেন
-                                                                </small>
-                                                            @endif
-                                                        </div>
+                                            <div class="border rounded p-3">
+                                                <div class="row align-items-center">
+                                                    {{-- Image column --}}
+                                                    <div class="col-auto">
+                                                        <img src="{{ !empty($selectedItem->image) ? url('upload/' . $itemType . '/' . $selectedItem->image) : url('upload/mcq.png') }}"
+                                                            class="rounded-circle" width="60"
+                                                            alt="{{ $itemName }} icon">
                                                     </div>
 
-                                                    {{-- Buttons row --}}
-                                                    <div class="mt-3">
-                                                        @php
-                                                            $studyParams = [
-                                                                'admission' => $selectedAdmission,
-                                                                'department' => $selectedDepartment,
-                                                                'study' => 1,
-                                                            ];
-                                                            $examParams = [
-                                                                'admission' => $selectedAdmission,
-                                                                'department' => $selectedDepartment,
-                                                                'exam' => 1,
-                                                            ];
-
-                                                            if ($selectedAdmissionData->name == 'ভার্সিটি এডমিশন') {
-                                                                $studyParams['subject'] = $selectedSubject;
-                                                                $studyParams['topic'] = $selectedTopic;
-                                                                $examParams['subject'] = $selectedSubject;
-                                                                $examParams['topic'] = $selectedTopic;
-                                                            } elseif (
-                                                                $selectedAdmissionData->name == 'পেপার ফাইনাল এক্সাম'
-                                                            ) {
-                                                                $studyParams['group'] = $selectedGroup;
-                                                                $studyParams['subject'] = $selectedSubject;
-                                                                $studyParams['paper_final'] = $selectedPaperFinal;
-                                                                $examParams['group'] = $selectedGroup;
-                                                                $examParams['subject'] = $selectedSubject;
-                                                                $examParams['paper_final'] = $selectedPaperFinal;
-                                                            } elseif (
-                                                                $selectedAdmissionData->name ==
-                                                                'ফাইনাল মডেল টেস্ট এক্সাম'
-                                                            ) {
-                                                                $studyParams['group'] = $selectedGroup;
-                                                                $studyParams['model_test'] = $selectedModelTest;
-                                                                $examParams['group'] = $selectedGroup;
-                                                                $examParams['model_test'] = $selectedModelTest;
-                                                            }
-                                                        @endphp
-
-                                                        <div class="d-flex gap-2 justify-content-between">
-                                                            <a href="{{ route('user.mcq.exam', $studyParams) }}"
-                                                                class="btn btn-danger btn-sm flex-fill text-center">📖
-                                                                স্টাডি</a>
-                                                            <a href="{{ route('user.mcq.exam', $examParams) }}"
-                                                                class="btn btn-success btn-sm flex-fill text-center">📝
-                                                                এক্সাম</a>
-                                                        </div>
+                                                    {{-- Details column --}}
+                                                    <div class="col">
+                                                        <h6 class="mb-1">{{ $selectedItem->name }}</h6>
+                                                        <small class="d-block">⏱️ সময়:
+                                                            {{ $selectedItem->exam_duration ?? 'N/A' }} মিনিট</small>
+                                                        <small class="d-block">📊 মার্ক:
+                                                            {{ $selectedItem->exam_mark ?? 'N/A' }}</small>
+                                                        <small class="d-block">💰 পরীক্ষার ফি:
+                                                            {{ number_format($selectedItem->fee, 2) }} টাকা</small>
+                                                        {{-- 🔴 If user has already attempted this item --}}
+                                                        @if ($userHasAttempted)
+                                                            <small class="d-block text-danger fw-bold mt-1">
+                                                                ⚠️ আপনি এই {{ $itemName }} এর উপর পূর্বে পরীক্ষা
+                                                                দিয়েছেন
+                                                            </small>
+                                                        @endif
                                                     </div>
                                                 </div>
-                                            @else
-                                                <h6 class="mb-1">কোনো {{ $itemName }} সিলেক্ট করা হয়নি</h6>
-                                            @endif
-                                        </div>
 
+                                                {{-- Buttons row --}}
+                                                <div class="mt-3">
+                                                    @php
+                                                        // Build parameters based on admission type
+                                                        $studyParams = [
+                                                            'admission' => $selectedAdmission,
+                                                            'department' => $selectedDepartment,
+                                                            'study' => 1,
+                                                        ];
+                                                        $examParams = [
+                                                            'admission' => $selectedAdmission,
+                                                            'department' => $selectedDepartment,
+                                                            'exam' => 1,
+                                                        ];
+                                                        
+                                                        if ($admissionName == 'ভার্সিটি এডমিশন') {
+                                                            $studyParams['subject'] = $selectedSubject;
+                                                            $studyParams['topic'] = $selectedTopic;
+                                                            $examParams['subject'] = $selectedSubject;
+                                                            $examParams['topic'] = $selectedTopic;
+                                                        } 
+                                                        elseif ($admissionName == 'পেপার ফাইনাল এক্সাম') {
+                                                            $studyParams['group'] = $selectedGroup;
+                                                            $studyParams['subject'] = $selectedSubject;
+                                                            $studyParams['paper_final'] = $selectedPaperFinal;
+                                                            $examParams['group'] = $selectedGroup;
+                                                            $examParams['subject'] = $selectedSubject;
+                                                            $examParams['paper_final'] = $selectedPaperFinal;
+                                                        } 
+                                                        elseif ($admissionName == 'ফাইনাল মডেল টেস্ট এক্সাম') {
+                                                            $studyParams['group'] = $selectedGroup;
+                                                            $studyParams['model_test'] = $selectedModelTest;
+                                                            $examParams['group'] = $selectedGroup;
+                                                            $examParams['model_test'] = $selectedModelTest;
+                                                        }
+                                                        // DEFAULT: For other admissions
+                                                        else {
+                                                            $studyParams['subject'] = $selectedSubject;
+                                                            $studyParams['topic'] = $selectedTopic;
+                                                            $examParams['subject'] = $selectedSubject;
+                                                            $examParams['topic'] = $selectedTopic;
+                                                        }
+                                                    @endphp
+
+                                                    <div class="d-flex gap-2 justify-content-between">
+                                                        <a href="{{ route('user.mcq.exam', $studyParams) }}"
+                                                            class="btn btn-danger btn-sm flex-fill text-center">📖
+                                                            স্টাডি</a>
+                                                        <a href="{{ route('user.mcq.exam', $examParams) }}"
+                                                            class="btn btn-success btn-sm flex-fill text-center">📝
+                                                            এক্সাম</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 @endif
                             @endif
                         </form>
 
-                        <!-- Exam and Study modes remain the same as your original code -->
+                        <!-- Exam and Study modes -->
                         @if ($examStart && $mcqs->isNotEmpty())
-                            <!-- Exam mode code... -->
                             <!-- ✅ Exam Header with Countdown -->
                             <div class="card shadow-sm border-success mb-4">
                                 <div
@@ -528,7 +612,7 @@
                                 <input type="hidden" name="topic" value="{{ $selectedTopic }}">
                                 <input type="hidden" name="model_test" value="{{ $selectedModelTest }}">
                                 <input type="hidden" name="paper_final" value="{{ $selectedPaperFinal }}">
-                                <input type="hidden" name="admission_data" value="{{ $selectedAdmissionData->name }}">
+                                <input type="hidden" name="admission_data" value="{{ $selectedAdmissionData ? $selectedAdmissionData->name : '' }}">
 
                                 @foreach ($mcqs as $index => $mcq)
                                     <div class="question-container" data-question="{{ $index + 1 }}"
@@ -708,7 +792,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            let duration = {{ $selectedTopicData->exam_duration ?? 10 }} * 60; // total seconds
+            let duration = {{ $selectedTopicData->exam_duration ?? ($selectedPaperFinalData->exam_duration ?? ($selectedModelTestData->exam_duration ?? 10)) }} * 60; // total seconds
             let startTime = Date.now(); // exam start timestamp
             let timerDisplay = document.getElementById("exam-timer");
 
