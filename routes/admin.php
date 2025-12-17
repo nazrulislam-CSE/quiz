@@ -263,14 +263,17 @@ Route::middleware('admin')->group(function () {
         Route::get('/mcq/index', [TopicMcqController::class, 'index'])->name('topic.mcq.index');
         Route::get('/mcq/create', [TopicMcqController::class, 'create'])->name('topic.mcq.create');
         Route::post('/mcq/store', [TopicMcqController::class, 'store'])->name('topic.mcq.store');
-        Route::get('/mcq/edit/{id}', [TopicMcqController::class, 'edit'])->name('topic.mcq.edit');
-        Route::put('/mcq/update/{id}', [TopicMcqController::class, 'update'])->name('topic.mcq.update');
-        Route::get('/mcq/delete/{id}', [TopicMcqController::class, 'destroy'])->name('topic.mcq.delete');
+        Route::get('/mcq/edit/{admission}/{department}/{subject}/{topic}', [TopicMcqController::class, 'edit'])->name('topic.mcq.edit');
+        Route::put('/mcq/update/{admission}/{department}/{subject}/{topic}',[TopicMcqController::class, 'update'])->name('topic.mcq.update');
+        Route::get('/mcq/delete/{admission}/{department}/{subject}/{topic}', [TopicMcqController::class, 'destroy'])->name('topic.mcq.delete');
         Route::get('/mcq/show/{id}', [TopicMcqController::class,'show'])->name('topic.mcq.show');
+        Route::get('/mcq/show/{admission}/{department}/{subject}/{topic}', [TopicMcqController::class, 'show'])->name('topic.mcq.show');
         Route::get('/mcq/get-departments/{admission_id}', [TopicMcqController::class, 'getDepartments'])->name('get.departments');
         Route::get('/mcq/get-subjects/{department_id}', [TopicMcqController::class, 'getSubjects']);
         Route::get('/mcq/get-topics/{subject_id}', [TopicMcqController::class, 'getTopics']);
         Route::post('/mcq/delete-question', [TopicMcqController::class, 'deleteQuestion'])->name('mcq.delete-question');
+        Route::get('/mcq/topic/single/{id}', [TopicMcqController::class, 'singleDeleteQuestion'])->name('single.topic.mcq.destroy');
+
     });
 
     /* ============> Topic Wise Study MCQ<=========== */
