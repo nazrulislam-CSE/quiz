@@ -312,15 +312,17 @@ Route::middleware('admin')->group(function () {
         Route::get('/mcq/index', [PaperFinalMcqController::class, 'index'])->name('paper.mcq.index');
         Route::get('/mcq/create', [PaperFinalMcqController::class, 'create'])->name('paper.mcq.create');
         Route::post('/mcq/store', [PaperFinalMcqController::class, 'store'])->name('paper.mcq.store');
-        Route::get('/mcq/edit/{id}', [PaperFinalMcqController::class, 'edit'])->name('paper.mcq.edit');
-        Route::post('/mcq/update/{id}', [PaperFinalMcqController::class, 'update'])->name('paper.mcq.update');
-        Route::get('/mcq/delete/{id}', [PaperFinalMcqController::class, 'destroy'])->name('paper.mcq.delete');
-        Route::get('/mcq/show/{id}', [PaperFinalMcqController::class,'show'])->name('paper.mcq.show');
+        Route::get('/mcq/edit/{admission}/{department}/{group}/{subject}/{paper}', [PaperFinalMcqController::class, 'edit'])->name('paper.mcq.edit');
+        Route::put('/mcq/update/{admission}/{department}/{group}/{subject}/{paper}',[PaperFinalMcqController::class, 'update'])->name('paper.mcq.update');
+        Route::get('/mcq/delete/{admission}/{department}/{group}/{subject}/{paper}', [PaperFinalMcqController::class, 'destroy'])->name('paper.mcq.delete');
+        // Route::get('/mcq/show/{id}', [PaperFinalMcqController::class,'show'])->name('paper.mcq.show');
+        Route::get('/mcq/show/{admission}/{department}/{group}/{subject}/{paper}', [PaperFinalMcqController::class, 'show'])->name('paper.mcq.show');
         Route::get('/mcq/get-departments/{admission_id}', [PaperFinalMcqController::class, 'getDepartments'])->name('get.departments');
         Route::get('/mcq/get-groups/{department_id}', [PaperFinalMcqController::class, 'getGroups']);
         Route::get('/mcq/get-subjects/{group_id}', [PaperFinalMcqController::class, 'getSubjects']);
         Route::get('/mcq/get-papers/{subject_id}', [PaperFinalMcqController::class, 'getPapers']);
         Route::post('/mcq/delete-question', [PaperFinalMcqController::class, 'deleteQuestion'])->name('paper.mcq.delete-question');
+        Route::get('/mcq/paper/single/{id}', [PaperFinalMcqController::class, 'singleDeleteQuestion'])->name('single.paper.mcq.destroy');
     });
 
     /* ============> Model Test <=========== */
