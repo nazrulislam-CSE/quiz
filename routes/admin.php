@@ -281,14 +281,16 @@ Route::middleware('admin')->group(function () {
         Route::get('/study/mcq/index', [TopicStudyMcqController::class, 'index'])->name('topic.study.mcq.index');
         Route::get('/study/mcq/create', [TopicStudyMcqController::class, 'create'])->name('topic.study.mcq.create');
         Route::post('/study/mcq/store', [TopicStudyMcqController::class, 'store'])->name('topic.study.mcq.store');
-        Route::get('/study/mcq/edit/{id}', [TopicStudyMcqController::class, 'edit'])->name('topic.study.mcq.edit');
-        Route::put('/study/mcq/update/{id}', [TopicStudyMcqController::class, 'update'])->name('topic.study.mcq.update');
-        Route::get('/study/mcq/delete/{id}', [TopicStudyMcqController::class, 'destroy'])->name('topic.study.mcq.delete');
+        Route::get('/study/mcq/edit/{admission}/{department}/{subject}/{topic}', [TopicStudyMcqController::class, 'edit'])->name('topic.study.mcq.edit');
+        Route::put('/study/mcq/update/{admission}/{department}/{subject}/{topic}',[TopicStudyMcqController::class, 'update'])->name('topic.study.mcq.update');
+        Route::get('/study/mcq/delete/{admission}/{department}/{subject}/{topic}', [TopicStudyMcqController::class, 'destroy'])->name('topic.study.mcq.delete');
         Route::get('/study/mcq/show/{id}', [TopicStudyMcqController::class,'show'])->name('topic.study.mcq.show');
+        Route::get('/study/mcq/show/{admission}/{department}/{subject}/{topic}', [TopicStudyMcqController::class, 'show'])->name('topic.study.mcq.show');
         Route::get('/study/mcq/get-departments/{admission_id}', [TopicStudyMcqController::class, 'getDepartments'])->name('get.departments');
         Route::get('/study/mcq/get-subjects/{department_id}', [TopicStudyMcqController::class, 'getSubjects']);
         Route::get('/study/mcq/get-topics/{subject_id}', [TopicStudyMcqController::class, 'getTopics']);
         Route::post('/study/mcq/delete-question', [TopicStudyMcqController::class, 'deleteQuestion'])->name('mcq.study.delete-question');
+        Route::get('/study/mcq/topic/single/{id}', [TopicStudyMcqController::class, 'singleDeleteQuestion'])->name('single.topic.study.mcq.destroy');
     });
 
     /* ============> Paper Final <=========== */
