@@ -50,37 +50,37 @@ class BalanceRequestController extends Controller
 
     public function update(Request $request, string $id)
     {
-        // dd($request->all());
         $balanceRequest = BalanceRequest::findOrFail($id);
 
         $request->validate([
             'status' => 'required|in:pending,approved,rejected',
         ]);
 
-        // ---- Only run commission logic if status is approved ---- //
         if ($request->status === 'approved') {
-            $user   = User::find($balanceRequest->user_id);
+            $user = User::find($balanceRequest->user_id);
             $amount = $balanceRequest->amount;
 
-            $this->referCommission($user, $amount);
-
-            $commission = Commission::find(1);
-
-            $commission_bonus = ($balanceRequest->amount * $commission->refer1) / 100;
+            // কমিশন লজিক চালানো হবে শুধুমাত্র যদি রেফারার থাকে
+            if ($user->refer_by) {
+                $this->referCommission($user, $amount);
+                $commission = Commission::find(1);
+                $commission_bonus = ($balanceRequest->amount * $commission->refer1) / 100;
+                $totalAdd = $balanceRequest->amount + $commission_bonus;
+            } else {
+                // রেফারার না থাকলে শুধুমাত্র মূল অ্যামাউন্ট
+                $totalAdd = $balanceRequest->amount;
+            }
 
             $balanceRequest->update([
-                'status' => 1,
-                // 'amount' => $balanceRequest->amount + $commission_bonus,
+                'status' => $request->status,
             ]);
 
-           $totalAdd = $balanceRequest->amount + $commission_bonus;
-           $user->main_wallet += $totalAdd;
-           $user->save();
-
+            $user->main_wallet += $totalAdd;
+            $user->save();
         }
 
         return redirect()->route('admin.balance.request.index')
-                        ->with('success','Balance request status updated successfully.');
+                        ->with('success', 'Balance request status updated successfully.');
     }
 
     public function referCommission($user, $amount)
@@ -88,7 +88,7 @@ class BalanceRequestController extends Controller
         $commission = Commission::find(1);
 
         if (!$commission) {
-            return back()->with('error', 'Commission settings not found.');
+            return; // শুধু রিটার্ন করুন, এরর না
         }
 
         $refer_id = $user->refer_by;
@@ -96,8 +96,8 @@ class BalanceRequestController extends Controller
         // Step 1: Direct Referrer
         $directReferrer = User::find($refer_id);
 
-        if (!$directReferrer || !$directReferrer->refer_by) {
-            return back()->with('error', 'Direct referrer not found.');
+        if (!$directReferrer) {
+            return; // রেফারার না থাকলে শুধু রিটার্ন
         }
 
         // 💰 Pay Direct Referrer (20%)
@@ -152,33 +152,31 @@ class BalanceRequestController extends Controller
             ]);
 
             // Step 3: 2nd Generation Referrer
-            if ($firstGenReferrer->refer_by) {
-                $secondGenReferrer = User::find($firstGenReferrer->refer_by);
+            $secondGenReferrer = User::find($firstGenReferrer->refer_by);
 
-                if ($secondGenReferrer) {
-                    $secondGenCommission = ($amount * $commission->refer3) / 100;
-                    $secondGenReferrer->increment('income_wallet', $secondGenCommission);
+            if ($secondGenReferrer) {
+                $secondGenCommission = ($amount * $commission->refer3) / 100;
+                $secondGenReferrer->increment('income_wallet', $secondGenCommission);
 
-                    Transaction::create([
-                        'from_id'   => $user->id,
-                        'user_id'   => $secondGenReferrer->id,
-                        'from_user' => $refer_id,
-                        'out'       => 'referral',
-                        'status'    => 'success',
-                        'purpose'   => '2nd Generation Referral Commission',
-                        'amount'    => $secondGenCommission,
-                    ]);
+                Transaction::create([
+                    'from_id'   => $user->id,
+                    'user_id'   => $secondGenReferrer->id,
+                    'from_user' => $refer_id,
+                    'out'       => 'referral',
+                    'status'    => 'success',
+                    'purpose'   => '2nd Generation Referral Commission',
+                    'amount'    => $secondGenCommission,
+                ]);
 
-                    Generation::create([
-                        'from_user_id' => $user->id,
-                        'to_user_id'   => $secondGenReferrer->id,
-                        'level'        => 2,
-                        'date'         => now(),
-                        'status'       => 1,
-                        'commission'   => $secondGenCommission,
-                        'total_amount' => $amount,
-                    ]);
-                }
+                Generation::create([
+                    'from_user_id' => $user->id,
+                    'to_user_id'   => $secondGenReferrer->id,
+                    'level'        => 2,
+                    'date'         => now(),
+                    'status'       => 1,
+                    'commission'   => $secondGenCommission,
+                    'total_amount' => $amount,
+                ]);
             }
         }
 
