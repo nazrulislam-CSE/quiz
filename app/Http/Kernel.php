@@ -71,6 +71,8 @@ class Kernel extends HttpKernel
 
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'permission' => \App\Http\Middleware\PermissionMiddleware::class,
-        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class
+        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
+        'check.bk.token' => \App\Http\Middleware\CheckBkToken::class,
+        'HandleCors' => \App\Http\Middleware\CorsMiddleware::class,
     ];
 }
