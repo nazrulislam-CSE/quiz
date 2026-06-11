@@ -17,30 +17,31 @@ use App\Http\Controllers\Api\V1\Admin\AdminController;
 
 Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
 
-    // ================= USER ROUTES =================
+    // ================= USER ROUTES (Phone OTP Only) =================
     Route::prefix('user')->group(function () {
 
         // Public routes
-        Route::post('register', [UserAuthController::class, 'register']);
-        Route::post('login', [UserAuthController::class, 'login']);
+        Route::post('register', [UserAuthController::class, 'register']);  // Register
+        Route::post('login', [UserAuthController::class, 'login']);        // Send OTP
+        Route::post('verify-otp', [UserAuthController::class, 'verifyOtp']); // Verify OTP & Login
+        Route::post('resend-otp', [UserAuthController::class, 'resendOtp']); // Resend OTP
+        
+        // Password Reset via Phone
         Route::post('forgot-password', [UserAuthController::class, 'sendResetLink']);
         Route::post('verify-code', [UserAuthController::class, 'verifyCode']);
         Route::post('reset-password', [UserAuthController::class, 'reset']);
 
-        // Protected routes
+        // Protected routes (requires authentication)
         Route::middleware(['auth:sanctum'])->group(function () {
-
             Route::post('logout', [UserAuthController::class, 'logout']);
             Route::get('profile', [UserAuthController::class, 'profile']);
             Route::put('profile', [UserAuthController::class, 'updateProfile']);
+            Route::post('avatar', [UserAuthController::class, 'uploadAvatar']);
             Route::post('change-password', [UserAuthController::class, 'changePassword']);
-
+            Route::delete('delete-account', [UserAuthController::class, 'deleteAccount']);
             Route::get('dashboard', [UserController::class, 'dashboard']);
-
         });
-
     });
-
 
     // ================= ADMIN ROUTES =================
     Route::prefix('admin')->group(function () {
@@ -69,17 +70,11 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
             Route::get('admins', [AdminController::class, 'getAllAdmins']);
             Route::post('admins', [AdminController::class, 'createAdmin']);
             Route::put('admins/{id}/status', [AdminController::class, 'updateAdminStatus']);
-
         });
-
     });
-
 });
-
 
 // Default route
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-
     return $request->user();
-
 });

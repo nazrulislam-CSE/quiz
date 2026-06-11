@@ -22,6 +22,11 @@ use App\Http\Controllers\Auth\RegisterController;
 //     return view('welcome');
 // });
 
+Route::get('/api', function () {
+    return view('api');
+});
+
+
 Auth::routes();
 
 /* =========> Sart Frontend All Routes <========= */

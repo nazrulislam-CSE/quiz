@@ -11,17 +11,20 @@ use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
+use App\Helpers\Traits\SMSTrait;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    // ================= REGISTER =================
+    use SMSTrait;
+
+    // ================= REGISTER WITH PHONE =================
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'full_name' => 'nullable|string|max:255',
-            'phone' => 'nullable|integer',
+            'phone' => 'required|numeric|min:10|unique:users,phone',
+            'full_name' => 'required|string|max:255',
+            'email' => 'nullable|email|unique:users,email',
             'username' => 'nullable|string|max:255|unique:users,username',
             'company_name' => 'nullable|string|max:255',
             'owner_name' => 'nullable|string|max:255',
@@ -34,15 +37,18 @@ class AuthController extends Controller
             ], 422);
         }
 
+        // Generate random password for phone-only users
+        $randomPassword = Str::random(12);
+        
         $user = User::create([
-            'email' => $request->email,
-            'full_name' => $request->full_name,
             'phone' => $request->phone,
+            'full_name' => $request->full_name,
+            'email' => $request->email,
             'company_name' => $request->company_name,
             'owner_name' => $request->owner_name,
-            'username' => $request->username,
-            'password' => Hash::make($request->password),
-            'show_password' => $request->password,
+            'username' => $request->username ?? 'user_' . $request->phone,
+            'password' => Hash::make($randomPassword),
+            'show_password' => $randomPassword,
             'main_wallet' => 0,
             'income_wallet' => 0,
             'withdraw_wallet' => 0,
@@ -50,25 +56,35 @@ class AuthController extends Controller
             'status' => 1,
         ]);
 
-        $token = $user->createToken('user_auth_token')->plainTextToken;
+        // Send welcome SMS
+        try {
+            $welcomeMessage = "Welcome to ChalkboardBD! Your account has been created successfully. Phone: " . $request->phone;
+            $this->sendSMS($request->phone, $welcomeMessage);
+        } catch (\Exception $e) {
+            \Log::error('Welcome SMS failed: ' . $e->getMessage());
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'User registered successfully',
+            'message' => 'User registered successfully. Please login using OTP.',
             'data' => [
-                'user' => $user,
-                'token' => $token,
-                'token_type' => 'Bearer'
+                'user' => [
+                    'id' => $user->id,
+                    'full_name' => $user->full_name,
+                    'phone' => $user->phone,
+                    'email' => $user->email,
+                    'username' => $user->username,
+                ]
             ]
         ], 201);
     }
 
-    // ================= LOGIN =================
+    // ================= LOGIN - SEND OTP TO PHONE =================
     public function login(Request $request)
     {
+        // dd('test');
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string',
+            'phone' => 'required|numeric|min:10',
         ]);
 
         if ($validator->fails()) {
@@ -78,36 +94,202 @@ class AuthController extends Controller
             ], 422);
         }
 
-        if (!Auth::guard('web')->attempt($request->only('email', 'password'))) {
+        $phone = $request->phone;
+        
+        // Check if phone exists
+        $user = User::where('phone', $phone)->first();
+        
+        if (!$user) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid credentials'
-            ], 401);
+                'message' => 'No account found with this phone number. Please register first.'
+            ], 404);
         }
-
-        $user = Auth::guard('web')->user();
-
+        
         if ($user->status == 0) {
             return response()->json([
                 'success' => false,
                 'message' => 'Your account is inactive. Please contact support.'
             ], 403);
         }
+        
+        // Generate 6-digit OTP
+        $otp = rand(100000, 999999);
+        
+        // Store OTP in cache with 5 minutes expiration
+        Cache::put('otp_' . $phone, [
+            'otp' => $otp,
+            'user_id' => $user->id,
+            'user_data' => $user->toArray()
+        ], now()->addMinutes(5));
+        
+        // Send OTP via SMS using SMSTrait
+        try {
+            $smsMessage = "Your ChalkboardBD login verification code is: $otp. Valid for 5 minutes.";
+            $response = $this->sendSMS($phone, $smsMessage);
+            // dd($response);
+            
+            if ($response['success']) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'OTP sent successfully to ' . $phone,
+                    'data' => [
+                        'phone' => $phone,
+                        'otp' => $otp // Remove in production, only for testing
+                    ]
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send OTP: ' . ($response['message'] ?? 'Unknown error')
+                ], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'SMS sending failed: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 
+    // ================= VERIFY OTP AND COMPLETE LOGIN =================
+    public function verifyOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required|numeric|min:10',
+            'otp' => 'required|digits:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $phone = $request->phone;
+        $cachedData = Cache::get('otp_' . $phone);
+        
+        if (!$cachedData || $cachedData['otp'] != $request->otp) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid or expired OTP'
+            ], 400);
+        }
+        
+        $user = User::find($cachedData['user_id']);
+        
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+        
+        if ($user->status == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your account is inactive. Please contact support.'
+            ], 403);
+        }
+        
+        // Delete OTP from cache
+        Cache::forget('otp_' . $phone);
+        
         // Revoke all existing tokens
         $user->tokens()->where('name', 'user_auth_token')->delete();
-
+        
+        // Create new token
         $token = $user->createToken('user_auth_token')->plainTextToken;
-
+        
+        // Update last login time
+        $user->update([
+            'updated_at' => now()
+        ]);
+        
         return response()->json([
             'success' => true,
             'message' => 'Login successful',
             'data' => [
-                'user' => $user,
+                'user' => [
+                    'id' => $user->id,
+                    'full_name' => $user->full_name,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'username' => $user->username,
+                    'image' => $user->image ? asset('storage/' . $user->image) : null,
+                    'main_wallet' => (float) $user->main_wallet,
+                    'income_wallet' => (float) $user->income_wallet,
+                    'withdraw_wallet' => (float) $user->withdraw_wallet,
+                    'refer_bonus' => (float) $user->refer_bonus,
+                    'status' => $user->status,
+                ],
                 'token' => $token,
                 'token_type' => 'Bearer'
             ]
         ]);
+    }
+
+    // ================= RESEND OTP =================
+    public function resendOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required|numeric|min:10',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $phone = $request->phone;
+        $user = User::where('phone', $phone)->first();
+        
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No account found with this phone number'
+            ], 404);
+        }
+        
+        // Generate new OTP
+        $otp = rand(100000, 999999);
+        
+        // Update cache
+        Cache::put('otp_' . $phone, [
+            'otp' => $otp,
+            'user_id' => $user->id,
+            'user_data' => $user->toArray()
+        ], now()->addMinutes(5));
+        
+        // Send OTP via SMS
+        try {
+            $smsMessage = "Your ChalkboardBD login verification code is: $otp. Valid for 5 minutes.";
+            $response = $this->sendSMS($phone, $smsMessage);
+            
+            if ($response['success']) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'OTP resent successfully to ' . $phone,
+                    'data' => [
+                        'phone' => $phone,
+                        'otp' => $otp // Remove in production
+                    ]
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to resend OTP: ' . ($response['message'] ?? 'Unknown error')
+                ], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'SMS sending failed: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     // ================= LOGOUT =================
@@ -121,120 +303,40 @@ class AuthController extends Controller
         ]);
     }
 
-    // ================= FORGOT PASSWORD (SEND CODE) =================
-    public function sendResetLink(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:users,email',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $user = User::where('email', $request->email)->first();
-        $code = rand(1000, 9999);
-
-        Cache::put('user_reset_code_' . $user->email, $code, now()->addMinutes(10));
-
-        // Send email with code
-        Mail::raw("Your password reset code is: $code", function ($message) use ($user) {
-            $message->to($user->email)
-                ->subject('Password Reset Code');
-        });
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Reset code sent to your email'
-        ]);
-    }
-
-    // ================= VERIFY CODE =================
-    public function verifyCode(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:users,email',
-            'code' => 'required|digits:4',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $cached = Cache::get('user_reset_code_' . $request->email);
-
-        if (!$cached || $cached != $request->code) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid or expired code'
-            ], 400);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Code verified successfully',
-            'data' => [
-                'email' => $request->email
-            ]
-        ]);
-    }
-
-    // ================= RESET PASSWORD =================
-    public function reset(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:users,email',
-            'password' => 'required|confirmed|min:8',
-            'code' => 'required|digits:4'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        // Verify code again before reset
-        $cached = Cache::get('user_reset_code_' . $request->email);
-
-        if (!$cached || $cached != $request->code) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid or expired code'
-            ], 400);
-        }
-
-        $user = User::where('email', $request->email)->first();
-
-        $user->update([
-            'password' => Hash::make($request->password),
-            'show_password' => $request->password,
-        ]);
-
-        Cache::forget('user_reset_code_' . $request->email);
-
-        // Revoke all tokens after password reset
-        $user->tokens()->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Password reset successful. Please login again.'
-        ]);
-    }
-
     // ================= GET PROFILE =================
     public function profile(Request $request)
     {
+        $user = $request->user();
+        
         return response()->json([
             'success' => true,
-            'data' => $request->user()
+            'data' => [
+                'id' => $user->id,
+                'full_name' => $user->full_name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'username' => $user->username,
+                'image' => $user->image ? asset('storage/' . $user->image) : null,
+                'main_wallet' => (float) $user->main_wallet,
+                'income_wallet' => (float) $user->income_wallet,
+                'withdraw_wallet' => (float) $user->withdraw_wallet,
+                'refer_bonus' => (float) $user->refer_bonus,
+                'city_name' => $user->city_name,
+                'present_address' => $user->present_address,
+                'parmanent_address' => $user->parmanent_address,
+                'date_of_birth' => $user->date_of_birth,
+                'nationality' => $user->nationality,
+                'religion' => $user->religion,
+                'blood_group' => $user->blood_group,
+                'gender' => $user->gender,
+                'nid_number' => $user->nid_number,
+                'facebook_url' => $user->facebook_url,
+                'linkedin_url' => $user->linkedin_url,
+                'twitter_url' => $user->twitter_url,
+                'instagram_url' => $user->instagram_url,
+                'status' => $user->status,
+                'created_at' => $user->created_at,
+            ]
         ]);
     }
 
@@ -245,7 +347,7 @@ class AuthController extends Controller
 
         $validator = Validator::make($request->all(), [
             'full_name' => 'nullable|string|max:255',
-            'phone' => 'nullable|integer|unique:users,phone,' . $user->id,
+            'email' => 'nullable|email|unique:users,email,' . $user->id,
             'username' => 'nullable|string|max:255|unique:users,username,' . $user->id,
             'city_name' => 'nullable|string|max:255',
             'present_address' => 'nullable|string',
@@ -254,7 +356,7 @@ class AuthController extends Controller
             'nationality' => 'nullable|string',
             'religion' => 'nullable|string',
             'blood_group' => 'nullable|string',
-            'gender' => 'nullable|string',
+            'gender' => 'nullable|string|in:Male,Female,Other',
             'nid_number' => 'nullable|string',
             'facebook_url' => 'nullable|url',
             'linkedin_url' => 'nullable|url',
@@ -270,7 +372,7 @@ class AuthController extends Controller
         }
 
         $user->update($request->only([
-            'full_name', 'phone', 'username', 'city_name', 'present_address',
+            'full_name', 'email', 'username', 'city_name', 'present_address',
             'parmanent_address', 'date_of_birth', 'nationality', 'religion',
             'blood_group', 'gender', 'nid_number', 'facebook_url', 'linkedin_url',
             'twitter_url', 'instagram_url'
@@ -315,6 +417,194 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Password changed successfully'
+        ]);
+    }
+
+    // ================= UPLOAD AVATAR =================
+    public function uploadAvatar(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user = $request->user();
+        
+        // Delete old avatar if exists
+        if ($user->image && $user->image != 'user.png' && file_exists(storage_path('app/public/' . $user->image))) {
+            unlink(storage_path('app/public/' . $user->image));
+        }
+        
+        $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        
+        $user->update(['image' => $avatarPath]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Avatar uploaded successfully',
+            'data' => [
+                'avatar_url' => asset('storage/' . $avatarPath)
+            ]
+        ]);
+    }
+
+    // ================= DELETE ACCOUNT =================
+    public function deleteAccount(Request $request)
+    {
+        $user = $request->user();
+        
+        $validator = Validator::make($request->all(), [
+            'reason' => 'nullable|string|max:500',
+        ]);
+        
+        // Log deletion reason
+        if ($request->reason) {
+            \Log::info('Account deletion requested', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'reason' => $request->reason
+            ]);
+        }
+        
+        // Revoke all tokens
+        $user->tokens()->delete();
+        
+        // Delete user
+        $user->delete();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Account deleted successfully'
+        ]);
+    }
+
+    // ================= FORGOT PASSWORD (SEND OTP TO PHONE) =================
+    public function sendResetLink(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required|numeric|min:10|exists:users,phone',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user = User::where('phone', $request->phone)->first();
+        $code = rand(100000, 999999);
+
+        Cache::put('user_reset_code_' . $user->phone, [
+            'code' => $code,
+            'user_id' => $user->id
+        ], now()->addMinutes(10));
+
+        // Send SMS with code
+        try {
+            $smsMessage = "Your ChalkboardBD password reset code is: $code. Valid for 10 minutes.";
+            $response = $this->sendSMS($user->phone, $smsMessage);
+            
+            if ($response['success']) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Reset code sent to your phone'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send reset code'
+                ], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'SMS sending failed: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // ================= VERIFY RESET CODE =================
+    public function verifyCode(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required|numeric|min:10|exists:users,phone',
+            'code' => 'required|digits:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $cached = Cache::get('user_reset_code_' . $request->phone);
+
+        if (!$cached || $cached['code'] != $request->code) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid or expired code'
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Code verified successfully',
+            'data' => [
+                'phone' => $request->phone
+            ]
+        ]);
+    }
+
+    // ================= RESET PASSWORD =================
+    public function reset(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required|numeric|min:10|exists:users,phone',
+            'password' => 'required|confirmed|min:8',
+            'code' => 'required|digits:6'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Verify code again before reset
+        $cached = Cache::get('user_reset_code_' . $request->phone);
+
+        if (!$cached || $cached['code'] != $request->code) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid or expired code'
+            ], 400);
+        }
+
+        $user = User::where('phone', $request->phone)->first();
+
+        $user->update([
+            'password' => Hash::make($request->password),
+            'show_password' => $request->password,
+        ]);
+
+        Cache::forget('user_reset_code_' . $request->phone);
+
+        // Revoke all tokens after password reset
+        $user->tokens()->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Password reset successful. Please login again.'
         ]);
     }
 }

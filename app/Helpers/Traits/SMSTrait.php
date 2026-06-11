@@ -4,32 +4,103 @@ namespace App\Helpers\Traits;
 
 trait SMSTrait
 {
-    private function techno_bulk_sms($apKey, $senderId, $mobileNo, $message, $userEmail)
+    /**
+     * Generate Access Token
+     */
+    private function getAdaReachToken()
     {
-        $url = 'https://24bulksms.com/24bulksms/api/api-sms-send';
-        $data = array(
-            'api_key' => $apKey,
-            'sender_id' => $senderId,
-            'message' => $message,
-            'mobile_no' => $mobileNo,
-            'user_email' => $userEmail
-        );
+        $url = "https://api.mobireach.com.bd/auth/tokens";
 
-        // Initialize cURL
-        $curl = curl_init($url);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        $payload = [
+            'username' => 'speak',
+            'password' => 'Dhaka@00888944',
+        ];
 
-        // Execute cURL and capture the response
-        $output = curl_exec($curl);
+        $ch = curl_init();
 
-        // Close cURL
-        curl_close($curl);
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+            ],
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+        ]);
 
-        // Print output (optional)
-        // print_r($output);
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            curl_close($ch);
+            return false;
+        }
+
+        curl_close($ch);
+
+        $result = json_decode($response, true);
+
+        return $result['token'] ?? false;
+    }
+
+    /**
+     * Send SMS
+     */
+    public function sendSMS($mobileNo, $message)
+    {
+        $token = $this->getAdaReachToken();
+
+        if (!$token) {
+            return [
+                'success' => false,
+                'message' => 'Token generation failed'
+            ];
+        }
+
+        $url = "https://api.mobireach.com.bd/sms/send";
+
+        $payload = [
+            "sender" => "Speak Up BD", // আপনার Sender ID
+            "receiver" => [
+                $mobileNo
+            ],
+            "content" => $message,
+            "msgType" => "T",
+            "requestType" => "S",
+            "contentType" => 1
+        ];
+
+        $ch = curl_init();
+
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $token,
+            ],
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+        ]);
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            $error = curl_error($ch);
+
+            curl_close($ch);
+
+            return [
+                'success' => false,
+                'message' => $error
+            ];
+        }
+
+        curl_close($ch);
+
+        return json_decode($response, true);
     }
 }
