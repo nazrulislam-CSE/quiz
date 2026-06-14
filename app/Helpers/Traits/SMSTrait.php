@@ -61,7 +61,7 @@ trait SMSTrait
         $url = "https://api.mobireach.com.bd/sms/send";
 
         $payload = [
-            "sender" => "Speak Up BD", // আপনার Sender ID
+            "sender" => "8801844531848", // আপনার Sender ID
             "receiver" => [
                 $mobileNo
             ],
@@ -70,6 +70,8 @@ trait SMSTrait
             "requestType" => "S",
             "contentType" => 1
         ];
+
+        // dd($payload);
 
         $ch = curl_init();
 

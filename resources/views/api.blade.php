@@ -1,1444 +1,1538 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"
-    />
-    <title>ChalkboardBD API Documentation</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
-    <!-- Toastr CSS -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
-    />
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>ChalkboardBD API Documentation - Complete Guide</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
-      :root {
-        --primary: #4f46e5;
-        --primary-dark: #4338ca;
-        --secondary: #10b981;
-        --danger: #ef4444;
-        --warning: #f59e0b;
-        --info: #3b82f6;
-        --dark: #1f2937;
-        --light: #f9fafb;
-      }
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --dark: #1f2937;
+            --light: #f9fafb;
+        }
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        padding: 15px;
-        position: relative;
-        overflow-x: hidden;
-      }
-
-      /* Mobile Responsive Padding */
-      @media (max-width: 768px) {
         body {
-          padding: 10px;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+            position: relative;
+            overflow-x: hidden;
         }
-      }
 
-      /* Animated Background */
-      body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>')
-          no-repeat bottom;
-        background-size: cover;
-        pointer-events: none;
-        animation: slide 20s linear infinite;
-      }
-
-      @keyframes slide {
-        0% {
-          transform: translateX(0);
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
         }
-        100% {
-          transform: translateX(-100%);
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            pointer-events: none;
+            animation: slide 20s linear infinite;
         }
-      }
 
-      .api-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        overflow: hidden;
-        position: relative;
-        z-index: 1;
-        animation: fadeInUp 0.8s ease-out;
-      }
+        @keyframes slide {
+            0% {
+                transform: translateX(0);
+            }
 
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(30px);
+            100% {
+                transform: translateX(-100%);
+            }
         }
-        to {
-          opacity: 1;
-          transform: translateY(0);
+
+        .api-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out;
         }
-      }
 
-      .header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 30px 20px;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-      }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
 
-      @media (max-width: 768px) {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .header {
-          padding: 20px 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
-      }
 
-      .header::before {
-        content: "";
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.1) 0%,
-          transparent 70%
-        );
-        animation: pulse 4s ease-in-out infinite;
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          transform: scale(1);
-          opacity: 0.5;
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px 15px;
+            }
         }
-        50% {
-          transform: scale(1.1);
-          opacity: 0.8;
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
         }
-      }
 
-      .logo-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 20px;
-        position: relative;
-        z-index: 1;
-      }
+        @keyframes pulse {
 
-      .logo {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        background: white;
-        padding: 10px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-        transition: transform 0.3s ease;
-      }
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
 
-      @media (max-width: 768px) {
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
         .logo {
-          width: 60px;
-          height: 60px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: white;
+            padding: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
         }
-      }
 
-      .logo:hover {
-        transform: scale(1.1) rotate(5deg);
-      }
+        @media (max-width: 768px) {
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+        }
 
-      .logo img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
+        .logo:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
 
-      .header h1 {
-        font-size: 2rem;
-        font-weight: bold;
-        margin-bottom: 10px;
-        animation: slideInLeft 0.8s ease-out;
-      }
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
 
-      @media (max-width: 768px) {
         .header h1 {
-          font-size: 1.5rem;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            animation: slideInLeft 0.8s ease-out;
         }
-      }
 
-      @keyframes slideInLeft {
-        from {
-          opacity: 0;
-          transform: translateX(-50px);
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
         }
-        to {
-          opacity: 1;
-          transform: translateX(0);
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
-      }
 
-      .header p {
-        font-size: 1rem;
-        opacity: 0.95;
-        animation: slideInRight 0.8s ease-out;
-      }
-
-      @media (max-width: 768px) {
         .header p {
-          font-size: 0.9rem;
+            font-size: 1rem;
+            opacity: 0.95;
+            animation: slideInRight 0.8s ease-out;
         }
-      }
 
-      @keyframes slideInRight {
-        from {
-          opacity: 0;
-          transform: translateX(50px);
+        @media (max-width: 768px) {
+            .header p {
+                font-size: 0.9rem;
+            }
         }
-        to {
-          opacity: 1;
-          transform: translateX(0);
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
-      }
 
-      .base-url {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
-        padding: 12px 20px;
-        margin-top: 20px;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-        justify-content: center;
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-      }
-
-      @media (max-width: 768px) {
         .base-url {
-          padding: 10px 15px;
-          flex-direction: column;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
-      }
 
-      .base-url:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-      }
+        @media (max-width: 768px) {
+            .base-url {
+                padding: 10px 15px;
+                flex-direction: column;
+            }
+        }
 
-      .base-url code {
-        background: rgba(0, 0, 0, 0.3);
-        padding: 6px 12px;
-        border-radius: 8px;
-        color: white;
-        font-size: 0.9rem;
-        word-break: break-all;
-      }
+        .base-url:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
 
-      @media (max-width: 768px) {
         .base-url code {
-          font-size: 0.8rem;
-          word-break: break-all;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 6px 12px;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.9rem;
+            word-break: break-all;
         }
-      }
 
-      .nav-tabs {
-        border-bottom: 2px solid #e5e7eb;
-        padding: 0 15px;
-        margin-top: 20px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        flex-wrap: nowrap;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-      }
+        @media (max-width: 768px) {
+            .base-url code {
+                font-size: 0.8rem;
+            }
+        }
 
-      @media (max-width: 768px) {
         .nav-tabs {
-          padding: 0 10px;
+            border-bottom: 2px solid #e5e7eb;
+            padding: 0 15px;
+            margin-top: 20px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex-wrap: nowrap;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
         }
-      }
 
-      .nav-tabs::-webkit-scrollbar {
-        height: 3px;
-      }
+        @media (max-width: 768px) {
+            .nav-tabs {
+                padding: 0 10px;
+            }
+        }
 
-      .nav-tabs::-webkit-scrollbar-track {
-        background: #f1f1f1;
-      }
+        .nav-tabs::-webkit-scrollbar {
+            height: 3px;
+        }
 
-      .nav-tabs::-webkit-scrollbar-thumb {
-        background: var(--primary);
-        border-radius: 3px;
-      }
+        .nav-tabs::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
 
-      .nav-tabs .nav-link {
-        border: none;
-        color: #6b7280;
-        font-weight: 600;
-        padding: 12px 16px;
-        transition: all 0.3s;
-        position: relative;
-        overflow: hidden;
-        font-size: 0.9rem;
-      }
+        .nav-tabs::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
 
-      @media (max-width: 768px) {
         .nav-tabs .nav-link {
-          padding: 10px 12px;
-          font-size: 0.85rem;
+            border: none;
+            color: #6b7280;
+            font-weight: 600;
+            padding: 12px 16px;
+            transition: all 0.3s;
+            position: relative;
+            font-size: 0.9rem;
         }
-      }
 
-      .nav-tabs .nav-link::before {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: var(--primary);
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-      }
+        @media (max-width: 768px) {
+            .nav-tabs .nav-link {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+        }
 
-      .nav-tabs .nav-link:hover::before {
-        transform: translateX(0);
-      }
+        .nav-tabs .nav-link.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            background: transparent;
+        }
 
-      .nav-tabs .nav-link:hover {
-        color: var(--primary);
-        border: none;
-      }
-
-      .nav-tabs .nav-link.active {
-        color: var(--primary);
-        border-bottom: 3px solid var(--primary);
-        background: transparent;
-      }
-
-      .content {
-        padding: 25px;
-      }
-
-      @media (max-width: 768px) {
         .content {
-          padding: 15px;
+            padding: 25px;
         }
-      }
 
-      .endpoint-card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        transition: all 0.3s;
-        overflow: hidden;
-        animation: fadeInUp 0.6s ease-out;
-        animation-fill-mode: both;
-      }
+        @media (max-width: 768px) {
+            .content {
+                padding: 15px;
+            }
+        }
 
-      .endpoint-card:nth-child(1) {
-        animation-delay: 0.1s;
-      }
-      .endpoint-card:nth-child(2) {
-        animation-delay: 0.2s;
-      }
-      .endpoint-card:nth-child(3) {
-        animation-delay: 0.3s;
-      }
-      .endpoint-card:nth-child(4) {
-        animation-delay: 0.4s;
-      }
-      .endpoint-card:nth-child(5) {
-        animation-delay: 0.5s;
-      }
+        .endpoint-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            overflow: hidden;
+        }
 
-      .endpoint-card:hover {
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        transform: translateY(-5px);
-      }
+        .endpoint-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
 
-      .endpoint-header {
-        padding: 15px 20px;
-        background: var(--light);
-        border-bottom: 1px solid #e5e7eb;
-        cursor: pointer;
-        transition: all 0.3s;
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      @media (max-width: 768px) {
         .endpoint-header {
-          padding: 12px 15px;
-          flex-direction: column;
-          align-items: flex-start;
+            padding: 15px 20px;
+            background: var(--light);
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-      }
 
-      .endpoint-header:hover {
-        background: #f3f4f6;
-      }
+        @media (max-width: 768px) {
+            .endpoint-header {
+                padding: 12px 15px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
 
-      .method {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 6px;
-        font-size: 0.75rem;
-        font-weight: bold;
-        font-family: monospace;
-        transition: transform 0.3s ease;
-      }
+        .endpoint-header:hover {
+            background: #f3f4f6;
+        }
 
-      .method:hover {
-        transform: scale(1.05);
-      }
+        .method {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            font-family: monospace;
+            transition: transform 0.3s ease;
+        }
 
-      .method-get {
-        background: #10b981;
-        color: white;
-      }
-      .method-post {
-        background: #3b82f6;
-        color: white;
-      }
-      .method-put {
-        background: #f59e0b;
-        color: white;
-      }
-      .method-delete {
-        background: #ef4444;
-        color: white;
-      }
+        .method:hover {
+            transform: scale(1.05);
+        }
 
-      .endpoint-url {
-        font-family: monospace;
-        font-size: 0.9rem;
-        color: var(--dark);
-        font-weight: 500;
-        word-break: break-all;
-      }
+        .method-get {
+            background: #10b981;
+            color: white;
+        }
 
-      @media (max-width: 768px) {
+        .method-post {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .method-put {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .method-delete {
+            background: #ef4444;
+            color: white;
+        }
+
         .endpoint-url {
-          font-size: 0.85rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: var(--dark);
+            font-weight: 500;
+            word-break: break-all;
         }
-      }
 
-      .endpoint-body {
-        padding: 20px;
-        display: none;
-        animation: fadeIn 0.5s ease-out;
-      }
+        @media (max-width: 768px) {
+            .endpoint-url {
+                font-size: 0.85rem;
+            }
+        }
 
-      @media (max-width: 768px) {
         .endpoint-body {
-          padding: 15px;
+            padding: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
         }
-      }
 
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(-10px);
+        @media (max-width: 768px) {
+            .endpoint-body {
+                padding: 15px;
+            }
         }
-        to {
-          opacity: 1;
-          transform: translateY(0);
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-      }
 
-      .endpoint-body.show {
-        display: block;
-      }
+        .endpoint-body.show {
+            display: block;
+        }
 
-      .table-custom {
-        background: white;
-        border-radius: 8px;
-        overflow-x: auto;
-        display: block;
-        width: 100%;
-      }
+        .table-custom {
+            background: white;
+            border-radius: 8px;
+            overflow-x: auto;
+            display: block;
+            width: 100%;
+        }
 
-      .table-custom table {
-        width: 100%;
-        min-width: 500px;
-      }
+        .table-custom table {
+            width: 100%;
+            min-width: 500px;
+        }
 
-      .table-custom th {
-        background: var(--light);
-        color: var(--dark);
-        font-weight: 600;
-        border: none;
-        padding: 10px;
-      }
+        .table-custom th {
+            background: var(--light);
+            color: var(--dark);
+            font-weight: 600;
+            border: none;
+            padding: 10px;
+        }
 
-      .table-custom td {
-        padding: 10px;
-      }
+        .table-custom td {
+            padding: 10px;
+        }
 
-      .required {
-        color: var(--danger);
-        font-size: 0.75rem;
-        font-weight: bold;
-      }
+        .required {
+            color: var(--danger);
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
 
-      .optional {
-        color: var(--warning);
-        font-size: 0.75rem;
-        font-weight: bold;
-      }
+        .optional {
+            color: var(--warning);
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
 
-      .badge-auth {
-        background: var(--primary);
-        color: white;
-        padding: 3px 8px;
-        border-radius: 20px;
-        font-size: 0.7rem;
-      }
+        .badge-auth {
+            background: var(--primary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
 
-      .badge-public {
-        background: var(--secondary);
-        color: white;
-        padding: 3px 8px;
-        border-radius: 20px;
-        font-size: 0.7rem;
-      }
+        .badge-public {
+            background: var(--secondary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
 
-      pre {
-        background: #1e1e1e;
-        color: #d4d4d4;
-        padding: 12px;
-        border-radius: 8px;
-        overflow-x: auto;
-        font-size: 0.8rem;
-        position: relative;
-        transition: all 0.3s ease;
-      }
+        .badge-referral {
+            background: #f59e0b;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
 
-      @media (max-width: 768px) {
         pre {
-          font-size: 0.7rem;
-          padding: 10px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.8rem;
+            position: relative;
+            transition: all 0.3s ease;
         }
-      }
 
-      pre:hover {
-        transform: scale(1.01);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      }
-
-      .response-example {
-        background: #f8f9fa;
-        border-left: 4px solid var(--primary);
-        padding: 12px;
-        border-radius: 8px;
-        margin-top: 15px;
-        transition: all 0.3s ease;
-      }
-
-      .response-example:hover {
-        transform: translateX(5px);
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-      }
-
-      .copy-btn {
-        background: var(--primary);
-        color: white;
-        border: none;
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 0.8rem;
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-
-      .copy-btn:hover {
-        background: var(--primary-dark);
-        transform: scale(1.05);
-      }
-
-      .footer {
-        background: linear-gradient(135deg, var(--dark) 0%, #111827 100%);
-        color: white;
-        padding: 25px 20px;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .footer::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          var(--primary),
-          transparent
-        );
-        animation: loading 3s infinite;
-      }
-
-      @keyframes loading {
-        0% {
-          left: -100%;
+        @media (max-width: 768px) {
+            pre {
+                font-size: 0.7rem;
+                padding: 10px;
+            }
         }
-        100% {
-          left: 100%;
+
+        pre:hover {
+            transform: scale(1.01);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
-      }
 
-      .footer-logo {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        background: white;
-        padding: 6px;
-        margin-bottom: 15px;
-        transition: transform 0.3s ease;
-        display: inline-block;
-      }
+        .response-example {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
 
-      @media (max-width: 768px) {
+        .response-example:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--dark) 0%, #111827 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            animation: loading 3s infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
         .footer-logo {
-          width: 45px;
-          height: 45px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            padding: 6px;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+            display: inline-block;
         }
-      }
 
-      .footer-logo:hover {
-        transform: rotate(360deg) scale(1.1);
-      }
+        @media (max-width: 768px) {
+            .footer-logo {
+                width: 45px;
+                height: 45px;
+            }
+        }
 
-      .footer-logo img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        border-radius: 50%;
-      }
+        .footer-logo:hover {
+            transform: rotate(360deg) scale(1.1);
+        }
 
-      .developer-info {
-        margin-top: 15px;
-        padding: 12px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        display: inline-block;
-        transition: all 0.3s ease;
-      }
+        .footer-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
 
-      .developer-info:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateY(-3px);
-      }
+        .developer-info {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
 
-      .tech-stack {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-top: 12px;
-      }
+        .developer-info:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
 
-      .tech-badge {
-        background: rgba(79, 70, 229, 0.2);
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        transition: all 0.3s ease;
-      }
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
 
-      @media (max-width: 768px) {
         .tech-badge {
-          font-size: 0.7rem;
-          padding: 3px 8px;
+            background: rgba(79, 70, 229, 0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
         }
-      }
 
-      .tech-badge:hover {
-        background: var(--primary);
-        transform: translateY(-2px);
-      }
+        @media (max-width: 768px) {
+            .tech-badge {
+                font-size: 0.7rem;
+                padding: 3px 8px;
+            }
+        }
 
-      /* Toastr Custom Styles */
-      .toast-success {
-        background-color: #10b981 !important;
-      }
+        .tech-badge:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
 
-      .toast-error {
-        background-color: #ef4444 !important;
-      }
+        .toast-success {
+            background-color: #10b981 !important;
+        }
 
-      .toast-info {
-        background-color: #3b82f6 !important;
-      }
+        .toast-error {
+            background-color: #ef4444 !important;
+        }
 
-      .toast-warning {
-        background-color: #f59e0b !important;
-      }
+        .toast-info {
+            background-color: #3b82f6 !important;
+        }
 
-      /* Scroll to top button */
-      .scroll-top-btn {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: var(--primary);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 45px;
-        height: 45px;
-        cursor: pointer;
-        display: none;
-        z-index: 1000;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-      }
-
-      @media (max-width: 768px) {
         .scroll-top-btn {
-          width: 40px;
-          height: 40px;
-          bottom: 15px;
-          right: 15px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: none;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
-      }
 
-      .scroll-top-btn:hover {
-        background: var(--primary-dark);
-        transform: translateY(-3px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      }
+        @media (max-width: 768px) {
+            .scroll-top-btn {
+                width: 40px;
+                height: 40px;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
 
-      /* Alert Responsive */
-      .alert {
-        font-size: 0.9rem;
-        padding: 12px;
-      }
+        .scroll-top-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+        }
 
-      @media (max-width: 768px) {
         .alert {
-          font-size: 0.85rem;
-          padding: 10px;
+            font-size: 0.9rem;
+            padding: 12px;
         }
-      }
+
+        @media (max-width: 768px) {
+            .alert {
+                font-size: 0.85rem;
+                padding: 10px;
+            }
+        }
+
+        .flow-diagram {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .step {
+            background: white;
+            border-radius: 10px;
+            padding: 12px 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            min-width: 180px;
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .arrow {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .arrow {
+                display: none;
+            }
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
     <div class="api-container">
-      <div class="header">
-        <div class="logo-container" data-aos="zoom-in" data-aos-duration="1000">
-          <div class="logo">
-            <img
-              src="https://chalkboardbd.com/upload/setting/logo/1759778293538.png"
-              alt="ChalkboardBD Logo"
-            />
-          </div>
-        </div>
-        <h1 data-aos="fade-up">
-          <i class="fas fa-chalkboard"></i> ChalkboardBD API
-        </h1>
-        <p data-aos="fade-up" data-aos-delay="100">
-          Complete API Documentation for Seamless Integration
-        </p>
-        <div class="base-url" data-aos="flip-up" data-aos-delay="200">
-          <i class="fas fa-link"></i> Base URL:
-          <code id="baseUrl">https://chalkboardbd.com/api/v1</code>
-          <button class="copy-btn" onclick="copyBaseUrl()">
-            <i class="fas fa-copy"></i> Copy URL
-          </button>
-        </div>
-        <div class="mt-3" data-aos="fade-up" data-aos-delay="300">
-          <span class="badge bg-light text-dark me-2"
-            ><i class="fas fa-shield-alt"></i> bktoken Required</span
-          >
-          <span class="badge bg-light text-dark"
-            ><i class="fas fa-key"></i> Sanctum Authentication</span
-          >
-        </div>
-      </div>
-
-      <ul class="nav nav-tabs" id="apiTabs" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" data-bs-toggle="tab" href="#userAuth">
-            <i class="fas fa-user"></i> User Auth
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#userPanel">
-            <i class="fas fa-user-circle"></i> User Panel
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#adminAuth">
-            <i class="fas fa-user-shield"></i> Admin Auth
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#adminPanel">
-            <i class="fas fa-cog"></i> Admin Panel
-          </a>
-        </li>
-      </ul>
-
-      <div class="tab-content content">
-        <!-- User Authentication Tab -->
-        <div class="tab-pane fade show active" id="userAuth">
-          <div class="alert alert-info" data-aos="fade-right">
-            <i class="fas fa-info-circle"></i> <strong>Important:</strong> All
-            API requests require <code>bktoken</code> in headers.
-          </div>
-
-          <!-- Register -->
-          <div class="endpoint-card" data-aos="fade-up">
-            <div class="endpoint-header" onclick="toggleEndpoint(this)">
-              <span class="method method-post">POST</span>
-              <span class="endpoint-url">/user/register</span>
-              <span class="badge-public">Public</span>
-              <i class="fas fa-chevron-down float-end mt-1"></i>
+        <div class="header">
+            <div class="logo-container" data-aos="zoom-in">
+                <div class="logo">
+                    <img src="https://chalkboardbd.com/upload/setting/logo/1759778293538.png" alt="ChalkboardBD Logo">
+                </div>
             </div>
-            <div class="endpoint-body">
-              <h6>📝 Description:</h6>
-              <p>Register a new user account</p>
+            <h1 data-aos="fade-up"><i class="fas fa-chalkboard"></i> ChalkboardBD API</h1>
+            <p data-aos="fade-up" data-aos-delay="100">Complete API Documentation for Seamless Integration</p>
+            <div class="base-url" data-aos="flip-up" data-aos-delay="200">
+                <i class="fas fa-link"></i> Base URL:
+                <code id="baseUrl">https://chalkboardbd.com/api/v1</code>
+                <button class="copy-btn" onclick="copyBaseUrl()"><i class="fas fa-copy"></i> Copy URL</button>
+            </div>
+            <div class="mt-3" data-aos="fade-up" data-aos-delay="300">
+                <span class="badge bg-light text-dark me-2"><i class="fas fa-shield-alt"></i> bktoken Required</span>
+                <span class="badge bg-light text-dark me-2"><i class="fas fa-key"></i> Sanctum Authentication</span>
+            </div>
+        </div>
 
-              <h6>📋 Headers:</h6>
-              <pre>
-{
+        <ul class="nav nav-tabs" id="apiTabs" role="tablist">
+            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#auth"><i
+                        class="fas fa-user"></i> Authentication</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#user"><i
+                        class="fas fa-user-circle"></i> User Panel</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#admin"><i
+                        class="fas fa-user-shield"></i> Admin Panel</a></li>
+        </ul>
+
+        <div class="tab-content content">
+            <!-- Authentication Tab -->
+            <div class="tab-pane fade show active" id="auth">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> <strong>Important:</strong> All API requests require
+                    <code>bktoken</code> in headers. Authentication is done via Phone OTP.
+                </div>
+
+                <!-- Login Flow Diagram -->
+                <div class="flow-diagram" data-aos="fade-up">
+                    <h5 class="text-center mb-3"><i class="fas fa-chart-line"></i> Phone OTP Login Flow</h5>
+                    <div class="flow-step">
+                        <div class="step">
+                            <div class="step-number">1</div>POST /user/login<br><small>Send phone number</small>
+                        </div>
+                        <div class="arrow"><i class="fas fa-arrow-right"></i></div>
+                        <div class="step">
+                            <div class="step-number">2</div>Receive OTP via SMS<br><small>6-digit code</small>
+                        </div>
+                        <div class="arrow"><i class="fas fa-arrow-right"></i></div>
+                        <div class="step">
+                            <div class="step-number">3</div>POST /user/verify-otp<br><small>Verify & get token</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Register -->
+                <div class="endpoint-card" data-aos="fade-up">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-post">POST</span>
+                        <span class="endpoint-url">/user/register</span>
+                        <span class="badge-public">Public</span>
+                        <span class="badge-referral">Referral Available</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📝 Description:</h6>
+                        <p>Register a new user account with phone number. Optional referral by username.</p>
+
+                        <h6>📋 Headers:</h6>
+                        <pre>{
     "bktoken": "your_bktoken_value",
     "Content-Type": "application/json"
-}</pre
-              >
+}</pre>
 
-              <h6>📦 Request Body:</h6>
-              <div class="table-responsive">
-                <table class="table table-custom table-sm">
-                  <thead>
-                    <tr>
-                      <th>Parameter</th>
-                      <th>Type</th>
-                      <th>Required</th>
-                      <th>Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>email</td>
-                      <td>string</td>
-                      <td><span class="required">Required</span></td>
-                      <td>Valid email address</td>
-                    </tr>
-                    <tr>
-                      <td>password</td>
-                      <td>string</td>
-                      <td><span class="required">Required</span></td>
-                      <td>Min 8 characters</td>
-                    </tr>
-                    <tr>
-                      <td>password_confirmation</td>
-                      <td>string</td>
-                      <td><span class="required">Required</span></td>
-                      <td>Must match password</td>
-                    </tr>
-                    <tr>
-                      <td>full_name</td>
-                      <td>string</td>
-                      <td><span class="optional">Optional</span></td>
-                      <td>User's full name</td>
-                    </tr>
-                    <tr>
-                      <td>phone</td>
-                      <td>integer</td>
-                      <td><span class="optional">Optional</span></td>
-                      <td>Phone number</td>
-                    </tr>
-                    <tr>
-                      <td>username</td>
-                      <td>string</td>
-                      <td><span class="optional">Optional</span></td>
-                      <td>Unique username</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                        <h6>📦 Request Body:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-custom table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Parameter</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>phone</td>
+                                        <td>numeric</td>
+                                        <td><span class="required">Required</span></td>
+                                        <td>Phone number (min 11 digits, unique)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>full_name</td>
+                                        <td>string</td>
+                                        <td><span class="required">Required</span></td>
+                                        <td>User's full name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>email</td>
+                                        <td>email</td>
+                                        <td><span class="optional">Optional</span></td>
+                                        <td>Email address (unique)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>username</td>
+                                        <td>string</td>
+                                        <td><span class="optional">Optional</span></td>
+                                        <td>Unique username (auto-generated if empty)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>company_name</td>
+                                        <td>string</td>
+                                        <td><span class="optional">Optional</span></td>
+                                        <td>Company name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>owner_name</td>
+                                        <td>string</td>
+                                        <td><span class="optional">Optional</span></td>
+                                        <td>Owner name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>refer_by</td>
+                                        <td>string</td>
+                                        <td><span class="optional">Optional</span></td>
+                                        <td>Referral username (must exist)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-              <h6>💡 Example Request:</h6>
-              <pre>
-{
+                        <h6>💡 Example Request:</h6>
+                        <pre>{
+    "phone": "8801783465103",
+    "full_name": "John Doe",
     "email": "john@example.com",
-    "password": "password123",
-    "password_confirmation": "password123",
-    "full_name": "John Doe"
-}</pre
-              >
+    "refer_by": "existing_user"
+}</pre>
 
-              <h6>✅ Success Response (201):</h6>
-              <div class="response-example">
-                <pre>
-{
+                        <h6>✅ Success Response (201):</h6>
+                        <div class="response-example">
+                            <pre>{
     "success": true,
-    "message": "User registered successfully",
+    "message": "User registered successfully with referral bonus!",
     "data": {
-        "user": {...},
-        "token": "1|abc123...",
-        "token_type": "Bearer"
+        "user": {
+            "id": 1,
+            "full_name": "John Doe",
+            "phone": "8801783465103",
+            "email": "john@example.com",
+            "username": "john_doe"
+        },
+        "referral": {
+            "referred_by": "existing_user",
+            "referred_by_name": "Existing User"
+        }
     }
-}</pre
-                >
-              </div>
-            </div>
-          </div>
+}</pre>
+                        </div>
+                    </div>
+                </div>
 
-          <!-- Login -->
-          <div class="endpoint-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="endpoint-header" onclick="toggleEndpoint(this)">
-              <span class="method method-post">POST</span>
-              <span class="endpoint-url">/user/login</span>
-              <span class="badge-public">Public</span>
-              <i class="fas fa-chevron-down float-end mt-1"></i>
-            </div>
-            <div class="endpoint-body">
-              <h6>📝 Description:</h6>
-              <p>Login user and get authentication token</p>
+                <!-- Send OTP (Login) -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-post">POST</span>
+                        <span class="endpoint-url">/user/login</span>
+                        <span class="badge-public">Public</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📝 Description:</h6>
+                        <p>Send OTP to registered phone number for login</p>
 
-              <h6>📦 Request Body:</h6>
-              <div class="table-responsive">
-                <table class="table table-custom table-sm">
-                  <thead>
-                    <tr>
-                      <th>Parameter</th>
-                      <th>Type</th>
-                      <th>Required</th>
-                      <th>Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>email</td>
-                      <td>string</td>
-                      <td><span class="required">Required</span></td>
-                      <td>Registered email</td>
-                    </tr>
-                    <tr>
-                      <td>password</td>
-                      <td>string</td>
-                      <td><span class="required">Required</span></td>
-                      <td>Account password</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                        <h6>📦 Request Body:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-custom table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Parameter</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>phone</td>
+                                        <td>numeric</td>
+                                        <td><span class="required">Required</span></td>
+                                        <td>Registered phone number</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-              <h6>✅ Success Response (200):</h6>
-              <div class="response-example">
-                <pre>
-{
+                        <h6>💡 Example Request:</h6>
+                        <pre>{
+    "phone": "8801783465103"
+}</pre>
+
+                        <h6>✅ Success Response (200):</h6>
+                        <div class="response-example">
+                            <pre>{
+    "success": true,
+    "message": "OTP sent successfully to 8801783465103",
+    "data": {
+        "phone": "8801783465103",
+        "otp": "123456"
+    }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Verify OTP -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-post">POST</span>
+                        <span class="endpoint-url">/user/verify-otp</span>
+                        <span class="badge-public">Public</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📝 Description:</h6>
+                        <p>Verify OTP and get authentication token</p>
+
+                        <h6>📦 Request Body:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-custom table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Parameter</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>phone</td>
+                                        <td>numeric</td>
+                                        <td><span class="required">Required</span></td>
+                                        <td>Phone number</td>
+                                    </tr>
+                                    <tr>
+                                        <td>otp</td>
+                                        <td>numeric</td>
+                                        <td><span class="required">Required</span></td>
+                                        <td>6-digit OTP received via SMS</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h6>✅ Success Response (200):</h6>
+                        <div class="response-example">
+                            <pre>{
     "success": true,
     "message": "Login successful",
     "data": {
-        "user": {...},
+        "user": {
+            "id": 1,
+            "full_name": "John Doe",
+            "email": "john@example.com",
+            "phone": "8801783465103",
+            "username": "john_doe",
+            "image": null,
+            "main_wallet": 0,
+            "income_wallet": 0,
+            "withdraw_wallet": 0,
+            "refer_bonus": 0,
+            "status": 1
+        },
         "token": "1|abc123...",
         "token_type": "Bearer"
     }
-}</pre
-                >
-              </div>
-            </div>
-          </div>
+}</pre>
+                        </div>
+                    </div>
+                </div>
 
-          <!-- Forgot Password -->
-          <div class="endpoint-card" data-aos="fade-up" data-aos-delay="200">
-            <div class="endpoint-header" onclick="toggleEndpoint(this)">
-              <span class="method method-post">POST</span>
-              <span class="endpoint-url">/user/forgot-password</span>
-              <span class="badge-public">Public</span>
-              <i class="fas fa-chevron-down float-end mt-1"></i>
-            </div>
-            <div class="endpoint-body">
-              <h6>📝 Description:</h6>
-              <p>Send password reset code to email</p>
-            </div>
-          </div>
+                <!-- Resend OTP -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-post">POST</span>
+                        <span class="endpoint-url">/user/resend-otp</span>
+                        <span class="badge-public">Public</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📝 Description:</h6>
+                        <p>Resend OTP to phone number</p>
 
-          <!-- Verify Code -->
-          <div class="endpoint-card" data-aos="fade-up" data-aos-delay="300">
-            <div class="endpoint-header" onclick="toggleEndpoint(this)">
-              <span class="method method-post">POST</span>
-              <span class="endpoint-url">/user/verify-code</span>
-              <span class="badge-public">Public</span>
-              <i class="fas fa-chevron-down float-end mt-1"></i>
-            </div>
-            <div class="endpoint-body">
-              <h6>📝 Description:</h6>
-              <p>Verify password reset code</p>
-            </div>
-          </div>
+                        <h6>📦 Request Body:</h6>
+                        <pre>{
+    "phone": "8801783465103"
+}</pre>
+                    </div>
+                </div>
 
-          <!-- Reset Password -->
-          <div class="endpoint-card" data-aos="fade-up" data-aos-delay="400">
-            <div class="endpoint-header" onclick="toggleEndpoint(this)">
-              <span class="method method-post">POST</span>
-              <span class="endpoint-url">/user/reset-password</span>
-              <span class="badge-public">Public</span>
-              <i class="fas fa-chevron-down float-end mt-1"></i>
-            </div>
-            <div class="endpoint-body">
-              <h6>📝 Description:</h6>
-              <p>Reset password using verification code</p>
-            </div>
-          </div>
-        </div>
+                <!-- Forgot Password -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-post">POST</span>
+                        <span class="endpoint-url">/user/forgot-password</span>
+                        <span class="badge-public">Public</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📝 Description:</h6>
+                        <p>Send password reset code to phone via SMS</p>
 
-        <!-- User Panel Tab -->
-        <div class="tab-pane fade" id="userPanel">
-          <div class="alert alert-warning" data-aos="fade-right">
-            <i class="fas fa-lock"></i>
-            <strong>Authentication Required:</strong> Bearer token required
-          </div>
+                        <h6>📦 Request Body:</h6>
+                        <pre>{
+    "phone": "8801783465103"
+}</pre>
+                    </div>
+                </div>
 
-          <!-- Logout -->
-          <div class="endpoint-card" data-aos="fade-up">
-            <div class="endpoint-header" onclick="toggleEndpoint(this)">
-              <span class="method method-post">POST</span>
-              <span class="endpoint-url">/user/logout</span>
-              <span class="badge-auth">Auth Required</span>
-              <i class="fas fa-chevron-down float-end mt-1"></i>
+                <!-- Verify Reset Code -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-post">POST</span>
+                        <span class="endpoint-url">/user/verify-code</span>
+                        <span class="badge-public">Public</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📝 Description:</h6>
+                        <p>Verify password reset code</p>
+
+                        <h6>📦 Request Body:</h6>
+                        <pre>{
+    "phone": "8801783465103",
+    "otp": "123456"
+}</pre>
+                    </div>
+                </div>
+
+                <!-- Reset Password -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-post">POST</span>
+                        <span class="endpoint-url">/user/reset-password</span>
+                        <span class="badge-public">Public</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📝 Description:</h6>
+                        <p>Reset password using verification code</p>
+
+                        <h6>📦 Request Body:</h6>
+                        <pre>{
+    "phone": "8801783465103",
+    "password": "newpassword123",
+    "password_confirmation": "newpassword123",
+    "otp": "123456"
+}</pre>
+                    </div>
+                </div>
             </div>
-            <div class="endpoint-body">
-              <h6>📋 Headers:</h6>
-              <pre>
-{
+
+            <!-- User Panel Tab -->
+            <div class="tab-pane fade" id="user">
+                <div class="alert alert-warning">
+                    <i class="fas fa-lock"></i> <strong>Authentication Required:</strong> All endpoints require Bearer
+                    token in Authorization header.
+                </div>
+
+                <!-- Logout -->
+                <div class="endpoint-card" data-aos="fade-up">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-post">POST</span>
+                        <span class="endpoint-url">/user/logout</span>
+                        <span class="badge-auth">Auth Required</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📋 Headers:</h6>
+                        <pre>{
     "bktoken": "your_bktoken_value",
     "Authorization": "Bearer {user_token}"
-}</pre
-              >
-            </div>
-          </div>
+}</pre>
+                    </div>
+                </div>
 
-          <!-- Get Profile -->
-          <div class="endpoint-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="endpoint-header" onclick="toggleEndpoint(this)">
-              <span class="method method-get">GET</span>
-              <span class="endpoint-url">/user/profile</span>
-              <span class="badge-auth">Auth Required</span>
-              <i class="fas fa-chevron-down float-end mt-1"></i>
-            </div>
-            <div class="endpoint-body">
-              <h6>✅ Success Response:</h6>
-              <div class="response-example">
-                <pre>
-{
+                <!-- Get Profile -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-get">GET</span>
+                        <span class="endpoint-url">/user/profile</span>
+                        <span class="badge-auth">Auth Required</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>✅ Success Response:</h6>
+                        <div class="response-example">
+                            <pre>{
     "success": true,
     "data": {
         "id": 1,
         "full_name": "John Doe",
         "email": "john@example.com",
-        "main_wallet": 0
+        "phone": "8801783465103",
+        "username": "john_doe",
+        "main_wallet": 1000.50,
+        "income_wallet": 500.25,
+        "withdraw_wallet": 200.00,
+        "refer_bonus": 150.00,
+        "status": 1
     }
-}</pre
-                >
-              </div>
-            </div>
-          </div>
+}</pre>
+                        </div>
+                    </div>
+                </div>
 
-          <!-- Dashboard -->
-          <div class="endpoint-card" data-aos="fade-up" data-aos-delay="200">
-            <div class="endpoint-header" onclick="toggleEndpoint(this)">
-              <span class="method method-get">GET</span>
-              <span class="endpoint-url">/user/dashboard</span>
-              <span class="badge-auth">Auth Required</span>
-              <i class="fas fa-chevron-down float-end mt-1"></i>
-            </div>
-            <div class="endpoint-body">
-              <h6>✅ Success Response:</h6>
-              <div class="response-example">
-                <pre>
-{
+                <!-- Update Profile -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-put">PUT</span>
+                        <span class="endpoint-url">/user/profile</span>
+                        <span class="badge-auth">Auth Required</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📦 Request Body (All Optional):</h6>
+                        <div class="table-responsive">
+                            <table class="table table-custom table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Parameter</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>full_name</td>
+                                        <td>string</td>
+                                        <td>Full name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>email</td>
+                                        <td>email</td>
+                                        <td>Email address</td>
+                                    </tr>
+                                    <tr>
+                                        <td>username</td>
+                                        <td>string</td>
+                                        <td>Username</td>
+                                    </tr>
+                                    <tr>
+                                        <td>city_name</td>
+                                        <td>string</td>
+                                        <td>City name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>present_address</td>
+                                        <td>string</td>
+                                        <td>Present address</td>
+                                    </tr>
+                                    <tr>
+                                        <td>parmanent_address</td>
+                                        <td>string</td>
+                                        <td>Permanent address</td>
+                                    </tr>
+                                    <tr>
+                                        <td>date_of_birth</td>
+                                        <td>string</td>
+                                        <td>Date of birth</td>
+                                    </tr>
+                                    <tr>
+                                        <td>blood_group</td>
+                                        <td>string</td>
+                                        <td>Blood group</td>
+                                    </tr>
+                                    <tr>
+                                        <td>gender</td>
+                                        <td>string</td>
+                                        <td>Gender (Male/Female/Other)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Avatar -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-post">POST</span>
+                        <span class="endpoint-url">/user/avatar</span>
+                        <span class="badge-auth">Auth Required</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📝 Description:</h6>
+                        <p>Upload user profile picture</p>
+                        <h6>📦 Request (multipart/form-data):</h6>
+                        <pre>avatar: (image file) jpeg,png,jpg,gif (max 2MB)</pre>
+                    </div>
+                </div>
+
+                <!-- Change Password -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-post">POST</span>
+                        <span class="endpoint-url">/user/change-password</span>
+                        <span class="badge-auth">Auth Required</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📦 Request Body:</h6>
+                        <pre>{
+    "current_password": "oldpassword",
+    "new_password": "newpassword123",
+    "new_password_confirmation": "newpassword123"
+}</pre>
+                    </div>
+                </div>
+
+                <!-- Delete Account -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-delete">DELETE</span>
+                        <span class="endpoint-url">/user/delete-account</span>
+                        <span class="badge-auth">Auth Required</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📦 Request Body (Optional):</h6>
+                        <pre>{
+    "reason": "Reason for account deletion"
+}</pre>
+                    </div>
+                </div>
+
+                <!-- Dashboard -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-get">GET</span>
+                        <span class="endpoint-url">/user/dashboard</span>
+                        <span class="badge-auth">Auth Required</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>✅ Success Response:</h6>
+                        <div class="response-example">
+                            <pre>{
     "success": true,
     "data": {
+        "user_info": {...},
         "wallets": {
             "main_wallet": 1000.50,
-            "income_wallet": 500.25
+            "income_wallet": 500.25,
+            "withdraw_wallet": 200.00,
+            "refer_bonus": 150.00
         }
     }
-}</pre
-                >
-              </div>
+}</pre>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Admin Authentication Tab -->
-        <div class="tab-pane fade" id="adminAuth">
-          <div class="alert alert-info" data-aos="fade-right">
-            <i class="fas fa-info-circle"></i> Admin endpoints require
-            <code>bktoken</code> header
-          </div>
+           
 
-          <!-- Admin Login -->
-          <div class="endpoint-card" data-aos="fade-up">
-            <div class="endpoint-header" onclick="toggleEndpoint(this)">
-              <span class="method method-post">POST</span>
-              <span class="endpoint-url">/admin/login</span>
-              <span class="badge-public">Public</span>
-              <i class="fas fa-chevron-down float-end mt-1"></i>
-            </div>
-            <div class="endpoint-body">
-              <h6>📦 Request Body:</h6>
-              <pre>
-{
+            <!-- Admin Panel Tab -->
+            <div class="tab-pane fade" id="admin">
+                <div class="alert alert-warning">
+                    <i class="fas fa-lock"></i> <strong>Admin Authentication Required:</strong> Admin token required.
+                </div>
+
+                <!-- Admin Login -->
+                <div class="endpoint-card" data-aos="fade-up">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-post">POST</span>
+                        <span class="endpoint-url">/admin/login</span>
+                        <span class="badge-public">Public</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📦 Request Body:</h6>
+                        <pre>{
     "email": "admin@example.com",
-    "password": "password123"
-}</pre
-              >
-            </div>
-          </div>
-        </div>
+    "password": "admin123"
+}</pre>
+                    </div>
+                </div>
 
-        <!-- Admin Panel Tab -->
-        <div class="tab-pane fade" id="adminPanel">
-          <div class="alert alert-warning" data-aos="fade-right">
-            <i class="fas fa-lock"></i>
-            <strong>Admin Authentication Required</strong>
-          </div>
-
-          <!-- Get All Users -->
-          <div class="endpoint-card" data-aos="fade-up">
-            <div class="endpoint-header" onclick="toggleEndpoint(this)">
-              <span class="method method-get">GET</span>
-              <span class="endpoint-url">/admin/users</span>
-              <span class="badge-auth">Admin Only</span>
-              <i class="fas fa-chevron-down float-end mt-1"></i>
-            </div>
-            <div class="endpoint-body">
-              <h6>📋 Headers:</h6>
-              <pre>
-{
+                <!-- Get All Users -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-get">GET</span>
+                        <span class="endpoint-url">/admin/users</span>
+                        <span class="badge-auth">Admin Only</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📋 Headers:</h6>
+                        <pre>{
     "bktoken": "your_bktoken_value",
     "Authorization": "Bearer {admin_token}"
-}</pre
-              >
-            </div>
-          </div>
+}</pre>
+                        <h6>📊 Query Parameters:</h6>
+                        <pre>per_page=15  // Items per page (optional)</pre>
+                    </div>
+                </div>
 
-          <!-- Update User Status -->
-          <div class="endpoint-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="endpoint-header" onclick="toggleEndpoint(this)">
-              <span class="method method-put">PUT</span>
-              <span class="endpoint-url">/admin/users/{id}/status</span>
-              <span class="badge-auth">Admin Only</span>
-              <i class="fas fa-chevron-down float-end mt-1"></i>
-            </div>
-            <div class="endpoint-body">
-              <h6>📦 Request Body:</h6>
-              <pre>
-{
+                <!-- Update User Status -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-put">PUT</span>
+                        <span class="endpoint-url">/admin/users/{id}/status</span>
+                        <span class="badge-auth">Admin Only</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📦 Request Body:</h6>
+                        <pre>{
     "status": 1  // 1=Active, 0=Inactive
-}</pre
-              >
-            </div>
-          </div>
-        </div>
-      </div>
+}</pre>
+                    </div>
+                </div>
 
-      <div class="footer">
-        <div class="footer-logo" data-aos="zoom-in">
-          <img
-            src="https://snazrul.speakupbd.com/uploads/slidelogo/1756054484nazrul.jpg"
-            alt="Nazrul Islam Suzon"
-          />
+                <!-- Update User Wallets -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-put">PUT</span>
+                        <span class="endpoint-url">/admin/users/{id}/wallets</span>
+                        <span class="badge-auth">Admin Only</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📦 Request Body:</h6>
+                        <pre>{
+    "main_wallet": 1000.00,
+    "income_wallet": 500.00,
+    "withdraw_wallet": 200.00,
+    "refer_bonus": 50.00
+}</pre>
+                    </div>
+                </div>
+
+                <!-- Delete User -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-delete">DELETE</span>
+                        <span class="endpoint-url">/admin/users/{id}</span>
+                        <span class="badge-auth">Admin Only</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>⚠️ Warning:</h6>
+                        <p>This action permanently deletes the user and all associated data.</p>
+                    </div>
+                </div>
+
+                <!-- Create Admin -->
+                <div class="endpoint-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="endpoint-header" onclick="toggleEndpoint(this)">
+                        <span class="method method-post">POST</span>
+                        <span class="endpoint-url">/admin/admins</span>
+                        <span class="badge-auth">Admin Only</span>
+                        <i class="fas fa-chevron-down float-end mt-1"></i>
+                    </div>
+                    <div class="endpoint-body">
+                        <h6>📦 Request Body:</h6>
+                        <pre>{
+    "name": "New Admin",
+    "username": "admin2",
+    "email": "admin2@example.com",
+    "phone": 1234567890,
+    "password": "password123",
+    "password_confirmation": "password123"
+}</pre>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="developer-info" data-aos="fade-up">
-          <h5><i class="fas fa-code"></i> Developed by Nazrul Islam Suzon</h5>
-          <p class="mb-2"><strong>Full Stack Web Developer</strong></p>
-          <div class="tech-stack">
-            <span class="tech-badge">HTML5</span>
-            <span class="tech-badge">CSS3</span>
-            <span class="tech-badge">Bootstrap</span>
-            <span class="tech-badge">Tailwind</span>
-            <span class="tech-badge">JavaScript</span>
-            <span class="tech-badge">jQuery</span>
-            <span class="tech-badge">React JS</span>
-            <span class="tech-badge">Next JS</span>
-            <span class="tech-badge">PHP</span>
-            <span class="tech-badge">Laravel</span>
-            <span class="tech-badge">Livewire</span>
-          </div>
+
+        <div class="footer">
+            <div class="footer-logo" data-aos="zoom-in">
+                <img src="https://snazrul.speakupbd.com/uploads/slidelogo/1756054484nazrul.jpg"
+                    alt="Nazrul Islam Suzon">
+            </div>
+            <div class="developer-info" data-aos="fade-up">
+                <h5><i class="fas fa-code"></i> Developed by Nazrul Islam Suzon</h5>
+                <p class="mb-2"><strong>Full Stack Web Developer</strong></p>
+                <div class="tech-stack">
+                    <span class="tech-badge">HTML5</span> <span class="tech-badge">CSS3</span> <span
+                        class="tech-badge">Bootstrap</span>
+                    <span class="tech-badge">Tailwind</span> <span class="tech-badge">JavaScript</span> <span
+                        class="tech-badge">jQuery</span>
+                    <span class="tech-badge">React JS</span> <span class="tech-badge">Next JS</span> <span
+                        class="tech-badge">PHP</span>
+                    <span class="tech-badge">Laravel</span> <span class="tech-badge">Livewire</span>
+                </div>
+            </div>
+            <p class="mt-3 mb-0" data-aos="fade-up" data-aos-delay="100">
+                <small>
+                    <i class="fas fa-clock"></i> API Version: 2.0.0 |
+                    <i class="fas fa-shield-alt"></i> Authentication: Sanctum + bktoken |
+                    <i class="fas fa-gift"></i> Referral System: Active
+                </small>
+            </p>
         </div>
-        <p class="mt-3 mb-0" data-aos="fade-up" data-aos-delay="100">
-          <small>
-            <i class="fas fa-clock"></i> API Version: 1.0.0 |
-            <i class="fas fa-shield-alt"></i> Authentication: Sanctum + bktoken
-          </small>
-        </p>
-      </div>
     </div>
 
-    <button class="scroll-top-btn" onclick="scrollToTop()">
-      <i class="fas fa-arrow-up"></i>
-    </button>
+    <button class="scroll-top-btn" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></button>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <!-- jQuery (required for toastr) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
-      // Initialize AOS
-      AOS.init({
-        duration: 1000,
-        once: true,
-        offset: 100,
-      });
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
 
-      // Toastr configuration
-      toastr.options = {
-        closeButton: true,
-        debug: false,
-        newestOnTop: false,
-        progressBar: true,
-        positionClass: "toast-top-right",
-        preventDuplicates: false,
-        onclick: null,
-        showDuration: "300",
-        hideDuration: "1000",
-        timeOut: "3000",
-        extendedTimeOut: "1000",
-        showEasing: "swing",
-        hideEasing: "linear",
-        showMethod: "fadeIn",
-        hideMethod: "fadeOut",
-      };
-
-      // Function to copy base URL with toastr notification
-      function copyBaseUrl() {
-        const baseUrl = document.getElementById("baseUrl").innerText;
-        navigator.clipboard
-          .writeText(baseUrl)
-          .then(() => {
-            toastr.success("✅ Base URL copied successfully!", "Success", {
-              timeOut: 2000,
-              progressBar: true,
-            });
-          })
-          .catch(() => {
-            toastr.error("❌ Failed to copy URL", "Error", {
-              timeOut: 2000,
-            });
-          });
-      }
-
-      // Function to copy any text
-      function copyToClipboard(text, element) {
-        navigator.clipboard
-          .writeText(text)
-          .then(() => {
-            toastr.success("📋 Copied to clipboard!", "Success", {
-              timeOut: 1500,
-            });
-          })
-          .catch(() => {
-            toastr.error("Failed to copy", "Error");
-          });
-      }
-
-      // Toggle endpoint body
-      function toggleEndpoint(element) {
-        const body = element.nextElementSibling;
-        const icon = element.querySelector(".fa-chevron-down");
-
-        if (body.classList.contains("show")) {
-          body.classList.remove("show");
-          if (icon) {
-            icon.style.transform = "rotate(0deg)";
-            icon.style.transition = "transform 0.3s ease";
-          }
-        } else {
-          body.classList.add("show");
-          if (icon) {
-            icon.style.transform = "rotate(180deg)";
-            icon.style.transition = "transform 0.3s ease";
-          }
-        }
-      }
-
-      // Scroll to top function
-      function scrollToTop() {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        toastr.info("Back to top!", "Navigation");
-      }
-
-      // Show/hide scroll button
-      const scrollBtn = document.querySelector(".scroll-top-btn");
-
-      window.addEventListener("scroll", () => {
-        if (window.scrollY > 300) {
-          scrollBtn.style.display = "block";
-        } else {
-          scrollBtn.style.display = "none";
-        }
-      });
-
-      // Add copy buttons to all pre tags
-      document.querySelectorAll("pre").forEach((pre, index) => {
-        const copyBtn = document.createElement("button");
-        copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
-        copyBtn.className = "copy-btn";
-        copyBtn.style.position = "absolute";
-        copyBtn.style.top = "10px";
-        copyBtn.style.right = "10px";
-        copyBtn.style.fontSize = "0.7rem";
-        copyBtn.style.padding = "4px 8px";
-        pre.style.position = "relative";
-
-        copyBtn.onclick = () => {
-          const text = pre.innerText;
-          navigator.clipboard.writeText(text).then(() => {
-            toastr.success("Code copied!", "Success", { timeOut: 1500 });
-          });
+        toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: "toast-top-right",
+            timeOut: 3000
         };
 
-        pre.appendChild(copyBtn);
-      });
+        function copyBaseUrl() {
+            const baseUrl = document.getElementById("baseUrl").innerText;
+            navigator.clipboard.writeText(baseUrl).then(() => toastr.success("✅ Base URL copied successfully!", "Success"))
+                .catch(() => toastr.error("❌ Failed to copy URL", "Error"));
+        }
 
-      // Handle mobile touch events
-      let touchStart = null;
-      document.querySelectorAll(".endpoint-header").forEach((header) => {
-        header.addEventListener("touchstart", (e) => {
-          touchStart = e.touches[0].clientY;
+        function toggleEndpoint(element) {
+            const body = element.nextElementSibling;
+            const icon = element.querySelector(".fa-chevron-down");
+            if (body.classList.contains("show")) {
+                body.classList.remove("show");
+                if (icon) icon.style.transform = "rotate(0deg)";
+            } else {
+                body.classList.add("show");
+                if (icon) icon.style.transform = "rotate(180deg)";
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+            toastr.info("Back to top!", "Navigation");
+        }
+
+        const scrollBtn = document.querySelector(".scroll-top-btn");
+        window.addEventListener("scroll", () => scrollBtn.style.display = window.scrollY > 300 ? "block" : "none");
+
+        document.querySelectorAll("pre").forEach((pre) => {
+            const copyBtn = document.createElement("button");
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+            copyBtn.className = "copy-btn";
+            copyBtn.style.cssText = "position:absolute; top:10px; right:10px; font-size:0.7rem; padding:4px 8px";
+            pre.style.position = "relative";
+            copyBtn.onclick = () => {
+                navigator.clipboard.writeText(pre.innerText).then(() => toastr.success("Code copied!",
+                    "Success"));
+            };
+            pre.appendChild(copyBtn);
         });
 
-        header.addEventListener("touchend", (e) => {
-          const touchEnd = e.changedTouches[0].clientY;
-          if (Math.abs(touchStart - touchEnd) < 10) {
-            toggleEndpoint(header);
-          }
+        // Disable Right Click
+        document.addEventListener("contextmenu", function(e) {
+            e.preventDefault();
+            toastr.error("❌ Right click is disabled!", "Error");
         });
-      });
     </script>
+</body>
 
-    <script>
-      // Disable Right Click
-      document.addEventListener("contextmenu", function (e) {
-        e.preventDefault();
-
-        toastr.error("❌ Right click is disabled!", "Error", {
-          timeOut: 2000,
-        });
-      });
-
-      // Disable Copy
-      document.addEventListener("copy", function (e) {
-        e.preventDefault();
-
-        toastr.error("❌ Copy is disabled!", "Error", {
-          timeOut: 2000,
-        });
-      });
-
-      // Disable Cut
-      document.addEventListener("cut", function (e) {
-        e.preventDefault();
-
-        toastr.error("❌ Cut is disabled!", "Error", {
-          timeOut: 2000,
-        });
-      });
-
-      // Disable Paste
-      document.addEventListener("paste", function (e) {
-        e.preventDefault();
-
-        toastr.error("❌ Paste is disabled!", "Error", {
-          timeOut: 2000,
-        });
-      });
-
-      // Disable Text Selection
-      document.addEventListener("selectstart", function (e) {
-        e.preventDefault();
-      });
-
-      // Disable Keyboard Shortcuts
-      document.addEventListener("keydown", function (e) {
-        // Ctrl+C
-        if (e.ctrlKey && e.key === "c") {
-          e.preventDefault();
-
-          toastr.error("❌ Copy shortcut disabled!", "Error", {
-            timeOut: 2000,
-          });
-        }
-
-        // Ctrl+U
-        if (e.ctrlKey && e.key === "u") {
-          e.preventDefault();
-
-          toastr.error("❌ View source disabled!", "Error", {
-            timeOut: 2000,
-          });
-        }
-
-        // Ctrl+S
-        if (e.ctrlKey && e.key === "s") {
-          e.preventDefault();
-
-          toastr.error("❌ Save disabled!", "Error", {
-            timeOut: 2000,
-          });
-        }
-
-        // Ctrl+Shift+I
-        if (e.ctrlKey && e.shiftKey && e.key === "I") {
-          e.preventDefault();
-
-          toastr.error("❌ Developer tools disabled!", "Error", {
-            timeOut: 2000,
-          });
-        }
-
-        // F12
-        if (e.key === "F12") {
-          e.preventDefault();
-
-          toastr.error("❌ F12 disabled!", "Error", {
-            timeOut: 2000,
-          });
-        }
-      });
-    </script>
-  </body>
 </html>
