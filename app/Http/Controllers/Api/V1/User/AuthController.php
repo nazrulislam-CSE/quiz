@@ -20,7 +20,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'phone' => 'required|numeric|min:10|unique:users,phone',
+            'phone' => 'required|digits:11|unique:users,phone',
             'full_name' => 'required|string|max:255',
             'email' => 'nullable|email|unique:users,email',
             'username' => 'nullable|string|max:255|unique:users,username',
@@ -38,22 +38,25 @@ class AuthController extends Controller
 
         // Process referral if provided
         $referId = null;
-        $referBonus = 0;
         $referUser = null;
 
-        if ($request->has('refer_by') && ! empty($request->refer_by)) {
+        if ($request->filled('refer_by')) {
+
             $referUser = User::where('username', $request->refer_by)->first();
 
             if (! $referUser) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Invalid referral username. Please provide a valid username.',
+                    'message' => 'Invalid referral username.',
                 ], 400);
             }
 
-            $referId = $referUser->id;
-
+        } else {
+            // Default referral user
+            $referUser = User::where('username', 'chalkboardbd')->first();
         }
+
+        $referId = $referUser?->id;
 
         // Generate random password for phone-only users
         $randomPassword = Str::random(12);
@@ -77,12 +80,18 @@ class AuthController extends Controller
 
         // Send welcome SMS
         try {
-            $welcomeMessage = 'Welcome to ChalkboardBD! Your account has been created successfully. Phone: '.$request->phone;
+            $welcomeMessage = "Welcome to ChalkboardBD!\n";
+            $welcomeMessage .= "Your account has been created successfully.\n\n";
+            $welcomeMessage .= "Login Details:\n";
+            $welcomeMessage .= "Phone: {$request->phone}\n";
+            $welcomeMessage .= "Password: {$randomPassword}\n\n";
 
-            // Add referral info in SMS if applicable
             if ($referUser) {
-                $welcomeMessage .= ' You were referred by: '.$referUser->full_name;
+                $welcomeMessage .= "Referred By: {$referUser->full_name}\n\n";
             }
+
+            $welcomeMessage .= "For security, please change your password after login.\n";
+            $welcomeMessage .= "Thank you for joining ChalkboardBD.";
 
             $this->sendSMS($request->phone, $welcomeMessage);
 
@@ -134,7 +143,7 @@ class AuthController extends Controller
     {
         // dd('test');
         $validator = Validator::make($request->all(), [
-            'phone' => 'required|numeric|min:10',
+            'phone' => 'required|numeric|digits:11',
         ]);
 
         if ($validator->fails()) {
@@ -211,7 +220,7 @@ class AuthController extends Controller
     {
         // dd('sadf');
         $validator = Validator::make($request->all(), [
-            'phone' => 'required|numeric|min:10',
+            'phone' => 'required|numeric|digits:11',
             'otp' => 'required|digits:6',
         ]);
 
@@ -289,7 +298,7 @@ class AuthController extends Controller
     public function resendOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'phone' => 'required|numeric|min:10',
+            'phone' => 'required|numeric|digits:11',
         ]);
 
         if ($validator->fails()) {
@@ -544,7 +553,7 @@ class AuthController extends Controller
     public function sendResetLink(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'phone' => 'required|numeric|min:10|exists:users,phone',
+            'phone' => 'required|numeric|min:11|exists:users,phone',
         ]);
 
         if ($validator->fails()) {
@@ -570,6 +579,7 @@ class AuthController extends Controller
             if (isset($response['status']) && $response['status'] === 'SUCCESS') {
                 return response()->json([
                     'success' => true,
+                    'otp' => $code, // 
                     'message' => 'Reset code sent to your phone',
                 ]);
             } else {
@@ -589,9 +599,9 @@ class AuthController extends Controller
     // ================= VERIFY RESET CODE =================
     public function verifyCode(Request $request)
     {
-        dd('test');
+        // dd('test');
         $validator = Validator::make($request->all(), [
-            'phone' => 'required|numeric|min:10|exists:users,phone',
+            'phone' => 'required|numeric|min:11|exists:users,phone',
             'code' => 'required|digits:6',
         ]);
 
@@ -616,6 +626,7 @@ class AuthController extends Controller
             'message' => 'Code verified successfully',
             'data' => [
                 'phone' => $request->phone,
+                'code' => $request->code,
             ],
         ]);
     }
@@ -624,7 +635,7 @@ class AuthController extends Controller
     public function reset(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'phone' => 'required|numeric|min:10|exists:users,phone',
+            'phone' => 'required|numeric|min:11|exists:users,phone',
             'password' => 'required|confirmed|min:8',
             'code' => 'required|digits:6',
         ]);
