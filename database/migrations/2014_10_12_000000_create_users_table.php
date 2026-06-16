@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('division_id')->nullable();
             $table->string('institute')->nullable();
             $table->string('email')->nullable();
+            $table->string('google_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->integer('phone')->nullable();
             $table->decimal('main_wallet', 12, 2)->default(0)->nullable();

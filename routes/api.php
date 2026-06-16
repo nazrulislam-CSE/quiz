@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\V1\User\AuthController as UserAuthController;
 use App\Http\Controllers\Api\V1\User\UserController;
+use App\Http\Controllers\Api\V1\User\AdmissionController;
 
 use App\Http\Controllers\Api\V1\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Api\V1\Admin\AdminController;
@@ -25,6 +26,10 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
         Route::post('login', [UserAuthController::class, 'login']);        // Send OTP
         Route::post('verify-otp', [UserAuthController::class, 'verifyOtp']); // Verify OTP & Login
         Route::post('resend-otp', [UserAuthController::class, 'resendOtp']); // Resend OTP
+        Route::post('/login-password', [UserAuthController::class, 'passwordLogin']); // Without Send Otp Login
+
+        // Google Login
+        Route::post('google-login', [UserAuthController::class, 'googleLogin']);
         
         // Password Reset via Phone
         Route::post('forgot-password', [UserAuthController::class, 'sendResetLink']);
@@ -40,6 +45,9 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
             Route::post('change-password', [UserAuthController::class, 'changePassword']);
             Route::delete('delete-account', [UserAuthController::class, 'deleteAccount']);
             Route::get('dashboard', [UserController::class, 'dashboard']);
+
+            // Get admission list (active only)
+            Route::get('/admissions', [AdmissionController::class, 'index']);
         });
     });
 

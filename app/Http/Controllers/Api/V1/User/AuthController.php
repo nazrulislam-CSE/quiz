@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
@@ -215,6 +216,56 @@ class AuthController extends Controller
         }
     }
 
+    // ================= WITHOUT VERIFY OTP LOGIN =================
+    public function passwordLogin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'phone' => 'required|numeric|digits:11',
+            'password' => 'required|string|min:8|max:20',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $user = User::where('phone', $request->phone)->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No account found with this phone number.',
+            ], 404);
+        }
+
+        if ($user->status == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your account is inactive.',
+            ], 403);
+        }
+
+        // Password check
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid phone or password.',
+            ], 401);
+        }
+
+        // Create token (Laravel Sanctum)
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Login successful.',
+            'token' => $token,
+            'user' => $user,
+        ]);
+    }
+
     // ================= VERIFY OTP AND COMPLETE LOGIN =================
     public function verifyOtp(Request $request)
     {
@@ -354,6 +405,69 @@ class AuthController extends Controller
                 'message' => 'SMS sending failed: '.$e->getMessage(),
             ], 500);
         }
+    }
+
+    // ================= Google Login =================
+    public function googleLogin(Request $request)
+    {
+        // dd('ok');
+        $request->validate([
+            'id_token' => 'required|string',
+        ]);
+
+        $response = Http::get(
+            'https://oauth2.googleapis.com/tokeninfo',
+            [
+                'id_token' => $request->id_token
+            ]
+        );
+
+        if (!$response->successful()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid Google token'
+            ], 401);
+        }
+
+        $googleUser = $response->json();
+
+        // Security check
+        if (($googleUser['aud'] ?? null) !== env('GOOGLE_CLIENT_ID')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid client ID'
+            ], 401);
+        }
+
+        $email = $googleUser['email'] ?? null;
+        $name = $googleUser['name'] ?? 'Google User';
+        $googleId = $googleUser['sub'] ?? null;
+
+        if (!$email) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email not found from Google account'
+            ], 400);
+        }
+
+        $user = User::updateOrCreate(
+            ['email' => $email],
+            [
+                'name' => $name,
+                'google_id' => $googleId,
+                'status' => 1,
+                'password' => bcrypt(Str::random(16)),
+            ]
+        );
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Google login successful',
+            'token' => $token,
+            'user' => $user,
+        ]);
     }
 
     // ================= LOGOUT =================
