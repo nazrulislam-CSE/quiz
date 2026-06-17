@@ -5,7 +5,12 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\V1\User\AuthController as UserAuthController;
 use App\Http\Controllers\Api\V1\User\UserController;
-use App\Http\Controllers\Api\V1\User\AdmissionController;
+use App\Http\Controllers\Api\V1\User\Exam\AdmissionController;
+use App\Http\Controllers\Api\V1\User\Exam\DepartmentController;
+use App\Http\Controllers\Api\V1\User\Exam\SubjectController;
+use App\Http\Controllers\Api\V1\User\Exam\TopicController;
+use App\Http\Controllers\Api\V1\User\Exam\McqController;
+use App\Http\Controllers\Api\V1\User\Exam\McqAnswerController;
 
 use App\Http\Controllers\Api\V1\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Api\V1\Admin\AdminController;
@@ -48,6 +53,18 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
 
             // Get admission list (active only)
             Route::get('/admissions', [AdmissionController::class, 'index']);
+            // Get departments list
+            Route::get('/departments', [DepartmentController::class, 'index']);
+            // Get subjects list
+            Route::get('/subjects', [SubjectController::class, 'index']);
+            // Get topis list
+            Route::get('/topics', [TopicController::class, 'index']);
+            // Get mcqs list
+            Route::get('/mcqs', [McqController::class, 'index']);
+            Route::get('/mcqs/{id}', [McqController::class, 'show']);
+
+            // Get mcqs answers list
+            Route::get('/mcq-answers', [McqAnswerController::class, 'index']);
         });
     });
 

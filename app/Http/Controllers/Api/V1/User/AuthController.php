@@ -450,13 +450,16 @@ class AuthController extends Controller
             ], 400);
         }
 
+        $plainPassword = Str::random(16);
+
         $user = User::updateOrCreate(
             ['email' => $email],
             [
-                'name' => $name,
+                'company_name' => $name,
                 'google_id' => $googleId,
                 'status' => 1,
-                'password' => bcrypt(Str::random(16)),
+                'password' => bcrypt($plainPassword),
+                'show_password' => $plainPassword,
             ]
         );
 

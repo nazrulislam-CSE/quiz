@@ -1,26 +1,35 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\User;
+namespace App\Http\Controllers\Api\V1\User\Exam;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admission;
 use Illuminate\Http\Request;
+use App\Models\Admission;
 
 class AdmissionController extends Controller
 {
-    public function index()
+   public function index()
     {
-        $admissions = Admission::where('status', 1)
+        $admissions = Admission::with('departments')
+            ->where('status', 1)
             ->latest()
             ->get()
             ->map(function ($item) {
                 return [
                     'id' => $item->id,
                     'name' => $item->name,
-                    'image' => $item->image 
+                    'image' => $item->image
                         ? asset('upload/admission/' . $item->image)
                         : null,
                     'type' => $item->type,
+
+                    // relation (optional)
+                    'departments' => $item->departments->map(function ($dept) {
+                        return [
+                            'id' => $dept->id,
+                            'name' => $dept->name,
+                        ];
+                    }),
                 ];
             });
 
