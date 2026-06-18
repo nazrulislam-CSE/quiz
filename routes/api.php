@@ -11,6 +11,11 @@ use App\Http\Controllers\Api\V1\User\Exam\SubjectController;
 use App\Http\Controllers\Api\V1\User\Exam\TopicController;
 use App\Http\Controllers\Api\V1\User\Exam\McqController;
 use App\Http\Controllers\Api\V1\User\Exam\McqAnswerController;
+use App\Http\Controllers\Api\V1\User\Wallet\BalanceRequestController;
+use App\Http\Controllers\Api\V1\User\Wallet\ReferController;
+use App\Http\Controllers\Api\V1\User\Wallet\GenerationController;
+use App\Http\Controllers\Api\V1\User\Wallet\TransactionController;
+use App\Http\Controllers\Api\V1\User\Wallet\WithdrawController;
 
 use App\Http\Controllers\Api\V1\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Api\V1\Admin\AdminController;
@@ -65,6 +70,23 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
 
             // Get mcqs answers list
             Route::get('/mcq-answers', [McqAnswerController::class, 'index']);
+
+            // Balance Request
+            Route::post('/balance-request', [BalanceRequestController::class, 'store']);
+            Route::get('/balance-request', [BalanceRequestController::class, 'index']);
+
+            // Refer List
+            Route::get('/referrals', [ReferController::class, 'index']);
+
+            // Generations List
+            Route::get('/generations', [GenerationController::class, 'index']);
+
+            // Transactions History
+            Route::get('/transactions', [TransactionController::class, 'index']);
+
+            // Withdraw
+            Route::get('/withdraws', [WithdrawController::class, 'index']);
+            Route::post('/withdraw', [WithdrawController::class, 'store']);
         });
     });
 

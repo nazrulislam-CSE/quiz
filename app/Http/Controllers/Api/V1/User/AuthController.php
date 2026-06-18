@@ -443,6 +443,7 @@ class AuthController extends Controller
         $name = $googleUser['name'] ?? 'Google User';
         $googleId = $googleUser['sub'] ?? null;
 
+
         if (!$email) {
             return response()->json([
                 'success' => false,
@@ -452,10 +453,14 @@ class AuthController extends Controller
 
         $plainPassword = Str::random(16);
 
+        // Username Generate
+        $username = Str::slug($name, '') . rand(1000, 9999);
+
         $user = User::updateOrCreate(
             ['email' => $email],
             [
-                'company_name' => $name,
+                'full_name' => $name,
+                'username' => $username,
                 'google_id' => $googleId,
                 'status' => 1,
                 'password' => bcrypt($plainPassword),
