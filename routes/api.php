@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\V1\User\Exam\SubjectController;
 use App\Http\Controllers\Api\V1\User\Exam\TopicController;
 use App\Http\Controllers\Api\V1\User\Exam\McqController;
 use App\Http\Controllers\Api\V1\User\Exam\McqAnswerController;
+use App\Http\Controllers\Api\V1\User\Exam\ExamController;
 use App\Http\Controllers\Api\V1\User\Wallet\BalanceRequestController;
 use App\Http\Controllers\Api\V1\User\Wallet\ReferController;
 use App\Http\Controllers\Api\V1\User\Wallet\GenerationController;
@@ -70,6 +71,12 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
 
             // Get mcqs answers list
             Route::get('/mcq-answers', [McqAnswerController::class, 'index']);
+
+            // Exam routes
+            Route::get('/exam/data', [ExamController::class, 'getExamData']);
+            Route::post('/exam/submit', [ExamController::class, 'submitExam']);
+            Route::get('/exam/result/{id}', [ExamController::class, 'viewExamResult']);
+            Route::get('/exam/reports', [ExamController::class, 'getExamReports']);
 
             // Balance Request
             Route::post('/balance-request', [BalanceRequestController::class, 'store']);
