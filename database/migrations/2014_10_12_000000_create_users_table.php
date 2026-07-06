@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('company_name')->nullable();
             $table->string('owner_name')->nullable();
-            $table->string('username')->nullable();
+            $table->string('username')->nullable()->unique();
+            $table->string('phone')->nullable()->unique();
             $table->integer('refer_by')->nullable();
             $table->string('full_name')->nullable();
             $table->integer('division_id')->nullable();
@@ -23,7 +24,6 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('google_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->integer('phone')->nullable();
             $table->decimal('main_wallet', 12, 2)->default(0)->nullable();
             $table->decimal('income_wallet', 12, 2)->default(0)->nullable();
             $table->decimal('withdraw_wallet', 12, 2)->default(0)->nullable();

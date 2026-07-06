@@ -144,7 +144,7 @@ class AuthController extends Controller
     {
         // dd('test');
         $validator = Validator::make($request->all(), [
-            'phone' => 'required|numeric|digits:11',
+            'phone' => 'required|numeric|digits:11|unique:users,phone',
         ]);
 
         if ($validator->fails()) {
@@ -220,7 +220,7 @@ class AuthController extends Controller
     public function passwordLogin(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'phone' => 'required|numeric|digits:11',
+            'phone' => 'required|numeric|digits:11|unique:users,phone',
             'password' => 'required|string|min:8|max:20',
         ]);
 
@@ -502,6 +502,7 @@ class AuthController extends Controller
                 'email' => $user->email,
                 'phone' => $user->phone,
                 'username' => $user->username,
+                'refer_by' => $user->refer_by,
                 'image' => $user->image ? asset('storage/'.$user->image) : null,
                 'main_wallet' => (float) $user->main_wallet,
                 'income_wallet' => (float) $user->income_wallet,

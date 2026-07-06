@@ -54,25 +54,25 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-    
         return Validator::make($data, [
             'full_name'   => ['required', 'string', 'max:255'],
             'username'    => ['required', 'string', 'max:255', 'unique:users,username'],
             'institute'   => ['required', 'string'],
             'division_id' => ['required', 'integer'],
             'refer_by'    => [
-                'nullable', 
+                'nullable',
                 'string',
                 function ($attribute, $value, $fail) {
                     if (!empty($value)) {
                         $exists = User::where('username', $value)->exists();
+
                         if (!$exists) {
-                            $fail('Please provide a valid Username!'); 
+                            $fail('Please provide a valid Username!');
                         }
                     }
-                }
+                },
             ],
-            'phone' => ['required', 'digits:11', 'numeric'],
+            'phone'       => ['required', 'numeric', 'digits:11', 'unique:users,phone'],
             'password'    => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
