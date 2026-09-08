@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Withdraw;
 use App\Models\Transaction;
+use Illuminate\Support\Facades\DB;
 
 class WithdrawController extends Controller
 {
@@ -41,38 +42,68 @@ class WithdrawController extends Controller
             'account_number' => 'required|string',
             'amount' => 'required|numeric|min:200',
         ]);
+        
 
-        $user = auth()->user();
+        try {
+            $user = auth()->user();
 
-        if ($user->income_wallet < $request->amount) {
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthenticated'
+                ], 401);
+            }
+
+            if ($user->income_wallet < $request->amount) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Insufficient balance'
+                ], 422);
+            }
+
+            $withdraw = DB::transaction(function () use ($request, $user) {
+
+                $withdraw = Withdraw::create([
+                    'user_id' => $user->id,
+                    'method' => $request->method,
+                    'account_number' => $request->account_number,
+                    'amount' => $request->amount,
+                    'status' => 'pending',
+                ]);
+
+                // Transaction log
+                Transaction::create([
+                    'from_id' => $user->id,
+                    'user_id' => $user->id,
+                    'out' => 'withdraw',
+                    'status' => 'pending',
+                    'purpose' => 'Withdraw Request',
+                    'amount' => $request->amount,
+                ]);
+
+                return $withdraw;
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Withdraw request submitted successfully',
+                'data' => $withdraw
+            ], 201);
+
+        } catch (\Throwable $e) {
+
+            \Log::error('Withdraw request failed', [
+                'user_id' => auth()->id(),
+                'amount' => $request->amount ?? null,
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
             return response()->json([
                 'success' => false,
-                'message' => 'Insufficient balance'
-            ], 422);
+                'message' => 'Something went wrong. Please try again later.'
+            ], 500);
         }
-
-        $withdraw = Withdraw::create([
-            'user_id' => $user->id,
-            'method' => $request->method,
-            'account_number' => $request->account_number,
-            'amount' => $request->amount,
-            'status' => 'pending',
-        ]);
-
-        // Optional: Transaction log
-        Transaction::create([
-            'from_id' => $user->id,
-            'user_id' => $user->id,
-            'out' => 'withdraw',
-            'status' => 'pending',
-            'purpose' => 'Withdraw Request',
-            'amount' => $request->amount,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Withdraw request submitted successfully',
-            'data' => $withdraw
-        ]);
     }
 }

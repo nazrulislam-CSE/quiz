@@ -1,8 +1,8 @@
 @extends('layouts.admin.app', [$pageTitle => 'Page Title'])
 
 @section('content')
- <!-- Content Header (Page header) -->
- <div class="breadcrumb-header justify-content-between">
+<!-- Content Header (Page header) -->
+<div class="breadcrumb-header justify-content-between">
     <div class="d-flex align-items-center">
         {{-- <h4 class="content-title mb-2">Hi, welcome back!</h4> --}}
         <nav aria-label="breadcrumb">
@@ -44,73 +44,93 @@
     </div> --}}
 </div>
 
- <!-- Main content -->
- <div class="card card-primary card-outline shadow-lg mb-4">
+<!-- Main content -->
+<div class="card card-primary card-outline shadow-lg mb-4">
     <div class="card-header border-bottom d-flex justify-content-between align-items-center">
-       <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}}</p>
-       <div class="d-flex">
-           <a href="{{ route('admin.balance.request.index')}}" class="btn btn-danger me-2">
-               <i class="fas fa-list d-inline"></i> Balance Request List
-           </a>
-       </div>
-   </div>
-    <div class="card-body">
-       <div class="table-responsive">
-           <table class="table table-bordered table-striped">
-            <tr>
-                <th>User Name</th>
-                <td>{{ $request->user->name ?? '' }}</td>
-            </tr>
-            <tr>
-                <th>Method</th>
-                <td>{{ ucfirst($request->method) }}</td>
-            </tr>
-            <tr>
-                <th>From Account</th>
-                <td>{{ $request->from_account }}</td>
-            </tr>
-            <tr>
-                <th>Amount</th>
-                <td class="font-weight-bold">{{ number_format($request->amount, 2) }} ৳</td>
-            </tr>
-            <tr>
-                <th>Transaction ID</th>
-                <td>{{ $request->trx_id ?? '' }}</td>
-            </tr>
-            <tr>
-                <th>Screenshot</th>
-                <td>
-                    @if($request->screenshot)
-                        <a href="{{ (!empty($request->screenshot)) ? url('upload/balance/'.$request->screenshot):url('upload/mcq.png') }}" target="_blank">
-                            <img src="{{ (!empty($request->screenshot)) ? url('upload/balance/'.$request->screenshot):url('upload/mcq.png') }}" alt="screenshot" class="img-thumbnail" style="width:80px; height:80px;">
-                        </a>
-                    @else
-                        <span class="text-muted">No Image</span>
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>
-                    @if($request->status == 'pending')
-                        <span class="badge bg-pill bg-warning">Pending</span>
-                    @elseif($request->status == 'approved')
-                        <span class="badge bg-pill bg-success">Approved</span>
-                    @elseif($request->status == 'rejected')
-                        <span class="badge bg-pill bg-danger">Rejected</span>
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <th>Created At</th>
-                <td>{{ $request->created_at->format('d M Y, h:i A') }}</td>
-            </tr>
-            <tr>
-                <th>Updated At</th>
-                <td>{{ $request->updated_at->format('d M Y, h:i A') }}</td>
-            </tr>
-        </table>
-       </div>
+        <p class="card-title my-0">{{ $pageTitle ?? 'Page Title'}}</p>
+        <div class="d-flex">
+            <a href="{{ route('admin.balance.request.index')}}" class="btn btn-danger me-2">
+                <i class="fas fa-list d-inline"></i> Balance Request List
+            </a>
+        </div>
     </div>
- </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th>User Name</th>
+                    <td> {{ $request->user->full_name ?? '' }}
+                        <br>
+                        <small class="text-success font-weight-bold">
+                            {{ $request->user->phone ?? '' }}
+                        </small>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Method</th>
+                    <td>{{ ucfirst($request->method) }}</td>
+                </tr>
+                <tr>
+                    <th>From Account</th>
+                    <td>{{ $request->from_account ?? 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <th>Amount</th>
+                    <td class="font-weight-bold">{{ number_format($request->amount, 2) }} ৳</td>
+                </tr>
+                <tr>
+                    <th>Transaction ID</th>
+                    <td>{{ $request->trx_id ?? '' }}</td>
+                </tr>
+                <tr>
+                    <th>Payment Status</th>
+                    <td>
+                        <span class="badge bg-success">{{ $request->payment_status ?? '' }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Payment Time</th>
+                    <td>
+                        {{ optional($request->paid_at)->format('Y-m-d h:i:s A') ?? 'Not Paid' }}
+                    </td>
+                </tr>
+
+                {{-- <tr>
+                    <th>Screenshot</th>
+                    <td>
+                        @if($request->screenshot)
+                        <a href="{{ (!empty($request->screenshot)) ? url('upload/balance/'.$request->screenshot):url('upload/mcq.png') }}"
+                            target="_blank">
+                            <img src="{{ (!empty($request->screenshot)) ? url('upload/balance/'.$request->screenshot):url('upload/mcq.png') }}"
+                                alt="screenshot" class="img-thumbnail" style="width:80px; height:80px;">
+                        </a>
+                        @else
+                        <span class="text-muted">No Image</span>
+                        @endif
+                    </td>
+                </tr> --}}
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        @if($request->status == 'pending')
+                        <span class="badge bg-pill bg-warning">Pending</span>
+                        @elseif($request->status == 'approved')
+                        <span class="badge bg-pill bg-success">Approved</span>
+                        @elseif($request->status == 'rejected')
+                        <span class="badge bg-pill bg-danger">Rejected</span>
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <th>Created At</th>
+                    <td>{{ $request->created_at->format('d M Y, h:i A') }}</td>
+                </tr>
+                <tr>
+                    <th>Updated At</th>
+                    <td>{{ $request->updated_at->format('d M Y, h:i A') }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
 @endsection

@@ -24,9 +24,10 @@ use Illuminate\Support\Facades\Validator;
 
 class ExamController extends Controller
 {
+   
     /**
-     * Get exam data with filters
-     */
+ * Get exam data with filters
+    */
     public function getExamData(Request $request)
     {
         try {
@@ -56,6 +57,17 @@ class ExamController extends Controller
                     'success' => false,
                     'message' => 'Unauthorized. Please login first.'
                 ], 401);
+            }
+
+            // ================= PAID EXAM WALLET CHECK =================
+            
+            if ((int) $request->query('exam') === 1) {
+                if ((float) $user->main_wallet < 100) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Insufficient wallet balance. A minimum balance of 100 BDT is required to start the exam.',
+                    ], 400);
+                }
             }
 
             $admissions = Admission::where('status', 1)->orderBy('id', 'asc')->get();
@@ -172,6 +184,20 @@ class ExamController extends Controller
                             ], 404);
                         }
 
+                        // **প্রথমে MCQ আছে কিনা চেক করুন**
+                        $mcqs = Mcq::with('answers')
+                                    ->where('topic_id', $selectedTopic)
+                                    ->where('mcq_type', 1)
+                                    ->get();
+
+                        if ($mcqs->isEmpty()) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'এই Topic এ কোনো প্রশ্ন নেই।'
+                            ], 404);
+                        }
+
+                        // **এখন ফি কাটুন**
                         $examFee = $selectedTopicData->fee;
                         $userBalance = $user->main_wallet;
 
@@ -198,17 +224,6 @@ class ExamController extends Controller
                         ]);
 
                         $isExamStarted = true;
-                        $mcqs = Mcq::with('answers')
-                                    ->where('topic_id', $selectedTopic)
-                                    ->where('mcq_type', 1)
-                                    ->get();
-
-                        if ($mcqs->isEmpty()) {
-                            return response()->json([
-                                'success' => false,
-                                'message' => 'এই Topic এ কোনো প্রশ্ন নেই।'
-                            ], 404);
-                        }
                     }
                 }
                 // Paper Final Exam workflow
@@ -290,6 +305,20 @@ class ExamController extends Controller
                             ], 404);
                         }
 
+                        // **প্রথমে MCQ আছে কিনা চেক করুন**
+                        $mcqs = Mcq::with('answers')
+                                    ->where('paper_final_id', $selectedPaperFinal)
+                                    ->where('mcq_type', 3)
+                                    ->get();
+
+                        if ($mcqs->isEmpty()) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'এই Paper Final এ কোনো প্রশ্ন নেই।'
+                            ], 404);
+                        }
+
+                        // **এখন ফি কাটুন**
                         $examFee = $selectedPaperFinalData->fee;
                         $userBalance = $user->main_wallet;
 
@@ -314,17 +343,6 @@ class ExamController extends Controller
                         ]);
 
                         $isExamStarted = true;
-                        $mcqs = Mcq::with('answers')
-                                    ->where('paper_final_id', $selectedPaperFinal)
-                                    ->where('mcq_type', 3)
-                                    ->get();
-
-                        if ($mcqs->isEmpty()) {
-                            return response()->json([
-                                'success' => false,
-                                'message' => 'এই Paper Final এ কোনো প্রশ্ন নেই।'
-                            ], 404);
-                        }
                     }
                 }
                 // Final Model Test workflow
@@ -391,6 +409,20 @@ class ExamController extends Controller
                             ], 404);
                         }
 
+                        // **প্রথমে MCQ আছে কিনা চেক করুন**
+                        $mcqs = Mcq::with('answers')
+                                    ->where('model_test_id', $selectedModelTest)
+                                    ->where('mcq_type', 4)
+                                    ->get();
+
+                        if ($mcqs->isEmpty()) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'এই Model Test এ কোনো প্রশ্ন নেই।'
+                            ], 404);
+                        }
+
+                        // **এখন ফি কাটুন**
                         $examFee = $selectedModelTestData->fee;
                         $userBalance = $user->main_wallet;
 
@@ -415,17 +447,6 @@ class ExamController extends Controller
                         ]);
 
                         $isExamStarted = true;
-                        $mcqs = Mcq::with('answers')
-                                    ->where('model_test_id', $selectedModelTest)
-                                    ->where('mcq_type', 4)
-                                    ->get();
-
-                        if ($mcqs->isEmpty()) {
-                            return response()->json([
-                                'success' => false,
-                                'message' => 'এই Model Test এ কোনো প্রশ্ন নেই।'
-                            ], 404);
-                        }
                     }
                 }
                 // DEFAULT WORKFLOW FOR OTHER ADMISSIONS
@@ -463,6 +484,19 @@ class ExamController extends Controller
                             ], 404);
                         }
 
+                        // **প্রথমে MCQ আছে কিনা চেক করুন**
+                        $mcqs = Mcq::with('answers')
+                                    ->where('topic_id', $selectedTopic)
+                                    ->get();
+
+                        if ($mcqs->isEmpty()) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'এই Topic এ কোনো প্রশ্ন নেই।'
+                            ], 404);
+                        }
+
+                        // **এখন ফি কাটুন**
                         $examFee = $selectedTopicData->fee;
                         $userBalance = $user->main_wallet;
 
@@ -487,16 +521,6 @@ class ExamController extends Controller
                         ]);
 
                         $isExamStarted = true;
-                        $mcqs = Mcq::with('answers')
-                                    ->where('topic_id', $selectedTopic)
-                                    ->get();
-
-                        if ($mcqs->isEmpty()) {
-                            return response()->json([
-                                'success' => false,
-                                'message' => 'এই Topic এ কোনো প্রশ্ন নেই।'
-                            ], 404);
-                        }
                     }
                 }
             }
@@ -531,6 +555,7 @@ class ExamController extends Controller
                             'id' => $topic->id,
                             'name' => $topic->name,
                             'fee' => $topic->fee,
+                            'exam_duration' => $topic->exam_duration,
                             'status' => $topic->status,
                         ];
                     }),
@@ -610,197 +635,243 @@ class ExamController extends Controller
         }
     }
 
-    /**
+   /**
      * Submit exam answers
      */
     public function submitExam(Request $request)
     {
-        // dd('hi');
-        // dd($request->all());
         try {
+
+            // ================= VALIDATION =================
             $validator = Validator::make($request->all(), [
                 'answers' => 'required|array',
-                'answers.*' => 'required|exists:answers,id',
-                'time_taken' => 'required|integer',
+                'answers.*' => 'required|exists:mcq_answers,id',
+
+                'time_taken' => 'required|integer|min:0',
+
                 'admission' => 'required|exists:admissions,id',
                 'department' => 'required|exists:departments,id',
+
                 'subject' => 'nullable|exists:subjects,id',
                 'topic' => 'nullable|exists:topics,id',
                 'group' => 'nullable|exists:groups,id',
                 'paper_final' => 'nullable|exists:paper_finals,id',
                 'model_test' => 'nullable|exists:model_tests,id',
-                'admission_data' => 'required|string', // Exam type
+
+                'admission_data' => 'required|string',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Validation failed',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
+
+            // ================= AUTH USER =================
             $user = Auth::user();
+
             if (!$user) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Unauthorized. Please login first.'
+                    'message' => 'Unauthorized. Please login first.',
                 ], 401);
             }
 
-            $answers = $request->answers;
-            $mcqs = Mcq::with('answers')->whereIn('id', array_keys($answers))->get();
 
+            // ================= ANSWERS =================
+            $answers = $request->input('answers');
+
+
+            // ================= GET MCQs =================
+            $mcqs = Mcq::with('answers')
+                ->whereIn('id', array_keys($answers))
+                ->get();
+
+
+            // ================= CALCULATE RESULT =================
             $total = $mcqs->count();
             $correct = 0;
             $wrong = 0;
 
-            foreach($mcqs as $mcq){
-                $givenAnswerId = $answers[$mcq->id] ?? null;
-                $correctAnswer = $mcq->answers->where('is_correct',1)->first();
+            foreach ($mcqs as $mcq) {
 
-                if($givenAnswerId && $correctAnswer && $givenAnswerId == $correctAnswer->id){
+                $givenAnswerId = $answers[$mcq->id] ?? null;
+
+                $correctAnswer = $mcq->answers
+                    ->where('is_correct', 1)
+                    ->first();
+
+                if (
+                    $givenAnswerId &&
+                    $correctAnswer &&
+                    (int) $givenAnswerId === (int) $correctAnswer->id
+                ) {
                     $correct++;
                 } else {
                     $wrong++;
                 }
             }
 
-            $score = $total > 0 ? round(($correct/$total)*100, 2) : 0;
+
+            // ================= SCORE =================
+            $score = $total > 0
+                ? round(($correct / $total) * 100, 2)
+                : 0;
+
+
             $timeTaken = $request->time_taken;
             $userId = $user->id;
 
-            $examType = $request->admission_data;
 
-            // Check if already exists
-            $alreadyExists = null;
-            if($examType == 'ভার্সিটি এডমিশন') {
-                $alreadyExists = ExamResult::where('user_id', $userId)
-                    ->where('admission_id', $request->admission)
-                    ->where('department_id', $request->department)
-                    ->where('subject_id', $request->subject)
-                    ->where('topic_id', $request->topic)
-                    ->first();
-            } elseif($examType == 'পেপার ফাইনাল এক্সাম') {
-                $alreadyExists = ExamResult::where('user_id', $userId)
-                    ->where('admission_id', $request->admission)
-                    ->where('department_id', $request->department)
-                    ->where('group_id', $request->group)
-                    ->where('subject_id', $request->subject)
-                    ->where('paper_final_id', $request->paper_final)
-                    ->first();
-            } elseif($examType == 'ফাইনাল মডেল টেস্ট এক্সাম') {
-                $alreadyExists = ExamResult::where('user_id', $userId)
-                    ->where('admission_id', $request->admission)
-                    ->where('department_id', $request->department)
-                    ->where('group_id', $request->group)
-                    ->where('model_test_id', $request->model_test)
-                    ->first();
-            } else {
-                $alreadyExists = ExamResult::where('user_id', $userId)
-                    ->where('admission_id', $request->admission)
-                    ->where('department_id', $request->department)
-                    ->where('subject_id', $request->subject)
-                    ->where('topic_id', $request->topic)
-                    ->first();
-            }
+            // ================= CREATE NEW EXAM RESULT =================
+            // প্রতিবার submit করলে নতুন row তৈরি হবে
 
-            // Only insert if not exists
-            if (!$alreadyExists) {
-                $examResult = ExamResult::create([
-                    'user_id'       => $userId,
-                    'admission_id'  => $request->admission,
-                    'department_id' => $request->department,
-                    'group_id'      => $request->group,
-                    'subject_id'    => $request->subject,
-                    'topic_id'      => $request->topic,
-                    'model_test_id' => $request->model_test,
-                    'paper_final_id'=> $request->paper_final,
-                    'total'         => $total,
-                    'correct'       => $correct,
-                    'wrong'         => $wrong,
-                    'score'         => $score,
-                    'time_taken'    => $timeTaken,
-                    'given_answers' => $answers,
-                ]);
-            } else {
-                $examResult = $alreadyExists;
-            }
+            $examResult = ExamResult::create([
+                'user_id'        => $userId,
+                'admission_id'   => $request->admission,
+                'department_id'  => $request->department,
+                'group_id'       => $request->group,
+                'subject_id'     => $request->subject,
+                'topic_id'       => $request->topic,
+                'model_test_id'  => $request->model_test,
+                'paper_final_id' => $request->paper_final,
 
-            // Load relationships
-            $examResult->load(['user','admission','department','subject','topic','group','modelTest','paperFinal']);
+                'total'          => $total,
+                'correct'        => $correct,
+                'wrong'          => $wrong,
+                'score'          => $score,
+                'time_taken'     => $timeTaken,
 
-            // Prepare MCQ data with answers
-            $mcqData = Mcq::with('answers')->whereIn('id', array_keys($answers))->get();
+                'given_answers'  => $answers,
+            ]);
 
+
+            // ================= LOAD RELATIONSHIPS =================
+            $examResult->load([
+                'user',
+                'admission',
+                'department',
+                'subject',
+                'topic',
+                'group',
+                'modelTest',
+                'paperFinal',
+            ]);
+
+
+            // ================= MCQ DATA =================
+            $mcqData = Mcq::with('answers')
+                ->whereIn('id', array_keys($answers))
+                ->get();
+
+
+            // ================= RESPONSE =================
             return response()->json([
                 'success' => true,
                 'message' => 'Exam submitted successfully!',
+
                 'data' => [
+
+                    // ================= EXAM RESULT =================
                     'exam_result' => [
                         'id' => $examResult->id,
+
                         'total' => $examResult->total,
                         'correct' => $examResult->correct,
                         'wrong' => $examResult->wrong,
                         'score' => $examResult->score,
                         'time_taken' => $examResult->time_taken,
+
                         'created_at' => $examResult->created_at,
-                        'user' => [
+
+                        // User
+                        'user' => $examResult->user ? [
                             'id' => $examResult->user->id,
                             'name' => $examResult->user->name,
                             'email' => $examResult->user->email,
-                        ],
+                        ] : null,
+
+                        // Admission
                         'admission' => $examResult->admission ? [
                             'id' => $examResult->admission->id,
                             'name' => $examResult->admission->name,
                         ] : null,
+
+                        // Department
                         'department' => $examResult->department ? [
                             'id' => $examResult->department->id,
                             'name' => $examResult->department->name,
                         ] : null,
+
+                        // Subject
                         'subject' => $examResult->subject ? [
                             'id' => $examResult->subject->id,
                             'name' => $examResult->subject->name,
                         ] : null,
+
+                        // Topic
                         'topic' => $examResult->topic ? [
                             'id' => $examResult->topic->id,
                             'name' => $examResult->topic->name,
                         ] : null,
+
+                        // Group
                         'group' => $examResult->group ? [
                             'id' => $examResult->group->id,
                             'name' => $examResult->group->name,
                         ] : null,
+
+                        // Model Test
                         'model_test' => $examResult->modelTest ? [
                             'id' => $examResult->modelTest->id,
                             'name' => $examResult->modelTest->name,
                         ] : null,
+
+                        // Paper Final
                         'paper_final' => $examResult->paperFinal ? [
                             'id' => $examResult->paperFinal->id,
                             'name' => $examResult->paperFinal->name,
                         ] : null,
                     ],
-                    'questions' => $mcqData->map(function($mcq) use ($answers) {
+
+
+                    // ================= QUESTIONS =================
+                    'questions' => $mcqData->map(function ($mcq) use ($answers) {
+
                         return [
                             'id' => $mcq->id,
+
                             'question' => $mcq->question,
-                            'given_answer_id' => $answers[$mcq->id] ?? null,
-                            'answers' => $mcq->answers->map(function($answer) {
+
+                            'given_answer_id' =>
+                                $answers[$mcq->id] ?? null,
+
+                            'answers' => $mcq->answers->map(function ($answer) {
+
                                 return [
                                     'id' => $answer->id,
                                     'answer' => $answer->answer,
                                     'is_correct' => $answer->is_correct,
                                 ];
-                            }),
+
+                            })->values(),
                         ];
-                    }),
-                ]
+
+                    })->values(),
+                ],
+
             ], 200);
 
+
         } catch (\Exception $e) {
+
             return response()->json([
                 'success' => false,
                 'message' => 'Something went wrong!',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

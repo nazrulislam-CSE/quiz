@@ -19,6 +19,94 @@
             color: green;
             /* or your preferred color */
         }
+
+        .animated-title {
+            background: linear-gradient(-45deg,
+                    rgba(13, 110, 253, 0.9),
+                    rgba(111, 66, 193, 0.9),
+                    rgba(214, 51, 132, 0.9),
+                    rgba(13, 202, 240, 0.9));
+
+            background-size: 400% 400%;
+            animation: colorMove 8s ease infinite;
+        }
+
+        @keyframes colorMove {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .student-card {
+            border-radius: 20px;
+            background: linear-gradient(-45deg,
+                    rgba(227, 242, 253, .95),
+                    rgba(187, 222, 251, .95),
+                    rgba(224, 247, 250, .95),
+                    rgba(232, 245, 233, .95));
+            background-size: 300% 300%;
+            animation: cardColor 8s ease infinite;
+            transition: .4s;
+        }
+
+        .student-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, .15) !important;
+        }
+
+        .profile-img {
+            border: 4px solid rgba(13, 110, 253, .7);
+            padding: 3px;
+            background: white;
+        }
+
+        @keyframes cardColor {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .animated-card {
+            background: linear-gradient(-45deg,
+                    rgba(227, 242, 253, 0.95),
+                    rgba(187, 222, 251, 0.95),
+                    rgba(206, 147, 216, 0.85),
+                    rgba(255, 205, 210, 0.9));
+
+            background-size: 400% 400%;
+            animation: cardGradient 8s ease infinite;
+            border-radius: 20px;
+        }
+
+        @keyframes cardGradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
     </style>
     <!-- Hero Image Slider -->
     <section id="heroSlider" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
@@ -69,7 +157,7 @@
                     <!-- Right: Content -->
                     <div class="col-md-6 mt-3">
                         <h2 class="fw-bold reveal">{{ $about->title }}</h2>
-                        <div class="mt-3 about-description reveal">{!! $about->description !!}</div>
+                        <div class="mt-3 about-description reveal  student-card animated-card">{!! $about->description !!}</div>
 
                         @if ($about->video_link && $about->video_link != '#')
                             <a href="{{ $about->video_link }}" class="btn btn-primary mt-3 reveal">ভিডিও দেখুন</a>
@@ -107,7 +195,7 @@
                         $colorClass = $availableColors[array_rand($availableColors)];
                     @endphp
 
-                    <div class="col-md-3 col-sm-6">
+                    <div class="col-md-3 col-sm-6 ">
                         <div class="p-4 rounded shadow-sm h-100 {{ $colorClass }} reveal">
                             <h5 class="mb-0">{{ $admission->name }}</h5>
                         </div>
@@ -129,7 +217,7 @@
                     <div class="program-slider">
                         @foreach ($programs as $program)
                             <div class="px-2"> <!-- Optional spacing -->
-                                <div class="card h-100 border-0 shadow-sm">
+                                <div class="card h-100 border-0 shadow-sm  student-card animated-card">
                                     <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}"
                                         class="img-fluid mb-3" alt="{{ $program->name }}">
                                     <div class="card-body">
@@ -168,7 +256,7 @@
                 <div class="teacher-slider">
                     @foreach ($teachers as $teacher)
                         <div class="px-2">
-                            <div class="card shadow rounded border-0 h-100">
+                            <div class="card shadow rounded border-0 h-100  student-card animated-card">
                                 <img src="{{ asset('upload/teacher/' . $teacher->image) }}" class="card-img-top"
                                     alt="{{ $teacher->name }}">
                                 <div class="card-body">
@@ -254,7 +342,7 @@
             <div class="row">
                 @foreach ($features as $index => $feature)
                     <div class="col-12 col-sm-6 col-md-3 mb-4">
-                        <div class="p-4 border rounded shadow-sm h-100 reveal"
+                        <div class="p-4 border rounded shadow-sm h-100 reveal  student-card animated-card"
                             style="background-color: {{ $bgColors[$index % count($bgColors)] }};">
                             <i class="{{ $feature->icon }} fa-2x mb-3"
                                 style="color: {{ $iconColors[$index % count($iconColors)] }};"></i>
@@ -289,30 +377,44 @@
     <!-- Students Section with Bootstrap Card & Slick Carousel -->
     <section class="py-5 bg-light position-relative">
         <div class="container">
-            <h2 class="mb-5 text-center text-primary fw-bold reveal">সফল যারা,কেমন তারা</h2>
+            <div class="text-center mb-5">
+                <h2
+                    class="d-inline-block px-5 py-3 fw-bold text-white border border-3 border-info rounded-4 shadow reveal animated-title">
+                    সফল যারা, কেমন তারা
+                </h2>
+            </div>
 
             @if ($students->count() > 0)
                 <div class="student-slider">
                     @foreach ($students as $student)
                         <div class="px-2">
-                            <div class="card border-0 shadow-sm h-100 text-center">
+                            <div class="card border-0 shadow-lg h-100 text-center student-card animated-card">
                                 <div class="card-body p-4">
+
                                     <!-- Profile Image -->
                                     <img src="{{ !empty($student->image) ? url('upload/student/' . $student->image) : url('upload/no_image.jpg') }}"
-                                        alt="{{ $student->name }}" class="rounded-circle mb-3 mx-auto"
-                                        style="width: 110px; height: 110px; object-fit: cover; border: 3px solid #4a90e2;">
+                                        alt="{{ $student->name }}" class="rounded-circle mb-3 mx-auto profile-img"
+                                        style="width: 110px; height: 110px; object-fit: cover;">
 
                                     <!-- Student Info -->
-                                    <h5 class="card-title text-dark fw-semibold mb-1">{{ $student->name }}</h5>
+                                    <h5 class="card-title text-dark fw-bold mb-1">
+                                        {{ $student->name }}
+                                    </h5>
 
-                                    <!-- Student Info -->
-                                    <h5 class="card-title text-success fw-semibold mb-1">{{ $student->merit }}</h5>
+                                    <h5 class="card-title text-primary fw-bold mb-1">
+                                        {{ $student->merit }}
+                                    </h5>
 
                                     @if ($student->versity)
-                                        <p class="text-success small mb-2">{{ $student->versity }}</p>
+                                        <p class="text-success small mb-2">
+                                            {{ $student->versity }}
+                                        </p>
                                     @endif
 
-                                    <p class="card-text fst-italic text-muted small">{!! $student->description !!}</p>
+                                    <p class="card-text fst-italic text-muted small">
+                                        {!! $student->description !!}
+                                    </p>
+
                                 </div>
                             </div>
                         </div>

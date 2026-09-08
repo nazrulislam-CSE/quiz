@@ -25,6 +25,7 @@ use App\Http\Controllers\User\BalanceRequestController;
 use App\Http\Controllers\User\WithdrawController;
 use App\Http\Controllers\User\BalanceTransferController;
 use App\Http\Controllers\User\OnlineQuizController;
+use App\Http\Controllers\User\TransactionHistoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth'], function () {
@@ -39,6 +40,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/balance-request', [BalanceRequestController::class, 'create'])->name('balance.request');
     Route::post('/balance-request', [BalanceRequestController::class, 'store'])->name('balance.request.store');
     Route::get('/balance-request/report', [BalanceRequestController::class, 'report'])->name('balance.request.report');
+    Route::get('/balance-transfer', [BalanceTransferController::class, 'create'])->name('balance.transfer');
+    Route::get('/transaction-history', [TransactionHistoryController::class, 'transactionHistory'])->name('transaction.history');
+
+    // EPS Payment
+    Route::get('/eps-payment',[BalanceRequestController::class, 'index'])->name('eps.payment');
+    Route::post('/eps-payment/initialize',[BalanceRequestController::class, 'initializePayment'])->name('eps.payment.initialize');
+    Route::get('/payment/success',[BalanceRequestController::class, 'success'])->name('payment.success');
+    Route::get('/payment/fail',[BalanceRequestController::class, 'fail'])->name('payment.fail');
+    Route::get('/payment/cancel',[BalanceRequestController::class, 'cancel'])->name('payment.cancel');
 
     Route::prefix('withdraw')->name('withdraw.')->group(function () {
         Route::get('/create', [WithdrawController::class, 'create'])->name('create');

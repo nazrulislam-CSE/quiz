@@ -3,53 +3,78 @@
 namespace App\Http\Controllers\Api\V1\User\Wallet;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Transaction;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class TransactionController extends Controller
+class TransactionHistoryController extends Controller
 {
-    public function index()
+    public function transactionHistory(Request $request)
     {
-        $userId = Auth::id();
+        $userId = auth()->id();
 
-        $transactions = Transaction::with(['initiator', 'recipient', 'originUser'])
-            ->where('user_id', $userId)
-            ->orWhere('from_id', $userId)
-            ->orderBy('id', 'desc')
-            ->get()
-            ->map(function ($item) {
+        $fromDate = $request->from_date;
+        $toDate   = $request->to_date;
 
-                return [
-                    'id' => $item->id,
+        // Validation
+        $request->validate([
+            'from_date' => ['nullable', 'date'],
+            'to_date'   => ['nullable', 'date', 'after_or_equal:from_date'],
+            'per_page'  => ['nullable', 'integer', 'min:1', 'max:100'],
+        ]);
 
-                    'initiator' => [
-                        'id' => $item->initiator->id ?? null,
-                        'name' => $item->initiator->name ?? null,
-                    ],
-
-                    'recipient' => [
-                        'id' => $item->recipient->id ?? null,
-                        'name' => $item->recipient->name ?? null,
-                    ],
-
-                    'origin_user' => [
-                        'id' => $item->originUser->id ?? null,
-                        'name' => $item->originUser->name ?? null,
-                    ],
-
-                    'type' => $item->out,
-                    'status' => $item->status,
-                    'purpose' => $item->purpose,
-                    'amount' => $item->amount,
-
-                    'created_at' => $item->created_at->format('d M Y h:i A'),
-                ];
+        // শুধুমাত্র লগইন করা User-এর নিজের Transaction
+        $query = Transaction::where('user_id', $userId)
+            ->when($fromDate, function ($query) use ($fromDate) {
+                $query->whereDate('created_at', '>=', $fromDate);
+            })
+            ->when($toDate, function ($query) use ($toDate) {
+                $query->whereDate('created_at', '<=', $toDate);
             });
+
+        // Summary
+        $totalAmount = (clone $query)->sum('amount');
+
+        $totalTransactions = (clone $query)->count();
+
+        $totalReceived = (clone $query)->sum('amount');
+
+        // Pagination
+        $perPage = $request->integer('per_page', 15);
+
+        $transactions = (clone $query)
+            ->latest()
+            ->paginate($perPage);
 
         return response()->json([
             'success' => true,
-            'data' => $transactions
+
+            'message' => 'লেনদেনের ইতিহাস সফলভাবে পাওয়া গেছে।',
+
+            'summary' => [
+                'total_received'    => (float) $totalReceived,
+                'total_transactions' => $totalTransactions,
+                'total_amount'      => (float) $totalAmount,
+            ],
+
+            'transactions' => $transactions->items(),
+
+            'pagination' => [
+                'current_page' => $transactions->currentPage(),
+                'last_page'    => $transactions->lastPage(),
+                'per_page'     => $transactions->perPage(),
+                'total'        => $transactions->total(),
+                'from'         => $transactions->firstItem(),
+                'to'           => $transactions->lastItem(),
+
+                'next_page_url' => $transactions->nextPageUrl(),
+                'prev_page_url' => $transactions->previousPageUrl(),
+            ],
+
+            'filters' => [
+                'from_date' => $fromDate,
+                'to_date'   => $toDate,
+            ],
         ]);
     }
 }

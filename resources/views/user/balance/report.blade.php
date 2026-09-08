@@ -19,36 +19,35 @@
                             <th>পেমেন্ট মেথড</th>
                             <th>একাউন্ট নাম্বার</th>
                             <th>টাকার পরিমাণ</th>
-                            <th>স্ক্রিনশট</th>
-                            <th>স্ট্যাটাস</th>
+                            <th>পেমেন্ট স্ট্যাটাস</th>
+                            <th>পরিশোধের সময়</th>
+                            <th>অ্যাপ্রুভ স্ট্যাটাস</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($requests as $key => $request)
                         <tr>
                             <td>{{ $key+1 }}</td>
-                           <td>{{ \Carbon\Carbon::parse($request->created_at)->format('j F Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($request->created_at)->format('j F Y') }}</td>
                             <td>
                                 <span class="badge bg-info text-dark">{{ ucfirst($request->method) }}</span>
                             </td>
-                            <td>{{ $request->from_account }}</td>
+                            <td>{{ $request->from_account ?? 'N/A' }}</td>
                             <td class="fw-bold text-success">৳{{ number_format($request->amount ?? 0, 2) }}</td>
                             <td>
-                                @if($request->screenshot)
-                                    <a href="{{ (!empty($request->screenshot)) ? url('upload/balance/'.$request->screenshot):url('upload/mcq.png') }}" target="_blank">
-                                        <img src="{{ (!empty($request->screenshot)) ? url('upload/balance/'.$request->screenshot):url('upload/mcq.png') }}" alt="screenshot" class="img-thumbnail" style="width:80px; height:80px;">
-                                    </a>
-                                @else
-                                    <span class="text-muted">No Image</span>
-                                @endif
+                                <span class="badge bg-success">{{ $request->payment_status ?? '' }}</span>
                             </td>
                             <td>
+                                {{ $request->paid_at->format('Y-m-d h:i:s A') }}
+                            </td>
+
+                            <td>
                                 @if($request->status == 'pending')
-                                    <span class="badge bg-warning text-dark">Pending</span>
+                                <span class="badge bg-warning text-dark">Pending</span>
                                 @elseif($request->status == 'approved')
-                                    <span class="badge bg-success">Approved</span>
+                                <span class="badge bg-success">Approved</span>
                                 @else
-                                    <span class="badge bg-danger">Rejected</span>
+                                <span class="badge bg-danger">Rejected</span>
                                 @endif
                             </td>
                         </tr>

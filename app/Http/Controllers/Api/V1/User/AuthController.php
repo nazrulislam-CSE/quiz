@@ -503,7 +503,7 @@ class AuthController extends Controller
                 'phone' => $user->phone,
                 'username' => $user->username,
                 'refer_by' => $user->refer_by,
-                'image' => $user->image ? asset('storage/'.$user->image) : null,
+                'image' => $user->image ? asset('upload/user/' . $user->image): null,
                 'main_wallet' => (float) $user->main_wallet,
                 'income_wallet' => (float) $user->income_wallet,
                 'withdraw_wallet' => (float) $user->withdraw_wallet,
@@ -534,8 +534,8 @@ class AuthController extends Controller
 
         $validator = Validator::make($request->all(), [
             'full_name' => 'nullable|string|max:255',
-            'email' => 'nullable|email|unique:users,email,'.$user->id,
-            'username' => 'nullable|string|max:255|unique:users,username,'.$user->id,
+            'email' => 'nullable|email|unique:users,email,' . $user->id,
+            'username' => 'nullable|string|max:255|unique:users,username,' . $user->id,
             'city_name' => 'nullable|string|max:255',
             'present_address' => 'nullable|string',
             'parmanent_address' => 'nullable|string',
@@ -549,6 +549,9 @@ class AuthController extends Controller
             'linkedin_url' => 'nullable|url',
             'twitter_url' => 'nullable|url',
             'instagram_url' => 'nullable|url',
+
+            // Image
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -558,20 +561,64 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user->update($request->only([
-            'full_name', 'email', 'username', 'city_name', 'present_address',
-            'parmanent_address', 'date_of_birth', 'nationality', 'religion',
-            'blood_group', 'gender', 'nid_number', 'facebook_url', 'linkedin_url',
-            'twitter_url', 'instagram_url',
+        // ================= UPDATE OTHER DATA =================
+        $user->fill($request->only([
+            'full_name',
+            'email',
+            'username',
+            'city_name',
+            'present_address',
+            'parmanent_address',
+            'date_of_birth',
+            'nationality',
+            'religion',
+            'blood_group',
+            'gender',
+            'nid_number',
+            'facebook_url',
+            'linkedin_url',
+            'twitter_url',
+            'instagram_url',
         ]));
+
+
+        // ================= UPDATE IMAGE =================
+        if ($request->hasFile('image')) {
+
+            // পুরাতন image delete
+            if ($user->image) {
+                $oldImage = public_path('upload/user/' . $user->image);
+
+                if (file_exists($oldImage)) {
+                    unlink($oldImage);
+                }
+            }
+
+            // নতুন image upload
+            $file = $request->file('image');
+
+            $filename = time() . '_' . $file->getClientOriginalName();
+
+            $file->move(
+                public_path('upload/user'),
+                $filename
+            );
+
+            // শুধু model এ value set হবে
+            $user->image = $filename;
+        }
+
+
+        // ================= SINGLE SAVE =================
+        $user->save();
+
 
         return response()->json([
             'success' => true,
             'message' => 'Profile updated successfully',
-            'data' => $user,
+            'data' => $user->fresh(),
         ]);
     }
-
     // ================= CHANGE PASSWORD =================
     public function changePassword(Request $request)
     {

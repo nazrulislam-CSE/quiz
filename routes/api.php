@@ -17,6 +17,11 @@ use App\Http\Controllers\Api\V1\User\Wallet\ReferController;
 use App\Http\Controllers\Api\V1\User\Wallet\GenerationController;
 use App\Http\Controllers\Api\V1\User\Wallet\TransactionController;
 use App\Http\Controllers\Api\V1\User\Wallet\WithdrawController;
+use App\Http\Controllers\Api\V1\User\Wallet\BalanceTransferController;
+use App\Http\Controllers\Api\V1\User\OnlineQuiz\OnlineQuizController;
+use App\Http\Controllers\Api\V1\User\Payment\EPSExampleController;
+
+use App\Http\Controllers\Api\V1\User\AdmissionInfoController;
 
 use App\Http\Controllers\Api\V1\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Api\V1\Admin\AdminController;
@@ -26,6 +31,11 @@ use App\Http\Controllers\Api\V1\Admin\AdminController;
 | API Routes - Version 1
 |--------------------------------------------------------------------------
 */
+
+Route::get('/eps/success', [BalanceRequestController::class, 'epsSuccess'])->name('payment.eps.success');
+Route::get('/eps/fail', [BalanceRequestController::class, 'epsFail'])->name('payment.eps.fail');
+Route::get('/eps/cancel', [BalanceRequestController::class, 'epsCancel'])->name('payment.eps.cancel');
+
 
 Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
 
@@ -51,7 +61,7 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
         Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('logout', [UserAuthController::class, 'logout']);
             Route::get('profile', [UserAuthController::class, 'profile']);
-            Route::put('profile', [UserAuthController::class, 'updateProfile']);
+            Route::post('profile', [UserAuthController::class, 'updateProfile']);
             Route::post('avatar', [UserAuthController::class, 'uploadAvatar']);
             Route::post('change-password', [UserAuthController::class, 'changePassword']);
             Route::delete('delete-account', [UserAuthController::class, 'deleteAccount']);
@@ -94,6 +104,24 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
             // Withdraw
             Route::get('/withdraws', [WithdrawController::class, 'index']);
             Route::post('/withdraw', [WithdrawController::class, 'store']);
+
+            // Balance Transfer
+            Route::get('/balance-transfers', [BalanceTransferController::class, 'index']);
+            Route::post('/balance-transfer', [BalanceTransferController::class, 'store']);
+
+            // Online Quiz
+            Route::get('/online-quizzes', [OnlineQuizController::class,'index']);
+            Route::get('/online-quizzes/{id}', [OnlineQuizController::class,'onlineExam']);
+            Route::post('/online-quizzes/submit', [OnlineQuizController::class,'submitExam']);
+            Route::get('/online-quizzes/{quiz_id}/result', [OnlineQuizController::class,'result']);
+            
+
+            // Admission Info
+            Route::get('admission-info', [AdmissionInfoController::class, 'index']);  
+
+            // EPS Payment
+            Route::post('/eps/initialize', [BalanceRequestController::class, 'initializeEpsPayment']);
+          
         });
     });
 

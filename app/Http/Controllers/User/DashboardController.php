@@ -39,10 +39,12 @@ class DashboardController extends Controller
                         ->sum('amount');
                         
         $mainWallet = $user->main_wallet;
+        $incomeWallet = $user->income_wallet;
 
         return view('user.dashborad.index', compact(
             'pageTitle',
             'mainWallet',
+            'incomeWallet',
             'referBonus',
             'directIncome',
             'balance',
