@@ -15,7 +15,7 @@ use App\Http\Controllers\Api\V1\User\Exam\ExamController;
 use App\Http\Controllers\Api\V1\User\Wallet\BalanceRequestController;
 use App\Http\Controllers\Api\V1\User\Wallet\ReferController;
 use App\Http\Controllers\Api\V1\User\Wallet\GenerationController;
-use App\Http\Controllers\Api\V1\User\Wallet\TransactionController;
+use App\Http\Controllers\Api\V1\User\Wallet\TransactionHistoryController;
 use App\Http\Controllers\Api\V1\User\Wallet\WithdrawController;
 use App\Http\Controllers\Api\V1\User\Wallet\BalanceTransferController;
 use App\Http\Controllers\Api\V1\User\OnlineQuiz\OnlineQuizController;
@@ -99,7 +99,7 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
             Route::get('/generations', [GenerationController::class, 'index']);
 
             // Transactions History
-            Route::get('/transactions', [TransactionController::class, 'index']);
+            Route::get('/transactions', [TransactionHistoryController::class, 'transactionHistory']);
 
             // Withdraw
             Route::get('/withdraws', [WithdrawController::class, 'index']);

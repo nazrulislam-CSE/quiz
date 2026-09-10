@@ -281,6 +281,8 @@ Route::middleware('admin')->group(function () {
         Route::get('/study/mcq/index', [TopicStudyMcqController::class, 'index'])->name('topic.study.mcq.index');
         Route::get('/study/mcq/create', [TopicStudyMcqController::class, 'create'])->name('topic.study.mcq.create');
         Route::post('/study/mcq/store', [TopicStudyMcqController::class, 'store'])->name('topic.study.mcq.store');
+        Route::post('/import', [TopicStudyMcqController::class, 'import'])->name('topic.study.mcq.import');
+        Route::get('/download-sample', [TopicStudyMcqController::class, 'downloadSample'])->name('topic.study.mcq.download-sample');
         Route::get('/study/mcq/edit/{admission}/{department}/{subject}/{topic}', [TopicStudyMcqController::class, 'edit'])->name('topic.study.mcq.edit');
         Route::put('/study/mcq/update/{admission}/{department}/{subject}/{topic}',[TopicStudyMcqController::class, 'update'])->name('topic.study.mcq.update');
         Route::get('/study/mcq/delete/{admission}/{department}/{subject}/{topic}', [TopicStudyMcqController::class, 'destroy'])->name('topic.study.mcq.delete');
@@ -312,6 +314,8 @@ Route::middleware('admin')->group(function () {
         Route::get('/mcq/index', [PaperFinalMcqController::class, 'index'])->name('paper.mcq.index');
         Route::get('/mcq/create', [PaperFinalMcqController::class, 'create'])->name('paper.mcq.create');
         Route::post('/mcq/store', [PaperFinalMcqController::class, 'store'])->name('paper.mcq.store');
+        Route::post('/import', [PaperFinalMcqController::class, 'import'])->name('paper.mcq.import');
+        Route::get('/download-sample', [PaperFinalMcqController::class, 'downloadSample'])->name('paper.mcq.download-sample');
         Route::get('/mcq/edit/{admission}/{department}/{group}/{subject}/{paper}', [PaperFinalMcqController::class, 'edit'])->name('paper.mcq.edit');
         Route::put('/mcq/update/{admission}/{department}/{group}/{subject}/{paper}',[PaperFinalMcqController::class, 'update'])->name('paper.mcq.update');
         Route::get('/mcq/delete/{admission}/{department}/{group}/{subject}/{paper}', [PaperFinalMcqController::class, 'destroy'])->name('paper.mcq.delete');
@@ -343,6 +347,8 @@ Route::middleware('admin')->group(function () {
         Route::get('/mcq/index', [ModelTestMcqController::class, 'index'])->name('model.mcq.index');
         Route::get('/mcq/create', [ModelTestMcqController::class, 'create'])->name('model.mcq.create');
         Route::post('/mcq/store', [ModelTestMcqController::class, 'store'])->name('model.mcq.store');
+        Route::post('/mcq/import', [ModelTestMcqController::class, 'import'])->name('model.mcq.import');
+        Route::get('/mcq/download-sample', [ModelTestMcqController::class, 'downloadSample'])->name('model.mcq.download-sample');
         Route::get('/mcq/edit/{admission}/{department}/{group}/{model}', [ModelTestMcqController::class, 'edit'])->name('model.mcq.edit');
         Route::put('/mcq/update/{admission}/{department}/{group}/{model}',[ModelTestMcqController::class, 'update'])->name('model.mcq.update');
         Route::get('/mcq/delete/{admission}/{department}/{group}/{model}', [ModelTestMcqController::class, 'destroy'])->name('model.mcq.delete');
@@ -359,6 +365,8 @@ Route::middleware('admin')->group(function () {
         Route::get('/index', [McqController::class, 'index'])->name('mcq.index');
         Route::get('/create', [McqController::class, 'create'])->name('mcq.create');
         Route::post('/store', [McqController::class, 'store'])->name('mcq.store');
+        Route::post('/mcq/import', [McqController::class, 'import'])->name('mcq.import');
+        Route::get('/mcq/download-sample', [McqController::class, 'downloadSample'])->name('mcq.download-sample');
         Route::get('/edit/{id}', [McqController::class, 'edit'])->name('mcq.edit');
         Route::put('/update/{id}', [McqController::class, 'update'])->name('mcq.update');
         Route::get('/delete/{id}', [McqController::class, 'destroy'])->name('mcq.delete');

@@ -11,6 +11,11 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\OnlineQuizMcqImport;
+use App\Exports\OnlineQuizMcqSampleExport;
+
 class McqController extends Controller
 {
     /**
@@ -19,7 +24,7 @@ class McqController extends Controller
     public function index()
     {
         $pageTitle = 'MCQ List';
-        $mcqs = Mcq::whereHas('quizAnswers')->latest()->get();
+        $mcqs = Mcq::latest()->get();
         return view('admin.mcq.index', compact('mcqs','pageTitle'));
     }
 
@@ -97,6 +102,56 @@ class McqController extends Controller
             DB::rollBack();
             return back()->withInput()->with('error', 'Failed: ' . $e->getMessage());
         }
+    }
+
+   /**
+     * Import MCQs from Excel file.
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'exam_datetime' => 'required|date',
+            'exam_duration' => 'required|integer|min:1',
+            'exam_mark' => 'required|integer|min:1',
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv|max:5120',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $examDateTime = Carbon::parse($request->exam_datetime);
+
+            // Create the MCQ exam record (same as manual store)
+            $mcq = Mcq::create([
+                'title'         => $request->title,
+                'exam_datetime' => $examDateTime,
+                'exam_duration' => $request->exam_duration,
+                'exam_mark'     => $request->exam_mark,
+                'mcq_type'      => 5, // 5 = online quiz
+                'created_by'    => Auth::id(),
+            ]);
+
+            // Import questions from Excel
+            $import = new OnlineQuizMcqImport($mcq->id, Auth::id());
+            Excel::import($import, $request->file('excel_file'));
+
+            DB::commit();
+            return redirect()->route('admin.mcq.index')
+                ->with('success', $import->getImportedCount() . ' MCQs imported successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->with('error', 'Failed to import MCQs: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download sample Excel file.
+     */
+    public function downloadSample()
+    {
+        return Excel::download(new OnlineQuizMcqSampleExport(), 'mcq_sample_' . date('Y-m-d') . '.xlsx');
     }
 
     

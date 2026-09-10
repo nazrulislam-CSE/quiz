@@ -1,4 +1,5 @@
 @extends('layouts.admin.app', [$pageTitle ?? 'MCQ' => 'Create MCQ'])
+
 @section('content')
     <div class="breadcrumb-header justify-content-between">
         <div class="d-flex align-items-center">
@@ -24,110 +25,208 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.mcq.store') }}" method="post" enctype="multipart/form-data">
-                        @csrf
-                        <div class="row">
-                            <div class="form-group col-xl-4 col-lg-4 col-md-4">
-                                <div class="form-group">
-                                    <label for="title">Title: <span class="text-danger">*</span></label>
-                                    <input type="text" name="title" value="{{ old('title') }}" id="title"
-                                        class="form-control" placeholder="Enter Title">
-                                    @error('title')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
+                    <!-- Tabs for Manual Entry and Excel Import -->
+                    <ul class="nav nav-tabs mb-4" id="mcqTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="manual-tab" data-bs-toggle="tab"
+                                data-bs-target="#manual-entry" type="button" role="tab">
+                                <i class="fas fa-pencil-alt"></i> Manual Entry
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="excel-tab" data-bs-toggle="tab" data-bs-target="#excel-import"
+                                type="button" role="tab">
+                                <i class="fas fa-file-excel"></i> Excel Import
+                            </button>
+                        </li>
+                    </ul>
 
-                            <div class="form-group col-xl-4 col-lg-4 col-md-4">
-                                <label for="exam_datetime">Exam Date & Time: <span class="text-danger">*</span></label>
-                                <input type="datetime-local" name="exam_datetime" id="exam_datetime" class="form-control"
-                                    value="{{ old('exam_datetime') }}">
-                                @error('exam_datetime')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
+                    <div class="tab-content">
+                        <!-- Manual Entry Tab -->
+                        <div class="tab-pane fade show active" id="manual-entry" role="tabpanel">
+                            <form action="{{ route('admin.mcq.store') }}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <div class="row">
+                                    <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                                        <div class="form-group">
+                                            <label for="title">Title: <span class="text-danger">*</span></label>
+                                            <input type="text" name="title" value="{{ old('title') }}" id="title"
+                                                class="form-control" placeholder="Enter Title">
+                                            @error('title')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
 
-                            <div class="form-group col-xl-4 col-lg-4 col-md-4">
-                                <div class="form-group">
-                                    <label for="name">Exam Duration/Time (In Minutes): <span
-                                            class="text-danger">*</span></label>
-                                    <input type="number" min="0" name="exam_duration"
-                                        value="{{ old('exam_duration') }}" id="exam_duration" class="form-control"
-                                        placeholder="Ex:10 minutes">
-                                    @error('exam_duration')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
+                                    <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                                        <label for="exam_datetime">Exam Date & Time: <span class="text-danger">*</span></label>
+                                        <input type="datetime-local" name="exam_datetime" id="exam_datetime" class="form-control"
+                                            value="{{ old('exam_datetime') }}">
+                                        @error('exam_datetime')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
 
-                            <div class="form-group col-xl-4 col-lg-4 col-md-4">
-                                <div class="form-group">
-                                    <label for="exam_mark">Exam Mark: <span class="text-danger">*</span></label>
-                                    <input type="number" min="0" name="exam_mark" value="{{ old('exam_mark') }}"
-                                        id="exam_mark" class="form-control" placeholder="Ex:25">
-                                    @error('exam_mark')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            {{-- Number of Questions --}}
-                            <div class="form-group col-xl-4 col-lg-4 col-md-4">
-                                <label for="total_questions">How many questions?</label>
-                                <input type="number" id="total_questions" class="form-control" min="1"
-                                    max="50" value="{{ old('total_questions') }}"
-                                    placeholder="Enter number of questions" required>
-                            </div>
+                                    <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                                        <div class="form-group">
+                                            <label for="name">Exam Duration/Time (In Minutes): <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="number" min="0" name="exam_duration"
+                                                value="{{ old('exam_duration') }}" id="exam_duration" class="form-control"
+                                                placeholder="Ex:10 minutes">
+                                            @error('exam_duration')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
 
-                            {{-- Questions will be generated here --}}
-                            <div id="questions-wrapper" class="col-12 mt-3">
-                                @if (old('questions'))
-                                    @foreach (old('questions') as $qIndex => $qData)
-                                        <div class="card mb-4 p-3 question-block">
-                                            <h5>Question {{ $qIndex + 1 }}</h5>
-                                            <div class="form-group mb-2">
-                                                <label>Question:</label>
-                                                <textarea name="questions[{{ $qIndex }}][text]" class="form-control" placeholder="Enter question" required>{{ $qData['text'] }}</textarea>
-                                                @error("questions.$qIndex.text")
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
+                                    <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                                        <div class="form-group">
+                                            <label for="exam_mark">Exam Mark: <span class="text-danger">*</span></label>
+                                            <input type="number" min="0" name="exam_mark" value="{{ old('exam_mark') }}"
+                                                id="exam_mark" class="form-control" placeholder="Ex:25">
+                                            @error('exam_mark')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    {{-- Number of Questions --}}
+                                    <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                                        <label for="total_questions">How many questions?</label>
+                                        <input type="number" id="total_questions" class="form-control" min="1"
+                                            max="50" value="{{ old('total_questions') }}"
+                                            placeholder="Enter number of questions" required>
+                                    </div>
 
-                                            <div class="row">
-                                                @foreach ([0, 1, 2, 3] as $i)
-                                                    <div class="col-md-6">
-                                                        <div class="input-group mb-2 option-item">
-                                                            <input type="text"
-                                                                name="questions[{{ $qIndex }}][answers][{{ $i }}][answer]"
-                                                                class="form-control"
-                                                                placeholder="Option {{ $i + 1 }}"
-                                                                value="{{ $qData['answers'][$i]['answer'] ?? '' }}"
-                                                                required>
-                                                            <div class="input-group-text">
-                                                                <input type="radio"
-                                                                    name="questions[{{ $qIndex }}][correct_answer]"
-                                                                    value="{{ $i }}"
-                                                                    {{ old("questions.$qIndex.correct_answer") == $i ? 'checked' : '' }}
-                                                                    style="cursor: pointer; margin-right:5px;"> Correct
-                                                            </div>
-                                                        </div>
-                                                        @error("questions.$qIndex.answers.$i.answer")
+                                    {{-- Questions will be generated here --}}
+                                    <div id="questions-wrapper" class="col-12 mt-3">
+                                        @if (old('questions'))
+                                            @foreach (old('questions') as $qIndex => $qData)
+                                                <div class="card mb-4 p-3 question-block">
+                                                    <h5>Question {{ $qIndex + 1 }}</h5>
+                                                    <div class="form-group mb-2">
+                                                        <label>Question:</label>
+                                                        <textarea name="questions[{{ $qIndex }}][text]" class="form-control" placeholder="Enter question" required>{{ $qData['text'] }}</textarea>
+                                                        @error("questions.$qIndex.text")
                                                             <span class="text-danger">{{ $message }}</span>
                                                         @enderror
                                                     </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                @endif
-                            </div>
 
-                            <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12 mt-3">
-                                <button type="submit" class="add-to-cart btn btn-success btn-block">
-                                    <i class="fas fa-plus"></i> Add MCQ
-                                </button>
-                            </div>
+                                                    <div class="row">
+                                                        @foreach ([0, 1, 2, 3] as $i)
+                                                            <div class="col-md-6">
+                                                                <div class="input-group mb-2 option-item">
+                                                                    <input type="text"
+                                                                        name="questions[{{ $qIndex }}][answers][{{ $i }}][answer]"
+                                                                        class="form-control"
+                                                                        placeholder="Option {{ $i + 1 }}"
+                                                                        value="{{ $qData['answers'][$i]['answer'] ?? '' }}"
+                                                                        required>
+                                                                    <div class="input-group-text">
+                                                                        <input type="radio"
+                                                                            name="questions[{{ $qIndex }}][correct_answer]"
+                                                                            value="{{ $i }}"
+                                                                            {{ old("questions.$qIndex.correct_answer") == $i ? 'checked' : '' }}
+                                                                            style="cursor: pointer; margin-right:5px;"> Correct
+                                                                    </div>
+                                                                </div>
+                                                                @error("questions.$qIndex.answers.$i.answer")
+                                                                    <span class="text-danger">{{ $message }}</span>
+                                                                @enderror
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    </div>
+
+                                    <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12 mt-3">
+                                        <button type="submit" class="add-to-cart btn btn-success btn-block">
+                                            <i class="fas fa-plus"></i> Add MCQ
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+
+                        <!-- Excel Import Tab -->
+                        <div class="tab-pane fade" id="excel-import" role="tabpanel">
+                            <form action="{{ route('admin.mcq.import') }}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <div class="row">
+                                    <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                                        <div class="form-group">
+                                            <label for="import_title">Title: <span class="text-danger">*</span></label>
+                                            <input type="text" name="title" value="{{ old('title') }}" id="import_title"
+                                                class="form-control" placeholder="Enter Title" required>
+                                            @error('title')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                                        <label for="import_exam_datetime">Exam Date & Time: <span class="text-danger">*</span></label>
+                                        <input type="datetime-local" name="exam_datetime" id="import_exam_datetime"
+                                            class="form-control" value="{{ old('exam_datetime') }}" required>
+                                        @error('exam_datetime')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                                        <div class="form-group">
+                                            <label for="import_exam_duration">Exam Duration/Time (In Minutes): <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="number" min="0" name="exam_duration"
+                                                value="{{ old('exam_duration') }}" id="import_exam_duration"
+                                                class="form-control" placeholder="Ex:10 minutes" required>
+                                            @error('exam_duration')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-xl-4 col-lg-4 col-md-4">
+                                        <div class="form-group">
+                                            <label for="import_exam_mark">Exam Mark: <span class="text-danger">*</span></label>
+                                            <input type="number" min="0" name="exam_mark" value="{{ old('exam_mark') }}"
+                                                id="import_exam_mark" class="form-control" placeholder="Ex:25" required>
+                                            @error('exam_mark')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    {{-- Excel file upload --}}
+                                    <div class="form-group col-xl-8 col-lg-8 col-md-8">
+                                        <label for="excel_file">Upload Excel File: <span class="text-danger">*</span></label>
+                                        @error('excel_file') <span class="text-danger">{{ $message }}</span> @enderror
+                                        <input type="file" name="excel_file" id="excel_file" class="form-control"
+                                            accept=".xlsx,.xls,.csv" required>
+                                        <small class="text-muted d-block mt-2">
+                                            <i class="fas fa-info-circle"></i>
+                                            Excel format: Question, Option 1, Option 2, Option 3, Option 4, Correct Answer (0-3)
+                                            <br>
+                                            <strong>Note:</strong> Correct Answer uses 0-based indexing (0=Option 1, 1=Option 2, 2=Option 3, 3=Option 4)
+                                            <br>
+                                            <a href="{{ route('admin.mcq.download-sample') }}"
+                                                class="btn btn-sm btn-info mt-2">
+                                                <i class="fas fa-download"></i> Download Sample Excel
+                                            </a>
+                                        </small>
+                                    </div>
+
+                                    <div class="col-xl-12 col-lg-6 col-md-6 col-sm-12 mt-3">
+                                        <button type="submit" class="btn btn-success btn-block">
+                                            <i class="fas fa-file-import"></i> Import MCQs
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

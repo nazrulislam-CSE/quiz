@@ -16,6 +16,9 @@ use App\Models\PaperFinal;
 use App\Models\ModelTest;
 use App\Models\McqAnswer;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\PaperMcqImport;
+use App\Exports\PaperSampleExport;
 
 class PaperFinalMcqController extends Controller
 {
@@ -109,6 +112,53 @@ class PaperFinalMcqController extends Controller
             return back()->withInput()->with('error', 'Failed to save MCQs: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Import MCQs from Excel file.
+    */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'admission_id' => 'required|exists:admissions,id',
+            'department_id' => 'required|exists:departments,id',
+            'group_id' => 'required|exists:groups,id',
+            'subject_id' => 'required|exists:subjects,id',
+            'paper_final_id' => 'required|exists:paper_finals,id',
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv|max:5120',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $import = new PaperMcqImport(
+                $request->admission_id,
+                $request->department_id,
+                $request->group_id,
+                $request->subject_id,
+                $request->paper_final_id,
+                Auth::id()
+            );
+
+            Excel::import($import, $request->file('excel_file'));
+
+            DB::commit();
+            return redirect()->route('admin.paper.mcq.index')
+                ->with('success', $import->getImportedCount() . ' MCQs imported successfully!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->with('error', 'Failed to import MCQs: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download sample Excel file.
+     */
+    public function downloadSample()
+    {
+        return Excel::download(new PaperSampleExport(), 'paper_mcq_sample_' . date('Y-m-d') . '.xlsx');
+    }
+
     /**
      * Display the specified resource.
      */
