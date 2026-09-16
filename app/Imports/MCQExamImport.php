@@ -8,7 +8,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Facades\Log;
 
-class MCQImport implements ToCollection, WithHeadingRow
+class MCQExamImport implements ToCollection, WithHeadingRow
 {
     protected $admissionId;
     protected $departmentId;
@@ -71,9 +71,9 @@ class MCQImport implements ToCollection, WithHeadingRow
                  * 1 = Exam
                  * 2 = Study
                  *
-                 * Default = 2 (Study)
+                 * Default = 1 (Exam)
                  */
-                $mcqType = (int) ($row['mcq_type'] ?? 2);
+                $mcqType = (int) ($row['mcq_type'] ?? 1);
 
                 if (!in_array($mcqType, [1, 2])) {
 
@@ -82,10 +82,10 @@ class MCQImport implements ToCollection, WithHeadingRow
                         ($index + 2) .
                         ": " .
                         $mcqType .
-                        ". Using 2 (Study) as default."
+                        ". Using 1 (Exam) as default."
                     );
 
-                    $mcqType = 2;
+                    $mcqType = 1;
                 }
 
                 // Create MCQ

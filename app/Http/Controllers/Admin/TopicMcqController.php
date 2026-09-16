@@ -16,6 +16,9 @@ use App\Models\Topic;
 use App\Models\PaperFinal;
 use App\Models\ModelTest;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\MCQExamImport;
+use App\Exports\MCQSampleExport;
 
 class TopicMcqController extends Controller
 {
@@ -107,6 +110,56 @@ class TopicMcqController extends Controller
             return back()->withInput()->with('error', 'Failed to save MCQs: ' . $e->getMessage());
         }
     }
+
+      /**
+     * Import MCQs from Excel file.
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'admission_id' => 'required|exists:admissions,id',
+            'department_id' => 'required|exists:departments,id',
+            'subject_id' => 'required|exists:subjects,id',
+            'topic_id' => 'required|exists:topics,id',
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv|max:5120', // Max 5MB
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $import = new MCQExamImport(
+                $request->admission_id,
+                $request->department_id,
+                $request->subject_id,
+                $request->topic_id,
+                Auth::id()
+            );
+
+            Excel::import($import, $request->file('excel_file'));
+
+            DB::commit();
+           return redirect()->route('admin.topic.mcq.index')->with('success', $import->getImportedCount() . ' MCQs imported successfully!');
+
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->with('error', 'Failed to import MCQs: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download sample Excel file.
+     */
+    public function downloadSample()
+    {
+        $fileName = 'mcq_sample_' . date('Y-m-d') . '.xlsx';
+
+        return Excel::download(
+            new MCQSampleExport(),
+            $fileName
+        );
+    }
+
     /**
      * Display the specified resource.
      */

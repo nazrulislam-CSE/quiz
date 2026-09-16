@@ -16,7 +16,6 @@ class MCQSampleExport implements FromArray
                 'Option 3',
                 'Option 4',
                 'Correct Answer (0-3)',
-                'MCQ Type (1=Exam, 2=Study)',
             ],
 
             [
@@ -26,7 +25,6 @@ class MCQSampleExport implements FromArray
                 'রাজশাহী',
                 'খুলনা',
                 0,
-                2, // Study
             ],
 
             [
@@ -36,7 +34,6 @@ class MCQSampleExport implements FromArray
                 'জবা',
                 'বেলি',
                 1,
-                1, // Exam
             ],
         ];
     }

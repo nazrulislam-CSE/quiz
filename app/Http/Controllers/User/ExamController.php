@@ -20,6 +20,7 @@ use App\Models\BalanceRequest;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 class ExamController extends Controller
 {
@@ -137,25 +138,7 @@ class ExamController extends Controller
                     }
 
                     $examFee = $selectedTopicData->fee;
-                    $userBalance = $user->main_wallet;
-
-                    if ($userBalance < $examFee) {
-                        return redirect()->back()->with('error', 'আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালান্স নেই।');
-                    }
-
-                    $user->main_wallet -= $examFee;
-                    $user->save(); 
-
-                    // Transaction log 
-                    Transaction::create([
-                        'from_id'   => $user->id,            
-                        'user_id'   => null,                
-                        'from_user' => $user->id,            
-                        'out'       => 'exam_fee',      
-                        'status'    => 'success',
-                        'purpose'   => 'Exam Fee Deducted for Topic: ' . $selectedTopicData->name,
-                        'amount'    => $examFee,
-                    ]);
+                    $sessionKey = 'paid_topic_' . $user->id . '_' . $selectedTopic;
 
                     $mcqs = Mcq::with('answers')
                                 ->where('topic_id', $selectedTopic)
@@ -169,6 +152,41 @@ class ExamController extends Controller
                             'subject' => $selectedSubject,
                             'topic' => $selectedTopic,
                         ])->with('error', 'এই Topic এ কোনো প্রশ্ন নেই।');
+                    }
+
+                    // session এ flag না থাকলে তবেই টাকা কাটুন
+                    if (!session()->has($sessionKey)) {
+
+                        $userBalance = $user->main_wallet;
+
+                        if ($userBalance < $examFee) {
+                            return redirect()->back()->with('error', 'আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালান্স নেই।');
+                        }
+
+                        DB::beginTransaction();
+                        try {
+
+                            $user->main_wallet -= $examFee;
+                            $user->save(); 
+
+                            // Transaction log 
+                            Transaction::create([
+                                'from_id'   => $user->id,            
+                                'user_id'   => null,                
+                                'from_user' => $user->id,            
+                                'out'       => 'exam_fee',      
+                                'status'    => 'success',
+                                'purpose'   => 'Exam Fee Deducted for Topic: ' . $selectedTopicData->name,
+                                'amount'    => $examFee,
+                            ]);
+
+                            DB::commit();
+
+                            session([$sessionKey => true]);
+                        } catch (\Exception $e) {
+                            DB::rollBack();
+                            return redirect()->back()->with('error', 'টাকা কাটতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                        }
                     }
                 }
             }
@@ -242,25 +260,7 @@ class ExamController extends Controller
                     }
 
                     $examFee = $selectedPaperFinalData->fee;
-                    $userBalance = $user->main_wallet;
-
-                    if ($userBalance < $examFee) {
-                        return redirect()->back()->with('error', 'আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালান্স নেই।');
-                    }
-
-                    $user->main_wallet -= $examFee;
-                    $user->save(); 
-
-                    // Transaction log 
-                    Transaction::create([
-                        'from_id'   => $user->id,            
-                        'user_id'   => null,                
-                        'from_user' => $user->id,            
-                        'out'       => 'exam_fee',      
-                        'status'    => 'success',
-                        'purpose'   => 'Exam Fee Deducted for Paper Final: ' . $selectedPaperFinalData->name,
-                        'amount'    => $examFee,
-                    ]);
+                    $sessionKey = 'paid_paper_final_' . $user->id . '_' . $selectedPaperFinal;
 
                     $mcqs = Mcq::with('answers')
                                 ->where('paper_final_id', $selectedPaperFinal)
@@ -275,6 +275,41 @@ class ExamController extends Controller
                             'subject' => $selectedSubject,
                             'paper_final' => $selectedPaperFinal,
                         ])->with('error', 'এই Paper Final এ কোনো প্রশ্ন নেই।');
+                    }
+
+                    // session এ flag না থাকলে তবেই টাকা কাটুন
+                    if (!session()->has($sessionKey)) {
+
+                        $userBalance = $user->main_wallet;
+
+                        if ($userBalance < $examFee) {
+                            return redirect()->back()->with('error', 'আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালান্স নেই।');
+                        }
+
+                        DB::beginTransaction();
+                        try {
+
+                           $user->main_wallet -= $examFee;
+                           $user->save(); 
+
+                            // Transaction log 
+                            Transaction::create([
+                                'from_id'   => $user->id,            
+                                'user_id'   => null,                
+                                'from_user' => $user->id,            
+                                'out'       => 'exam_fee',      
+                                'status'    => 'success',
+                                'purpose'   => 'Exam Fee Deducted for Paper Final: ' . $selectedPaperFinalData->name,
+                                'amount'    => $examFee,
+                            ]);
+                                
+                            DB::commit();
+
+                            session([$sessionKey => true]);
+                        } catch (\Exception $e) {
+                            DB::rollBack();
+                            return redirect()->back()->with('error', 'টাকা কাটতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                        }
                     }
                 }
             }
@@ -335,25 +370,7 @@ class ExamController extends Controller
                     }
 
                     $examFee = $selectedModelTestData->fee;
-                    $userBalance = $user->main_wallet;
-
-                    if ($userBalance < $examFee) {
-                        return redirect()->back()->with('error', 'আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালান্স নেই।');
-                    }
-
-                    $user->main_wallet -= $examFee;
-                    $user->save(); 
-
-                    // Transaction log 
-                    Transaction::create([
-                        'from_id'   => $user->id,            
-                        'user_id'   => null,                
-                        'from_user' => $user->id,            
-                        'out'       => 'exam_fee',      
-                        'status'    => 'success',
-                        'purpose'   => 'Exam Fee Deducted for Model Test: ' . $selectedModelTestData->name,
-                        'amount'    => $examFee,
-                    ]);
+                    $sessionKey = 'paid_model_test_' . $user->id . '_' . $selectedModelTest;
 
                     $mcqs = Mcq::with('answers')
                                 ->where('model_test_id', $selectedModelTest)
@@ -367,6 +384,41 @@ class ExamController extends Controller
                             'group' => $selectedGroup,
                             'model_test' => $selectedModelTest,
                         ])->with('error', 'এই Model Test এ কোনো প্রশ্ন নেই।');
+                    }
+
+                    // session এ flag না থাকলে তবেই টাকা কাটুন
+                    if (!session()->has($sessionKey)) {
+
+                        $userBalance = $user->main_wallet;
+
+                        if ($userBalance < $examFee) {
+                            return redirect()->back()->with('error', 'আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালান্স নেই।');
+                        }
+
+                        DB::beginTransaction();
+                        try {
+
+                            $user->main_wallet -= $examFee;
+                            $user->save(); 
+
+                            // Transaction log 
+                            Transaction::create([
+                                'from_id'   => $user->id,            
+                                'user_id'   => null,                
+                                'from_user' => $user->id,            
+                                'out'       => 'exam_fee',      
+                                'status'    => 'success',
+                                'purpose'   => 'Exam Fee Deducted for Model Test: ' . $selectedModelTestData->name,
+                                'amount'    => $examFee,
+                            ]);
+                                
+                            DB::commit();
+
+                            session([$sessionKey => true]);
+                        } catch (\Exception $e) {
+                            DB::rollBack();
+                            return redirect()->back()->with('error', 'টাকা কাটতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                        }
                     }
                 }
             }
@@ -404,25 +456,7 @@ class ExamController extends Controller
                     }
 
                     $examFee = $selectedTopicData->fee;
-                    $userBalance = $user->main_wallet;
-
-                    if ($userBalance < $examFee) {
-                        return redirect()->back()->with('error', 'আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালান্স নেই।');
-                    }
-
-                    $user->main_wallet -= $examFee;
-                    $user->save(); 
-
-                    // Transaction log 
-                    Transaction::create([
-                        'from_id'   => $user->id,            
-                        'user_id'   => null,                
-                        'from_user' => $user->id,            
-                        'out'       => 'exam_fee',      
-                        'status'    => 'success',
-                        'purpose'   => 'Exam Fee Deducted for Topic: ' . $selectedTopicData->name,
-                        'amount'    => $examFee,
-                    ]);
+                    $sessionKey = 'paid_topic_' . $user->id . '_' . $selectedTopic;
 
                     $mcqs = Mcq::with('answers')
                                 ->where('topic_id', $selectedTopic)
@@ -435,6 +469,41 @@ class ExamController extends Controller
                             'subject' => $selectedSubject,
                             'topic' => $selectedTopic,
                         ])->with('error', 'এই Topic এ কোনো প্রশ্ন নেই।');
+                    }
+
+                    // session এ flag না থাকলে তবেই টাকা কাটুন
+                    if (!session()->has($sessionKey)) {
+
+                        $userBalance = $user->main_wallet;
+
+                        if ($userBalance < $examFee) {
+                            return redirect()->back()->with('error', 'আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালান্স নেই।');
+                        }
+
+                        DB::beginTransaction();
+                        try {
+
+                            $user->main_wallet -= $examFee;
+                            $user->save(); 
+
+                            // Transaction log 
+                            Transaction::create([
+                                'from_id'   => $user->id,            
+                                'user_id'   => null,                
+                                'from_user' => $user->id,            
+                                'out'       => 'exam_fee',      
+                                'status'    => 'success',
+                                'purpose'   => 'Exam Fee Deducted for Topic: ' . $selectedTopicData->name,
+                                'amount'    => $examFee,
+                            ]);
+                                
+                            DB::commit();
+
+                            session([$sessionKey => true]);
+                        } catch (\Exception $e) {
+                            DB::rollBack();
+                            return redirect()->back()->with('error', 'টাকা কাটতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                        }
                     }
                 }
             }
@@ -627,6 +696,16 @@ class ExamController extends Controller
             ]);
         } else {
             $examResult = $alreadyExists;
+        }
+
+        // ✅ Session flag clear করুন — পরেরবার নতুন করে exam দিলে আবার payment নেবে
+        if ($examType == 'পেপার ফাইনাল এক্সাম') {
+            session()->forget('paid_paper_final_' . $userId . '_' . $request->paper_final);
+        } elseif ($examType == 'ফাইনাল মডেল টেস্ট এক্সাম') {
+            session()->forget('paid_model_test_' . $userId . '_' . $request->model_test);
+        } else {
+            // ভার্সিটি এডমিশন + other admissions (topic based)
+            session()->forget('paid_topic_' . $userId . '_' . $request->topic);
         }
 
         $examResult = ExamResult::with(['user','admission','department','subject','topic','group','modelTest','paperFinal'])

@@ -157,7 +157,7 @@
 
                         <!-- Excel Import Tab -->
                         <div class="tab-pane fade" id="excel-import" role="tabpanel">
-                            <form action="{{ route('admin.topic.study.mcq.import') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('admin.topic.exam.mcq.import') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
                                     {{-- select admission --}}
@@ -225,7 +225,7 @@
                                             <br>
                                             <strong>Note:</strong> Correct Answer uses 0-based indexing (0=Option 1, 1=Option 2, 2=Option 3, 3=Option 4)
                                             <br>
-                                            <a href="{{ route('admin.topic.study.mcq.download-sample') }}" class="btn btn-sm btn-info mt-2">
+                                            <a href="{{ route('admin.topic.exam.mcq.download-sample') }}" class="btn btn-sm btn-info mt-2">
                                                 <i class="fas fa-download"></i> Download Sample Excel
                                             </a>
                                         </small>

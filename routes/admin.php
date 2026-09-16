@@ -263,6 +263,8 @@ Route::middleware('admin')->group(function () {
         Route::get('/topic/mcq/index', [TopicMcqController::class, 'index'])->name('topic.mcq.index');
         Route::get('/mcq/create', [TopicMcqController::class, 'create'])->name('topic.mcq.create');
         Route::post('/mcq/store', [TopicMcqController::class, 'store'])->name('topic.mcq.store');
+        Route::post('/mcq/import', [TopicMcqController::class, 'import'])->name('topic.exam.mcq.import');
+        Route::get('/mcq/download-sample', [TopicMcqController::class, 'downloadSample'])->name('topic.exam.mcq.download-sample');
         Route::get('/mcq/edit/{admission}/{department}/{subject}/{topic}', [TopicMcqController::class, 'edit'])->name('topic.mcq.edit');
         Route::put('/mcq/update/{admission}/{department}/{subject}/{topic}',[TopicMcqController::class, 'update'])->name('topic.mcq.update');
         Route::get('/mcq/delete/{admission}/{department}/{subject}/{topic}', [TopicMcqController::class, 'destroy'])->name('topic.mcq.delete');
@@ -281,8 +283,8 @@ Route::middleware('admin')->group(function () {
         Route::get('/study/mcq/index', [TopicStudyMcqController::class, 'index'])->name('topic.study.mcq.index');
         Route::get('/study/mcq/create', [TopicStudyMcqController::class, 'create'])->name('topic.study.mcq.create');
         Route::post('/study/mcq/store', [TopicStudyMcqController::class, 'store'])->name('topic.study.mcq.store');
-        Route::post('/import', [TopicStudyMcqController::class, 'import'])->name('topic.study.mcq.import');
-        Route::get('/download-sample', [TopicStudyMcqController::class, 'downloadSample'])->name('topic.study.mcq.download-sample');
+        Route::post('/study/import', [TopicStudyMcqController::class, 'import'])->name('topic.study.mcq.import');
+        Route::get('/study/download-sample', [TopicStudyMcqController::class, 'downloadSample'])->name('topic.study.mcq.download-sample');
         Route::get('/study/mcq/edit/{admission}/{department}/{subject}/{topic}', [TopicStudyMcqController::class, 'edit'])->name('topic.study.mcq.edit');
         Route::put('/study/mcq/update/{admission}/{department}/{subject}/{topic}',[TopicStudyMcqController::class, 'update'])->name('topic.study.mcq.update');
         Route::get('/study/mcq/delete/{admission}/{department}/{subject}/{topic}', [TopicStudyMcqController::class, 'destroy'])->name('topic.study.mcq.delete');

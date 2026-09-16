@@ -17,7 +17,7 @@ use App\Models\ModelTest;
 use App\Models\McqAnswer;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\MCQImport;
+use App\Imports\MCQStudyImport;
 use App\Exports\MCQSampleExport;
 
 class TopicStudyMcqController extends Controller
@@ -127,7 +127,7 @@ class TopicStudyMcqController extends Controller
         try {
             DB::beginTransaction();
 
-            $import = new MCQImport(
+            $import = new MCQStudyImport(
                 $request->admission_id,
                 $request->department_id,
                 $request->subject_id,
@@ -138,8 +138,8 @@ class TopicStudyMcqController extends Controller
             Excel::import($import, $request->file('excel_file'));
 
             DB::commit();
-            return redirect()->route('admin.topic.study.mcq.index')
-                           ->with('success', $import->getImportedCount() . ' MCQs imported successfully!');
+           return redirect()->route('admin.topic.study.mcq.index')->with('success', $import->getImportedCount() . ' MCQs imported successfully!');
+
 
         } catch (\Exception $e) {
             DB::rollBack();
