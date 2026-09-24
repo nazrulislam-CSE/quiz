@@ -20,6 +20,8 @@ use App\Http\Controllers\Api\V1\User\Wallet\WithdrawController;
 use App\Http\Controllers\Api\V1\User\Wallet\BalanceTransferController;
 use App\Http\Controllers\Api\V1\User\OnlineQuiz\OnlineQuizController;
 use App\Http\Controllers\Api\V1\User\Payment\EPSExampleController;
+use App\Http\Controllers\Api\V1\User\Rank\RankController;
+use App\Http\Controllers\Api\V1\User\Rank\RewardController;
 
 use App\Http\Controllers\Api\V1\User\AdmissionInfoController;
 
@@ -121,6 +123,10 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
 
             // EPS Payment
             Route::post('/eps/initialize', [BalanceRequestController::class, 'initializeEpsPayment']);
+
+            // Rank
+            Route::get('/rank', [RankController::class, 'rank'])->name('rank');
+            Route::get('/reward', [RewardController::class, 'reward'])->name('reward');
           
         });
     });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\User;
 use App\Helpers\Traits\SMSTrait;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Rank;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
@@ -78,6 +79,20 @@ class AuthController extends Controller
             'withdraw_wallet' => 0,
             'status' => 1,
         ]);
+
+        // Referrer gets FREE MEMBER rank after referring a new user
+        Rank::updateOrCreate(
+            [
+                'user_id'   => $referId,
+                'rank_name' => 'FREE MEMBER',
+            ],
+            [
+                'rank_deposit' => 0,
+                'rank_reward'  => 0,
+                'reward_text'  => null,
+                'status'       => 1,
+            ]
+        );
 
         // Send welcome SMS
         try {
@@ -254,6 +269,13 @@ class AuthController extends Controller
                 'message' => 'Invalid phone or password.',
             ], 401);
         }
+
+        // Hide sensitive fields from API response
+        $user->makeHidden([
+            'password',
+            'show_password',
+            'remember_token',
+        ]);
 
         // Create token (Laravel Sanctum)
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -467,6 +489,14 @@ class AuthController extends Controller
                 'show_password' => $plainPassword,
             ]
         );
+
+        
+        // Hide sensitive fields from API response
+        $user->makeHidden([
+            'password',
+            'show_password',
+            'remember_token',
+        ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
 

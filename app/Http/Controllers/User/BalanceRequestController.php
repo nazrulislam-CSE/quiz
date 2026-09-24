@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use App\Models\Rank;
 use App\Models\Commission;
 use App\Models\Transaction;
 use App\Models\Generation;
@@ -42,7 +43,7 @@ class BalanceRequestController extends Controller
     public function initializePayment(Request $request)
     {
         $request->validate([
-            'amount' => 'required|numeric|min:1',
+            'amount' => 'required|numeric|min:100',
         ]);
 
         try {
@@ -579,6 +580,32 @@ class BalanceRequestController extends Controller
                 DB::commit();
 
                 // ========================================================
+                // UPDATE USER RANK
+                // ========================================================
+
+               try {
+
+                    $this->updateUserRank(
+                        $balanceRequest->user_id
+                    );
+
+                    Log::info('User rank updated successfully', [
+                        'user_id' => $balanceRequest->user_id,
+                        'balance_request_id' => $balanceRequest->id,
+                    ]);
+
+                } catch (\Throwable $e) {
+
+                    Log::error('User Rank Update Failed', [
+                        'user_id' => $balanceRequest->user_id,
+                        'balance_request_id' => $balanceRequest->id,
+                        'message' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
+                    ]);
+
+                }
+
+                // ========================================================
                 // Clear Session
                 // ============================================================
 
@@ -1063,6 +1090,358 @@ class BalanceRequestController extends Controller
 
 
         return true;
+    }
+
+    public function updateUserRank($userId)
+    {
+        $user = User::find($userId);
+
+        if (!$user) {
+            return;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | STEP 1: User এর নিজের মোট paid deposit
+        |--------------------------------------------------------------------------
+        */
+
+        $ownDeposit = BalanceRequest::where('user_id', $user->id)
+            ->where('status', 'approved')
+            ->where('payment_status', 'paid')
+            ->sum('amount');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | STEP 2: পুরো Team বের করা
+        |--------------------------------------------------------------------------
+        */
+
+        $teamUserIds = $this->getTeamUserIds($user->id);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | STEP 3: Team Deposit Turnover
+        |--------------------------------------------------------------------------
+        */
+
+        $teamDepositTurnover = 0;
+
+        if (!empty($teamUserIds)) {
+            $teamDepositTurnover = BalanceRequest::whereIn(
+                    'user_id',
+                    $teamUserIds
+                )
+                ->where('status', 'approved')
+                ->where('payment_status', 'paid')
+                ->sum('amount');
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | STEP 4: Direct Paid Customer
+        |--------------------------------------------------------------------------
+        */
+
+        $directUsers = User::where('refer_by', $user->id)->get();
+
+        $directPaidCustomer = 0;
+
+        foreach ($directUsers as $directUser) {
+
+            $deposit = BalanceRequest::where('user_id', $directUser->id)
+                ->where('status', 'approved')
+                ->where('payment_status', 'paid')
+                ->sum('amount');
+
+            if ($deposit >= 100) {
+                $directPaidCustomer++;
+            }
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | STEP 5: Team Rank Count
+        |--------------------------------------------------------------------------
+        */
+
+        $teamRanks = Rank::whereIn('user_id', $teamUserIds)
+            ->where('status', 1)
+            ->get()
+            ->groupBy('rank_name');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | STEP 6: Rank Eligibility
+        |--------------------------------------------------------------------------
+        */
+
+        $earnedRank = null;
+
+
+        // ---------------------------------------------------------
+        // 1. LEARNER
+        // Minimum own deposit = 100
+        // ---------------------------------------------------------
+
+        if ($ownDeposit >= 100) {
+            $earnedRank = [
+                'rank_name'    => 'LEARNER',
+                'rank_deposit' => $ownDeposit,
+                'rank_reward'  => 0,
+                'reward_text'  => null,
+            ];
+        }
+
+
+        // ---------------------------------------------------------
+        // 2. DREAMER
+        // Direct Paid Customer = 50
+        // Team Turnover = 50,000
+        // ---------------------------------------------------------
+
+        if (
+            $directPaidCustomer >= 50 &&
+            $teamDepositTurnover >= 50000
+        ) {
+            $earnedRank = [
+                'rank_name'    => 'DREAMER',
+                'rank_deposit' => $teamDepositTurnover,
+                'rank_reward'  => 5000,
+                'reward_text'  => '৳5,000 Cash অথবা Cox’s Bazar Tour',
+            ];
+        }
+
+
+        // ---------------------------------------------------------
+        // 3. EDTECH ENTREPRENEUR
+        // 5 DREAMER
+        // Team Turnover = 250,000
+        // ---------------------------------------------------------
+
+        $dreamerCount = $teamRanks
+            ->get('DREAMER', collect())
+            ->count();
+
+        if (
+            $dreamerCount >= 5 &&
+            $teamDepositTurnover >= 250000
+        ) {
+            $earnedRank = [
+                'rank_name'    => 'EDTECH ENTREPRENEUR',
+                'rank_deposit' => $teamDepositTurnover,
+                'rank_reward'  => 15000,
+                'reward_text'  => '৳15,000 Cash অথবা India Tour',
+            ];
+        }
+
+
+        // ---------------------------------------------------------
+        // 4. PLAN MASTER
+        // 4 EDTECH ENTREPRENEUR
+        // Team Turnover = 1,000,000
+        // ---------------------------------------------------------
+
+        $entrepreneurCount = $teamRanks
+            ->get('EDTECH ENTREPRENEUR', collect())
+            ->count();
+
+        if (
+            $entrepreneurCount >= 4 &&
+            $teamDepositTurnover >= 1000000
+        ) {
+            $earnedRank = [
+                'rank_name'    => 'PLAN MASTER',
+                'rank_deposit' => $teamDepositTurnover,
+                'rank_reward'  => 50000,
+                'reward_text'  => '৳50,000 Cash অথবা Nepal Tour',
+            ];
+        }
+
+
+        // ---------------------------------------------------------
+        // 5. MERIT STAR
+        // 3 PLAN MASTER
+        // Team Turnover = 3,000,000
+        // ---------------------------------------------------------
+
+        $planMasterCount = $teamRanks
+            ->get('PLAN MASTER', collect())
+            ->count();
+
+        if (
+            $planMasterCount >= 3 &&
+            $teamDepositTurnover >= 3000000
+        ) {
+            $earnedRank = [
+                'rank_name'    => 'MERIT STAR',
+                'rank_deposit' => $teamDepositTurnover,
+                'rank_reward'  => 100000,
+                'reward_text'  => '৳1,00,000 Cash অথবা Thailand Tour',
+            ];
+        }
+
+
+        // ---------------------------------------------------------
+        // 6. CAMPUS CHAMPION
+        // 2 MERIT STAR
+        // Team Turnover = 6,000,000
+        // ---------------------------------------------------------
+
+        $meritStarCount = $teamRanks
+            ->get('MERIT STAR', collect())
+            ->count();
+
+        if (
+            $meritStarCount >= 2 &&
+            $teamDepositTurnover >= 6000000
+        ) {
+            $earnedRank = [
+                'rank_name'    => 'CAMPUS CHAMPION',
+                'rank_deposit' => $teamDepositTurnover,
+                'rank_reward'  => 200000,
+                'reward_text'  => '৳2,00,000 Cash অথবা Motorcycle',
+            ];
+        }
+
+
+        // ---------------------------------------------------------
+        // 7. LEADER
+        // 2 CAMPUS CHAMPION
+        // Team Turnover = 12,000,000
+        // ---------------------------------------------------------
+
+        $campusChampionCount = $teamRanks
+            ->get('CAMPUS CHAMPION', collect())
+            ->count();
+
+        if (
+            $campusChampionCount >= 2 &&
+            $teamDepositTurnover >= 12000000
+        ) {
+            $earnedRank = [
+                'rank_name'    => 'LEADER',
+                'rank_deposit' => $teamDepositTurnover,
+                'rank_reward'  => 500000,
+                'reward_text'  => '৳5,00,000 Cash অথবা Couple Umrah + Bike',
+            ];
+        }
+
+
+        // ---------------------------------------------------------
+        // 8. EDTECH BRAND BUILDER
+        // 2 LEADER
+        // Team Turnover = 24,000,000
+        // ---------------------------------------------------------
+
+        $leaderCount = $teamRanks
+            ->get('LEADER', collect())
+            ->count();
+
+        if (
+            $leaderCount >= 2 &&
+            $teamDepositTurnover >= 24000000
+        ) {
+            $earnedRank = [
+                'rank_name'    => 'EDTECH BRAND BUILDER',
+                'rank_deposit' => $teamDepositTurnover,
+                'rank_reward'  => 1500000,
+                'reward_text'  => '৳15,00,000 Cash অথবা Couple Hajj',
+            ];
+        }
+
+
+        // ---------------------------------------------------------
+        // 9. TOP EDTECH CONSULT
+        // 2 EDTECH BRAND BUILDER
+        // Team Turnover = 48,000,000
+        // ---------------------------------------------------------
+
+        $brandBuilderCount = $teamRanks
+            ->get('EDTECH BRAND BUILDER', collect())
+            ->count();
+
+        if (
+            $brandBuilderCount >= 2 &&
+            $teamDepositTurnover >= 48000000
+        ) {
+            $earnedRank = [
+                'rank_name'    => 'TOP EDTECH CONSULT',
+                'rank_deposit' => $teamDepositTurnover,
+                'rank_reward'  => 3500000,
+                'reward_text'  => '৳35,00,000 Cash অথবা Private Car | Monthly Salary: ৳40,000',
+            ];
+        }
+
+
+        // ---------------------------------------------------------
+        // 10. NATIONAL RANK ACHIEVER
+        // 2 TOP EDTECH CONSULT
+        // Team Turnover = 96,000,000
+        // ---------------------------------------------------------
+
+        $topConsultCount = $teamRanks
+            ->get('TOP EDTECH CONSULT', collect())
+            ->count();
+
+        if (
+            $topConsultCount >= 2 &&
+            $teamDepositTurnover >= 96000000
+        ) {
+            $earnedRank = [
+                'rank_name'    => 'NATIONAL RANK ACHIEVER',
+                'rank_deposit' => $teamDepositTurnover,
+                'rank_reward'  => 10000000,
+                'reward_text'  => '৳1,00,00,000 অথবা Luxury Apartment | Company Profit Share: 1%',
+            ];
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | STEP 7: Rank Insert / Update
+        |--------------------------------------------------------------------------
+        */
+
+        if ($earnedRank) {
+
+            Rank::updateOrCreate(
+                [
+                    'user_id'   => $user->id,
+                    'rank_name' => $earnedRank['rank_name'],
+                ],
+                [
+                    'rank_deposit' => $earnedRank['rank_deposit'],
+                    'rank_reward'  => $earnedRank['rank_reward'],
+                    'reward_text'  => $earnedRank['reward_text'],
+                    'status'       => 1,
+                ]
+            );
+        }
+    }
+
+    private function getTeamUserIds($userId)
+    {
+        $teamIds = [];
+
+        $children = User::where('refer_by', $userId)->pluck('id');
+
+        foreach ($children as $childId) {
+
+            $teamIds[] = $childId;
+
+            $teamIds = array_merge(
+                $teamIds,
+                $this->getTeamUserIds($childId)
+            );
+        }
+
+        return array_unique($teamIds);
     }
 
 

@@ -26,6 +26,9 @@ use App\Http\Controllers\User\WithdrawController;
 use App\Http\Controllers\User\BalanceTransferController;
 use App\Http\Controllers\User\OnlineQuizController;
 use App\Http\Controllers\User\TransactionHistoryController;
+use App\Http\Controllers\User\RankController;
+use App\Http\Controllers\User\RewardController;
+use App\Http\Controllers\User\RechargeController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth'], function () {
@@ -55,6 +58,16 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/store', [WithdrawController::class, 'store'])->name('store');
         Route::get('/list', [WithdrawController::class, 'index'])->name('list');
     });
+
+    Route::get('/rank', [RankController::class, 'rank'])->name('rank');
+    Route::get('/reward', [RewardController::class, 'reward'])->name('reward');
+    
+    
+    Route::get('/recharge', [RechargeController::class, 'rechargeCreate'])->name('recharge.create');
+    Route::post('/recharge', [RechargeController::class, 'rechargeStore'])->name('recharge.store');
+    Route::get('/recharge/history', [RechargeController::class, 'rechargeHistory'])->name('recharge.history');
+
+
 
     // Staff routes
     // Route::prefix('staffs')->as('staff.')->group(function () {

@@ -20,6 +20,6 @@
 <footer class="bg-dark text-white py-3 mt-4 d-none d-md-block shadow-sm">
     <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
         <p class="mb-2 mb-md-0">© {{ date('Y') }} User Dashboard. All rights reserved.</p>
-        <p class="mb-0">Developed by <a href="#" class="text-white">Nazrul Islam Suzon</a></p>
+        <p class="mb-0">Developed by <a href="https://speakupbd.com/" target="_blank" class="text-white text-decoration-none">Speak Up BD</a></p>
     </div>
 </footer>

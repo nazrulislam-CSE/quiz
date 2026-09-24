@@ -133,7 +133,7 @@
                                        id="amount"
                                        name="amount"
                                        value="{{ old('amount') }}"
-                                       min="5"
+                                       min="100"
                                        step="1"
                                        placeholder="যেমন: 100"
                                        required>

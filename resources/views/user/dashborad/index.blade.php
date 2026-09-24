@@ -254,6 +254,77 @@ $referLink = route('register', ['refer' => Auth::user()->username]);
         </div>
 
 
+        <!-- র‍্যাংক -->
+        <div class="col-md-4 col-sm-6 mb-4">
+            <a href="{{ route('user.rank') }}" class="text-decoration-none">
+                <div class="card shadow-sm border-0 rounded-3 h-100" style="background:#fff3cd !important;">
+                    <div class="card-body d-flex align-items-center">
+
+                        <div class="me-3">
+                            <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center"
+                                style="width:60px; height:60px;">
+                                <i class="fas fa-trophy fa-2x"></i>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h6 class="mb-0 fw-bold text-dark">র‍্যাংক</h6>
+                            <small class="text-muted">আপনার র‍্যাংক দেখুন</small>
+                        </div>
+
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- রিওয়ার্ড -->
+        <div class="col-md-4 col-sm-6 mb-4">
+            <a href="{{ route('user.reward') }}" class="text-decoration-none">
+                <div class="card shadow-sm border-0 rounded-3 h-100" style="background:#e3f2fd !important;">
+                    <div class="card-body d-flex align-items-center">
+
+                        <div class="me-3">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                style="width:60px; height:60px;">
+                                <i class="fas fa-gift fa-2x"></i>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h6 class="mb-0 fw-bold text-dark">রিওয়ার্ড</h6>
+                            <small class="text-muted">রিওয়ার্ড দেখুন</small>
+                        </div>
+
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- ওয়ালেট -->
+        <div class="col-md-4 col-sm-6 mb-4">
+            <a href="{{ route('user.recharge.create') }}" class="text-decoration-none">
+                <div class="card shadow-sm border-0 rounded-3 h-100" style="background:#e8f5e9 !important;">
+
+                    <div class="card-body d-flex align-items-center">
+
+                        <div class="me-3">
+                            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center"
+                                style="width:60px; height:60px;">
+                                <i class="fas fa-wallet fa-2x"></i>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h6 class="mb-0 fw-bold text-dark">ওয়ালেট</h6>
+                            <small class="text-muted">মোবাইল রিচার্জ করুন</small>
+                        </div>
+
+                    </div>
+                </div>
+            </a>
+        </div>
+
+
 </div>
 
 

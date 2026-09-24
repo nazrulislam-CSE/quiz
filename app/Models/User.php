@@ -94,6 +94,15 @@ class User extends Authenticatable
         return $this->hasMany(BalanceTransfer::class, 'user_id');
     }
 
+    public function recharges(): HasMany
+    {
+        return $this->hasMany(
+            Recharge::class,
+            'user_id'
+        );
+    }
+
+
 
 
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Models\Rank;
 use App\Models\Agent;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\DB;
@@ -110,6 +111,20 @@ class RegisterController extends Controller
                 'show_password' => $data['password'],
                 'created_by'    => $data['username'],
             ]);
+
+            // Referrer gets FREE MEMBER rank after referring a new user
+            Rank::updateOrCreate(
+                [
+                    'user_id'   => $referUser->id,
+                    'rank_name' => 'FREE MEMBER',
+                ],
+                [
+                    'rank_deposit' => 0,
+                    'rank_reward'  => 0,
+                    'reward_text'  => null,
+                    'status'       => 1,
+                ]
+            );
 
             flash()->addSuccess('User Registered Successfully.');
             return $user;
