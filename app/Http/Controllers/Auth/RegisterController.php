@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
 
 class RegisterController extends Controller
 {
@@ -61,14 +63,13 @@ class RegisterController extends Controller
             'institute'   => ['required', 'string'],
             'division_id' => ['required', 'integer'],
             'refer_by'    => [
-                'nullable',
+                'required',
                 'string',
                 function ($attribute, $value, $fail) {
                     if (!empty($value)) {
                         $exists = User::where('username', $value)->exists();
-
                         if (!$exists) {
-                            $fail('Please provide a valid Username!');
+                            $fail('Please provide a valid Refer Username!');
                         }
                     }
                 },
@@ -83,27 +84,25 @@ class RegisterController extends Controller
      *
      * @param  array  $data
      * @return \App\Models\User
+     *
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function create(array $data)
     {
+        // Refer user খুঁজে বের করা
+        $referUser = User::where('username', $data['refer_by'])->first();
+
+        if (!$referUser) {
+            throw ValidationException::withMessages([
+                'refer_by' => 'Please provide a valid Refer Username!',
+            ]);
+        }
+
         try {
-            if (empty($data['refer_by'])) {
-                flash()->addError("Please provide a Refer Username!");
-                return null; 
-            }
-
-            $referUser = User::where('username', $data['refer_by'])->first();
-            if (!$referUser) {
-                flash()->addError("Please provide a valid Refer Username!");
-                return null; 
-            }
-
-            $refer_id = $referUser->id;
-
             $user = User::create([
                 'full_name'     => $data['full_name'],
                 'username'      => $data['username'],
-                'refer_by'      => $refer_id,
+                'refer_by'      => $referUser->id,
                 'phone'         => $data['phone'],
                 'institute'     => $data['institute'],
                 'division_id'   => $data['division_id'],
@@ -127,29 +126,41 @@ class RegisterController extends Controller
             );
 
             flash()->addSuccess('User Registered Successfully.');
+
             return $user;
 
         } catch (\Exception $e) {
-            flash()->addError($e->getMessage());
-            return null;
-        }
+            // আসল error টা log-এ রাখুন যাতে debug করা যায়
+            Log::error('Registration Failed: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+            ]);
 
+            throw ValidationException::withMessages([
+                'error' => 'Registration failed: ' . $e->getMessage(),
+            ]);
+        }
     }
 
-    public function checkRefer($username){
+    /**
+     * Check refer username (AJAX)
+     *
+     * @param  string  $username
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkRefer($username)
+    {
         $user = User::where('username', $username)->first();
 
-        if($user){
+        if ($user) {
             return response()->json([
-                'status' => true,
-                'message' => 'Valid Refer Username ✅'
-            ]);
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid Refer Username ❌'
+                'status'  => true,
+                'message' => 'Valid Refer Username ✅',
             ]);
         }
-    }
 
+        return response()->json([
+            'status'  => false,
+            'message' => 'Invalid Refer Username ❌',
+        ]);
+    }
 }

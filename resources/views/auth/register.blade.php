@@ -34,6 +34,16 @@
                 <p class="mb-0">Join our learning community today</p>
             </div>
             
+            @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+            
             <div class="register-body">
                 <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                     @csrf
