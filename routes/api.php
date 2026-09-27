@@ -22,6 +22,8 @@ use App\Http\Controllers\Api\V1\User\OnlineQuiz\OnlineQuizController;
 use App\Http\Controllers\Api\V1\User\Payment\EPSExampleController;
 use App\Http\Controllers\Api\V1\User\Rank\RankController;
 use App\Http\Controllers\Api\V1\User\Rank\RewardController;
+use App\Http\Controllers\Api\V1\User\Banner\BannerController;
+use App\Http\Controllers\Api\V1\User\Recharge\RechargeController;
 
 use App\Http\Controllers\Api\V1\User\AdmissionInfoController;
 
@@ -127,6 +129,14 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
             // Rank
             Route::get('/rank', [RankController::class, 'rank'])->name('rank');
             Route::get('/reward', [RewardController::class, 'reward'])->name('reward');
+
+            // Banner
+            Route::get('/banners', [BannerController::class, 'index']);
+
+            // Recharge
+            Route::post('recharge', [RechargeController::class,'store']);
+            Route::get('recharge-history', [RechargeController::class,'rechargeHistory']);
+
           
         });
     });
