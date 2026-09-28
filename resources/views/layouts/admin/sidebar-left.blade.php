@@ -61,7 +61,8 @@
                         href="{{ route('admin.admin.home') }}"><i class="side-menu__icon fas fa-th-large"></i><span
                             class="side-menu__label">Dashboard</span></a>
                 </li>
-                <li class="slide">
+                <li
+                    class="slide {{ Request::is('admin/course-types*') || Request::is('admin/course-classes*') || Request::is('admin/course-categories*') ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                         <i class="side-menu__icon fas fa-cog"></i>
                         <span class="side-menu__label">
@@ -75,27 +76,31 @@
                         <li class="side-menu__label1">
                             <a href="javascript:void(0);">Course Type List</a>
                         </li>
-                        <li><a class="slide-item" href="#">Course Type List</a></li>
-                        <li><a class="slide-item" href="#">Course Class List</a></li>
-                        <li><a class="slide-item" href="#">Course List</a></li>
+
+                        <li>
+                            <a class="slide-item {{ Request::is('admin/course-types*') ? 'active' : '' }}"
+                                href="{{ route('admin.course.type.index') }}">
+                                Course Type List
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="slide-item {{ Request::is('admin/course-classes*') ? 'active' : '' }}"
+                                href="{{ route('admin.course.class.index') }}">
+                                Course Class List
+                            </a>
+                        </li>
+                        <li>
+                            <a class="slide-item {{ Request::is('admin/course-categories*') ? 'active' : '' }}"
+                                href="{{ route('admin.course.category.index') }}">
+                                Course Category List
+                            </a>
+                        </li>
                         <li><a class="slide-item" href="#">Academic Course List</a></li>
                         <li><a class="slide-item" href="#">Admission Course List</a></li>
                         <li><a class="slide-item" href="#">Fee Summary List</a></li>
                         <li><a class="slide-item" href="#">Course Online Paid List</a></li>
                         <li><a class="slide-item" href="#">Course Offline Paid List</a></li>
-                    </ul>
-                </li>
-
-                <li class="slide {{ Request::is('admin/users*') ? 'is-expanded' : '' }}">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
-                        <i class="side-menu__icon fas fa-cog"></i>
-                        <span class="side-menu__label">User List</span>
-                        <i class="angle fe fe-chevron-down hor-angle"></i>
-                    </a>
-                    <ul class="slide-menu">
-                        <li class="side-menu__label1"><a href="javascript:void(0);">User List</a></li>
-                        <li><a class="slide-item {{ Request::is('admin/users/index') ? 'active' : '' }}"
-                                href="{{ route('admin.user.index')}}">List</a></li>
                     </ul>
                 </li>
                 <li class="slide {{ Request::is('admin/balance*') ? 'is-expanded' : '' }}">

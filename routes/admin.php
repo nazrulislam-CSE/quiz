@@ -34,6 +34,9 @@ use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\ProgramSubjectController;
 use App\Http\Controllers\Admin\AdmissionInfoController;
 use App\Http\Controllers\Admin\BranchController;
+use App\Http\Controllers\Admin\CourseTypeController;
+use App\Http\Controllers\Admin\CourseClassController;
+use App\Http\Controllers\Admin\CourseCategoryController;
 
 
 
@@ -449,6 +452,30 @@ Route::middleware('admin')->group(function () {
         Route::get('/delete/{id}', [WithdrawController::class, 'destroy'])->name('withdraw.request.delete');
         Route::get('/show/{id}', [WithdrawController::class,'show'])->name('withdraw.request.show');
 
+    });
+
+    /* ============> Study Center <=========== */
+    Route::prefix('course-types')->name('course.type.')->group(function () {
+        Route::get('/index',        [CourseTypeController::class, 'index'])->name('index');
+        Route::post('/store',       [CourseTypeController::class, 'store'])->name('store');
+        Route::post('/update/{id}', [CourseTypeController::class, 'update'])->name('update');
+        Route::get('/delete/{id}',  [CourseTypeController::class, 'destroy'])->name('delete');
+    });
+
+    /* ============> Course Class <============ */
+    Route::prefix('course-classes')->name('course.class.')->group(function () {
+        Route::get('/index',        [CourseClassController::class, 'index'])->name('index');
+        Route::post('/store',       [CourseClassController::class, 'store'])->name('store');
+        Route::post('/update/{id}', [CourseClassController::class, 'update'])->name('update');
+        Route::get('/delete/{id}',  [CourseClassController::class, 'destroy'])->name('delete');
+    });
+
+    /* ============> Course Category <============ */
+    Route::prefix('course-categories')->name('course.category.')->group(function () {
+        Route::get('/index',        [CourseCategoryController::class, 'index'])->name('index');
+        Route::post('/store',       [CourseCategoryController::class, 'store'])->name('store');
+        Route::post('/update/{id}', [CourseCategoryController::class, 'update'])->name('update');
+        Route::get('/delete/{id}',  [CourseCategoryController::class, 'destroy'])->name('delete');
     });
     
 });

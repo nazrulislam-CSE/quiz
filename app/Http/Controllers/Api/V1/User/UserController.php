@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api\V1\User;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Teacher;
-use App\Models\Student;
 use App\Models\Program;
+use App\Models\Teacher;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -15,18 +15,9 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        // Dashboard Data
-        $teachers = Teacher::where('status', 1)
-            ->latest()
-            ->get();
-
-        $students = Student::where('status', 1)
-            ->latest()
-            ->get();
-
-        $programs = Program::where('status', 1)
-            ->latest()
-            ->get();
+        $teacherCount = Teacher::where('status', 1)->count();
+        $studentCount = User::where('status', 1)->count();
+        $programCount = Program::where('status', 1)->count();
 
         return response()->json([
             'success' => true,
@@ -35,7 +26,10 @@ class UserController extends Controller
             'data' => [
 
                 // ================= USER INFO =================
-                'user_info' => $user,
+                'user_info' => $user->makeHidden([
+                    'password',
+                    'show_password',
+                ]),
 
                 // ================= WALLETS =================
                 'wallets' => [
@@ -47,16 +41,11 @@ class UserController extends Controller
 
                 // ================= COUNTS =================
                 'counts' => [
-                    'teacher_count' => $teachers->count(),
-                    'student_count' => $students->count(),
-                    'program_count' => $programs->count(),
+                    'teacher_count' => $teacherCount,
+                    'student_count' => $studentCount,
+                    'program_count' => $programCount,
                 ],
-
-                // ================= DASHBOARD LIST =================
-                'teachers' => $teachers,
-                'students' => $students,
-                'programs' => $programs,
-            ]
+            ],
         ], 200);
     }
 }
