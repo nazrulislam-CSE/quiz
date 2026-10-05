@@ -37,6 +37,7 @@ use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\CourseTypeController;
 use App\Http\Controllers\Admin\CourseClassController;
 use App\Http\Controllers\Admin\CourseCategoryController;
+use App\Http\Controllers\Admin\CourseController;
 
 
 
@@ -476,6 +477,18 @@ Route::middleware('admin')->group(function () {
         Route::post('/store',       [CourseCategoryController::class, 'store'])->name('store');
         Route::post('/update/{id}', [CourseCategoryController::class, 'update'])->name('update');
         Route::get('/delete/{id}',  [CourseCategoryController::class, 'destroy'])->name('delete');
+    });
+
+    /* ============> Course <============ */
+    Route::prefix('courses')->name('course.')->group(function () {
+        Route::get('/index',        [CourseController::class, 'index'])->name('index');
+        Route::post('/store',       [CourseController::class, 'store'])->name('store');
+        Route::post('/update/{id}', [CourseController::class, 'update'])->name('update');
+        Route::get('/delete/{id}',  [CourseController::class, 'destroy'])->name('delete');
+
+        // Dependent dropdown JSON endpoints (Modal-এর জন্য)
+        Route::get('/get-classes/{typeId}',       [CourseController::class, 'getClasses'])->name('get.classes');
+        Route::get('/get-categories/{classId}',   [CourseController::class, 'getCategories'])->name('get.categories');
     });
     
 });

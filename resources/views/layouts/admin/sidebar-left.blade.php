@@ -62,7 +62,7 @@
                             class="side-menu__label">Dashboard</span></a>
                 </li>
                 <li
-                    class="slide {{ Request::is('admin/course-types*') || Request::is('admin/course-classes*') || Request::is('admin/course-categories*') ? 'is-expanded' : '' }}">
+                    class="slide {{ Request::is('admin/course-types*') || Request::is('admin/course-classes*') || Request::is('admin/course-categories*')  || Request::is('admin/courses*')  ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                         <i class="side-menu__icon fas fa-cog"></i>
                         <span class="side-menu__label">
@@ -96,9 +96,12 @@
                                 Course Category List
                             </a>
                         </li>
-                        <li><a class="slide-item" href="#">Academic Course List</a></li>
-                        <li><a class="slide-item" href="#">Admission Course List</a></li>
-                        <li><a class="slide-item" href="#">Fee Summary List</a></li>
+                        <li>
+                            <a class="slide-item {{ Request::is('admin/courses*') ? 'active' : '' }}"
+                                href="{{ route('admin.course.index') }}">
+                                Course List
+                            </a>
+                        </li>
                         <li><a class="slide-item" href="#">Course Online Paid List</a></li>
                         <li><a class="slide-item" href="#">Course Offline Paid List</a></li>
                     </ul>
