@@ -65,7 +65,7 @@ class RechargeController extends Controller
         */
 
         $operatorMap = [
-            '013' => 'BL',
+            '013' => 'GP',
             '014' => 'BL',
             '015' => 'TT',
             '016' => 'AT',
@@ -78,7 +78,7 @@ class RechargeController extends Controller
             'GP' => 'গ্রামীণফোন',
             'BL' => 'বাংলালিংক',
             'RB' => 'রবি',
-            'AT' => 'এয়ারটেল',
+            'AT' => 'এয়ারটেল',
             'TT' => 'টেলিটক',
         ];
 
@@ -95,7 +95,7 @@ class RechargeController extends Controller
         if (!$requiredOperator) {
             return response()->json([
                 'success' => false,
-                'message' => 'এই মোবাইল নম্বরের অপারেটর শনাক্ত করা যায়নি।',
+                'message' => 'এই মোবাইল নম্বরের অপারেটর শনাক্ত করা যায়নি।',
             ], 422);
         }
 
@@ -119,7 +119,7 @@ class RechargeController extends Controller
         if ($walletBalance < $amount) {
             return response()->json([
                 'success' => false,
-                'message' => 'আপনার ইনকাম ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই।',
+                'message' => 'আপনার ইনকাম ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই।',
                 'balance' => $walletBalance,
             ], 422);
         }
@@ -175,7 +175,7 @@ class RechargeController extends Controller
                 return response()->json([
                     'success' => false,
                     'message' => $result['message']
-                        ?? 'রিচার্জ সফল হয়নি।',
+                        ?? 'রিচার্জ সফল হয়নি।',
                 ], 422);
             }
 
@@ -209,7 +209,7 @@ class RechargeController extends Controller
 
                 if (!$lockedUser) {
                     throw new \Exception(
-                        'ইউজার পাওয়া যায়নি।'
+                        'ইউজার পাওয়া যায়নি।'
                     );
                 }
 
@@ -225,13 +225,13 @@ class RechargeController extends Controller
 
                 if ($balance < $amount) {
                     throw new \Exception(
-                        'আপনার ইনকাম ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই।'
+                        'আপনার ইনকাম ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই।'
                     );
                 }
 
                 /*
                 |--------------------------------------------------------------------------
-                | Deduct Wallet
+                | Deduct Wallet (Recharge Amount)
                 |--------------------------------------------------------------------------
                 */
 
@@ -268,7 +268,7 @@ class RechargeController extends Controller
 
                 /*
                 |--------------------------------------------------------------------------
-                | Transaction Record
+                | Transaction Record (Recharge Withdraw)
                 |--------------------------------------------------------------------------
                 */
 
@@ -310,7 +310,7 @@ class RechargeController extends Controller
                 'success' => true,
 
                 'message' =>
-                    'রিচার্জ সফল হয়েছে এবং কমিশন বিতরণ করা হয়েছে।',
+                    'রিচার্জ সফল হয়েছে এবং কমিশন বিতরণ করা হয়েছে।',
 
                 'data' => [
                     'reference' =>
@@ -367,6 +367,15 @@ class RechargeController extends Controller
 
     /**
      * Recharge Commission
+     *
+     * প্রতি ১০০০ টাকা Recharge এ মোট Commission = ২০ টাকা
+     *
+     * Total Commission = (amount / 1000) * 20
+     *
+     * Self       = 50%
+     * Referrer   = 25%
+     * 1st Gen    = 15%
+     * 2nd Gen    = 10%
      */
     private function giveRechargeCommission(
         User $user,
@@ -375,28 +384,23 @@ class RechargeController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | Commission Distribution
-        |--------------------------------------------------------------------------
-        |
-        | Self       = 50%
-        | Referrer   = 25%
-        | 1st Gen    = 15%
-        | 2nd Gen    = 10%
-        |
+        | Total Commission
         |--------------------------------------------------------------------------
         */
 
+        $totalCommission = ($amount / 1000) * 20;
+
         $selfCommission =
-            $amount * 0.50;
+            $totalCommission * 0.50;
 
         $referrerCommission =
-            $amount * 0.25;
+            $totalCommission * 0.25;
 
         $firstGenerationCommission =
-            $amount * 0.15;
+            $totalCommission * 0.15;
 
         $secondGenerationCommission =
-            $amount * 0.10;
+            $totalCommission * 0.10;
 
 
         /*
@@ -405,11 +409,29 @@ class RechargeController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $user->income_wallet =
-            (float) ($user->income_wallet ?? 0)
-            + $selfCommission;
+        if ($selfCommission > 0) {
 
-        $user->save();
+            $user->income_wallet =
+                (float) ($user->income_wallet ?? 0)
+                + $selfCommission;
+
+            $user->save();
+
+
+            Transaction::create([
+                'from_id' => $user->id,
+
+                'user_id' => $user->id,
+
+                'out' => 'deposit',
+
+                'status' => 'success',
+
+                'purpose' => 'Recharge Self Commission',
+
+                'amount' => $selfCommission,
+            ]);
+        }
 
 
         /*
@@ -433,11 +455,36 @@ class RechargeController extends Controller
             return;
         }
 
-        $referrer->income_wallet =
-            (float) ($referrer->income_wallet ?? 0)
-            + $referrerCommission;
 
-        $referrer->save();
+        /*
+        |--------------------------------------------------------------------------
+        | Direct Referrer Commission
+        |--------------------------------------------------------------------------
+        */
+
+        if ($referrerCommission > 0) {
+
+            $referrer->income_wallet =
+                (float) ($referrer->income_wallet ?? 0)
+                + $referrerCommission;
+
+            $referrer->save();
+
+
+            Transaction::create([
+                'from_id' => $user->id,
+
+                'user_id' => $referrer->id,
+
+                'out' => 'deposit',
+
+                'status' => 'success',
+
+                'purpose' => 'Recharge Referrer Commission',
+
+                'amount' => $referrerCommission,
+            ]);
+        }
 
 
         /*
@@ -461,11 +508,30 @@ class RechargeController extends Controller
             return;
         }
 
-        $firstGeneration->income_wallet =
-            (float) ($firstGeneration->income_wallet ?? 0)
-            + $firstGenerationCommission;
 
-        $firstGeneration->save();
+        if ($firstGenerationCommission > 0) {
+
+            $firstGeneration->income_wallet =
+                (float) ($firstGeneration->income_wallet ?? 0)
+                + $firstGenerationCommission;
+
+            $firstGeneration->save();
+
+
+            Transaction::create([
+                'from_id' => $user->id,
+
+                'user_id' => $firstGeneration->id,
+
+                'out' => 'deposit',
+
+                'status' => 'success',
+
+                'purpose' => 'Recharge 1st Gen Commission',
+
+                'amount' => $firstGenerationCommission,
+            ]);
+        }
 
 
         /*
@@ -489,11 +555,30 @@ class RechargeController extends Controller
             return;
         }
 
-        $secondGeneration->income_wallet =
-            (float) ($secondGeneration->income_wallet ?? 0)
-            + $secondGenerationCommission;
 
-        $secondGeneration->save();
+        if ($secondGenerationCommission > 0) {
+
+            $secondGeneration->income_wallet =
+                (float) ($secondGeneration->income_wallet ?? 0)
+                + $secondGenerationCommission;
+
+            $secondGeneration->save();
+
+
+            Transaction::create([
+                'from_id' => $user->id,
+
+                'user_id' => $secondGeneration->id,
+
+                'out' => 'deposit',
+
+                'status' => 'success',
+
+                'purpose' => 'Recharge 2nd Gen Commission',
+
+                'amount' => $secondGenerationCommission,
+            ]);
+        }
     }
 
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Program;
 use App\Models\Teacher;
 use App\Models\User;
+use App\Models\ExamResult;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -16,8 +17,15 @@ class UserController extends Controller
         $user = $request->user();
 
         $teacherCount = Teacher::where('status', 1)->count();
+
         $studentCount = User::where('status', 1)->count();
+
         $programCount = Program::where('status', 1)->count();
+
+        // Exam দেওয়া Unique User Count
+        $examUserCount = ExamResult::whereNotNull('user_id')
+            ->distinct('user_id')
+            ->count('user_id');
 
         return response()->json([
             'success' => true,
@@ -44,6 +52,7 @@ class UserController extends Controller
                     'teacher_count' => $teacherCount,
                     'student_count' => $studentCount,
                     'program_count' => $programCount,
+                    'exam_user_count' => $examUserCount,
                 ],
             ],
         ], 200);
