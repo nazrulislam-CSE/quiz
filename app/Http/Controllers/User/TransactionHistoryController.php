@@ -5,49 +5,105 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionHistoryController extends Controller
 {
     public function transactionHistory(Request $request)
     {
-        $pageTitle = "লেনদেনের ইতিহাস";
-        $userId = auth()->id();
+        $user = Auth::user();
 
-        $fromDate = $request->from_date;
-        $toDate   = $request->to_date;
+        // =====================================================
+        // BASE QUERY
+        // ✅ শুধু user_id — from_id বাদ
+        // কারণ: History = আমার wallet এ কী হলো
+        // =====================================================
+        $query = Transaction::where('user_id', $user->id);
 
-        // শুধুমাত্র লগইন করা User-এর নিজের Transaction
-        $query = Transaction::where('user_id', $userId)
-            ->when($fromDate, function ($query) use ($fromDate) {
-                $query->whereDate('created_at', '>=', $fromDate);
-            })
-            ->when($toDate, function ($query) use ($toDate) {
-                $query->whereDate('created_at', '<=', $toDate);
-            });
+        // Date Filter
+        if ($request->filled('from_date')) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
 
-        // মোট লেনদেনের পরিমাণ
-        $totalAmount = (clone $query)->sum('amount');
+        $transactions = $query->latest()->paginate(15)->withQueryString();
 
-        // মোট লেনদেন
-        $totalTransactions = (clone $query)->count();
 
-        // মোট পাওয়া টাকা
-        $totalReceived = (clone $query)->sum('amount');
+        // =====================================================
+        // 💰 MAIN WALLET
+        // Credit → EPS Deposit + Deposit Commission
+        // Debit  → Exam Fee
+        // =====================================================
+        $mainWalletCredit = Transaction::where('user_id', $user->id)
+            ->where('out', 'in')
+            ->whereIn('purpose', [
+                'EPS Balance Deposit',
+                'Deposit Commission',
+            ])
+            ->whereIn('status', ['success', 'approved'])
+            ->sum('amount');
 
-        // Transaction List
-        $transactions = (clone $query)
-            ->latest()
-            ->paginate(15)
-            ->withQueryString();
+        $mainWalletDebit = Transaction::where('user_id', $user->id)
+            ->where('out', 'exam_fee')
+            ->whereIn('status', ['success', 'approved'])
+            ->sum('amount');
+
+        $mainWalletBalance = $mainWalletCredit - $mainWalletDebit;
+
+
+        // =====================================================
+        // 💵 INCOME WALLET
+        // Credit → Referral (out=referral) + Recharge Commission (out=deposit)
+        // Debit  → Withdraw + Recharge
+        // =====================================================
+        $incomeWalletCredit = Transaction::where('user_id', $user->id)
+            ->whereIn('out', ['referral', 'deposit'])
+            ->whereIn('purpose', [
+                'Direct Referral Commission',
+                '1st Generation Referral Commission',
+                '2nd Generation Referral Commission',
+                'Recharge Self Commission',
+                'Recharge Referrer Commission',
+                'Recharge 1st Gen Commission',
+                'Recharge 2nd Gen Commission',
+            ])
+            ->whereIn('status', ['success', 'approved'])
+            ->sum('amount');
+
+        $incomeWalletDebit = Transaction::where('user_id', $user->id)
+            ->whereIn('out', ['withdraw', 'recharge'])
+            ->whereIn('status', ['success', 'approved'])
+            ->sum('amount');
+
+        $incomeWalletBalance = $incomeWalletCredit - $incomeWalletDebit;
+
+
+        // =====================================================
+        // TOTAL
+        // =====================================================
+        $totalAmount       = $transactions->sum('amount');
+        $totalTransactions = $transactions->total();
+
+        $pageTitle = 'Transaction History';
+
 
         return view('user.transaction.history', compact(
-            'pageTitle',
             'transactions',
+            'pageTitle',
             'totalAmount',
             'totalTransactions',
-            'totalReceived',
-            'fromDate',
-            'toDate'
+
+            // Main Wallet
+            'mainWalletBalance',
+            'mainWalletCredit',
+            'mainWalletDebit',
+
+            // Income Wallet
+            'incomeWalletBalance',
+            'incomeWalletCredit',
+            'incomeWalletDebit',
         ));
     }
 }

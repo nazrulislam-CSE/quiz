@@ -322,7 +322,7 @@ class RechargeController extends Controller
                 Transaction::create([
                     'from_id'  => $lockedUser->id,
                     'user_id'  => $lockedUser->id,
-                    'out'      => 'withdraw',
+                    'out'      => 'recharge',
                     'status'   => 'success',
                     'purpose'  => 'Recharge',
                     'amount'   => $amount,

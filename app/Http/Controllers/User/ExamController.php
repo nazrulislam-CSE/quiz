@@ -310,7 +310,7 @@ class ExamController extends Controller
                             // Transaction log
                             Transaction::create([
                                 'from_id' => $user->id,
-                                'user_id' => null,
+                                'user_id' => $user->id,
                                 'from_user' => $user->id,
                                 'out' => 'exam_fee',
                                 'status' => 'success',
@@ -437,7 +437,7 @@ class ExamController extends Controller
                             // Transaction log
                             Transaction::create([
                                 'from_id' => $user->id,
-                                'user_id' => null,
+                                'user_id' => $user->id,
                                 'from_user' => $user->id,
                                 'out' => 'exam_fee',
                                 'status' => 'success',
@@ -550,7 +550,7 @@ class ExamController extends Controller
                             // Transaction log
                             Transaction::create([
                                 'from_id' => $user->id,
-                                'user_id' => null,
+                                'user_id' => $user->id,
                                 'from_user' => $user->id,
                                 'out' => 'exam_fee',
                                 'status' => 'success',
@@ -639,7 +639,7 @@ class ExamController extends Controller
                             // Transaction log
                             Transaction::create([
                                 'from_id' => $user->id,
-                                'user_id' => null,
+                                'user_id' => $user->id,
                                 'from_user' => $user->id,
                                 'out' => 'exam_fee',
                                 'status' => 'success',
