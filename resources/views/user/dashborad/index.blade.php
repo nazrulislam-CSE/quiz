@@ -324,6 +324,30 @@ $referLink = route('register', ['refer' => Auth::user()->username]);
             </a>
         </div>
 
+        <!-- স্টাডি সেন্টার -->
+        <div class="col-md-4 col-sm-6 mb-4">
+            <a href="{{ route('user.study.center') }}" class="text-decoration-none">
+                <div class="card shadow-sm border-0 rounded-3 h-100" style="background:#ffbfbfdd !important;">
+
+                    <div class="card-body d-flex align-items-center">
+
+                        <div class="me-3">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                style="width:60px; height:60px;">
+                                <i class="fas fa-graduation-cap fa-2x"></i>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h6 class="mb-0 fw-bold text-dark">স্টাডি সেন্টার</h6>
+                            <small class="text-muted">পড়াশোনার জন্য প্রবেশ করুন</small>
+                        </div>
+
+                    </div>
+                </div>
+            </a>
+        </div>
+
 
 </div>
 

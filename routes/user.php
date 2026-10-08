@@ -29,6 +29,7 @@ use App\Http\Controllers\User\TransactionHistoryController;
 use App\Http\Controllers\User\RankController;
 use App\Http\Controllers\User\RewardController;
 use App\Http\Controllers\User\RechargeController;
+use App\Http\Controllers\User\StudyCenterController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'auth'], function () {
@@ -66,6 +67,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/recharge', [RechargeController::class, 'rechargeCreate'])->name('recharge.create');
     Route::post('/recharge', [RechargeController::class, 'rechargeStore'])->name('recharge.store');
     Route::get('/recharge/history', [RechargeController::class, 'rechargeHistory'])->name('recharge.history');
+
+    // study center
+    Route::get('/study-center', [StudyCenterController::class, 'index'])->name('study.center');
+    // Course Details (single)
+    Route::get('/study-center/course/{slug}', [StudyCenterController::class, 'show'])
+     ->name('study.center.course.show');
+
 
 
 
