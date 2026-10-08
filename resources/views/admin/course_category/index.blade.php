@@ -41,6 +41,7 @@
                             <thead>
                                 <tr>
                                     <th class="border-bottom-0">SL</th>
+                                    <th class="border-bottom-0">Course Type</th>
                                     <th class="border-bottom-0">Course Class</th>
                                     <th class="border-bottom-0">Name</th>
                                     <th class="border-bottom-0">Slug</th>
@@ -52,6 +53,7 @@
                                 @forelse ($courseCategories as $key => $category)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
+                                        <td>{{ $category->courseClass->courseType->name ?? 'N/A' }}</td>
                                         <td>{{ $category->courseClass->name ?? 'N/A' }}</td>
                                         <td>{{ $category->name }}</td>
                                         <td>{{ $category->slug }}</td>
