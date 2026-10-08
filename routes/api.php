@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\V1\User\Rank\RankController;
 use App\Http\Controllers\Api\V1\User\Rank\RewardController;
 use App\Http\Controllers\Api\V1\User\Banner\BannerController;
 use App\Http\Controllers\Api\V1\User\Recharge\RechargeController;
+use App\Http\Controllers\Api\V1\User\Study\StudyCenterController;
 
 use App\Http\Controllers\Api\V1\User\AdmissionInfoController;
 
@@ -136,6 +137,10 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
             // Recharge
             Route::post('recharge', [RechargeController::class,'store']);
             Route::get('recharge-history', [RechargeController::class,'rechargeHistory']);
+
+            // Study Center
+            Route::get('/study-center', [StudyCenterController::class, 'index'])->name('study.center');
+            Route::get('/study-center/course/{slug}', [StudyCenterController::class, 'show'])->name('study.center.course.show');
 
           
         });
