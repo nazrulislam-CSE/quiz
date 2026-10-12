@@ -30,6 +30,12 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('thumbnail')->nullable();
 
+            // Teacher Information
+            $table->string('teacher_name')->nullable();
+            $table->string('teacher_designation')->default('Senior Instructor');
+            $table->string('teacher_photo')->nullable();
+            $table->string('teacher_experience')->nullable();
+
             // Pricing
             $table->decimal('price', 10, 2)->default(0);
             $table->decimal('discount_price', 10, 2)->nullable();

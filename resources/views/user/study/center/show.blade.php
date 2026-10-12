@@ -12,14 +12,18 @@
         position: relative;
         overflow: hidden;
     }
+
     .cd-hero::after {
         content: '';
         position: absolute;
-        top: -50px; right: -50px;
-        width: 200px; height: 200px;
-        background: rgba(255,255,255,.12);
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, .12);
         border-radius: 50%;
     }
+
     .cd-hero h2 {
         font-weight: 700;
         margin-bottom: 8px;
@@ -27,20 +31,24 @@
         position: relative;
         z-index: 1;
     }
+
     .cd-breadcrumb {
         font-size: 13px;
         opacity: .9;
         margin-bottom: 12px;
     }
+
     .cd-breadcrumb a {
         color: #fff;
         text-decoration: none;
         opacity: .85;
     }
+
     .cd-breadcrumb a:hover {
         opacity: 1;
         text-decoration: underline;
     }
+
     .cd-badge {
         display: inline-block;
         padding: 5px 12px;
@@ -50,15 +58,18 @@
         margin-right: 6px;
         margin-bottom: 6px;
     }
+
     .cd-badge.light {
-        background: rgba(255,255,255,.2);
+        background: rgba(255, 255, 255, .2);
         color: #fff;
         backdrop-filter: blur(8px);
     }
+
     .cd-badge.gold {
         background: #f59e0b;
         color: #fff;
     }
+
     .cd-badge.green {
         background: #10b981;
         color: #fff;
@@ -67,7 +78,7 @@
     .cd-card {
         background: #fff;
         border-radius: 16px;
-        box-shadow: 0 4px 18px rgba(0,0,0,.06);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
         padding: 22px;
         border: none;
     }
@@ -75,8 +86,9 @@
     .cd-image-wrap {
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 8px 24px rgba(0,0,0,.1);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, .1);
     }
+
     .cd-image-wrap img {
         width: 100%;
         height: auto;
@@ -90,22 +102,26 @@
         padding: 20px;
         text-align: center;
     }
+
     .cd-price-old {
         font-size: 15px;
         color: #94a3b8;
         text-decoration: line-through;
     }
+
     .cd-price-new {
         font-size: 32px;
         font-weight: 800;
         color: #4f46e5;
         line-height: 1.2;
     }
+
     .cd-price-free {
         font-size: 32px;
         font-weight: 800;
         color: #10b981;
     }
+
     .cd-discount-tag {
         display: inline-block;
         background: #ef4444;
@@ -132,11 +148,13 @@
         transition: all .2s ease;
         margin-bottom: 10px;
     }
+
     .cd-btn-primary:hover {
         color: #fff;
         transform: translateY(-2px);
-        box-shadow: 0 10px 22px rgba(124,58,237,.35);
+        box-shadow: 0 10px 22px rgba(124, 58, 237, .35);
     }
+
     .cd-btn-secondary {
         display: block;
         width: 100%;
@@ -151,6 +169,7 @@
         text-decoration: none;
         transition: all .2s ease;
     }
+
     .cd-btn-secondary:hover {
         background: #e2e8f0;
         color: #1e293b;
@@ -163,9 +182,11 @@
         padding: 12px 0;
         border-bottom: 1px solid #f1f5f9;
     }
+
     .cd-info-row:last-child {
         border-bottom: none;
     }
+
     .cd-info-icon {
         width: 40px;
         height: 40px;
@@ -175,15 +196,33 @@
         justify-content: center;
         flex-shrink: 0;
     }
-    .cd-info-icon.i1 { background: #eef2ff; color: #4f46e5; }
-    .cd-info-icon.i2 { background: #ecfdf5; color: #059669; }
-    .cd-info-icon.i3 { background: #fef3c7; color: #b45309; }
-    .cd-info-icon.i4 { background: #fdf2f8; color: #db2777; }
+
+    .cd-info-icon.i1 {
+        background: #eef2ff;
+        color: #4f46e5;
+    }
+
+    .cd-info-icon.i2 {
+        background: #ecfdf5;
+        color: #059669;
+    }
+
+    .cd-info-icon.i3 {
+        background: #fef3c7;
+        color: #b45309;
+    }
+
+    .cd-info-icon.i4 {
+        background: #fdf2f8;
+        color: #db2777;
+    }
+
     .cd-info-label {
         font-size: 12px;
         color: #94a3b8;
         margin-bottom: 2px;
     }
+
     .cd-info-value {
         font-weight: 600;
         color: #1e293b;
@@ -209,6 +248,7 @@
         align-items: center;
         gap: 8px;
     }
+
     .cd-section-title i {
         color: #6366f1;
     }
@@ -221,25 +261,30 @@
         text-decoration: none;
         display: block;
         background: #fff;
-        box-shadow: 0 2px 10px rgba(0,0,0,.05);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, .05);
     }
+
     .related-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 10px 24px rgba(79,70,229,.15);
+        box-shadow: 0 10px 24px rgba(79, 70, 229, .15);
     }
+
     .related-thumb {
         height: 110px;
         overflow: hidden;
         background: linear-gradient(135deg, #eef2ff, #fdf2f8);
     }
+
     .related-thumb img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
+
     .related-body {
         padding: 12px;
     }
+
     .related-title {
         font-size: 13px;
         font-weight: 700;
@@ -251,6 +296,7 @@
         overflow: hidden;
         min-height: 36px;
     }
+
     .related-price {
         font-size: 14px;
         font-weight: 800;
@@ -275,21 +321,21 @@
         {{-- Badges --}}
         <div class="mb-2">
             @if ($course->courseType)
-                <span class="cd-badge light">{{ $course->courseType->name }}</span>
+            <span class="cd-badge light">{{ $course->courseType->name }}</span>
             @endif
             @if ($course->courseClass)
-                <span class="cd-badge light">{{ $course->courseClass->name }}</span>
+            <span class="cd-badge light">{{ $course->courseClass->name }}</span>
             @endif
             @if ($course->courseCategory)
-                <span class="cd-badge light">{{ $course->courseCategory->name }}</span>
+            <span class="cd-badge light">{{ $course->courseCategory->name }}</span>
             @endif
             @if ($course->is_featured)
-                <span class="cd-badge gold">
-                    <i class="fas fa-star"></i> ফিচারড
-                </span>
+            <span class="cd-badge gold">
+                <i class="fas fa-star"></i> ফিচারড
+            </span>
             @endif
             @if ($course->is_free)
-                <span class="cd-badge green">ফ্রি</span>
+            <span class="cd-badge green">ফ্রি</span>
             @endif
         </div>
 
@@ -306,24 +352,23 @@
             {{-- Image --}}
             <div class="cd-image-wrap mb-4">
                 @if ($course->thumbnail)
-                    <img src="{{ asset('storage/' . $course->thumbnail) }}"
-                         alt="{{ $course->title }}">
+                <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="{{ $course->title }}">
                 @else
-                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1000&q=80"
-                         alt="Default Course Image">
+                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=1000&q=80"
+                    alt="Default Course Image">
                 @endif
             </div>
 
             {{-- Description --}}
             @if ($course->description)
-                <div class="cd-card mb-4">
-                    <div class="cd-section-title">
-                        <i class="fas fa-align-left"></i> কোর্স সম্পর্কে
-                    </div>
-                    <div class="cd-description">
-                        {{ $course->description }}
-                    </div>
+            <div class="cd-card mb-4">
+                <div class="cd-section-title">
+                    <i class="fas fa-align-left"></i> কোর্স সম্পর্কে
                 </div>
+                <div class="cd-description">
+                    {{ $course->description }}
+                </div>
+            </div>
             @endif
 
             {{-- Course Info (Mobile-friendly info list) --}}
@@ -412,25 +457,24 @@
                     <div class="cd-price-box mb-3">
 
                         @if ($course->is_free)
-                            <div class="cd-price-free">ফ্রি</div>
-                            <div class="small text-muted mt-1">সম্পূর্ণ বিনামূল্যে</div>
+                        <div class="cd-price-free">ফ্রি</div>
+                        <div class="small text-muted mt-1">সম্পূর্ণ বিনামূল্যে</div>
 
                         @elseif ($course->has_discount)
-                            <div class="cd-discount-tag">
-                                <i class="fas fa-bolt"></i> {{ $course->discount_percent }}% ছাড়
-                            </div>
-                            <div class="cd-price-old">৳{{ number_format($course->price, 0) }}</div>
-                            <div class="cd-price-new">৳{{ number_format($course->discount_price, 0) }}</div>
+                        <div class="cd-discount-tag">
+                            <i class="fas fa-bolt"></i> {{ $course->discount_percent }}% ছাড়
+                        </div>
+                        <div class="cd-price-old">৳{{ number_format($course->price, 0) }}</div>
+                        <div class="cd-price-new">৳{{ number_format($course->discount_price, 0) }}</div>
 
                         @else
-                            <div class="cd-price-new">৳{{ number_format($course->price, 0) }}</div>
+                        <div class="cd-price-new">৳{{ number_format($course->price, 0) }}</div>
                         @endif
 
                     </div>
 
                     {{-- Action Buttons --}}
-                    <a href="#" class="cd-btn-primary"
-                       onclick="return confirm('কেনার সিস্টেম শীঘ্রই আসছে!');">
+                    <a href="#" class="cd-btn-primary" onclick="return confirm('কেনার সিস্টেম শীঘ্রই আসছে!');">
                         <i class="fas fa-shopping-cart"></i>
                         এখনই কিনুন
                     </a>
@@ -439,6 +483,51 @@
                         <i class="fas fa-arrow-left"></i>
                         আরও কোর্স দেখুন
                     </a>
+                </div>
+
+                {{-- Teacher Information --}}
+                <div class="cd-card mb-3">
+                    <div class="cd-section-title" style="font-size: 14px;">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        আপনার ইন্সট্রাক্টর
+                    </div>
+
+                    <div class="text-center py-3">
+                        {{-- Teacher Photo --}}
+                        @if ($course->teacher_photo)
+                        <img src="{{ asset('storage/' . $course->teacher_photo) }}"
+                            alt="{{ $course->teacher_name ?? 'Teacher' }}" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;
+                       border: 3px solid #e5e7eb;">
+                        @else
+                        <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 100px; height: 100px; background: #f1f5f9;
+                        border: 3px solid #e5e7eb;">
+                            <i class="fas fa-user-tie fa-3x text-secondary"></i>
+                        </div>
+                        @endif
+
+                        {{-- Teacher Name --}}
+                        <h5 class="fw-bold mb-1">
+                            {{ $course->teacher_name ?: 'Teacher Name' }}
+                        </h5>
+
+                        {{-- Designation --}}
+                        <div class="text-primary small fw-semibold mb-3">
+                            {{ $course->teacher_designation ?: 'Senior Instructor' }}
+                        </div>
+
+                        <hr>
+
+                        {{-- Experience --}}
+                        <div class="d-flex align-items-start text-start gap-2">
+                            <i class="fas fa-briefcase text-success mt-1"></i>
+                            <div>
+                                <div class="small text-muted">Teaching Experience</div>
+                                <div class="small fw-semibold">
+                                    {{ $course->teacher_experience ?: 'অভিজ্ঞ শিক্ষক' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 {{-- Quick Info --}}
@@ -471,50 +560,48 @@
 
     {{-- ============ RELATED COURSES ============ --}}
     @if ($relatedCourses->count() > 0)
-        <div class="mt-5">
-            <h5 class="mb-3 fw-bold">
-                <i class="fas fa-th-large text-primary"></i>
-                সম্পর্কিত কোর্স
-            </h5>
+    <div class="mt-5">
+        <h5 class="mb-3 fw-bold">
+            <i class="fas fa-th-large text-primary"></i>
+            সম্পর্কিত কোর্স
+        </h5>
 
-            <div class="row g-3">
-                @foreach ($relatedCourses as $related)
-                    <div class="col-md-4 col-sm-6">
-                        <a href="{{ route('user.study.center.course.show', $related->slug) }}"
-                           class="related-card">
+        <div class="row g-3">
+            @foreach ($relatedCourses as $related)
+            <div class="col-md-4 col-sm-6">
+                <a href="{{ route('user.study.center.course.show', $related->slug) }}" class="related-card">
 
-                            <div class="related-thumb">
-                                @if ($related->thumbnail)
-                                    <img src="{{ asset('storage/' . $related->thumbnail) }}"
-                                         alt="{{ $related->title }}">
-                                @else
-                                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&q=80"
-                                         alt="Default">
-                                @endif
-                            </div>
-
-                            <div class="related-body">
-                                <div class="related-title">{{ $related->title }}</div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="related-price">
-                                        @if ($related->is_free)
-                                            ফ্রি
-                                        @elseif ($related->has_discount)
-                                            ৳{{ number_format($related->discount_price, 0) }}
-                                        @else
-                                            ৳{{ number_format($related->price, 0) }}
-                                        @endif
-                                    </span>
-                                    <span class="small text-muted">
-                                        <i class="fas fa-eye"></i> {{ $related->view_count }}
-                                    </span>
-                                </div>
-                            </div>
-                        </a>
+                    <div class="related-thumb">
+                        @if ($related->thumbnail)
+                        <img src="{{ asset('storage/' . $related->thumbnail) }}" alt="{{ $related->title }}">
+                        @else
+                        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&q=80"
+                            alt="Default">
+                        @endif
                     </div>
-                @endforeach
+
+                    <div class="related-body">
+                        <div class="related-title">{{ $related->title }}</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="related-price">
+                                @if ($related->is_free)
+                                ফ্রি
+                                @elseif ($related->has_discount)
+                                ৳{{ number_format($related->discount_price, 0) }}
+                                @else
+                                ৳{{ number_format($related->price, 0) }}
+                                @endif
+                            </span>
+                            <span class="small text-muted">
+                                <i class="fas fa-eye"></i> {{ $related->view_count }}
+                            </span>
+                        </div>
+                    </div>
+                </a>
             </div>
+            @endforeach
         </div>
+    </div>
     @endif
 
 </div>

@@ -20,38 +20,42 @@ class CourseController extends Controller
     {
         $pageTitle = 'Course List';
 
-        $query = Course::with(['courseType', 'courseClass', 'courseCategory']);
+        $query = Course::with([
+            'courseType',
+            'courseClass',
+            'courseCategory'
+        ]);
 
-        // Filter: Course Type
         if ($request->filled('course_type_id')) {
             $query->where('course_type_id', $request->course_type_id);
         }
 
-        // Filter: Course Class
         if ($request->filled('course_class_id')) {
             $query->where('course_class_id', $request->course_class_id);
         }
 
-        // Filter: Course Category
         if ($request->filled('course_category_id')) {
             $query->where('course_category_id', $request->course_category_id);
         }
 
-        // Filter: Status
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        // Filter: Search by title
         if ($request->filled('search')) {
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
         $courses = $query->latest()->get();
 
-        $courseTypes      = CourseType::where('status', 'active')->orderBy('name')->get();
-        $courseClasses    = CourseClass::where('status', 'active')->orderBy('name')->get();
-        $courseCategories = CourseCategory::where('status', 'active')->orderBy('name')->get();
+        $courseTypes = CourseType::where('status', 'active')
+            ->orderBy('name')->get();
+
+        $courseClasses = CourseClass::where('status', 'active')
+            ->orderBy('name')->get();
+
+        $courseCategories = CourseCategory::where('status', 'active')
+            ->orderBy('name')->get();
 
         return view('admin.course.index', compact(
             'courses',
@@ -63,7 +67,7 @@ class CourseController extends Controller
     }
 
     /* ============================================================
-       STORE — Create Course (with image upload)
+       STORE — Create Course
     ============================================================ */
     public function store(Request $request)
     {
@@ -71,49 +75,90 @@ class CourseController extends Controller
             'course_type_id'     => 'required|exists:course_types,id',
             'course_class_id'    => 'required|exists:course_classes,id',
             'course_category_id' => 'required|exists:course_categories,id',
+
             'title'              => 'required|string|max:255|unique:courses,title',
             'description'        => 'nullable|string',
+
             'thumbnail'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+
+            // Teacher information
+            'teacher_name'        => 'nullable|string|max:255',
+            'teacher_designation' => 'nullable|string|max:255',
+            'teacher_photo'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'teacher_experience'  => 'nullable|string|max:255',
+
+            // Pricing
             'price'              => 'required|numeric|min:0',
             'discount_price'     => 'nullable|numeric|min:0|lt:price',
             'is_free'            => 'nullable|boolean',
-            'duration'           => 'nullable|string|max:100',
-            'total_class'        => 'nullable|integer|min:0',
-            'status'             => 'nullable|in:active,inactive',
+
+            // Extra information
+            'duration'            => 'nullable|string|max:100',
+            'total_class'         => 'nullable|integer|min:0',
+
+            // Status
+            'status'              => 'nullable|in:active,inactive',
         ], [
             'discount_price.lt' => 'Discount price must be less than price.',
-            'thumbnail.max'     => 'Image size must be less than 2MB.',
-            'thumbnail.mimes'   => 'Image must be jpg, jpeg, png, or webp.',
+            'thumbnail.max' => 'Course image size must be less than 2MB.',
+            'thumbnail.mimes' => 'Course image must be jpg, jpeg, png, or webp.',
+            'teacher_photo.max' => 'Teacher image size must be less than 2MB.',
+            'teacher_photo.mimes' => 'Teacher image must be jpg, jpeg, png, or webp.',
         ]);
 
-        // Handle image upload
+        // Upload course thumbnail
         $thumbnailPath = null;
+
         if ($request->hasFile('thumbnail')) {
-            $thumbnailPath = $request->file('thumbnail')->store('courses', 'public');
+            $thumbnailPath = $request->file('thumbnail')
+                ->store('courses', 'public');
+        }
+
+        // Upload teacher photo
+        $teacherPhotoPath = null;
+
+        if ($request->hasFile('teacher_photo')) {
+            $teacherPhotoPath = $request->file('teacher_photo')
+                ->store('teachers', 'public');
         }
 
         Course::create([
             'course_type_id'     => $request->course_type_id,
             'course_class_id'    => $request->course_class_id,
             'course_category_id' => $request->course_category_id,
+
             'title'              => $request->title,
             'slug'               => Str::slug($request->title) . '-' . uniqid(),
             'description'        => $request->description,
             'thumbnail'          => $thumbnailPath,
+
+            // Teacher information
+            'teacher_name'        => $request->teacher_name,
+            'teacher_designation' => $request->teacher_designation
+                ?: 'Senior Instructor',
+            'teacher_photo'       => $teacherPhotoPath,
+            'teacher_experience'  => $request->teacher_experience,
+
+            // Pricing
             'price'              => $request->price,
             'discount_price'     => $request->discount_price,
             'is_free'            => $request->boolean('is_free'),
+
+            // Extra information
             'duration'           => $request->duration,
             'total_class'        => $request->total_class,
+
+            // Status
             'status'             => $request->status ?? 'active',
         ]);
 
         flash()->addSuccess('Course Created Successfully.');
+
         return redirect()->route('admin.course.index');
     }
 
     /* ============================================================
-       UPDATE — Update Course (with image replace)
+       UPDATE — Update Course
     ============================================================ */
     public function update(Request $request, string $id)
     {
@@ -121,97 +166,154 @@ class CourseController extends Controller
             'course_type_id'     => 'required|exists:course_types,id',
             'course_class_id'    => 'required|exists:course_classes,id',
             'course_category_id' => 'required|exists:course_categories,id',
+
             'title'              => 'required|string|max:255|unique:courses,title,' . $id,
             'description'        => 'nullable|string',
+
             'thumbnail'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+
+            // Teacher information
+            'teacher_name'        => 'nullable|string|max:255',
+            'teacher_designation' => 'nullable|string|max:255',
+            'teacher_photo'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'teacher_experience'  => 'nullable|string|max:255',
+
+            // Pricing
             'price'              => 'required|numeric|min:0',
             'discount_price'     => 'nullable|numeric|min:0|lt:price',
             'is_free'            => 'nullable|boolean',
-            'duration'           => 'nullable|string|max:100',
-            'total_class'        => 'nullable|integer|min:0',
-            'status'             => 'nullable|in:active,inactive',
+
+            // Extra information
+            'duration'            => 'nullable|string|max:100',
+            'total_class'         => 'nullable|integer|min:0',
+
+            // Status
+            'status'              => 'nullable|in:active,inactive',
         ], [
             'discount_price.lt' => 'Discount price must be less than price.',
-            'thumbnail.max'     => 'Image size must be less than 2MB.',
-            'thumbnail.mimes'   => 'Image must be jpg, jpeg, png, or webp.',
+            'thumbnail.max' => 'Course image size must be less than 2MB.',
+            'thumbnail.mimes' => 'Course image must be jpg, jpeg, png, or webp.',
+            'teacher_photo.max' => 'Teacher image size must be less than 2MB.',
+            'teacher_photo.mimes' => 'Teacher image must be jpg, jpeg, png, or webp.',
         ]);
 
         $course = Course::findOrFail($id);
 
-        // Handle image upload
-        $thumbnailPath = $course->thumbnail; // keep old by default
+        // Update course thumbnail
+        $thumbnailPath = $course->thumbnail;
+
         if ($request->hasFile('thumbnail')) {
-            // Delete old image
-            if ($course->thumbnail && Storage::disk('public')->exists($course->thumbnail)) {
+            if (
+                $course->thumbnail &&
+                Storage::disk('public')->exists($course->thumbnail)
+            ) {
                 Storage::disk('public')->delete($course->thumbnail);
             }
-            $thumbnailPath = $request->file('thumbnail')->store('courses', 'public');
+
+            $thumbnailPath = $request->file('thumbnail')
+                ->store('courses', 'public');
+        }
+
+        // Update teacher photo
+        $teacherPhotoPath = $course->teacher_photo;
+
+        if ($request->hasFile('teacher_photo')) {
+            if (
+                $course->teacher_photo &&
+                Storage::disk('public')->exists($course->teacher_photo)
+            ) {
+                Storage::disk('public')->delete($course->teacher_photo);
+            }
+
+            $teacherPhotoPath = $request->file('teacher_photo')
+                ->store('teachers', 'public');
         }
 
         $course->update([
             'course_type_id'     => $request->course_type_id,
             'course_class_id'    => $request->course_class_id,
             'course_category_id' => $request->course_category_id,
+
             'title'              => $request->title,
             'slug'               => Str::slug($request->title) . '-' . $course->id,
             'description'        => $request->description,
             'thumbnail'          => $thumbnailPath,
+
+            // Teacher information
+            'teacher_name'        => $request->teacher_name,
+            'teacher_designation' => $request->teacher_designation
+                ?: 'Senior Instructor',
+            'teacher_photo'       => $teacherPhotoPath,
+            'teacher_experience'  => $request->teacher_experience,
+
+            // Pricing
             'price'              => $request->price,
             'discount_price'     => $request->discount_price,
             'is_free'            => $request->boolean('is_free'),
+
+            // Extra information
             'duration'           => $request->duration,
             'total_class'        => $request->total_class,
+
+            // Status
             'status'             => $request->status ?? 'active',
         ]);
 
         flash()->addSuccess('Course Updated Successfully.');
+
         return redirect()->route('admin.course.index');
     }
 
     /* ============================================================
-       DESTROY — Delete Course (with image cleanup)
+       DESTROY — Delete Course + Images
     ============================================================ */
     public function destroy(string $id)
     {
         $course = Course::findOrFail($id);
 
-        // Delete image file
-        if ($course->thumbnail && Storage::disk('public')->exists($course->thumbnail)) {
+        // Delete course thumbnail
+        if (
+            $course->thumbnail &&
+            Storage::disk('public')->exists($course->thumbnail)
+        ) {
             Storage::disk('public')->delete($course->thumbnail);
+        }
+
+        // Delete teacher photo
+        if (
+            $course->teacher_photo &&
+            Storage::disk('public')->exists($course->teacher_photo)
+        ) {
+            Storage::disk('public')->delete($course->teacher_photo);
         }
 
         $course->delete();
 
         flash()->addError('Course Deleted Successfully.');
+
         return redirect()->route('admin.course.index');
     }
 
     /* ============================================================
-       Dependent Dropdown JSON endpoints
+       Dependent Dropdown JSON Endpoints
     ============================================================ */
 
-    /**
-     * Get course classes by course type (for dependent dropdown)
-     */
     public function getClasses($typeId)
     {
         $classes = CourseClass::where('course_type_id', $typeId)
-                              ->where('status', 'active')
-                              ->orderBy('name')
-                              ->get(['id', 'name']);
+            ->where('status', 'active')
+            ->orderBy('name')
+            ->get(['id', 'name']);
 
         return response()->json($classes);
     }
 
-    /**
-     * Get course categories by course class (for dependent dropdown)
-     */
     public function getCategories($classId)
     {
         $categories = CourseCategory::where('course_class_id', $classId)
-                                    ->where('status', 'active')
-                                    ->orderBy('name')
-                                    ->get(['id', 'name']);
+            ->where('status', 'active')
+            ->orderBy('name')
+            ->get(['id', 'name']);
 
         return response()->json($categories);
     }

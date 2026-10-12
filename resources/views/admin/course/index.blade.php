@@ -15,7 +15,7 @@
 </div>
 
 {{-- ============================================================
-     FILTER SECTION
+FILTER SECTION
 ============================================================ --}}
 <div class="card mb-3">
     <div class="card-body py-3">
@@ -28,10 +28,9 @@
                     <select name="course_type_id" id="filter_course_type" class="form-select form-select-sm">
                         <option value="">All Types</option>
                         @foreach ($courseTypes as $type)
-                            <option value="{{ $type->id }}"
-                                {{ request('course_type_id') == $type->id ? 'selected' : '' }}>
-                                {{ $type->name }}
-                            </option>
+                        <option value="{{ $type->id }}" {{ request('course_type_id')==$type->id ? 'selected' : '' }}>
+                            {{ $type->name }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
@@ -42,14 +41,14 @@
                     <select name="course_class_id" id="filter_course_class" class="form-select form-select-sm">
                         <option value="">All Classes</option>
                         @if (request('course_class_id'))
-                            @php
-                                $selectedClass = $courseClasses->firstWhere('id', request('course_class_id'));
-                            @endphp
-                            @if ($selectedClass)
-                                <option value="{{ $selectedClass->id }}" selected>
-                                    {{ $selectedClass->name }}
-                                </option>
-                            @endif
+                        @php
+                        $selectedClass = $courseClasses->firstWhere('id', request('course_class_id'));
+                        @endphp
+                        @if ($selectedClass)
+                        <option value="{{ $selectedClass->id }}" selected>
+                            {{ $selectedClass->name }}
+                        </option>
+                        @endif
                         @endif
                     </select>
                 </div>
@@ -60,14 +59,14 @@
                     <select name="course_category_id" id="filter_course_category" class="form-select form-select-sm">
                         <option value="">All Categories</option>
                         @if (request('course_category_id'))
-                            @php
-                                $selectedCategory = $courseCategories->firstWhere('id', request('course_category_id'));
-                            @endphp
-                            @if ($selectedCategory)
-                                <option value="{{ $selectedCategory->id }}" selected>
-                                    {{ $selectedCategory->name }}
-                                </option>
-                            @endif
+                        @php
+                        $selectedCategory = $courseCategories->firstWhere('id', request('course_category_id'));
+                        @endphp
+                        @if ($selectedCategory)
+                        <option value="{{ $selectedCategory->id }}" selected>
+                            {{ $selectedCategory->name }}
+                        </option>
+                        @endif
                         @endif
                     </select>
                 </div>
@@ -77,8 +76,9 @@
                     <label class="form-label mb-1 small fw-bold">Status</label>
                     <select name="status" class="form-select form-select-sm">
                         <option value="">All Status</option>
-                        <option value="active"   {{ request('status') === 'active'   ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        <option value="active" {{ request('status')==='active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ request('status')==='inactive' ? 'selected' : '' }}>Inactive
+                        </option>
                     </select>
                 </div>
 
@@ -86,7 +86,7 @@
                 <div class="col-md-6 col-sm-6">
                     <label class="form-label mb-1 small fw-bold">Search</label>
                     <input type="text" name="search" class="form-control form-control-sm"
-                           value="{{ request('search') }}" placeholder="Course title...">
+                        value="{{ request('search') }}" placeholder="Course title...">
                 </div>
 
                 {{-- Buttons --}}
@@ -117,8 +117,8 @@
                         </span>
                     </p>
                     <div class="d-flex">
-                        <button type="button" class="btn btn-success me-2"
-                                data-bs-toggle="modal" data-bs-target="#addCourseModal">
+                        <button type="button" class="btn btn-success me-2" data-bs-toggle="modal"
+                            data-bs-target="#addCourseModal">
                             <i class="fas fa-plus d-inline"></i> Add New Course
                         </button>
                     </div>
@@ -127,11 +127,12 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table id="file-datatable"
-                               class="border-top-0 table table-bordered text-nowrap key-buttons border-bottom">
+                            class="border-top-0 table table-bordered text-nowrap key-buttons border-bottom">
                             <thead>
                                 <tr>
                                     <th class="border-bottom-0">SL</th>
                                     <th class="border-bottom-0">Image</th>
+                                    <th class="border-bottom-0">Teacher</th>
                                     <th class="border-bottom-0">Title</th>
                                     <th class="border-bottom-0">Type</th>
                                     <th class="border-bottom-0">Class</th>
@@ -145,87 +146,100 @@
                             </thead>
                             <tbody>
                                 @forelse ($courses as $key => $course)
-                                    <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td>
-                                            @if ($course->thumbnail)
-                                                <img src="{{ asset('storage/' . $course->thumbnail) }}"
-                                                     alt="{{ $course->title }}"
-                                                     style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
-                                            @else
-                                                <span class="badge bg-light text-muted">No Image</span>
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>
+                                        @if ($course->thumbnail)
+                                        <img src="{{ asset('storage/' . $course->thumbnail) }}"
+                                            alt="{{ $course->title }}"
+                                            style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
+                                        @else
+                                        <span class="badge bg-light text-muted">No Image</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            @if ($course->teacher_photo)
+                                            <img src="{{ asset('storage/' . $course->teacher_photo) }}"
+                                                alt="{{ $course->teacher_name }}"
+                                                style="width:35px;height:35px;object-fit:cover;border-radius:50%;">
                                             @endif
-                                        </td>
-                                        <td>
-                                            {{ $course->title }}
-                                            @if ($course->is_featured)
-                                                <span class="badge bg-warning text-dark">Featured</span>
-                                            @endif
-                                        </td>
-                                        <td>{{ $course->courseType->name ?? 'N/A' }}</td>
-                                        <td>{{ $course->courseClass->name ?? 'N/A' }}</td>
-                                        <td>{{ $course->courseCategory->name ?? 'N/A' }}</td>
-                                        <td>
-                                            @if ($course->is_free)
-                                                <span class="badge bg-info">Free</span>
-                                            @else
-                                                ৳ {{ number_format($course->price, 0) }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($course->has_discount)
-                                                <span class="text-success fw-bold">
-                                                    ৳ {{ number_format($course->discount_price, 0) }}
-                                                </span>
+
+                                            <div>
+                                                <div class="fw-semibold">
+                                                    {{ $course->teacher_name ?: 'N/A' }}
+                                                </div>
                                                 <small class="text-muted">
-                                                    ({{ $course->discount_percent }}% off)
+                                                    {{ $course->teacher_designation ?: 'Senior Instructor' }}
                                                 </small>
-                                            @else
-                                                <span class="text-muted">—</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-secondary">
-                                                <i class="fas fa-eye"></i> {{ $course->view_count }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            @if ($course->status === 'active')
-                                                <span class="badge bg-success">Active</span>
-                                            @else
-                                                <span class="badge bg-danger">Inactive</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            {{-- Show --}}
-                                            <button type="button" class="btn btn-sm btn-info"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#showCourseModal-{{ $course->id }}"
-                                                    title="View">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{ $course->title }}
+                                        @if ($course->is_featured)
+                                        <span class="badge bg-warning text-dark">Featured</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $course->courseType->name ?? 'N/A' }}</td>
+                                    <td>{{ $course->courseClass->name ?? 'N/A' }}</td>
+                                    <td>{{ $course->courseCategory->name ?? 'N/A' }}</td>
+                                    <td>
+                                        @if ($course->is_free)
+                                        <span class="badge bg-info">Free</span>
+                                        @else
+                                        ৳ {{ number_format($course->price, 0) }}
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($course->has_discount)
+                                        <span class="text-success fw-bold">
+                                            ৳ {{ number_format($course->discount_price, 0) }}
+                                        </span>
+                                        <small class="text-muted">
+                                            ({{ $course->discount_percent }}% off)
+                                        </small>
+                                        @else
+                                        <span class="text-muted">—</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-eye"></i> {{ $course->view_count }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if ($course->status === 'active')
+                                        <span class="badge bg-success">Active</span>
+                                        @else
+                                        <span class="badge bg-danger">Inactive</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        {{-- Show --}}
+                                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                            data-bs-target="#showCourseModal-{{ $course->id }}" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
 
-                                            {{-- Edit --}}
-                                            <button type="button" class="btn btn-sm btn-primary"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#editCourseModal-{{ $course->id }}"
-                                                    title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
+                                        {{-- Edit --}}
+                                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#editCourseModal-{{ $course->id }}" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
 
-                                            {{-- Delete --}}
-                                            <a href="{{ route('admin.course.delete', $course->id) }}"
-                                               class="btn btn-sm btn-danger"
-                                               onclick="return confirm('Are you sure to delete?')"
-                                               title="Delete">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                        {{-- Delete --}}
+                                        <a href="{{ route('admin.course.delete', $course->id) }}"
+                                            class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Are you sure to delete?')" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
                                 @empty
-                                    <tr>
-                                        <td colspan="11" class="text-center text-muted">No Data Found</td>
-                                    </tr>
+                                <tr>
+                                    <td colspan="11" class="text-center text-muted">No Data Found</td>
+                                </tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -237,11 +251,10 @@
 </div>
 
 {{-- ============================================================
-     ADD MODAL (Bootstrap 5 + fade + image upload)
+ADD MODAL (Bootstrap 5 + fade + image upload)
 ============================================================ --}}
-<div class="modal fade" id="addCourseModal" tabindex="-1"
-     aria-labelledby="addCourseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+<div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form action="{{ route('admin.course.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -258,14 +271,14 @@
                             <select name="course_type_id" id="add_course_type" class="form-select" required>
                                 <option value="">-- Select Type --</option>
                                 @foreach ($courseTypes as $type)
-                                    <option value="{{ $type->id }}"
-                                        {{ old('course_type_id') == $type->id ? 'selected' : '' }}>
-                                        {{ $type->name }}
-                                    </option>
+                                <option value="{{ $type->id }}" {{ old('course_type_id')==$type->id ? 'selected' : ''
+                                    }}>
+                                    {{ $type->name }}
+                                </option>
                                 @endforeach
                             </select>
                             @error('course_type_id')
-                                <small class="text-danger">{{ $message }}</small>
+                            <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
 
@@ -288,11 +301,10 @@
                         {{-- Title --}}
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Course Title <span class="text-danger">*</span></label>
-                            <input type="text" name="title" class="form-control"
-                                   value="{{ old('title') }}"
-                                   placeholder="e.g. HSC Bangla + English + ICT — 1st Year" required>
+                            <input type="text" name="title" class="form-control" value="{{ old('title') }}"
+                                placeholder="e.g. HSC Bangla + English + ICT — 1st Year" required>
                             @error('title')
-                                <small class="text-danger">{{ $message }}</small>
+                            <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
 
@@ -300,31 +312,89 @@
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Description</label>
                             <textarea name="description" class="form-control" rows="3"
-                                      placeholder="Short description (optional)">{{ old('description') }}</textarea>
+                                placeholder="Short description (optional)">{{ old('description') }}</textarea>
                         </div>
 
                         {{-- Thumbnail --}}
                         <div class="col-md-12 mb-3">
                             <label class="form-label">Course Thumbnail</label>
                             <input type="file" name="thumbnail" class="form-control" accept="image/*"
-                                   onchange="previewAddImage(event)">
+                                onchange="previewAddImage(event)">
                             <small class="text-muted">Max 2MB • jpg, jpeg, png, webp</small>
                             @error('thumbnail')
-                                <small class="text-danger d-block">{{ $message }}</small>
+                            <small class="text-danger d-block">{{ $message }}</small>
                             @enderror
                             <div class="mt-2">
                                 <img id="addImagePreview" src="" alt="Preview"
-                                     style="display:none; max-width: 180px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                                    style="display:none; max-width: 180px; border-radius: 8px; border: 1px solid #e5e7eb;">
                             </div>
+                        </div>
+
+                        {{-- Teacher Information --}}
+                        <div class="col-12">
+                            <hr>
+                            <h5 class="mb-3">
+                                <i class="fas fa-chalkboard-teacher text-primary"></i>
+                                Teacher Information
+                            </h5>
+                        </div>
+
+                        {{-- Teacher Name --}}
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teacher Name</label>
+                            <input type="text" name="teacher_name" class="form-control"
+                                value="{{ old('teacher_name') }}" placeholder="Enter teacher name">
+                            @error('teacher_name')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        {{-- Teacher Designation --}}
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Designation</label>
+                            <input type="text" name="teacher_designation" class="form-control"
+                                value="{{ old('teacher_designation', 'Senior Instructor') }}"
+                                placeholder="Senior Instructor">
+                            @error('teacher_designation')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        {{-- Teacher Photo --}}
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teacher Photo</label>
+                            <input type="file" name="teacher_photo" class="form-control" accept=".jpg,.jpeg,.png,.webp"
+                                onchange="previewAddTeacherImage(event)">
+                            <small class="text-muted">Max 2MB · JPG, JPEG, PNG, WEBP</small>
+
+                            @error('teacher_photo')
+                            <small class="text-danger d-block">{{ $message }}</small>
+                            @enderror
+
+                            <div class="mt-2">
+                                <img id="addTeacherImagePreview" src="" alt="Teacher Preview"
+                                    style="display:none;width:100px;height:100px;object-fit:cover;border-radius:50%;border:2px solid #ddd;">
+                            </div>
+                        </div>
+
+                        {{-- Teacher Experience --}}
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Experience</label>
+                            <input type="text" name="teacher_experience" class="form-control"
+                                value="{{ old('teacher_experience', '৫+ Years of Teaching Experience') }}"
+                                placeholder="৫+ Years of Teaching Experience">
+                            @error('teacher_experience')
+                            <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </div>
 
                         {{-- Price --}}
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Price (৳) <span class="text-danger">*</span></label>
-                            <input type="number" name="price" class="form-control"
-                                   value="{{ old('price', 0) }}" min="0" step="1" required>
+                            <input type="number" name="price" class="form-control" value="{{ old('price', 0) }}" min="0"
+                                step="1" required>
                             @error('price')
-                                <small class="text-danger">{{ $message }}</small>
+                            <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
 
@@ -332,18 +402,18 @@
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Discount Price (৳)</label>
                             <input type="number" name="discount_price" class="form-control"
-                                   value="{{ old('discount_price') }}" min="0" step="1"
-                                   placeholder="Leave empty if no discount">
+                                value="{{ old('discount_price') }}" min="0" step="1"
+                                placeholder="Leave empty if no discount">
                             @error('discount_price')
-                                <small class="text-danger">{{ $message }}</small>
+                            <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </div>
 
                         {{-- Is Free --}}
                         <div class="col-md-4 mb-3 d-flex align-items-center">
                             <div class="form-check mt-4">
-                                <input class="form-check-input" type="checkbox" name="is_free"
-                                       id="add_is_free" value="1" {{ old('is_free') ? 'checked' : '' }}>
+                                <input class="form-check-input" type="checkbox" name="is_free" id="add_is_free"
+                                    value="1" {{ old('is_free') ? 'checked' : '' }}>
                                 <label class="form-check-label" for="add_is_free">Free Course</label>
                             </div>
                         </div>
@@ -351,23 +421,24 @@
                         {{-- Duration --}}
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Duration</label>
-                            <input type="text" name="duration" class="form-control"
-                                   value="{{ old('duration') }}" placeholder="e.g. 3 months">
+                            <input type="text" name="duration" class="form-control" value="{{ old('duration') }}"
+                                placeholder="e.g. 3 months">
                         </div>
 
                         {{-- Total Class --}}
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Total Class</label>
                             <input type="number" name="total_class" class="form-control"
-                                   value="{{ old('total_class') }}" min="0" placeholder="e.g. 40">
+                                value="{{ old('total_class') }}" min="0" placeholder="e.g. 40">
                         </div>
 
                         {{-- Status --}}
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Status</label>
                             <select name="status" class="form-select">
-                                <option value="active"   {{ old('status') === 'active'   ? 'selected' : '' }}>Active</option>
-                                <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                <option value="active" {{ old('status')==='active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ old('status')==='inactive' ? 'selected' : '' }}>Inactive
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -383,380 +454,449 @@
 </div>
 
 {{-- ============================================================
-     EDIT MODALS (per row, image upload)
+EDIT MODALS (per row, image upload)
 ============================================================ --}}
 @foreach ($courses as $course)
-    <div class="modal fade" id="editCourseModal-{{ $course->id }}" tabindex="-1"
-         aria-labelledby="editCourseModalLabel-{{ $course->id }}" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content">
-                <form action="{{ route('admin.course.update', $course->id) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editCourseModalLabel-{{ $course->id }}">
-                            Edit Course
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
+<div class="modal fade" id="editCourseModal-{{ $course->id }}" tabindex="-1"
+    aria-labelledby="editCourseModalLabel-{{ $course->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{{ route('admin.course.update', $course->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCourseModalLabel-{{ $course->id }}">
+                        Edit Course
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
 
-                    <div class="modal-body">
-                        <div class="row">
-                            {{-- Course Type --}}
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Course Type <span class="text-danger">*</span></label>
-                                <select name="course_type_id" class="form-select edit-course-type"
-                                        data-course-id="{{ $course->id }}" required>
-                                    <option value="">-- Select Type --</option>
-                                    @foreach ($courseTypes as $type)
-                                        <option value="{{ $type->id }}"
-                                            {{ $course->course_type_id == $type->id ? 'selected' : '' }}>
-                                            {{ $type->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                <div class="modal-body">
+                    <div class="row">
+                        {{-- Course Type --}}
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Course Type <span class="text-danger">*</span></label>
+                            <select name="course_type_id" class="form-select edit-course-type"
+                                data-course-id="{{ $course->id }}" required>
+                                <option value="">-- Select Type --</option>
+                                @foreach ($courseTypes as $type)
+                                <option value="{{ $type->id }}" {{ $course->course_type_id == $type->id ? 'selected' :
+                                    '' }}>
+                                    {{ $type->name }}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                            {{-- Course Class --}}
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Course Class <span class="text-danger">*</span></label>
-                                <select name="course_class_id" class="form-select edit-course-class"
-                                        id="edit_course_class_{{ $course->id }}" required>
-                                    <option value="{{ $course->course_class_id }}">
-                                        {{ $course->courseClass->name ?? '-- Select Class --' }}
-                                    </option>
-                                </select>
-                            </div>
+                        {{-- Course Class --}}
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Course Class <span class="text-danger">*</span></label>
+                            <select name="course_class_id" class="form-select edit-course-class"
+                                id="edit_course_class_{{ $course->id }}" required>
+                                <option value="{{ $course->course_class_id }}">
+                                    {{ $course->courseClass->name ?? '-- Select Class --' }}
+                                </option>
+                            </select>
+                        </div>
 
-                            {{-- Course Category --}}
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Course Category <span class="text-danger">*</span></label>
-                                <select name="course_category_id" class="form-select edit-course-category"
-                                        id="edit_course_category_{{ $course->id }}" required>
-                                    <option value="{{ $course->course_category_id }}">
-                                        {{ $course->courseCategory->name ?? '-- Select Category --' }}
-                                    </option>
-                                </select>
-                            </div>
+                        {{-- Course Category --}}
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Course Category <span class="text-danger">*</span></label>
+                            <select name="course_category_id" class="form-select edit-course-category"
+                                id="edit_course_category_{{ $course->id }}" required>
+                                <option value="{{ $course->course_category_id }}">
+                                    {{ $course->courseCategory->name ?? '-- Select Category --' }}
+                                </option>
+                            </select>
+                        </div>
 
-                            {{-- Title --}}
-                            <div class="col-md-12 mb-3">
-                                <label class="form-label">Course Title <span class="text-danger">*</span></label>
-                                <input type="text" name="title" class="form-control"
-                                       value="{{ $course->title }}" required>
-                            </div>
+                        {{-- Title --}}
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Course Title <span class="text-danger">*</span></label>
+                            <input type="text" name="title" class="form-control" value="{{ $course->title }}" required>
+                        </div>
 
-                            {{-- Description --}}
-                            <div class="col-md-12 mb-3">
-                                <label class="form-label">Description</label>
-                                <textarea name="description" class="form-control"
-                                          rows="3">{{ $course->description }}</textarea>
-                            </div>
+                        {{-- Description --}}
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea name="description" class="form-control"
+                                rows="3">{{ $course->description }}</textarea>
+                        </div>
 
-                            {{-- Thumbnail --}}
-                            <div class="col-md-12 mb-3">
-                                <label class="form-label">Course Thumbnail</label>
-                                <input type="file" name="thumbnail" class="form-control" accept="image/*"
-                                       onchange="previewEditImage(event, {{ $course->id }})">
-                                <small class="text-muted">Max 2MB • jpg, jpeg, png, webp • Leave empty to keep current</small>
-                                @error('thumbnail')
-                                    <small class="text-danger d-block">{{ $message }}</small>
-                                @enderror
-                                <div class="mt-2">
-                                    @if ($course->thumbnail)
-                                        <img id="editImagePreview_{{ $course->id }}"
-                                             src="{{ asset('storage/' . $course->thumbnail) }}"
-                                             alt="Current"
-                                             style="max-width: 180px; border-radius: 8px; border: 1px solid #e5e7eb;">
-                                    @else
-                                        <img id="editImagePreview_{{ $course->id }}" src="" alt="Preview"
-                                             style="display:none; max-width: 180px; border-radius: 8px; border: 1px solid #e5e7eb;">
-                                    @endif
-                                </div>
-                            </div>
-
-                            {{-- Price --}}
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Price (৳) <span class="text-danger">*</span></label>
-                                <input type="number" name="price" class="form-control"
-                                       value="{{ $course->price }}" min="0" step="1" required>
-                            </div>
-
-                            {{-- Discount --}}
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Discount Price (৳)</label>
-                                <input type="number" name="discount_price" class="form-control"
-                                       value="{{ $course->discount_price }}" min="0" step="1">
-                            </div>
-
-                            {{-- Is Free --}}
-                            <div class="col-md-4 mb-3 d-flex align-items-center">
-                                <div class="form-check mt-4">
-                                    <input class="form-check-input" type="checkbox" name="is_free"
-                                           id="edit_is_free_{{ $course->id }}" value="1"
-                                           {{ $course->is_free ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="edit_is_free_{{ $course->id }}">
-                                        Free Course
-                                    </label>
-                                </div>
-                            </div>
-
-                            {{-- Duration --}}
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Duration</label>
-                                <input type="text" name="duration" class="form-control"
-                                       value="{{ $course->duration }}">
-                            </div>
-
-                            {{-- Total Class --}}
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Total Class</label>
-                                <input type="number" name="total_class" class="form-control"
-                                       value="{{ $course->total_class }}" min="0">
-                            </div>
-
-                            {{-- Status --}}
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Status</label>
-                                <select name="status" class="form-select">
-                                    <option value="active"   {{ $course->status === 'active'   ? 'selected' : '' }}>Active</option>
-                                    <option value="inactive" {{ $course->status === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                                </select>
+                        {{-- Thumbnail --}}
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Course Thumbnail</label>
+                            <input type="file" name="thumbnail" class="form-control" accept="image/*"
+                                onchange="previewEditImage(event, {{ $course->id }})">
+                            <small class="text-muted">Max 2MB • jpg, jpeg, png, webp • Leave empty to keep
+                                current</small>
+                            @error('thumbnail')
+                            <small class="text-danger d-block">{{ $message }}</small>
+                            @enderror
+                            <div class="mt-2">
+                                @if ($course->thumbnail)
+                                <img id="editImagePreview_{{ $course->id }}"
+                                    src="{{ asset('storage/' . $course->thumbnail) }}" alt="Current"
+                                    style="max-width: 180px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                                @else
+                                <img id="editImagePreview_{{ $course->id }}" src="" alt="Preview"
+                                    style="display:none; max-width: 180px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                                @endif
                             </div>
                         </div>
-                    </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Update Course</button>
+
+                        {{-- Teacher Information --}}
+                        <div class="col-12">
+                            <hr>
+                            <h5 class="mb-3">
+                                <i class="fas fa-chalkboard-teacher text-primary"></i>
+                                Teacher Information
+                            </h5>
+                        </div>
+
+                        {{-- Teacher Name --}}
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teacher Name</label>
+                            <input type="text" name="teacher_name" class="form-control"
+                                value="{{ $course->teacher_name }}" placeholder="Enter teacher name">
+                        </div>
+
+                        {{-- Designation --}}
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Designation</label>
+                            <input type="text" name="teacher_designation" class="form-control"
+                                value="{{ $course->teacher_designation ?? 'Senior Instructor' }}"
+                                placeholder="Senior Instructor">
+                        </div>
+
+                        {{-- Teacher Photo --}}
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teacher Photo</label>
+                            <input type="file" name="teacher_photo" class="form-control" accept=".jpg,.jpeg,.png,.webp"
+                                onchange="previewEditTeacherImage(event, {{ $course->id }})">
+
+                            <small class="text-muted">
+                                Max 2MB · Leave empty to keep current photo
+                            </small>
+
+                            <div class="mt-2">
+                                <img id="editTeacherImagePreview_{{ $course->id }}"
+                                    src="{{ $course->teacher_photo ? asset('storage/' . $course->teacher_photo) : '' }}"
+                                    alt="Teacher Photo"
+                                    style="width:100px;height:100px;object-fit:cover;border-radius:50%;border:2px solid #ddd;{{ $course->teacher_photo ? '' : 'display:none;' }}">
+                            </div>
+
+                            @error('teacher_photo')
+                            <small class="text-danger d-block">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        {{-- Experience --}}
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Experience</label>
+                            <input type="text" name="teacher_experience" class="form-control"
+                                value="{{ $course->teacher_experience }}" placeholder="৫+ Years of Teaching Experience">
+                        </div>
+
+
+                        {{-- Price --}}
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Price (৳) <span class="text-danger">*</span></label>
+                            <input type="number" name="price" class="form-control" value="{{ $course->price }}" min="0"
+                                step="1" required>
+                        </div>
+
+                        {{-- Discount --}}
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Discount Price (৳)</label>
+                            <input type="number" name="discount_price" class="form-control"
+                                value="{{ $course->discount_price }}" min="0" step="1">
+                        </div>
+
+                        {{-- Is Free --}}
+                        <div class="col-md-4 mb-3 d-flex align-items-center">
+                            <div class="form-check mt-4">
+                                <input class="form-check-input" type="checkbox" name="is_free"
+                                    id="edit_is_free_{{ $course->id }}" value="1" {{ $course->is_free ? 'checked' : ''
+                                }}>
+                                <label class="form-check-label" for="edit_is_free_{{ $course->id }}">
+                                    Free Course
+                                </label>
+                            </div>
+                        </div>
+
+                        {{-- Duration --}}
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Duration</label>
+                            <input type="text" name="duration" class="form-control" value="{{ $course->duration }}">
+                        </div>
+
+                        {{-- Total Class --}}
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Total Class</label>
+                            <input type="number" name="total_class" class="form-control"
+                                value="{{ $course->total_class }}" min="0">
+                        </div>
+
+                        {{-- Status --}}
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="active" {{ $course->status === 'active' ? 'selected' : '' }}>Active
+                                </option>
+                                <option value="inactive" {{ $course->status === 'inactive' ? 'selected' : '' }}>Inactive
+                                </option>
+                            </select>
+                        </div>
                     </div>
-                </form>
-            </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Course</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 @endforeach
 
 {{-- ============================================================
-     SHOW MODALS (per row, professional view + image)
+SHOW MODALS (per row, professional view + image)
 ============================================================ --}}
 @foreach ($courses as $course)
-    <div class="modal fade" id="showCourseModal-{{ $course->id }}" tabindex="-1"
-         aria-labelledby="showCourseModalLabel-{{ $course->id }}" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content border-0 shadow-lg" style="border-radius: 14px; overflow: hidden;">
+<div class="modal fade" id="showCourseModal-{{ $course->id }}" tabindex="-1"
+    aria-labelledby="showCourseModalLabel-{{ $course->id }}" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 14px; overflow: hidden;">
 
-                {{-- ===================== HERO HEADER ===================== --}}
-                <div class="position-relative p-4 text-white"
-                     style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #a855f7 100%);">
-                    <button type="button" class="btn-close btn-close-white position-absolute"
-                            style="top: 16px; right: 16px;" data-bs-dismiss="modal" aria-label="Close"></button>
+            {{-- ===================== HERO HEADER ===================== --}}
+            <div class="position-relative p-4 text-white"
+                style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #a855f7 100%);">
+                <button type="button" class="btn-close btn-close-white position-absolute"
+                    style="top: 16px; right: 16px;" data-bs-dismiss="modal" aria-label="Close"></button>
 
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="d-flex align-items-center justify-content-center flex-shrink-0"
-                             style="width: 56px; height: 56px; background: rgba(255,255,255,.18);
+                <div class="d-flex align-items-center gap-3">
+                    <div class="d-flex align-items-center justify-content-center flex-shrink-0" style="width: 56px; height: 56px; background: rgba(255,255,255,.18);
                                     border-radius: 14px; backdrop-filter: blur(8px);">
-                            <i class="fas fa-graduation-cap fs-3"></i>
-                        </div>
-
-                        <div class="flex-grow-1">
-                            <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
-                                <span class="badge bg-light text-dark small fw-semibold">
-                                    {{ $course->courseType->name ?? 'N/A' }}
-                                </span>
-                                @if ($course->is_featured)
-                                    <span class="badge bg-warning text-dark small">
-                                        <i class="fas fa-star"></i> Featured
-                                    </span>
-                                @endif
-                                @if ($course->is_free)
-                                    <span class="badge bg-info small">Free</span>
-                                @endif
-                            </div>
-                            <h5 class="mb-0 fw-bold">{{ $course->title }}</h5>
-                        </div>
+                        <i class="fas fa-graduation-cap fs-3"></i>
                     </div>
 
-                    <div class="mt-3 d-flex align-items-center gap-2 small" style="opacity: .9;">
-                        <i class="fas fa-layer-group"></i>
-                        <span>{{ $course->courseClass->name ?? 'N/A' }}</span>
-                        <i class="fas fa-chevron-right small"></i>
-                        <span>{{ $course->courseCategory->name ?? 'N/A' }}</span>
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                            <span class="badge bg-light text-dark small fw-semibold">
+                                {{ $course->courseType->name ?? 'N/A' }}
+                            </span>
+                            @if ($course->is_featured)
+                            <span class="badge bg-warning text-dark small">
+                                <i class="fas fa-star"></i> Featured
+                            </span>
+                            @endif
+                            @if ($course->is_free)
+                            <span class="badge bg-info small">Free</span>
+                            @endif
+                        </div>
+                        <h5 class="mb-0 fw-bold">{{ $course->title }}</h5>
                     </div>
                 </div>
 
-                {{-- ===================== BODY ===================== --}}
-                <div class="modal-body p-4">
-
-                    {{-- Thumbnail --}}
-                    @if ($course->thumbnail)
-                        <div class="mb-4 text-center">
-                            <img src="{{ asset('storage/' . $course->thumbnail) }}"
-                                 alt="{{ $course->title }}"
-                                 style="max-width: 100%; max-height: 280px; border-radius: 12px;
-                                        box-shadow: 0 4px 12px rgba(0,0,0,.08);">
-                        </div>
-                    @endif
-
-                    {{-- STATS CARDS --}}
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-4">
-                            <div class="p-3 h-100 rounded-3" style="background: #f0f9ff; border: 1px solid #bae6fd;">
-                                <div class="small text-muted mb-1">
-                                    <i class="fas fa-tag text-primary"></i> Price
-                                </div>
-                                <div class="fs-5 fw-bold text-dark">
-                                    @if ($course->is_free)
-                                        <span class="text-info">Free</span>
-                                    @else
-                                        ৳{{ number_format($course->price, 0) }}
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="p-3 h-100 rounded-3" style="background: #f0fdf4; border: 1px solid #bbf7d0;">
-                                <div class="small text-muted mb-1">
-                                    <i class="fas fa-percent text-success"></i> Discount
-                                </div>
-                                <div class="fs-5 fw-bold text-dark">
-                                    @if ($course->has_discount)
-                                        <span class="text-success">
-                                            ৳{{ number_format($course->discount_price, 0) }}
-                                        </span>
-                                        <small class="text-muted fw-normal">
-                                            ({{ $course->discount_percent }}%)
-                                        </small>
-                                    @else
-                                        <span class="text-muted fw-normal fs-6">No discount</span>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="p-3 h-100 rounded-3"
-                                 style="background: linear-gradient(135deg, #fef3c7, #fde68a);
-                                        border: 1px solid #fcd34d;">
-                                <div class="small text-muted mb-1">
-                                    <i class="fas fa-bolt text-warning"></i> Final Price
-                                </div>
-                                <div class="fs-5 fw-bold text-dark">
-                                    ৳{{ number_format($course->final_price, 0) }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- DETAILS GRID --}}
-                    <h6 class="text-uppercase text-muted small fw-bold mb-3" style="letter-spacing: .5px;">
-                        Course Information
-                    </h6>
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center gap-2 p-2 rounded-2">
-                                <div class="d-flex align-items-center justify-content-center flex-shrink-0"
-                                     style="width: 36px; height: 36px; background: #eef2ff; border-radius: 10px;">
-                                    <i class="fas fa-clock text-primary"></i>
-                                </div>
-                                <div>
-                                    <div class="small text-muted">Duration</div>
-                                    <div class="fw-semibold">{{ $course->duration ?? '—' }}</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center gap-2 p-2 rounded-2">
-                                <div class="d-flex align-items-center justify-content-center flex-shrink-0"
-                                     style="width: 36px; height: 36px; background: #ecfeff; border-radius: 10px;">
-                                    <i class="fas fa-book text-info"></i>
-                                </div>
-                                <div>
-                                    <div class="small text-muted">Total Classes</div>
-                                    <div class="fw-semibold">{{ $course->total_class ?? '—' }}</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center gap-2 p-2 rounded-2">
-                                <div class="d-flex align-items-center justify-content-center flex-shrink-0"
-                                     style="width: 36px; height: 36px; background: #fdf2f8; border-radius: 10px;">
-                                    <i class="fas fa-eye text-danger"></i>
-                                </div>
-                                <div>
-                                    <div class="small text-muted">Total Views</div>
-                                    <div class="fw-semibold">{{ number_format($course->view_count) }}</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center gap-2 p-2 rounded-2">
-                                <div class="d-flex align-items-center justify-content-center flex-shrink-0"
-                                     style="width: 36px; height: 36px; background: #f0fdf4; border-radius: 10px;">
-                                    @if ($course->status === 'active')
-                                        <i class="fas fa-check-circle text-success"></i>
-                                    @else
-                                        <i class="fas fa-times-circle text-danger"></i>
-                                    @endif
-                                </div>
-                                <div>
-                                    <div class="small text-muted">Status</div>
-                                    <div class="fw-semibold">
-                                        @if ($course->status === 'active')
-                                            <span class="text-success">Active</span>
-                                        @else
-                                            <span class="text-danger">Inactive</span>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- DESCRIPTION --}}
-                    @if ($course->description)
-                        <h6 class="text-uppercase text-muted small fw-bold mb-2" style="letter-spacing: .5px;">
-                            Description
-                        </h6>
-                        <div class="p-3 rounded-3 mb-3"
-                             style="background: #f8fafc; border-left: 3px solid #6366f1;
-                                    line-height: 1.6; color: #334155;">
-                            {{ $course->description }}
-                        </div>
-                    @endif
-
-                    {{-- TIMESTAMPS --}}
-                    <div class="d-flex justify-content-between text-muted small pt-2 border-top">
-                        <span>
-                            <i class="fas fa-calendar-plus"></i>
-                            Created: {{ $course->created_at?->format('d M Y, h:i A') }}
-                        </span>
-                        <span>
-                            <i class="fas fa-clock"></i>
-                            Updated: {{ $course->updated_at?->format('d M Y, h:i A') }}
-                        </span>
-                    </div>
+                <div class="mt-3 d-flex align-items-center gap-2 small" style="opacity: .9;">
+                    <i class="fas fa-layer-group"></i>
+                    <span>{{ $course->courseClass->name ?? 'N/A' }}</span>
+                    <i class="fas fa-chevron-right small"></i>
+                    <span>{{ $course->courseCategory->name ?? 'N/A' }}</span>
                 </div>
-
-                {{-- ===================== FOOTER ===================== --}}
-                <div class="modal-footer bg-light border-0 px-4 py-3">
-                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">
-                        <i class="fas fa-times"></i> Close
-                    </button>
-                </div>
-
             </div>
+
+            {{-- ===================== BODY ===================== --}}
+            <div class="modal-body p-4">
+
+                {{-- Thumbnail --}}
+                @if ($course->thumbnail)
+                <div class="mb-4 text-center">
+                    <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="{{ $course->title }}" style="max-width: 100%; max-height: 280px; border-radius: 12px;
+                                        box-shadow: 0 4px 12px rgba(0,0,0,.08);">
+                </div>
+                @endif
+
+                {{-- Teacher Info --}}
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="flex-shrink-0">
+                        @if ($course->teacher_photo)
+                        <img src="{{ asset('storage/' . $course->teacher_photo) }}" alt="{{ $course->teacher_name }}"
+                            style="width: 64px; height: 64px; object-fit: cover; border-radius: 50%; border: 2px solid #e5e7eb;">
+                        @else
+                        <div class="d-flex align-items-center justify-content-center"
+                            style="width: 64px; height: 64px; background: #f3f4f6; border-radius: 50%; border: 2px solid #e5e7eb;">
+                            <i class="fas fa-user text-muted"></i>
+                        </div>
+                        @endif
+                    </div>
+                    <div>
+                        <div class="fw-semibold">{{ $course->teacher_name ?: 'N/A' }}</div>
+                        <small class="text-muted">{{ $course->teacher_designation ?: 'Senior Instructor' }}</small>
+                    </div>
+                </div>
+
+                {{-- STATS CARDS --}}
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="p-3 h-100 rounded-3" style="background: #f0f9ff; border: 1px solid #bae6fd;">
+                            <div class="small text-muted mb-1">
+                                <i class="fas fa-tag text-primary"></i> Price
+                            </div>
+                            <div class="fs-5 fw-bold text-dark">
+                                @if ($course->is_free)
+                                <span class="text-info">Free</span>
+                                @else
+                                ৳{{ number_format($course->price, 0) }}
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="p-3 h-100 rounded-3" style="background: #f0fdf4; border: 1px solid #bbf7d0;">
+                            <div class="small text-muted mb-1">
+                                <i class="fas fa-percent text-success"></i> Discount
+                            </div>
+                            <div class="fs-5 fw-bold text-dark">
+                                @if ($course->has_discount)
+                                <span class="text-success">
+                                    ৳{{ number_format($course->discount_price, 0) }}
+                                </span>
+                                <small class="text-muted fw-normal">
+                                    ({{ $course->discount_percent }}%)
+                                </small>
+                                @else
+                                <span class="text-muted fw-normal fs-6">No discount</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="p-3 h-100 rounded-3" style="background: linear-gradient(135deg, #fef3c7, #fde68a);
+                                        border: 1px solid #fcd34d;">
+                            <div class="small text-muted mb-1">
+                                <i class="fas fa-bolt text-warning"></i> Final Price
+                            </div>
+                            <div class="fs-5 fw-bold text-dark">
+                                ৳{{ number_format($course->final_price, 0) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- DETAILS GRID --}}
+                <h6 class="text-uppercase text-muted small fw-bold mb-3" style="letter-spacing: .5px;">
+                    Course Information
+                </h6>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2 p-2 rounded-2">
+                            <div class="d-flex align-items-center justify-content-center flex-shrink-0"
+                                style="width: 36px; height: 36px; background: #eef2ff; border-radius: 10px;">
+                                <i class="fas fa-clock text-primary"></i>
+                            </div>
+                            <div>
+                                <div class="small text-muted">Duration</div>
+                                <div class="fw-semibold">{{ $course->duration ?? '—' }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2 p-2 rounded-2">
+                            <div class="d-flex align-items-center justify-content-center flex-shrink-0"
+                                style="width: 36px; height: 36px; background: #ecfeff; border-radius: 10px;">
+                                <i class="fas fa-book text-info"></i>
+                            </div>
+                            <div>
+                                <div class="small text-muted">Total Classes</div>
+                                <div class="fw-semibold">{{ $course->total_class ?? '—' }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2 p-2 rounded-2">
+                            <div class="d-flex align-items-center justify-content-center flex-shrink-0"
+                                style="width: 36px; height: 36px; background: #fdf2f8; border-radius: 10px;">
+                                <i class="fas fa-eye text-danger"></i>
+                            </div>
+                            <div>
+                                <div class="small text-muted">Total Views</div>
+                                <div class="fw-semibold">{{ number_format($course->view_count) }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center gap-2 p-2 rounded-2">
+                            <div class="d-flex align-items-center justify-content-center flex-shrink-0"
+                                style="width: 36px; height: 36px; background: #f0fdf4; border-radius: 10px;">
+                                @if ($course->status === 'active')
+                                <i class="fas fa-check-circle text-success"></i>
+                                @else
+                                <i class="fas fa-times-circle text-danger"></i>
+                                @endif
+                            </div>
+                            <div>
+                                <div class="small text-muted">Status</div>
+                                <div class="fw-semibold">
+                                    @if ($course->status === 'active')
+                                    <span class="text-success">Active</span>
+                                    @else
+                                    <span class="text-danger">Inactive</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- DESCRIPTION --}}
+                @if ($course->description)
+                <h6 class="text-uppercase text-muted small fw-bold mb-2" style="letter-spacing: .5px;">
+                    Description
+                </h6>
+                <div class="p-3 rounded-3 mb-3" style="background: #f8fafc; border-left: 3px solid #6366f1;
+                                    line-height: 1.6; color: #334155;">
+                    {{ $course->description }}
+                </div>
+                @endif
+
+                {{-- TIMESTAMPS --}}
+                <div class="d-flex justify-content-between text-muted small pt-2 border-top">
+                    <span>
+                        <i class="fas fa-calendar-plus"></i>
+                        Created: {{ $course->created_at?->format('d M Y, h:i A') }}
+                    </span>
+                    <span>
+                        <i class="fas fa-clock"></i>
+                        Updated: {{ $course->updated_at?->format('d M Y, h:i A') }}
+                    </span>
+                </div>
+            </div>
+
+            {{-- ===================== FOOTER ===================== --}}
+            <div class="modal-footer bg-light border-0 px-4 py-3">
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+
         </div>
     </div>
+</div>
 @endforeach
 
 @endsection
 
 {{-- ============================================================
-     JS — Dependent dropdown + Image Preview
+JS — Dependent dropdown + Image Preview
 ============================================================ --}}
 @push('admin')
 <script>
@@ -958,5 +1098,41 @@
         });
 
     });
+
+    /* ============ Teacher Image Preview ============ */
+
+function previewAddTeacherImage(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('addTeacherImagePreview');
+
+    if (file && preview) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+
+        reader.readAsDataURL(file);
+    }
+}
+
+function previewEditTeacherImage(event, courseId) {
+    const file = event.target.files[0];
+    const preview = document.getElementById(
+        'editTeacherImagePreview_' + courseId
+    );
+
+    if (file && preview) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+
+        reader.readAsDataURL(file);
+    }
+}
 </script>
 @endpush
