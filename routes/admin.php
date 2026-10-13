@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\CourseTypeController;
 use App\Http\Controllers\Admin\CourseClassController;
 use App\Http\Controllers\Admin\CourseCategoryController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\CoursePurchaseController;
 
 
 
@@ -489,6 +490,14 @@ Route::middleware('admin')->group(function () {
         // Dependent dropdown JSON endpoints (Modal-এর জন্য)
         Route::get('/get-classes/{typeId}',       [CourseController::class, 'getClasses'])->name('get.classes');
         Route::get('/get-categories/{classId}',   [CourseController::class, 'getCategories'])->name('get.categories');
+    });
+
+    /* ============> Course Purchases <============ */
+    Route::prefix('course-purchases')->name('course.purchase.')->group(function () {
+        Route::get('/index',        [CoursePurchaseController::class, 'index'])->name('index');
+        Route::get('/show/{id}',    [CoursePurchaseController::class, 'show'])->name('show');
+        Route::get('/delete/{id}',  [CoursePurchaseController::class, 'destroy'])->name('delete');
+        Route::get('/voucher/{id}', [CoursePurchaseController::class, 'voucher'])->name('voucher');
     });
     
 });

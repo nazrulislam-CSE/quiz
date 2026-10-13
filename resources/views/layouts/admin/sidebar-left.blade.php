@@ -61,8 +61,12 @@
                         href="{{ route('admin.admin.home') }}"><i class="side-menu__icon fas fa-th-large"></i><span
                             class="side-menu__label">Dashboard</span></a>
                 </li>
-                <li
-                    class="slide {{ Request::is('admin/course-types*') || Request::is('admin/course-classes*') || Request::is('admin/course-categories*')  || Request::is('admin/courses*')  ? 'is-expanded' : '' }}">
+                <li class="slide {{ Request::is('admin/course-types*') 
+                 || Request::is('admin/course-classes*') 
+                 || Request::is('admin/course-categories*') 
+                 || Request::is('admin/courses*') 
+                 || Request::is('admin/course-purchases*') 
+                 ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                         <i class="side-menu__icon fas fa-cog"></i>
                         <span class="side-menu__label">
@@ -102,8 +106,12 @@
                                 Course List
                             </a>
                         </li>
-                        <li><a class="slide-item" href="#">Course Online Paid List</a></li>
-                        <li><a class="slide-item" href="#">Course Offline Paid List</a></li>
+                        <li>
+                            <a class="slide-item {{ Request::is('admin/course-purchases*') ? 'active' : '' }}"
+                                href="{{ route('admin.course.purchase.index') }}">
+                                Course Paid List
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="slide {{ Request::is('admin/balance*') ? 'is-expanded' : '' }}">

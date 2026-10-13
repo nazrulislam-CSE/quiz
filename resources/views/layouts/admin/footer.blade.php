@@ -3,6 +3,6 @@
         © {{ date('Y') }} <a href="#" class="text-primary">MCQ Admission Dashboard</a>. All Rights Reserved.
     </span>
     <span>
-        Developed by <a href="#" class="text-primary">Nazrul Islam Suzon</a>
+        Developed by <a href="https://speakupbd.com/" target="_blank" class="text-primary">Speak Up BD</a>
     </span>
 </div>
