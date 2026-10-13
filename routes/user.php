@@ -74,6 +74,24 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/study-center/course/{slug}', [StudyCenterController::class, 'show'])
      ->name('study.center.course.show');
 
+    // Course Buy → EPS Initialize
+    Route::post('/study-center/course/buy/{course}', [StudyCenterController::class, 'buy'])
+         ->name('study.center.course.buy');
+
+    // EPS Callbacks (course specific)
+    Route::get('/course-payment/success', [StudyCenterController::class, 'paymentSuccess'])
+         ->name('course.payment.success');
+
+    Route::get('/course-payment/fail', [StudyCenterController::class, 'paymentFail'])
+         ->name('course.payment.fail');
+
+    Route::get('/course-payment/cancel', [StudyCenterController::class, 'paymentCancel'])
+         ->name('course.payment.cancel');
+
+    // My Courses (optional, future-এ কাজে লাগবে)
+    Route::get('/my-courses', [StudyCenterController::class, 'myCourses'])
+         ->name('study.center.my.courses');
+
 
 
 

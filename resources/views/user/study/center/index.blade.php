@@ -241,6 +241,11 @@
                 <h3>{{ $pageTitle }}</h3>
                 <p>পড়াশোনার জন্য আপনার পছন্দের কোর্সটি বেছে নিন</p>
             </div>
+            <div class="mt-3">
+                <a href="{{ route('user.study.center.my.courses') }}" class="btn btn-light">
+                    <i class="fas fa-book-reader"></i> আমার কোর্সসমূহ
+                </a>
+            </div>
         </div>
     </div>
 

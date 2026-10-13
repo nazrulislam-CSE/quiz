@@ -474,10 +474,36 @@
                     </div>
 
                     {{-- Action Buttons --}}
-                    <a href="#" class="cd-btn-primary" onclick="return confirm('কেনার সিস্টেম শীঘ্রই আসছে!');">
-                        <i class="fas fa-shopping-cart"></i>
-                        এখনই কিনুন
+                    @auth
+                    @if ($alreadyOwned)
+                    <div class="alert alert-success d-flex align-items-center mb-3" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <div>আপনি এই কোর্সটি ইতিমধ্যে কিনেছেন</div>
+                    </div>
+                    <a href="{{ route('user.study.center.my.courses') }}" class="cd-btn-primary">
+                        <i class="fas fa-book-reader"></i>
+                        আমার কোর্সে যান
                     </a>
+                    @elseif ($course->is_free)
+                    <a href="#" class="cd-btn-primary">
+                        <i class="fas fa-play-circle"></i>
+                        ফ্রি এনরোল করুন
+                    </a>
+                    @else
+                    <form action="{{ route('user.study.center.course.buy', $course->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="cd-btn-primary w-100 border-0">
+                            <i class="fas fa-shopping-cart"></i>
+                            এখনই কিনুন — ৳{{ number_format($course->final_price, 0) }}
+                        </button>
+                    </form>
+                    @endif
+                    @else
+                    <a href="{{ route('login') }}" class="cd-btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        কিনতে লগইন করুন
+                    </a>
+                    @endauth
 
                     <a href="{{ route('user.study.center') }}" class="cd-btn-secondary">
                         <i class="fas fa-arrow-left"></i>

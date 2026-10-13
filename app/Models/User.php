@@ -103,6 +103,11 @@ class User extends Authenticatable
         );
     }
 
+    public function courseOrders()
+    {
+        return $this->hasMany(CourseOrder::class);
+    }
+
 
 
 
