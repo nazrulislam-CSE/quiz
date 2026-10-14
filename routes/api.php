@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\V1\User\Rank\RewardController;
 use App\Http\Controllers\Api\V1\User\Banner\BannerController;
 use App\Http\Controllers\Api\V1\User\Recharge\RechargeController;
 use App\Http\Controllers\Api\V1\User\Study\StudyCenterController;
+use App\Http\Controllers\Api\V1\User\Study\CoursePurchaseController;
 
 use App\Http\Controllers\Api\V1\User\AdmissionInfoController;
 
@@ -40,6 +41,18 @@ use App\Http\Controllers\Api\V1\Admin\AdminController;
 Route::get('/eps/success', [BalanceRequestController::class, 'epsSuccess'])->name('payment.eps.success');
 Route::get('/eps/fail', [BalanceRequestController::class, 'epsFail'])->name('payment.eps.fail');
 Route::get('/eps/cancel', [BalanceRequestController::class, 'epsCancel'])->name('payment.eps.cancel');
+
+/* ============================================================
+   EPS Callback (Public — no auth, EPS hits these)
+============================================================ */
+Route::prefix('study-center/payment')->group(function () {
+    Route::match(['get', 'post'], '/success', [CoursePurchaseController::class, 'paymentSuccess'])
+         ->name('study.center.payment.success');
+    Route::match(['get', 'post'], '/fail',    [CoursePurchaseController::class, 'paymentFail'])
+         ->name('study.center.payment.fail');
+    Route::match(['get', 'post'], '/cancel',  [CoursePurchaseController::class, 'paymentCancel'])
+         ->name('study.center.payment.cancel');
+});
 
 
 Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
@@ -141,6 +154,11 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
             // Study Center
             Route::get('/study-center', [StudyCenterController::class, 'index'])->name('study.center');
             Route::get('/study-center/course/{slug}', [StudyCenterController::class, 'show'])->name('study.center.course.show');
+
+            // Purchase
+            Route::post('/study-center/course/{course}/buy', [CoursePurchaseController::class, 'buy'])->name('study.center.course.buy');
+            Route::get('/study-center/my-courses', [CoursePurchaseController::class, 'myCourses'])->name('study.center.my.courses');
+            Route::get('/study-center/order/{id}', [CoursePurchaseController::class, 'orderDetails'])->name('study.center.order.details');
 
           
         });
