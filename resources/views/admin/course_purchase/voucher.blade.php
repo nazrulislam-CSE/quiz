@@ -30,11 +30,13 @@
                     {{ get_setting('site_name')->value ?? 'Chalkboard Bd' }}
                 </h1>
                 <div style="font-size:12px; color:#ffffff; opacity:.95; margin-bottom:3px;">
-                    📞 {{ get_setting('phone')->value ?? '' }} &nbsp;|&nbsp;
+                    📞 01521420274 &nbsp;|&nbsp;
+                    📞 01805007535 &nbsp;|&nbsp;
                     ✉ {{ get_setting('email')->value ?? '' }}
                 </div>
                 <div style="font-size:12px; color:#ffffff; opacity:.9;">
-                    📍 {{ get_setting('business_address')->value ?? '' }}
+                    📍 Corporate address: Malopara,Rajshahi <br>
+                    📍 Head office: Dhanmondi 27,Dhaka
                 </div>
             </div>
 
@@ -72,7 +74,7 @@
                                 </td>
                                 <td style="vertical-align:middle; padding:12px 12px 12px 0;">
                                     <div style="font-weight:700; font-size:15px; color:#1e293b; margin-bottom:3px;">
-                                        {{ $order->user->name ?? 'N/A' }}
+                                        {{ $order->user->full_name ?? 'N/A' }}
                                     </div>
                                     <div style="font-size:12px; color:#64748b; margin-bottom:2px;">
                                         User ID: #{{ $order->user_id }}
@@ -212,29 +214,6 @@
                 </tr>
             </table>
 
-            {{-- ============ Commission Distribution ============ --}}
-            @if ($transactions->count() > 0)
-                <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:14px; margin-top:16px;">
-                    <div style="font-size:12px; font-weight:700; color:#059669; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">
-                        💰 COMMISSION DISTRIBUTION
-                    </div>
-
-                    <table style="width:100%; border-collapse:collapse; font-size:13px;">
-                        @foreach ($transactions as $txn)
-                            <tr>
-                                <td style="padding:5px 0; color:#1e293b;">
-                                    {{ $txn->purpose }}
-                                    <span style="color:#64748b; font-size:11.5px;">(User #{{ $txn->user_id }})</span>
-                                </td>
-                                <td style="padding:5px 0; text-align:right; font-weight:700; color:#059669;">
-                                    ৳{{ number_format($txn->amount, 2) }}
-                                </td>
-                            </tr>
-                        @endforeach
-                    </table>
-                </div>
-            @endif
-
             {{-- ============ Signature ============ --}}
             <table style="width:100%; border-collapse:collapse; margin-top:40px;">
                 <tr>
@@ -249,20 +228,6 @@
                 </tr>
             </table>
 
-        </div>
-
-        {{-- ============ FOOTER ============ --}}
-        <div style="background:#f8fafc; padding:16px 28px; border-top:1px solid #e2e8f0; font-size:12px; color:#64748b;">
-            <table style="width:100%; border-collapse:collapse;">
-                <tr>
-                    <td style="vertical-align:middle;">
-                        🌐 This is a computer-generated voucher. No signature required for digital use.
-                    </td>
-                    <td style="text-align:right; vertical-align:middle; font-weight:600; color:#1e293b;">
-                        {{ get_setting('copy_right')->value ?? 'Copy Right' }}
-                    </td>
-                </tr>
-            </table>
         </div>
 
     </div>

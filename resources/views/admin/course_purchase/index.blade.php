@@ -225,12 +225,12 @@ PURCHASE LIST
                                             {{-- User Image --}}
                                             <img src="{{ !empty($order->user->image) 
                         ? url('upload/user/' . $order->user->image) 
-                        : url('upload/avater.png') }}" alt="{{ $order->user->name ?? 'User' }}" style="width: 42px; height: 42px; object-fit: cover; border-radius: 50%;
+                        : url('upload/avater.png') }}" alt="{{ $order->user->full_name ?? 'User' }}" style="width: 42px; height: 42px; object-fit: cover; border-radius: 50%;
                     border: 2px solid #e5e7eb;">
 
                                             {{-- User Info --}}
                                             <div class="d-flex flex-column">
-                                                <span class="fw-bold">{{ $order->user->name ?? 'N/A' }}</span>
+                                                <span class="fw-bold">{{ $order->user->full_name ?? 'N/A' }}</span>
                                                 <small class="text-muted" style="font-size: 11px;">
                                                     {{ $order->user->email ?? '' }}
                                                 </small>
@@ -297,7 +297,7 @@ PURCHASE LIST
                                         </a>
 
                                         {{-- Print Voucher --}}
-                                        {{-- <a href="{{ route('admin.course.purchase.voucher', $order->id) }}"
+                                        <a href="{{ route('admin.course.purchase.voucher', $order->id) }}"
                                             class="btn btn-sm btn-primary" title="Print Voucher" target="_blank">
                                             <i class="fas fa-print"></i>
                                         </a>
@@ -307,7 +307,7 @@ PURCHASE LIST
                                             onclick="return confirm('Are you sure to delete this purchase record?')"
                                             title="Delete">
                                             <i class="fas fa-trash"></i>
-                                        </a> --}}
+                                        </a>
                                     </td>
                                 </tr>
                                 @empty

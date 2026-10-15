@@ -158,9 +158,9 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
             // Purchase
             Route::post('/study-center/course/{course}/buy', [CoursePurchaseController::class, 'buy'])->name('study.center.course.buy');
             Route::get('/study-center/my-courses', [CoursePurchaseController::class, 'myCourses'])->name('study.center.my.courses');
-            Route::get('/study-center/order/{id}', [CoursePurchaseController::class, 'orderDetails'])->name('study.center.order.details');
+            Route::get('/study-center/order/{order_no}', [CoursePurchaseController::class, 'orderDetails'])->name('study.center.order.details');
+            Route::get('/study-center/course/voucher/{order_no}', [CoursePurchaseController::class, 'voucher'])->name('study.center.order.voucher');
 
-          
         });
     });
 

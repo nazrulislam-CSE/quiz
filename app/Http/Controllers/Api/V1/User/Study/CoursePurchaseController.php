@@ -364,34 +364,88 @@ class CoursePurchaseController extends Controller
     /* ============================================================
        MY COURSES — API
     ============================================================ */
+
     public function myCourses(): JsonResponse
     {
         $user = Auth::user();
 
-        $orders = CourseOrder::with(['course.courseType', 'course.courseClass', 'course.courseCategory'])
-                             ->where('user_id', $user->id)
-                             ->where('payment_status', 'paid')
-                             ->latest()
-                             ->get()
-                             ->map(function ($order) {
-                                 return [
-                                     'order_id'    => $order->id,
-                                     'order_no'    => $order->order_no,
-                                     'paid_amount' => (float) $order->paid_amount,
-                                     'paid_at'     => $order->paid_at?->toDateTimeString(),
-                                     'course'      => $order->course ? [
-                                         'id'             => $order->course->id,
-                                         'title'          => $order->course->title,
-                                         'slug'           => $order->course->slug,
-                                         'thumbnail'      => $order->course->thumbnail
-                                                                ? asset('storage/' . $order->course->thumbnail)
-                                                                : 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80',
-                                         'course_type'    => $order->course->courseType->name ?? null,
-                                         'course_class'   => $order->course->courseClass->name ?? null,
-                                         'course_category' => $order->course->courseCategory->name ?? null,
-                                     ] : null,
-                                 ];
-                             });
+        $orders = CourseOrder::with([
+            'course.courseType',
+            'course.courseClass',
+            'course.courseCategory',
+        ])
+        ->where('user_id', $user->id)
+        ->where('payment_status', 'paid')
+        ->latest()
+        ->get()
+        ->map(function ($order) {
+            $course = $order->course;
+
+            return [
+                'order_id'    => $order->id,
+                'order_no'    => $order->order_no,
+                'paid_amount' => (float) $order->paid_amount,
+                'paid_at'     => $order->paid_at?->toDateTimeString(),
+
+                'course' => $course ? [
+                    'id'                => $course->id,
+                    'title'             => $course->title,
+                    'slug'              => $course->slug,
+                    'description'       => $course->description,
+
+                    'thumbnail' => $course->thumbnail
+                        ? asset('storage/' . $course->thumbnail)
+                        : 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80',
+
+                    // Teacher Information
+                    'teacher' => [
+                        'name'        => $course->teacher_name,
+                        'designation' => $course->teacher_designation,
+                        'photo'       => $course->teacher_photo
+                            ? asset('storage/' . $course->teacher_photo)
+                            : null,
+                        'experience'  => $course->teacher_experience,
+                    ],
+
+                    // Pricing
+                    'price'            => (float) $course->price,
+                    'discount_price'   => $course->discount_price !== null
+                        ? (float) $course->discount_price
+                        : null,
+                    'final_price'      => (float) $course->final_price,
+                    'has_discount'     => $course->has_discount,
+                    'discount_percent' => $course->discount_percent,
+                    'is_free'           => (bool) $course->is_free,
+
+                    // Course Details
+                    'total_class' => $course->total_class,
+                    'duration'    => $course->duration,
+                    'start_date'  => $course->start_date?->format('Y-m-d'),
+                    'end_date'    => $course->end_date?->format('Y-m-d'),
+                    'status'      => $course->status,
+                    'is_featured' => (bool) $course->is_featured,
+                    'view_count'  => (int) $course->view_count,
+
+                    // Relations
+                    'course_type' => $course->courseType ? [
+                        'id'   => $course->courseType->id,
+                        'name' => $course->courseType->name,
+                    ] : null,
+
+                    'course_class' => $course->courseClass ? [
+                        'id'   => $course->courseClass->id,
+                        'name' => $course->courseClass->name,
+                    ] : null,
+
+                    'course_category' => $course->courseCategory ? [
+                        'id'   => $course->courseCategory->id,
+                        'name' => $course->courseCategory->name,
+                    ] : null,
+
+                    'created_at' => $course->created_at?->toDateTimeString(),
+                ] : null,
+            ];
+        });
 
         return response()->json([
             'success' => true,
@@ -403,37 +457,107 @@ class CoursePurchaseController extends Controller
     /* ============================================================
        ORDER DETAILS — API
     ============================================================ */
-    public function orderDetails(string $id): JsonResponse
+    public function orderDetails(string $order_no): JsonResponse
     {
         $user = Auth::user();
 
-        $order = CourseOrder::with(['course.courseType', 'course.courseClass', 'course.courseCategory'])
-                            ->where('user_id', $user->id)
-                            ->where('id', $id)
-                            ->first();
+        $order = CourseOrder::with([
+            'course.courseType',
+            'course.courseClass',
+            'course.courseCategory',
+        ])
+        ->where('user_id', $user->id)
+        ->where('order_no', $order_no)
+        ->first();
 
         if (! $order) {
             return response()->json([
                 'success' => false,
                 'message' => 'Order not found.',
+                'data'    => null,
             ], 404);
         }
 
+        $course = $order->course;
+
         return response()->json([
             'success' => true,
-            'message' => 'Order details retrieved.',
-            'data'    => [
-                'order_id'      => $order->id,
-                'order_no'      => $order->order_no,
-                'paid_amount'   => (float) $order->paid_amount,
-                'price'         => (float) $order->price,
-                'discount'      => (float) $order->discount_price,
-                'payment_status' => $order->payment_status,
-                'payment_method' => $order->payment_method,
-                'merchant_transaction_id' => $order->merchant_transaction_id,
-                'eps_transaction_id'      => $order->eps_transaction_id,
-                'paid_at'       => $order->paid_at?->toDateTimeString(),
-                'course'        => $order->course,
+            'message' => 'Order details retrieved successfully.',
+
+            'data' => [
+                // Order Information
+                'order_id'                 => $order->id,
+                'order_no'                 => $order->order_no,
+                'price'                    => (float) $order->price,
+                'discount'                 => $order->discount_price !== null
+                    ? (float) $order->discount_price
+                    : null,
+                'paid_amount'              => (float) $order->paid_amount,
+                'payment_status'            => $order->payment_status,
+                'payment_method'            => $order->payment_method,
+                'merchant_transaction_id'   => $order->merchant_transaction_id,
+                'eps_transaction_id'        => $order->eps_transaction_id,
+                'paid_at'                   => $order->paid_at?->toDateTimeString(),
+                'created_at'                => $order->created_at?->toDateTimeString(),
+
+                // Complete Course Information
+                'course' => $course ? [
+                    'id'          => $course->id,
+                    'title'       => $course->title,
+                    'slug'        => $course->slug,
+                    'description' => $course->description,
+
+                    'thumbnail' => $course->thumbnail
+                        ? asset('storage/' . $course->thumbnail)
+                        : 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80',
+
+                    // Teacher Information
+                    'teacher' => [
+                        'name'        => $course->teacher_name,
+                        'designation' => $course->teacher_designation,
+                        'photo'       => $course->teacher_photo
+                            ? asset('storage/' . $course->teacher_photo)
+                            : null,
+                        'experience'  => $course->teacher_experience,
+                    ],
+
+                    // Pricing
+                    'price'            => (float) $course->price,
+                    'discount_price'   => $course->discount_price !== null
+                        ? (float) $course->discount_price
+                        : null,
+                    'final_price'      => (float) $course->final_price,
+                    'has_discount'     => $course->has_discount,
+                    'discount_percent' => $course->discount_percent,
+                    'is_free'           => (bool) $course->is_free,
+
+                    // Course Details
+                    'total_class' => $course->total_class,
+                    'duration'    => $course->duration,
+                    'start_date'  => $course->start_date?->format('Y-m-d'),
+                    'end_date'    => $course->end_date?->format('Y-m-d'),
+                    'status'      => $course->status,
+                    'is_featured' => (bool) $course->is_featured,
+                    'view_count'  => (int) $course->view_count,
+
+                    // Relations
+                    'course_type' => $course->courseType ? [
+                        'id'   => $course->courseType->id,
+                        'name' => $course->courseType->name,
+                    ] : null,
+
+                    'course_class' => $course->courseClass ? [
+                        'id'   => $course->courseClass->id,
+                        'name' => $course->courseClass->name,
+                    ] : null,
+
+                    'course_category' => $course->courseCategory ? [
+                        'id'   => $course->courseCategory->id,
+                        'name' => $course->courseCategory->name,
+                    ] : null,
+
+                    'created_at' => $course->created_at?->toDateTimeString(),
+                ] : null,
             ],
         ], 200);
     }
@@ -610,5 +734,103 @@ class CoursePurchaseController extends Controller
 </html>';
 
         return response($html, 200);
+    }
+
+    /* ============================================================
+   VOUCHER DETAILS — REST API
+    ============================================================ */
+    public function voucher(string $order_no): JsonResponse
+    {
+        $order = CourseOrder::with([
+            'course.courseType',
+            'course.courseClass',
+            'course.courseCategory',
+        ])
+        ->where('user_id', Auth::id())
+        ->where('order_no', $order_no)
+        ->where('payment_status', 'paid')
+        ->first();
+
+        if (! $order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Voucher not found or payment is not completed.',
+                'data'    => null,
+            ], 404);
+        }
+
+        $course = $order->course;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Course voucher retrieved successfully.',
+            'data' => [
+                // Voucher Information
+                'voucher' => [
+                    'voucher_no' => $order->order_no,
+                    'issued_at'  => $order->paid_at?->toDateTimeString(),
+                    'status'     => 'paid',
+                ],
+
+                // Payment Information
+                'payment' => [
+                    'order_id'                => $order->id,
+                    'order_no'                => $order->order_no,
+                    'price'                   => (float) $order->price,
+                    'discount'                => $order->discount_price !== null
+                        ? (float) $order->discount_price
+                        : null,
+                    'paid_amount'             => (float) $order->paid_amount,
+                    'payment_status'          => $order->payment_status,
+                    'payment_method'          => $order->payment_method,
+                    'merchant_transaction_id'  => $order->merchant_transaction_id,
+                    'eps_transaction_id'       => $order->eps_transaction_id,
+                    'paid_at'                 => $order->paid_at?->toDateTimeString(),
+                ],
+
+                // Course Information
+                'course' => $course ? [
+                    'id'          => $course->id,
+                    'title'       => $course->title,
+                    'slug'        => $course->slug,
+                    'description' => $course->description,
+
+                    'thumbnail' => $course->thumbnail
+                        ? asset('storage/' . $course->thumbnail)
+                        : null,
+
+                    // Teacher Information
+                    'teacher' => [
+                        'name'        => $course->teacher_name,
+                        'designation' => $course->teacher_designation,
+                        'photo'       => $course->teacher_photo
+                            ? asset('storage/' . $course->teacher_photo)
+                            : null,
+                        'experience'  => $course->teacher_experience,
+                    ],
+
+                    // Course Details
+                    'duration'    => $course->duration,
+                    'total_class' => $course->total_class,
+                    'start_date'  => $course->start_date?->format('Y-m-d'),
+                    'end_date'    => $course->end_date?->format('Y-m-d'),
+
+                    'course_type' => $course->courseType ? [
+                        'id'   => $course->courseType->id,
+                        'name' => $course->courseType->name,
+                    ] : null,
+
+                    'course_class' => $course->courseClass ? [
+                        'id'   => $course->courseClass->id,
+                        'name' => $course->courseClass->name,
+                    ] : null,
+
+                    'course_category' => $course->courseCategory ? [
+                        'id'   => $course->courseCategory->id,
+                        'name' => $course->courseCategory->name,
+                    ] : null,
+                ] : null,
+            ],
+        ], 200);
     }
 }

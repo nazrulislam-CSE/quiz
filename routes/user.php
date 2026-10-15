@@ -92,6 +92,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/my-courses', [StudyCenterController::class, 'myCourses'])
          ->name('study.center.my.courses');
 
+     Route::get('/voucher/{order_no}', [StudyCenterController::class, 'voucher'])->name('study.center.my.courses.voucher');
+
 
 
 

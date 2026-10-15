@@ -148,50 +148,6 @@
                 </div>
             </div>
 
-            {{-- Commission Transactions --}}
-            @if ($transactions->count() > 0)
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-bottom">
-                    <h6 class="mb-0 fw-bold">
-                        <i class="fas fa-users text-primary"></i> Commission Distribution
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-sm table-hover mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>User ID</th>
-                                    <th>Purpose</th>
-                                    <th class="text-end">Amount</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($transactions as $txn)
-                                <tr>
-                                    <td>
-                                        <span class="badge bg-secondary">
-                                            #{{ $txn->user_id }}
-                                        </span>
-                                    </td>
-                                    <td>{{ $txn->purpose }}</td>
-                                    <td class="text-end fw-bold text-success">
-                                        ৳{{ number_format($txn->amount, 2) }}
-                                    </td>
-                                    <td>
-                                        <small class="text-muted">
-                                            {{ $txn->created_at?->format('d M Y, h:i A') }}
-                                        </small>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            @endif
 
         </div>
 
