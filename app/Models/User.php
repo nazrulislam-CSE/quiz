@@ -108,6 +108,22 @@ class User extends Authenticatable
         return $this->hasMany(CourseOrder::class);
     }
 
+    /**
+     * Orders যেখানে এই user buyer
+     */
+    public function courseOrdersAsBuyer()
+    {
+        return $this->hasMany(CourseOrder::class, 'user_id');
+    }
+
+    /**
+     * Orders যেখানে এই user student (access পাবে)
+     */
+    public function courseOrdersAsStudent()
+    {
+        return $this->hasMany(CourseOrder::class, 'student_id');
+    }
+
 
 
 

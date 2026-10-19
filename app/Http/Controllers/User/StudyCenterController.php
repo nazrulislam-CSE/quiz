@@ -4,7 +4,6 @@ namespace App\Http\Controllers\User;
 
 use App\EPS\EPSPayment;
 use App\Http\Controllers\Controller;
-use App\Models\Commission;
 use App\Models\Course;
 use App\Models\CourseOrder;
 use App\Models\Generation;
@@ -19,7 +18,7 @@ use Illuminate\Support\Str;
 class StudyCenterController extends Controller
 {
     /* ============================================================
-       Study Center — course list
+       STUDY CENTER — Course List
     ============================================================ */
     public function index()
     {
@@ -34,7 +33,7 @@ class StudyCenterController extends Controller
     }
 
     /* ============================================================
-       Single Course Details
+       SINGLE COURSE DETAILS
     ============================================================ */
     public function show(string $slug)
     {
@@ -43,6 +42,7 @@ class StudyCenterController extends Controller
                         ->where('status', 'active')
                         ->firstOrFail();
 
+        // View count (session-based dedup)
         $viewKey = 'viewed_course_' . $course->id;
         if (!session()->has($viewKey)) {
             $course->increment('view_count');
@@ -51,6 +51,7 @@ class StudyCenterController extends Controller
 
         $pageTitle = $course->title;
 
+        // Related courses
         $relatedCourses = Course::with(['courseType', 'courseClass'])
                                 ->where('course_category_id', $course->course_category_id)
                                 ->where('id', '!=', $course->id)
@@ -58,27 +59,50 @@ class StudyCenterController extends Controller
                                 ->take(3)
                                 ->get();
 
+        // Already owned?
         $alreadyOwned = false;
         if (Auth::check()) {
-            $alreadyOwned = CourseOrder::where('user_id', Auth::id())
-                                       ->where('course_id', $course->id)
-                                       ->where('payment_status', 'paid')
-                                       ->exists();
+            $alreadyOwned = CourseOrder::where('student_id', Auth::id())
+                                    ->where('course_id', $course->id)
+                                    ->where('payment_status', 'paid')
+                                    ->exists();
         }
+
+        /* ============================================================
+           STUDENT LIST (self exclude + admin exclude) — Gift purchase
+        ============================================================ */
+        $students = Auth::check()
+            ? User::whereNotIn('id', [1, 2])
+                ->where('id', '!=', Auth::id())
+                ->where('status', '1')
+                ->orderBy('full_name')
+                ->get(['id', 'full_name', 'username', 'email', 'phone'])
+            : collect();
 
         return view('user.study.center.show', compact(
             'pageTitle',
             'course',
             'relatedCourses',
-            'alreadyOwned'
+            'alreadyOwned',
+            'students'
         ));
     }
 
     /* ============================================================
-       BUY — EPS Initialize
+       BUY — EPS Initialize (Self + Gift)
     ============================================================ */
     public function buy(Request $request, Course $course)
     {
+        /* ===== Validate ===== */
+        $request->validate([
+            'purchase_for' => 'required|in:self,other',
+            'student_id'   => 'nullable|required_if:purchase_for,other|exists:users,id',
+        ], [
+            'student_id.required_if' => 'অনুগ্রহ করে একজন Student select করুন।',
+            'student_id.exists'      => 'Selected student পাওয়া যায়নি।',
+        ]);
+
+        /* ===== Basic Checks ===== */
         if ($course->status !== 'active') {
             return back()->with('error', 'এই কোর্সটি এখন পাওয়া যাচ্ছে না।');
         }
@@ -87,15 +111,54 @@ class StudyCenterController extends Controller
             return back()->with('error', 'ফ্রি কোর্স কেনার প্রয়োজন নেই।');
         }
 
-        $alreadyOwned = CourseOrder::where('user_id', Auth::id())
-                                   ->where('course_id', $course->id)
-                                   ->where('payment_status', 'paid')
-                                   ->exists();
+        $buyer  = Auth::user();
+        $isGift = $request->purchase_for === 'other';
 
-        if ($alreadyOwned) {
+        /* ===== Determine Student ===== */
+        $studentId    = null;
+        $studentName  = null;
+        $studentEmail = null;
+        $studentPhone = null;
+
+        if (! $isGift) {
+            // Self purchase
+            $studentId    = $buyer->id;
+            $studentName  = $buyer->full_name;
+            $studentEmail = $buyer->email;
+            $studentPhone = $buyer->phone;
+        } else {
+            // Gift purchase — MUST be existing user
+            $studentUser = User::where('id', $request->student_id)
+                               ->where('status', '1')
+                               ->first();
+
+            if (! $studentUser) {
+                return back()->with('error', 'Selected student পাওয়া যায়নি।');
+            }
+
+            if ($studentUser->id === $buyer->id) {
+                return back()->with('error', 'নিজেকে gift করা যাবে না।');
+            }
+
+            $studentId    = $studentUser->id;
+            $studentName  = $studentUser->full_name;
+            $studentEmail = $studentUser->email;
+            $studentPhone = $studentUser->phone;
+        }
+
+        /* ===== Duplicate block — same student already owns this course ===== */
+        $duplicateQuery = CourseOrder::where('course_id', $course->id)
+                                     ->where('student_id', $studentId)
+                                     ->where('payment_status', 'paid');
+
+        if ($duplicateQuery->exists()) {
+            $msg = $isGift
+                ? 'এই student ইতিমধ্যে এই কোর্সটি পেয়েছেন।'
+                : 'আপনি ইতিমধ্যে এই কোর্সটি কিনেছেন।';
+
             return redirect()
-                ->route('study.center.course.show', $course->slug)
-                ->with('success', 'আপনি ইতিমধ্যে এই কোর্সটি কিনেছেন।');
+                ->route('user.study.center.course.show', $course->slug)
+                ->with('success', $msg);
         }
 
         $amount = (float) $course->final_price;
@@ -109,9 +172,15 @@ class StudyCenterController extends Controller
             $merchantTransactionId = 'EPS' . now()->format('YmdHis') . rand(10000, 99999);
             $orderNo               = 'ORD-' . strtoupper(Str::random(10));
 
+            /* ===== Store in session for callback ===== */
             session([
                 'course_payment_data' => [
-                    'user_id'                 => Auth::id(),
+                    'user_id'                 => $buyer->id,
+                    'student_id'              => $studentId,
+                    'student_name'            => $studentName,
+                    'student_email'           => $studentEmail,
+                    'student_phone'           => $studentPhone,
+                    'is_gift'                 => $isGift,
                     'course_id'               => $course->id,
                     'amount'                  => $amount,
                     'order_no'                => $orderNo,
@@ -129,38 +198,38 @@ class StudyCenterController extends Controller
             ]];
 
             $payload = [
-                'CustomerOrderId'    => $customerOrderId,
-                'totalAmount'        => $amount,
-                'ipAddress'          => $request->ip(),
-                'successUrl'         => route('user.course.payment.success'),
-                'failUrl'            => route('user.course.payment.fail'),
-                'cancelUrl'          => route('user.course.payment.cancel'),
-                'customerName'       => Auth::user()->full_name ?? '',
-                'customerEmail'      => Auth::user()->email ?? '',
-                'customerAddress'    => Auth::user()->address ?? '',
-                'customerAddress2'   => '',
-                'customerCity'       => Auth::user()->city ?? 'Dhaka',
-                'customerState'      => Auth::user()->state ?? 'Dhaka',
-                'customerPostcode'   => Auth::user()->postcode ?? '1000',
-                'customerCountry'    => 'BD',
-                'customerPhone'      => Auth::user()->phone ?? '01700000000',
-                'shipmentName'       => Auth::user()->full_name ?? '',
-                'shipmentAddress'    => Auth::user()->address ?? '',
-                'shipmentAddress2'   => '',
-                'shipmentCity'       => Auth::user()->city ?? 'Dhaka',
-                'shipmentState'      => Auth::user()->state ?? 'Dhaka',
-                'shipmentPostcode'   => Auth::user()->postcode ?? '1000',
-                'shipmentCountry'    => 'BD',
-                'valueA'             => (string) Auth::id(),
-                'valueB'             => $merchantTransactionId,
-                'valueC'             => 'course_' . $course->id,
-                'valueD'             => '',
-                'shippingMethod'     => 'Digital',
-                'noOfItem'           => '1',
-                'productName'        => $course->title,
-                'productProfile'     => 'Course',
-                'productCategory'    => 'Course',
-                'ProductList'        => $productArr,
+                'CustomerOrderId'  => $customerOrderId,
+                'totalAmount'      => $amount,
+                'ipAddress'        => $request->ip(),
+                'successUrl'       => route('user.course.payment.success'),
+                'failUrl'          => route('user.course.payment.fail'),
+                'cancelUrl'        => route('user.course.payment.cancel'),
+                'customerName'     => $buyer->full_name ?? '',
+                'customerEmail'    => $buyer->email ?? '',
+                'customerAddress'  => $buyer->address ?? '',
+                'customerAddress2' => '',
+                'customerCity'     => $buyer->city ?? 'Dhaka',
+                'customerState'    => $buyer->state ?? 'Dhaka',
+                'customerPostcode' => $buyer->postcode ?? '1000',
+                'customerCountry'  => 'BD',
+                'customerPhone'    => $buyer->phone ?? '01700000000',
+                'shipmentName'     => $buyer->full_name ?? '',
+                'shipmentAddress'  => $buyer->address ?? '',
+                'shipmentAddress2' => '',
+                'shipmentCity'     => $buyer->city ?? 'Dhaka',
+                'shipmentState'    => $buyer->state ?? 'Dhaka',
+                'shipmentPostcode' => $buyer->postcode ?? '1000',
+                'shipmentCountry'  => 'BD',
+                'valueA'           => (string) $buyer->id,
+                'valueB'           => $merchantTransactionId,
+                'valueC'           => 'course_' . $course->id,
+                'valueD'           => '',
+                'shippingMethod'   => 'Digital',
+                'noOfItem'         => '1',
+                'productName'      => $course->title,
+                'productProfile'   => 'Course',
+                'productCategory'  => 'Course',
+                'ProductList'      => $productArr,
             ];
 
             $epsPayment = new EPSPayment;
@@ -200,7 +269,7 @@ class StudyCenterController extends Controller
             session()->forget('course_payment_data');
             Log::error('Course EPS Initialize Error', [
                 'message'   => $e->getMessage(),
-                'user_id'   => Auth::id(),
+                'user_id'   => $buyer->id,
                 'course_id' => $course->id,
             ]);
 
@@ -227,10 +296,9 @@ class StudyCenterController extends Controller
                 null;
 
             if (! $merchantTransactionId) {
-                Log::error('Course EPS: Transaction ID not found');
                 session()->forget('course_payment_data');
 
-                return redirect()->route('study.center')
+                return redirect()->route('user.study.center')
                     ->with('error', 'Transaction তথ্য পাওয়া যায়নি।');
             }
 
@@ -240,11 +308,11 @@ class StudyCenterController extends Controller
                 session()->forget('course_payment_data');
 
                 return redirect()
-                    ->route('study.center.course.show', $existingOrder->course->slug ?? '')
+                    ->route('user.study.center.course.show', $existingOrder->course->slug ?? '')
                     ->with('success', 'এই payment ইতিমধ্যে প্রক্রিয়াকৃত হয়েছে।');
             }
 
-            /* ===== STEP 3: EPS Verify API ===== */
+            /* ===== STEP 3: EPS Verify ===== */
             $epsPayment = new EPSPayment;
             $verifyResponse = $epsPayment->checkPaymentStatus($merchantTransactionId);
 
@@ -261,29 +329,25 @@ class StudyCenterController extends Controller
             ) {
                 session()->forget('course_payment_data');
 
-                return redirect()->route('study.center')
+                return redirect()->route('user.study.center')
                     ->with('error', 'Payment Verify করা সম্ভব হয়নি।');
             }
 
             /* ===== STEP 5: EPS Status ===== */
             $epsStatus = strtolower(trim($verifyResponse['Status'] ?? ''));
-
             if ($epsStatus !== 'success') {
                 session()->forget('course_payment_data');
 
-                return redirect()->route('study.center')
+                return redirect()->route('user.study.center')
                     ->with('error', 'Payment সফল হয়নি। Status: ' . ($verifyResponse['Status'] ?? 'Unknown'));
             }
 
             /* ===== STEP 6: Txn ID Match ===== */
             $verifiedMerchantTransactionId = $verifyResponse['MerchantTransactionId'] ?? null;
-            if (
-                $verifiedMerchantTransactionId &&
-                $verifiedMerchantTransactionId !== $merchantTransactionId
-            ) {
+            if ($verifiedMerchantTransactionId && $verifiedMerchantTransactionId !== $merchantTransactionId) {
                 session()->forget('course_payment_data');
 
-                return redirect()->route('study.center')
+                return redirect()->route('user.study.center')
                     ->with('error', 'Transaction ID verification ব্যর্থ হয়েছে।');
             }
 
@@ -294,7 +358,7 @@ class StudyCenterController extends Controller
             if ($originalAmount > 0 && abs($originalAmount - $verifiedAmount) > 0.01) {
                 session()->forget('course_payment_data');
 
-                return redirect()->route('study.center')
+                return redirect()->route('user.study.center')
                     ->with('error', 'Payment amount verification ব্যর্থ হয়েছে।');
             }
 
@@ -308,18 +372,27 @@ class StudyCenterController extends Controller
             DB::beginTransaction();
 
             try {
-                $user = User::findOrFail($sessionData['user_id'] ?? Auth::id());
+                $buyer  = User::findOrFail($sessionData['user_id'] ?? Auth::id());
                 $course = Course::findOrFail($sessionData['course_id']);
 
-                /* ----- Commission Base Amount -----
-                   discount_price থাকলে সেটাই, না থাকলে price */
                 $commissionBase = (float) ($course->discount_price ?? $course->price);
 
                 /* ----- Create Course Order ----- */
                 $order = CourseOrder::create([
-                    'user_id'                 => $user->id,
+                    'user_id'                 => $buyer->id,
+                    'student_id'              => $sessionData['student_id'] ?? null,
                     'course_id'               => $course->id,
                     'order_no'                => $sessionData['order_no'] ?? ('ORD-' . strtoupper(Str::random(10))),
+
+                    'is_gift'                 => (bool) ($sessionData['is_gift'] ?? false),
+
+                    'buyer_name'              => $buyer->full_name,
+                    'buyer_email'             => $buyer->email,
+                    'buyer_phone'             => $buyer->phone,
+
+                    'student_name'            => $sessionData['student_name'] ?? $buyer->full_name,
+                    'student_email'           => $sessionData['student_email'] ?? $buyer->email,
+                    'student_phone'           => $sessionData['student_phone'] ?? $buyer->phone,
 
                     'price'                   => $course->price,
                     'discount_price'          => $course->discount_price,
@@ -344,38 +417,30 @@ class StudyCenterController extends Controller
 
                 /* ----- Transaction: Course Purchase ----- */
                 Transaction::create([
-                    'from_id'   => $user->id,
-                    'user_id'   => $user->id,
-                    'from_user' => $user->id,
+                    'from_id'   => $buyer->id,
+                    'user_id'   => $buyer->id,
+                    'from_user' => $buyer->id,
                     'out'       => 'in',
                     'status'    => 'success',
                     'purpose'   => 'Course Purchase: ' . $course->title,
                     'amount'    => $verifiedAmount,
                 ]);
 
-                /* ============================================================
-                   REFERRAL COMMISSION DISTRIBUTE
-                   Direct 20% | 1st Gen 10% | 2nd Gen 5%
-                   Commission base: discount_price (fallback: price)
-                ============================================================ */
-                $this->referCourseCommission($user, $commissionBase, $course, $order);
+                /* ----- Commission distribute (Buyer chain-এ) ----- */
+                $this->referCourseCommission($buyer, $commissionBase, $course, $order);
 
                 DB::commit();
 
                 session()->forget('course_payment_data');
 
-                Log::info('Course Order + Commission Created', [
-                    'order_id'  => $order->id,
-                    'order_no'  => $order->order_no,
-                    'user_id'   => $user->id,
-                    'course_id' => $course->id,
-                    'amount'    => $order->paid_amount,
-                    'commission_base' => $commissionBase,
-                ]);
+                $isGift = (bool) ($sessionData['is_gift'] ?? false);
+                $msg = $isGift
+                    ? '🎉 ' . ($sessionData['student_name'] ?? 'Student') . '-এর জন্য কোর্স সফলভাবে কেনা হয়েছে!'
+                    : '🎉 অভিনন্দন! আপনার কোর্স সফলভাবে কেনা হয়েছে।';
 
                 return redirect()
-                    ->route('study.center.course.show', $course->slug)
-                    ->with('success', '🎉 অভিনন্দন! আপনার কোর্স সফলভাবে কেনা হয়েছে।');
+                    ->route('user.study.center.course.show', $course->slug)
+                    ->with('success', $msg);
 
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -392,19 +457,14 @@ class StudyCenterController extends Controller
                 'request' => $request->all(),
             ]);
 
-            return redirect()->route('study.center')
+            return redirect()->route('user.study.center')
                 ->with('error', 'Payment verification এ সমস্যা হয়েছে।');
         }
     }
 
-   /* ============================================================
-   REFERRAL COURSE COMMISSION (FIXED)
-   
-   Buyer নিজেই      → 20% (Cashback)
-   Direct Referrer  → 10%
-   1st Gen Referrer → 5%
-   
-    Base amount = discount_price (fallback: price)
+    /* ============================================================
+       REFERRAL COURSE COMMISSION
+       Buyer নিজেই 20% | Direct 10% | 1st Gen 5%
     ============================================================ */
     public function referCourseCommission(User $user, float $baseAmount, Course $course, CourseOrder $order): bool
     {
@@ -445,33 +505,12 @@ class StudyCenterController extends Controller
 
         /* ===== STEP 2: Direct Referrer (10%) ===== */
         $directReferrerId = $user->refer_by;
-
         if (! $directReferrerId) {
-            Log::info('Course Commission: No direct referrer', [
-                'user_id' => $user->id,
-                'order_id' => $order->id,
-            ]);
-
             return true;
         }
 
         $directReferrer = User::lockForUpdate()->find($directReferrerId);
-
-        if (! $directReferrer) {
-            Log::warning('Course Commission: Direct Referrer Not Found', [
-                'user_id'  => $user->id,
-                'refer_id' => $directReferrerId,
-            ]);
-
-            return true;
-        }
-
-        /* Self-commission protection */
-        if ($directReferrer->id === $user->id) {
-            Log::warning('Course Commission: Direct Referrer = Buyer (skipped)', [
-                'user_id' => $user->id,
-            ]);
-
+        if (! $directReferrer || $directReferrer->id === $user->id) {
             return true;
         }
 
@@ -501,23 +540,16 @@ class StudyCenterController extends Controller
             ]);
         }
 
-        /* ===== STEP 3: 1st Generation Referrer (5%) ===== */
+        /* ===== STEP 3: 1st Gen (5%) ===== */
         $firstGenReferrerId = $directReferrer->refer_by;
-
         if (! $firstGenReferrerId) {
             return true;
         }
 
         $firstGenReferrer = User::lockForUpdate()->find($firstGenReferrerId);
-
-        if (! $firstGenReferrer) {
-            return true;
-        }
-
-        /* Self-commission protection */
-        if (
-            $firstGenReferrer->id === $user->id ||
-            $firstGenReferrer->id === $directReferrer->id
+        if (! $firstGenReferrer
+            || $firstGenReferrer->id === $user->id
+            || $firstGenReferrer->id === $directReferrer->id
         ) {
             return true;
         }
@@ -548,24 +580,11 @@ class StudyCenterController extends Controller
             ]);
         }
 
-        /* ===== Log ===== */
-        Log::info('Course Commission Distributed', [
-            'buyer_id'          => $user->id,
-            'order_id'          => $order->id,
-            'course_id'         => $course->id,
-            'base_amount'       => $baseAmount,
-            'buyer_amount'      => $buyerCommission,
-            'direct_referrer'   => $directReferrer->id,
-            'direct_amount'     => $directCommission,
-            'first_gen_id'      => $firstGenReferrer->id,
-            'first_amount'      => $firstCommission,
-        ]);
-
         return true;
     }
 
     /* ============================================================
-       PAYMENT FAIL — No Order
+       PAYMENT FAIL / CANCEL
     ============================================================ */
     public function paymentFail(Request $request)
     {
@@ -576,9 +595,6 @@ class StudyCenterController extends Controller
             ->with('error', '❌ Payment ব্যর্থ হয়েছে। টাকা কাটা হয়নি। আবার চেষ্টা করুন।');
     }
 
-    /* ============================================================
-       PAYMENT CANCEL — No Order
-    ============================================================ */
     public function paymentCancel(Request $request)
     {
         Log::info('Course EPS Cancel Callback', $request->all());
@@ -589,19 +605,41 @@ class StudyCenterController extends Controller
     }
 
     /* ============================================================
-       MY COURSES
+       MY COURSES — যেখানে এই user student
     ============================================================ */
     public function myCourses()
     {
         $pageTitle = 'আমার কোর্সসমূহ';
 
-        $orders = CourseOrder::with(['course.courseType', 'course.courseClass'])
-                             ->where('user_id', Auth::id())
-                             ->where('payment_status', 'paid')
-                             ->latest()
-                             ->get();
+        $userId = Auth::id();
 
-        return view('user.study.center.my-courses', compact('pageTitle', 'orders'));
+        /* ============================================================
+        MY COURSES — আমি যেসব কোর্স কিনেছি/পেয়েছি
+        ============================================================ */
+        $orders = CourseOrder::with(['course.courseType', 'course.courseClass', 'user'])
+                            ->where(function ($q) use ($userId) {
+                                $q->where('student_id', $userId)
+                                ->orWhere(function ($q2) use ($userId) {
+                                    $q2->whereNull('student_id')
+                                        ->where('user_id', $userId);
+                                });
+                            })
+                            ->where('payment_status', 'paid')
+                            ->latest()
+                            ->get();
+
+        /* ============================================================
+        GIFTED COURSES — আমি যাদেরকে গিফট করেছি
+        (buyer = me AND is_gift = true)
+        ============================================================ */
+        $giftOrders = CourseOrder::with(['course.courseType', 'course.courseClass', 'student'])
+                                ->where('user_id', $userId)
+                                ->where('is_gift', true)
+                                ->where('payment_status', 'paid')
+                                ->latest()
+                                ->get();
+
+        return view('user.study.center.my-courses', compact('pageTitle', 'orders', 'giftOrders'));
     }
 
     /* ============================================================
@@ -609,10 +647,15 @@ class StudyCenterController extends Controller
     ============================================================ */
     public function voucher(string $order_no)
     {
-        $order = CourseOrder::with(['course.courseType', 'course.courseClass'])
-                            ->where('user_id', Auth::id())
+        $userId = Auth::id();
+
+        $order = CourseOrder::with(['course.courseType', 'course.courseClass', 'user', 'student'])
                             ->where('order_no', $order_no)
                             ->where('payment_status', 'paid')
+                            ->where(function ($q) use ($userId) {
+                                $q->where('user_id', $userId)
+                                  ->orWhere('student_id', $userId);
+                            })
                             ->firstOrFail();
 
         $pageTitle = 'কোর্স ভাউচার';

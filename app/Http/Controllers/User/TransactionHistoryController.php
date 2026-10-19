@@ -13,11 +13,9 @@ class TransactionHistoryController extends Controller
     {
         $user = Auth::user();
 
-        // =====================================================
-        // BASE QUERY
-        // ✅ শুধু user_id — from_id বাদ
-        // কারণ: History = আমার wallet এ কী হলো
-        // =====================================================
+        /* =====================================================
+           BASE QUERY — শুধু user_id (আমার wallet-এ কী হলো)
+        ===================================================== */
         $query = Transaction::where('user_id', $user->id);
 
         // Date Filter
@@ -30,19 +28,23 @@ class TransactionHistoryController extends Controller
 
         $transactions = $query->latest()->paginate(15)->withQueryString();
 
+        /* =====================================================
+           💰 WALLET BALANCES — Source of Truth = users table
+           ✅ Transaction sum থেকে recalculate না করে
+              users.main_wallet & users.income_wallet ব্যবহার
+        ===================================================== */
+        $mainWalletBalance   = (float) ($user->main_wallet   ?? 0);
+        $incomeWalletBalance = (float) ($user->income_wallet ?? 0);
 
-        // =====================================================
-        // 💰 MAIN WALLET
-        // Credit → EPS Deposit + Deposit Commission
-        // Debit  → Exam Fee
-        // =====================================================
+        /* =====================================================
+           💰 MAIN WALLET — Credit / Debit (display purposes)
+           Credit → EPS Deposit + Deposit Commission (Course Purchase বাদ)
+           Debit  → Exam Fee
+        ===================================================== */
         $mainWalletCredit = Transaction::where('user_id', $user->id)
             ->where('out', 'in')
-            ->whereIn('purpose', [
-                'EPS Balance Deposit',
-                'Deposit Commission',
-            ])
             ->whereIn('status', ['success', 'approved'])
+            ->where('purpose', 'not like', 'Course Purchase:%')
             ->sum('amount');
 
         $mainWalletDebit = Transaction::where('user_id', $user->id)
@@ -50,25 +52,13 @@ class TransactionHistoryController extends Controller
             ->whereIn('status', ['success', 'approved'])
             ->sum('amount');
 
-        $mainWalletBalance = $mainWalletCredit - $mainWalletDebit;
-
-
-        // =====================================================
-        // 💵 INCOME WALLET
-        // Credit → Referral (out=referral) + Recharge Commission (out=deposit)
-        // Debit  → Withdraw + Recharge
-        // =====================================================
+        /* =====================================================
+           💵 INCOME WALLET — Credit / Debit (display purposes)
+           ✅ Purpose whitelist সরিয়ে সব referral+deposit যোগ
+           কারণ: Course Commission purpose গুলো whitelist-এ ছিল না
+        ===================================================== */
         $incomeWalletCredit = Transaction::where('user_id', $user->id)
             ->whereIn('out', ['referral', 'deposit'])
-            ->whereIn('purpose', [
-                'Direct Referral Commission',
-                '1st Generation Referral Commission',
-                '2nd Generation Referral Commission',
-                'Recharge Self Commission',
-                'Recharge Referrer Commission',
-                'Recharge 1st Gen Commission',
-                'Recharge 2nd Gen Commission',
-            ])
             ->whereIn('status', ['success', 'approved'])
             ->sum('amount');
 
@@ -77,17 +67,13 @@ class TransactionHistoryController extends Controller
             ->whereIn('status', ['success', 'approved'])
             ->sum('amount');
 
-        $incomeWalletBalance = $incomeWalletCredit - $incomeWalletDebit;
-
-
-        // =====================================================
-        // TOTAL
-        // =====================================================
+        /* =====================================================
+           TOTAL
+        ===================================================== */
         $totalAmount       = $transactions->sum('amount');
         $totalTransactions = $transactions->total();
 
         $pageTitle = 'Transaction History';
-
 
         return view('user.transaction.history', compact(
             'transactions',

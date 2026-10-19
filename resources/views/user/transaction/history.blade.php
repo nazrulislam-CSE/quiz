@@ -145,15 +145,25 @@
                                 $out     = $transaction->out ?? '';
 
                                 // ============================================
-                                // 🎯 Type Determine (out column base)
+                                // 🎯 Course Purchase detect
+                                // out='in' হলেও এটা আসলে Debit (user টাকা দিয়েছে)
                                 // ============================================
-                                if ($out === 'in') {
+                                $isCoursePurchase = ($out === 'in' && \Str::startsWith($purpose, 'Course Purchase:'));
+
+                                // ============================================
+                                // 🎯 Type Determine
+                                // ============================================
+                                if ($isCoursePurchase) {
+                                    $type         = 'Purchase';
+                                    $typeBadge    = 'warning';
+                                    $amountPrefix = '-';
+                                } elseif ($out === 'in') {
                                     // EPS Deposit + Deposit Commission
                                     $type         = 'Credit';
                                     $typeBadge    = 'success';
                                     $amountPrefix = '+';
                                 } elseif ($out === 'referral') {
-                                    // Referral Commission
+                                    // সব Referral Commission + Course Commission
                                     $type         = 'Credit';
                                     $typeBadge    = 'success';
                                     $amountPrefix = '+';
@@ -177,7 +187,10 @@
                                 // ============================================
                                 // 🎯 Wallet Determine
                                 // ============================================
-                                if ($out === 'in') {
+                                if ($isCoursePurchase) {
+                                    $wallet      = 'Course Purchase';
+                                    $walletColor = 'warning';
+                                } elseif ($out === 'in') {
                                     // EPS Deposit + Deposit Commission → Main
                                     $wallet      = 'Main Wallet';
                                     $walletColor = 'success';
@@ -221,6 +234,8 @@
                                             🟢 Credit
                                         @elseif($type === 'Debit')
                                             🔴 Debit
+                                        @elseif($type === 'Purchase')
+                                            🛒 Purchase
                                         @else
                                             🔄 Transfer
                                         @endif
@@ -261,6 +276,8 @@
                                             💵 {{ $wallet }}
                                         @elseif($wallet === 'Income → Main')
                                             🔄 {{ $wallet }}
+                                        @elseif($wallet === 'Course Purchase')
+                                            🛒 {{ $wallet }}
                                         @else
                                             {{ $wallet }}
                                         @endif
@@ -270,7 +287,7 @@
 
                                 {{-- Amount --}}
                                 <td class="text-nowrap">
-                                    <strong class="text-{{ $typeBadge }}">
+                                    <strong class="text-{{ $typeBadge === 'warning' ? 'danger' : $typeBadge }}">
                                         {{ $amountPrefix }}৳{{ number_format($transaction->amount ?? 0, 2) }}
                                     </strong>
                                 </td>
@@ -292,8 +309,6 @@
                         @endforelse
 
                     </tbody>
-
-                    {{-- ❌ tfoot বাদ --}}
 
                 </table>
             </div>
