@@ -6,368 +6,198 @@ use App\Http\Controllers\Controller;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class TransactionHistoryController extends Controller
 {
-    /**
-     * Transaction History
-     */
     public function transactionHistory(Request $request)
     {
         $user = Auth::user();
 
-        // =====================================================
-        // BASE QUERY
-        // শুধু user_id
-        // কারণ History = আমার Wallet-এ কী হয়েছে
-        // =====================================================
+        /* =====================================================
+           BASE QUERY
+        ===================================================== */
+        $query = Transaction::where('user_id', $user->id);
 
-        $query = Transaction::where(
-            'user_id',
-            $user->id
-        );
-
-        // =====================================================
-        // DATE FILTER
-        // =====================================================
-
+        // Date Filter
         if ($request->filled('from_date')) {
-
-            $query->whereDate(
-                'created_at',
-                '>=',
-                $request->from_date
-            );
+            $query->whereDate('created_at', '>=', $request->from_date);
         }
-
         if ($request->filled('to_date')) {
-
-            $query->whereDate(
-                'created_at',
-                '<=',
-                $request->to_date
-            );
+            $query->whereDate('created_at', '<=', $request->to_date);
         }
 
-        // =====================================================
-        // TRANSACTIONS
-        // =====================================================
+        $transactions = $query->latest()->paginate(15)->withQueryString();
 
-        $transactions = $query
-            ->latest()
-            ->paginate(15)
-            ->withQueryString();
+        /* =====================================================
+           💰 ACTUAL WALLET BALANCES
+           Source of truth = users table
+           (Transaction sum থেকে recalculate না)
+        ===================================================== */
+        $mainWalletBalance   = (float) ($user->main_wallet   ?? 0);
+        $incomeWalletBalance = (float) ($user->income_wallet ?? 0);
 
-
-        // =====================================================
-        // MAIN WALLET
-        //
-        // Credit:
-        // EPS Deposit
-        // Deposit Commission
-        //
-        // Debit:
-        // Exam Fee
-        // =====================================================
-
-        $mainWalletCredit = Transaction::where(
-                'user_id',
-                $user->id
-            )
+        /* =====================================================
+           💰 MAIN WALLET — Credit / Debit (display purposes)
+           Credit → EPS Deposit + Deposit Commission (Course Purchase বাদ)
+           Debit  → Exam Fee
+        ===================================================== */
+        $mainWalletCredit = Transaction::where('user_id', $user->id)
             ->where('out', 'in')
-            ->whereIn('purpose', [
-                'EPS Balance Deposit',
-                'Deposit Commission',
-            ])
-            ->whereIn('status', [
-                'success',
-                'approved',
-            ])
+            ->whereIn('status', ['success', 'approved'])
+            ->where('purpose', 'not like', 'Course Purchase:%')
             ->sum('amount');
 
-
-        $mainWalletDebit = Transaction::where(
-                'user_id',
-                $user->id
-            )
+        $mainWalletDebit = Transaction::where('user_id', $user->id)
             ->where('out', 'exam_fee')
-            ->whereIn('status', [
-                'success',
-                'approved',
-            ])
+            ->whereIn('status', ['success', 'approved'])
             ->sum('amount');
 
+        $mainWalletTransactionBalance = $mainWalletCredit - $mainWalletDebit;
 
-        $mainWalletTransactionBalance =
-            $mainWalletCredit -
-            $mainWalletDebit;
-
-
-        // =====================================================
-        // INCOME WALLET
-        //
-        // Credit:
-        // Referral Commission
-        // Generation Commission
-        // Recharge Commission
-        //
-        // Debit:
-        // Withdraw
-        // Recharge
-        // =====================================================
-
-        $incomeWalletCredit = Transaction::where(
-                'user_id',
-                $user->id
-            )
-            ->whereIn('out', [
-                'referral',
-                'deposit',
-            ])
-            ->whereIn('purpose', [
-
-                'Direct Referral Commission',
-
-                '1st Generation Referral Commission',
-
-                '2nd Generation Referral Commission',
-
-                'Recharge Self Commission',
-
-                'Recharge Referrer Commission',
-
-                'Recharge 1st Gen Commission',
-
-                'Recharge 2nd Gen Commission',
-
-            ])
-            ->whereIn('status', [
-                'success',
-                'approved',
-            ])
+        /* =====================================================
+           💵 INCOME WALLET — Credit / Debit (display purposes)
+           ✅ Purpose whitelist সরানো — সব referral+deposit যোগ
+           (Course Commission purpose গুলো whitelist-এ ছিল না)
+        ===================================================== */
+        $incomeWalletCredit = Transaction::where('user_id', $user->id)
+            ->whereIn('out', ['referral', 'deposit'])
+            ->whereIn('status', ['success', 'approved'])
             ->sum('amount');
 
-
-        $incomeWalletDebit = Transaction::where(
-                'user_id',
-                $user->id
-            )
-            ->whereIn('out', [
-                'withdraw',
-                'recharge',
-            ])
-            ->whereIn('status', [
-                'success',
-                'approved',
-            ])
+        $incomeWalletDebit = Transaction::where('user_id', $user->id)
+            ->whereIn('out', ['withdraw', 'recharge'])
+            ->whereIn('status', ['success', 'approved'])
             ->sum('amount');
 
+        $incomeWalletTransactionBalance = $incomeWalletCredit - $incomeWalletDebit;
 
-        $incomeWalletTransactionBalance =
-            $incomeWalletCredit -
-            $incomeWalletDebit;
+        /* =====================================================
+           TOTAL
+        ===================================================== */
+        $totalAmount       = $transactions->getCollection()->sum('amount');
+        $totalTransactions = $transactions->total();
 
+        /* =====================================================
+           TRANSACTION DATA — with proper type detection
+        ===================================================== */
+        $transactionData = $transactions->getCollection()->map(function ($transaction) {
 
-        // =====================================================
-        // CURRENT ACTUAL WALLET BALANCE
-        // User table থেকে বর্তমান balance
-        // =====================================================
+            $purpose = $transaction->purpose ?? '';
+            $out     = $transaction->out ?? '';
 
-        $mainWalletBalance =
-            (float) $user->main_wallet;
+            /* ============================================================
+               🎯 Course Purchase detection
+               out='in' হলেও এটা আসলে Debit (user টাকা দিয়েছে)
+            ============================================================ */
+            $isCoursePurchase = ($out === 'in' && Str::startsWith($purpose, 'Course Purchase:'));
 
-        $incomeWalletBalance =
-            (float) $user->income_wallet;
-
-
-        // =====================================================
-        // TOTAL
-        // =====================================================
-
-        $totalAmount =
-            $transactions->getCollection()->sum('amount');
-
-        $totalTransactions =
-            $transactions->total();
-
-
-        // =====================================================
-        // TRANSACTION DATA
-        // =====================================================
-
-        $transactionData = $transactions
-            ->getCollection()
-            ->map(function ($transaction) {
-
-                // Default type
+            /* ============================================================
+               🎯 Type Determine
+            ============================================================ */
+            if ($isCoursePurchase) {
+                $type = 'purchase';
+            } elseif (in_array($out, ['exam_fee', 'withdraw', 'recharge'])) {
+                $type = 'debit';
+            } elseif ($out === 'transfer') {
+                $type = 'transfer';
+            } elseif (in_array($out, ['in', 'referral', 'deposit'])) {
                 $type = 'credit';
+            } else {
+                $type = 'debit';
+            }
 
-                // Debit transaction
-                if (
-                    in_array(
-                        $transaction->out,
-                        [
-                            'exam_fee',
-                            'withdraw',
-                            'recharge',
-                        ]
-                    )
-                ) {
-                    $type = 'debit';
-                }
+            /* ============================================================
+               🎯 Wallet Determine
+            ============================================================ */
+            if ($isCoursePurchase) {
+                $wallet = 'course_purchase';
+            } elseif ($out === 'in' || $out === 'exam_fee') {
+                $wallet = 'main_wallet';
+            } elseif (in_array($out, ['referral', 'deposit', 'withdraw', 'recharge'])) {
+                $wallet = 'income_wallet';
+            } elseif ($out === 'transfer') {
+                $wallet = 'income_to_main';
+            } else {
+                $wallet = 'unknown';
+            }
 
-                // Transfer transaction
-                if (
-                    $transaction->out === 'transfer'
-                ) {
-                    $type = 'transfer';
-                }
+            return [
+                'id'                 => $transaction->id,
+                'from_id'            => $transaction->from_id,
+                'user_id'            => $transaction->user_id,
+                'from_user'          => $transaction->from_user,
 
-                return [
+                'type'               => $type,              // credit | debit | transfer | purchase
+                'wallet'             => $wallet,            // main_wallet | income_wallet | course_purchase | income_to_main
+                'transaction_type'   => $out,               // raw out column
 
-                    'id' =>
-                        $transaction->id,
+                'is_course_purchase' => $isCoursePurchase,
 
-                    'from_id' =>
-                        $transaction->from_id,
+                'status'             => $transaction->status,
+                'purpose'            => $purpose,
+                'amount'             => (float) $transaction->amount,
+                'date'               => $transaction->created_at
+                    ? $transaction->created_at->format('Y-m-d H:i:s')
+                    : null,
+            ];
+        })->values();
 
-                    'user_id' =>
-                        $transaction->user_id,
-
-                    'from_user' =>
-                        $transaction->from_user,
-
-                    'type' =>
-                        $type,
-
-                    'transaction_type' =>
-                        $transaction->out,
-
-                    'status' =>
-                        $transaction->status,
-
-                    'purpose' =>
-                        $transaction->purpose,
-
-                    'amount' =>
-                        (float) $transaction->amount,
-
-                    'date' =>
-                        $transaction->created_at
-                            ? $transaction->created_at
-                                ->format('Y-m-d H:i:s')
-                            : null,
-                ];
-            })
-            ->values();
-
-
-        // =====================================================
-        // API RESPONSE
-        // =====================================================
-
+        /* =====================================================
+           API RESPONSE
+        ===================================================== */
         return response()->json([
-
             'success' => true,
-
-            'message' =>
-                'Transaction history retrieved successfully.',
+            'message' => 'Transaction history retrieved successfully.',
 
             'data' => [
 
-                // =================================================
-                // WALLET SUMMARY
-                // =================================================
-
+                /* =================================================
+                   WALLET SUMMARY
+                ================================================= */
                 'wallet' => [
-
                     'main_wallet' => [
-
-                        'balance' =>
-                            $mainWalletBalance,
-
-                        'total_credit' =>
-                            (float) $mainWalletCredit,
-
-                        'total_debit' =>
-                            (float) $mainWalletDebit,
-
-                        'transaction_balance' =>
-                            (float) $mainWalletTransactionBalance,
+                        'balance'             => $mainWalletBalance,
+                        'total_credit'        => (float) $mainWalletCredit,
+                        'total_debit'         => (float) $mainWalletDebit,
+                        'transaction_balance' => (float) $mainWalletTransactionBalance,
                     ],
 
                     'income_wallet' => [
-
-                        'balance' =>
-                            $incomeWalletBalance,
-
-                        'total_credit' =>
-                            (float) $incomeWalletCredit,
-
-                        'total_debit' =>
-                            (float) $incomeWalletDebit,
-
-                        'transaction_balance' =>
-                            (float) $incomeWalletTransactionBalance,
+                        'balance'             => $incomeWalletBalance,
+                        'total_credit'        => (float) $incomeWalletCredit,
+                        'total_debit'         => (float) $incomeWalletDebit,
+                        'transaction_balance' => (float) $incomeWalletTransactionBalance,
                     ],
 
-                    'total_wallet_balance' =>
-                        $mainWalletBalance +
-                        $incomeWalletBalance,
+                    'total_wallet_balance' => $mainWalletBalance + $incomeWalletBalance,
                 ],
 
+                /* =================================================
+                   TRANSACTIONS
+                ================================================= */
+                'transactions' => $transactionData,
 
-                // =================================================
-                // TRANSACTIONS
-                // =================================================
-
-                'transactions' =>
-                    $transactionData,
-
-
-                // =================================================
-                // SUMMARY
-                // =================================================
-
+                /* =================================================
+                   SUMMARY
+                ================================================= */
                 'summary' => [
-
-                    'total_amount' =>
-                        (float) $totalAmount,
-
-                    'total_transactions' =>
-                        $totalTransactions,
+                    'total_amount'       => (float) $totalAmount,
+                    'total_transactions' => $totalTransactions,
                 ],
 
-
-                // =================================================
-                // PAGINATION
-                // =================================================
-
+                /* =================================================
+                   PAGINATION
+                ================================================= */
                 'pagination' => [
-
-                    'current_page' =>
-                        $transactions->currentPage(),
-
-                    'last_page' =>
-                        $transactions->lastPage(),
-
-                    'per_page' =>
-                        $transactions->perPage(),
-
-                    'total' =>
-                        $transactions->total(),
-
-                    'from' =>
-                        $transactions->firstItem(),
-
-                    'to' =>
-                        $transactions->lastItem(),
-
-                    'next_page_url' =>
-                        $transactions->nextPageUrl(),
-
-                    'previous_page_url' =>
-                        $transactions->previousPageUrl(),
+                    'current_page'      => $transactions->currentPage(),
+                    'last_page'         => $transactions->lastPage(),
+                    'per_page'          => $transactions->perPage(),
+                    'total'             => $transactions->total(),
+                    'from'              => $transactions->firstItem(),
+                    'to'                => $transactions->lastItem(),
+                    'next_page_url'     => $transactions->nextPageUrl(),
+                    'previous_page_url' => $transactions->previousPageUrl(),
                 ],
             ],
         ]);

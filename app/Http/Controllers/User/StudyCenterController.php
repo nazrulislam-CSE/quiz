@@ -662,4 +662,16 @@ class StudyCenterController extends Controller
 
         return view('user.study.center.voucher', compact('pageTitle', 'order'));
     }
+
+    public function publicVoucher(string $order_no)
+    {
+        $order = CourseOrder::with(['course.courseType', 'course.courseClass', 'user', 'student'])
+                            ->where('order_no', $order_no)
+                            ->where('payment_status', 'paid')
+                            ->firstOrFail();
+
+        $pageTitle = 'কোর্স ভাউচার';
+
+        return view('user.study.center.voucher', compact('pageTitle', 'order'));
+    }
 }

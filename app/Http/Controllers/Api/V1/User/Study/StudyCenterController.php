@@ -5,30 +5,18 @@ namespace App\Http\Controllers\Api\V1\User\Study;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\CourseOrder;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class StudyCenterController extends Controller
 {
-    /**
-     * Study Center — Course List
-     * 
-     * Query Params:
-     * - per_page (int, default 15, max 100)
-     * - page (int, default 1)
-     * - search (string)
-     * - course_category_id (int)
-     * - course_class_id (int)
-     * - course_type_id (int)
-     * - is_free (boolean: 0/1)
-     * - sort (latest|price_low|price_high|popular)
-     */
+    /* ============================================================
+       INDEX — Course List (with filters, pagination, search)
+    ============================================================ */
     public function index(Request $request): JsonResponse
     {
-        /* ============================================================
-           VALIDATION
-        ============================================================ */
         $validated = $request->validate([
             'per_page'           => 'nullable|integer|min:1|max:100',
             'page'               => 'nullable|integer|min:1',
@@ -40,13 +28,10 @@ class StudyCenterController extends Controller
             'sort'               => 'nullable|in:latest,oldest,price_low,price_high,popular',
         ]);
 
-        /* ============================================================
-           QUERY BUILD
-        ============================================================ */
         $query = Course::with(['courseType', 'courseClass', 'courseCategory'])
                        ->where('status', 'active');
 
-        // Filter: Search (title + description)
+        // Search
         if (! empty($validated['search'])) {
             $search = $validated['search'];
             $query->where(function ($q) use ($search) {
@@ -55,73 +40,50 @@ class StudyCenterController extends Controller
             });
         }
 
-        // Filter: Course Category
+        // Filters
         if (! empty($validated['course_category_id'])) {
             $query->where('course_category_id', $validated['course_category_id']);
         }
-
-        // Filter: Course Class
         if (! empty($validated['course_class_id'])) {
             $query->where('course_class_id', $validated['course_class_id']);
         }
-
-        // Filter: Course Type
         if (! empty($validated['course_type_id'])) {
             $query->where('course_type_id', $validated['course_type_id']);
         }
-
-        // Filter: Is Free
         if (isset($validated['is_free']) && $validated['is_free'] !== '') {
             $isFree = in_array($validated['is_free'], ['1', 'true', true, 1], true);
             $query->where('is_free', $isFree);
         }
 
-        /* ============================================================
-           SORTING
-        ============================================================ */
+        // Sorting
         $sort = $validated['sort'] ?? 'latest';
-
         switch ($sort) {
             case 'oldest':
                 $query->oldest();
                 break;
-
             case 'price_low':
                 $query->orderByRaw('COALESCE(discount_price, price) ASC');
                 break;
-
             case 'price_high':
                 $query->orderByRaw('COALESCE(discount_price, price) DESC');
                 break;
-
             case 'popular':
                 $query->orderByDesc('view_count')->latest();
                 break;
-
-            case 'latest':
             default:
                 $query->latest();
                 break;
         }
 
-        /* ============================================================
-           PAGINATION
-        ============================================================ */
+        // Pagination
         $perPage = (int) ($validated['per_page'] ?? 15);
         $page    = (int) ($validated['page'] ?? 1);
 
         $courses = $query->paginate($perPage, ['*'], 'page', $page);
 
-        /* ============================================================
-           TRANSFORM
-        ============================================================ */
-        $transformed = collect($courses->items())->map(function ($course) {
-            return $this->transformCourse($course);
-        });
+        // Transform
+        $transformed = collect($courses->items())->map(fn ($c) => $this->transformCourse($c));
 
-        /* ============================================================
-           RESPONSE
-        ============================================================ */
         return response()->json([
             'success' => true,
             'message' => 'Study center courses retrieved successfully.',
@@ -152,9 +114,11 @@ class StudyCenterController extends Controller
         ], 200);
     }
 
-    /**
-     * Single Course Details
-     */
+    /* ============================================================
+       SHOW — Course Details
+       ✅ FIX: alreadyOwned এখন student_id দিয়ে check
+       ✅ NEW: can_purchase_self / can_purchase_gift flags
+    ============================================================ */
     public function show(string $slug): JsonResponse
     {
         $course = Course::with(['courseType', 'courseClass', 'courseCategory'])
@@ -181,13 +145,19 @@ class StudyCenterController extends Controller
             ->get()
             ->map(fn ($c) => $this->transformCourse($c));
 
+        /* ============================================================
+           ✅ FIX: alreadyOwned — student_id based (gift-ও ধরবে)
+           কারণ: আমি gift-এও এই course পেয়ে থাকতে পারি
+        ============================================================ */
         $alreadyOwned = false;
         if (Auth::check()) {
-            $alreadyOwned = CourseOrder::where('user_id', Auth::id())
+            $alreadyOwned = CourseOrder::where('student_id', Auth::id())
                 ->where('course_id', $course->id)
                 ->where('payment_status', 'paid')
                 ->exists();
         }
+
+        $isFree = (bool) $course->is_free;
 
         return response()->json([
             'success' => true,
@@ -195,14 +165,28 @@ class StudyCenterController extends Controller
             'data'    => [
                 'course'          => $this->transformCourse($course),
                 'already_owned'   => $alreadyOwned,
+                'is_free'         => $isFree,
+
+                /* ============================================================
+                   🎯 PURCHASE OPTIONS (Mobile app needs these flags)
+                   - can_purchase_self: নিজে কিনতে পারবে?
+                   - can_purchase_gift: অন্যকে গিফট করতে পারবে?
+                   - must_purchase_as_gift: শুধু gift করা যাবে?
+                ============================================================ */
+                'purchase_options' => [
+                    'can_purchase_self'       => !$isFree && !$alreadyOwned,
+                    'can_purchase_gift'       => !$isFree,
+                    'must_purchase_as_gift'   => !$isFree && $alreadyOwned,
+                ],
+
                 'related_courses' => $relatedCourses,
             ],
         ], 200);
     }
 
-    /**
-     * Transform course data for API
-     */
+    /* ============================================================
+       TRANSFORM — Course data for API
+    ============================================================ */
     private function transformCourse(Course $course): array
     {
         return [
@@ -215,7 +199,6 @@ class StudyCenterController extends Controller
                 ? asset('storage/' . $course->thumbnail)
                 : 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80',
 
-            // Teacher Information
             'teacher' => [
                 'name'        => $course->teacher_name,
                 'designation' => $course->teacher_designation,
@@ -225,7 +208,6 @@ class StudyCenterController extends Controller
                 'experience'  => $course->teacher_experience,
             ],
 
-            // Pricing
             'price'             => (float) $course->price,
             'discount_price'    => $course->discount_price !== null
                 ? (float) $course->discount_price
@@ -235,14 +217,12 @@ class StudyCenterController extends Controller
             'discount_percent'  => $course->discount_percent,
             'is_free'           => (bool) $course->is_free,
 
-            // Extra Information
             'duration'          => $course->duration,
             'total_class'       => $course->total_class,
             'view_count'        => (int) $course->view_count,
             'is_featured'       => (bool) $course->is_featured,
             'status'            => $course->status,
 
-            // Relations
             'course_type' => $course->courseType ? [
                 'id'   => $course->courseType->id,
                 'name' => $course->courseType->name,

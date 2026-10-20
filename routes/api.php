@@ -61,15 +61,15 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
     Route::prefix('user')->group(function () {
 
         // Public routes
-        Route::post('register', [UserAuthController::class, 'register']);  // Register
-        Route::post('login', [UserAuthController::class, 'login']);        // Send OTP
-        Route::post('verify-otp', [UserAuthController::class, 'verifyOtp']); // Verify OTP & Login
-        Route::post('resend-otp', [UserAuthController::class, 'resendOtp']); // Resend OTP
+        Route::post('register', [UserAuthController::class, 'register']);       // Register
+        Route::post('login', [UserAuthController::class, 'login']);             // Send OTP
+        Route::post('verify-otp', [UserAuthController::class, 'verifyOtp']);    // Verify OTP & Login
+        Route::post('resend-otp', [UserAuthController::class, 'resendOtp']);    // Resend OTP
         Route::post('/login-password', [UserAuthController::class, 'passwordLogin']); // Without Send Otp Login
 
         // Google Login
         Route::post('google-login', [UserAuthController::class, 'googleLogin']);
-        
+
         // Password Reset via Phone
         Route::post('forgot-password', [UserAuthController::class, 'sendResetLink']);
         Route::post('verify-code', [UserAuthController::class, 'verifyCode']);
@@ -77,6 +77,8 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
 
         // Protected routes (requires authentication)
         Route::middleware(['auth:sanctum'])->group(function () {
+
+            /* ================= AUTH / PROFILE ================= */
             Route::post('logout', [UserAuthController::class, 'logout']);
             Route::get('profile', [UserAuthController::class, 'profile']);
             Route::post('profile', [UserAuthController::class, 'updateProfile']);
@@ -85,82 +87,85 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
             Route::delete('delete-account', [UserAuthController::class, 'deleteAccount']);
             Route::get('dashboard', [UserController::class, 'dashboard']);
 
-            // Get admission list (active only)
+            /* ================= EXAM ================= */
             Route::get('/admissions', [AdmissionController::class, 'index']);
-            // Get departments list
             Route::get('/departments', [DepartmentController::class, 'index']);
-            // Get subjects list
             Route::get('/subjects', [SubjectController::class, 'index']);
-            // Get topis list
             Route::get('/topics', [TopicController::class, 'index']);
-            // Get mcqs list
             Route::get('/mcqs', [McqController::class, 'index']);
             Route::get('/mcqs/{id}', [McqController::class, 'show']);
-
-            // Get mcqs answers list
             Route::get('/mcq-answers', [McqAnswerController::class, 'index']);
 
-            // Exam routes
             Route::get('/exam/data', [ExamController::class, 'getExamData']);
             Route::post('/exam/submit', [ExamController::class, 'submitExam']);
             Route::get('/exam/result/{id}', [ExamController::class, 'viewExamResult']);
             Route::get('/exam/reports', [ExamController::class, 'getExamReports']);
 
-            // Balance Request
+            /* ================= WALLET ================= */
             Route::post('/balance-request', [BalanceRequestController::class, 'store']);
             Route::get('/balance-request', [BalanceRequestController::class, 'index']);
-
-            // Refer List
             Route::get('/referrals', [ReferController::class, 'index']);
-
-            // Generations List
             Route::get('/generations', [GenerationController::class, 'index']);
-
-            // Transactions History
             Route::get('/transactions', [TransactionHistoryController::class, 'transactionHistory']);
 
-            // Withdraw
             Route::get('/withdraws', [WithdrawController::class, 'index']);
             Route::post('/withdraw', [WithdrawController::class, 'store']);
 
-            // Balance Transfer
             Route::get('/balance-transfers', [BalanceTransferController::class, 'index']);
             Route::post('/balance-transfer', [BalanceTransferController::class, 'store']);
 
-            // Online Quiz
-            Route::get('/online-quizzes', [OnlineQuizController::class,'index']);
-            Route::get('/online-quizzes/{id}', [OnlineQuizController::class,'onlineExam']);
-            Route::post('/online-quizzes/submit', [OnlineQuizController::class,'submitExam']);
-            Route::get('/online-quizzes/{quiz_id}/result', [OnlineQuizController::class,'result']);
-            
+            /* ================= ONLINE QUIZ ================= */
+            Route::get('/online-quizzes', [OnlineQuizController::class, 'index']);
+            Route::get('/online-quizzes/{id}', [OnlineQuizController::class, 'onlineExam']);
+            Route::post('/online-quizzes/submit', [OnlineQuizController::class, 'submitExam']);
+            Route::get('/online-quizzes/{quiz_id}/result', [OnlineQuizController::class, 'result']);
 
-            // Admission Info
-            Route::get('admission-info', [AdmissionInfoController::class, 'index']);  
+            /* ================= ADMISSION INFO ================= */
+            Route::get('admission-info', [AdmissionInfoController::class, 'index']);
 
-            // EPS Payment
+            /* ================= EPS PAYMENT ================= */
             Route::post('/eps/initialize', [BalanceRequestController::class, 'initializeEpsPayment']);
 
-            // Rank
+            /* ================= RANK & REWARD ================= */
             Route::get('/rank', [RankController::class, 'rank'])->name('rank');
             Route::get('/reward', [RewardController::class, 'reward'])->name('reward');
 
-            // Banner
+            /* ================= BANNER ================= */
             Route::get('/banners', [BannerController::class, 'index']);
 
-            // Recharge
-            Route::post('recharge', [RechargeController::class,'store']);
-            Route::get('recharge-history', [RechargeController::class,'rechargeHistory']);
+            /* ================= RECHARGE ================= */
+            Route::post('recharge', [RechargeController::class, 'store']);
+            Route::get('recharge-history', [RechargeController::class, 'rechargeHistory']);
 
-            // Study Center
-            Route::get('/study-center', [StudyCenterController::class, 'index'])->name('study.center');
-            Route::get('/study-center/course/{slug}', [StudyCenterController::class, 'show'])->name('study.center.course.show');
+            /* ============================================================
+               STUDY CENTER (Course List + Purchase + Voucher)
+            ============================================================ */
+            Route::prefix('study-center')->group(function () {
 
-            // Purchase
-            Route::post('/study-center/course/{course}/buy', [CoursePurchaseController::class, 'buy'])->name('study.center.course.buy');
-            Route::get('/study-center/my-courses', [CoursePurchaseController::class, 'myCourses'])->name('study.center.my.courses');
-            Route::get('/study-center/order/{order_no}', [CoursePurchaseController::class, 'orderDetails'])->name('study.center.order.details');
-            Route::get('/study-center/course/voucher/{order_no}', [CoursePurchaseController::class, 'voucher'])->name('study.center.order.voucher');
+                // Course list
+                Route::get('/', [StudyCenterController::class, 'index'])
+                     ->name('study.center');
 
+                // Course details
+                Route::get('/course/{slug}', [StudyCenterController::class, 'show'])
+                     ->name('study.center.course.show');
+
+                // Purchase (Self + Gift)
+                Route::post('/course/{course}/buy', [CoursePurchaseController::class, 'buy'])
+                     ->name('study.center.course.buy');
+
+                // My courses (my + gifted)
+                Route::get('/my-courses', [CoursePurchaseController::class, 'myCourses'])
+                     ->name('study.center.my.courses');
+
+                // Order details
+                Route::get('/order/{order_no}', [CoursePurchaseController::class, 'orderDetails'])
+                     ->name('study.center.order.details');
+
+                // Voucher (JSON + web_url for print/download)
+                Route::get('/voucher/{order_no}', [CoursePurchaseController::class, 'voucher'])
+                     ->name('study.center.order.voucher');
+            });
         });
     });
 

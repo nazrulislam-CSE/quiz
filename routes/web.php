@@ -6,6 +6,7 @@ use App\Http\Controllers\Frontend\FrontendController;
 use App\Http\Controllers\Frontend\MenuPagesController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\User\StudyCenterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +19,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
+/* ============================================================
+   PUBLIC VOUCHER (Signed URL — apps webview)
+============================================================ */
+Route::get('/voucher/{order_no}', [StudyCenterController::class, 'publicVoucher'])
+     ->name('voucher.public')
+     ->middleware('signed');
 
 Route::get('/api', function () {
     return view('api');

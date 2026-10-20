@@ -32,6 +32,7 @@ use App\Http\Controllers\User\RechargeController;
 use App\Http\Controllers\User\StudyCenterController;
 use Illuminate\Support\Facades\Route;
 
+     
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('user.home');
     Route::get('logout', [DashboardController::class, 'logout'])->name('user.logout');
