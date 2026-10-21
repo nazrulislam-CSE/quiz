@@ -184,6 +184,74 @@ class StudyCenterController extends Controller
         ], 200);
     }
 
+     /* ============================================================
+       ✅ NEW: STUDENTS — Gift purchase-এর জন্য student list
+       Query: ?search= (name/username/phone/email দিয়ে)
+       Query: ?per_page= (default 200, max 500)
+    ============================================================ */
+    public function students(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+
+        if (! $user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated.',
+            ], 401);
+        }
+
+        $validated = $request->validate([
+            'search'   => 'nullable|string|max:255',
+            'per_page' => 'nullable|integer|min:1|max:500',
+        ]);
+
+        $query = User::whereNotIn('id', [1, 2])
+            ->where('id', '!=', $user->id)
+            ->where('status', '1');
+
+        // Search (name / username / phone / email)
+        if (! empty($validated['search'])) {
+            $search = $validated['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('full_name', 'like', "%{$search}%")
+                  ->orWhere('username', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $perPage = (int) ($validated['per_page'] ?? 200);
+
+        $students = $query->orderBy('full_name')
+            ->limit($perPage)
+            ->get(['id', 'full_name', 'username', 'email', 'phone'])
+            ->map(function ($student) {
+                return [
+                    'id'        => $student->id,
+                    'full_name' => $student->full_name,
+                    'username'  => $student->username,
+                    'email'     => $student->email,
+                    'phone'     => $student->phone,
+
+                    // Display label (mobile app dropdown-এ দেখানোর জন্য ready-made)
+                    'display_label' => trim(
+                        $student->full_name
+                        . ($student->username ? ' — ' . $student->username : '')
+                        . ($student->phone ? ' — ' . $student->phone : '')
+                    ),
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Students list retrieved successfully.',
+            'data'    => $students,
+            'meta'    => [
+                'total' => $students->count(),
+            ],
+        ], 200);
+    }
+
     /* ============================================================
        TRANSFORM — Course data for API
     ============================================================ */

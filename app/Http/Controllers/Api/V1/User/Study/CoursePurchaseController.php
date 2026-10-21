@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
@@ -19,6 +20,12 @@ use Illuminate\Support\Str;
 
 class CoursePurchaseController extends Controller
 {
+    /* ============================================================
+       CACHE CONFIG — Payment data survives across requests
+    ============================================================ */
+    private const CACHE_PREFIX    = 'course_payment_';
+    private const CACHE_TTL_HOURS = 2;
+
     /* ============================================================
        BUY — Initialize EPS Payment (Self + Gift)
     ============================================================ */
@@ -101,27 +108,29 @@ class CoursePurchaseController extends Controller
             return response()->json(['success' => false, 'message' => 'Invalid payment amount.'], 400);
         }
 
+        $merchantTransactionId = null;
+        $cacheKey = null;
+
         try {
             $customerOrderId       = 'CRS_' . now()->format('YmdHis') . '_' . rand(1000, 9999);
             $merchantTransactionId = 'EPS' . now()->format('YmdHis') . rand(10000, 99999);
             $orderNo               = 'ORD-' . strtoupper(Str::random(10));
+            $cacheKey              = self::CACHE_PREFIX . $merchantTransactionId;
 
-            /* ===== SESSION — with student fields ===== */
-            session([
-                'api_course_payment_data' => [
-                    'user_id'                 => $user->id,
-                    'student_id'              => $studentId,
-                    'student_name'            => $studentName,
-                    'student_email'           => $studentEmail,
-                    'student_phone'           => $studentPhone,
-                    'is_gift'                 => $isGift,
-                    'course_id'               => $course->id,
-                    'amount'                  => $amount,
-                    'order_no'                => $orderNo,
-                    'merchant_transaction_id' => $merchantTransactionId,
-                    'customer_order_id'       => $customerOrderId,
-                ],
-            ]);
+            /* ===== CACHE — persists across requests (no session needed) ===== */
+            Cache::put($cacheKey, [
+                'user_id'                 => $user->id,
+                'student_id'              => $studentId,
+                'student_name'            => $studentName,
+                'student_email'           => $studentEmail,
+                'student_phone'           => $studentPhone,
+                'is_gift'                 => $isGift,
+                'course_id'               => $course->id,
+                'amount'                  => $amount,
+                'order_no'                => $orderNo,
+                'customer_order_id'       => $customerOrderId,
+                'merchant_transaction_id' => $merchantTransactionId,
+            ], now()->addHours(self::CACHE_TTL_HOURS));
 
             $productArr = [[
                 'ProductName'     => $course->title,
@@ -170,7 +179,7 @@ class CoursePurchaseController extends Controller
             $data = $epsPayment->CreatePayment($payload);
 
             if (! $data || ! isset($data['isSuccess']) || $data['isSuccess'] !== true) {
-                session()->forget('api_course_payment_data');
+                Cache::forget($cacheKey);
                 Log::error('API Course EPS Init Failed', ['data' => $data]);
 
                 return response()->json([
@@ -183,7 +192,7 @@ class CoursePurchaseController extends Controller
             $paymentUrl = $data['RedirectURL'] ?? $data['payment_url'] ?? null;
 
             if (! $paymentUrl) {
-                session()->forget('api_course_payment_data');
+                Cache::forget($cacheKey);
                 Log::error('API Course EPS URL Missing', ['response' => $data]);
 
                 return response()->json([
@@ -192,17 +201,14 @@ class CoursePurchaseController extends Controller
                 ], 502);
             }
 
-            session([
-                'api_course_payment_data' => array_merge(
-                    session('api_course_payment_data', []),
-                    [
-                        'eps_transaction_id'     => $data['TransactionId'] ?? null,
-                        'gateway_transaction_id' => $data['MerchantTransactionId'] ?? null,
-                        'gateway_response'       => $data,
-                        'payment_url'            => $paymentUrl,
-                    ]
-                ),
-            ]);
+            /* ===== Update cache with EPS response details ===== */
+            $cachedData = Cache::get($cacheKey, []);
+            $cachedData['eps_transaction_id']     = $data['TransactionId'] ?? null;
+            $cachedData['gateway_transaction_id'] = $data['MerchantTransactionId'] ?? null;
+            $cachedData['gateway_response']       = $data;
+            $cachedData['payment_url']            = $paymentUrl;
+
+            Cache::put($cacheKey, $cachedData, now()->addHours(self::CACHE_TTL_HOURS));
 
             return response()->json([
                 'success' => true,
@@ -229,7 +235,10 @@ class CoursePurchaseController extends Controller
             ], 200);
 
         } catch (\Exception $e) {
-            session()->forget('api_course_payment_data');
+            if ($cacheKey) {
+                Cache::forget($cacheKey);
+            }
+
             Log::error('API Course EPS Initialize Error', [
                 'message'   => $e->getMessage(),
                 'user_id'   => $user->id,
@@ -245,32 +254,33 @@ class CoursePurchaseController extends Controller
 
     /* ============================================================
        PAYMENT SUCCESS — Verify + Order Create + Commission
+       ✅ Uses cache + EPS verify fallback
     ============================================================ */
     public function paymentSuccess(Request $request)
     {
+        $merchantTransactionId = null;
+
         try {
             Log::info('API Course EPS Success Callback', ['request' => $request->all()]);
-
-            $sessionData = session('api_course_payment_data', []);
 
             $merchantTransactionId =
                 $request->merchant_transaction_id ??
                 $request->MerchantTransactionId ??
                 $request->merchantTransactionId ??
-                $sessionData['merchant_transaction_id'] ??
                 null;
 
             if (! $merchantTransactionId) {
-                session()->forget('api_course_payment_data');
                 return $this->renderCallback('error', 'Transaction information not found.');
             }
 
+            /* ===== DUPLICATE CHECK ===== */
             $existingOrder = CourseOrder::where('merchant_transaction_id', $merchantTransactionId)->first();
             if ($existingOrder) {
-                session()->forget('api_course_payment_data');
+                Cache::forget(self::CACHE_PREFIX . $merchantTransactionId);
                 return $this->renderCallback('success', 'This payment has already been processed.', $existingOrder);
             }
 
+            /* ===== EPS VERIFY ===== */
             $epsPayment = new EPSPayment;
             $verifyResponse = $epsPayment->checkPaymentStatus($merchantTransactionId);
 
@@ -280,59 +290,99 @@ class CoursePurchaseController extends Controller
             ]);
 
             if (! $verifyResponse || ! isset($verifyResponse['isSuccess']) || $verifyResponse['isSuccess'] !== true) {
-                session()->forget('api_course_payment_data');
+                Cache::forget(self::CACHE_PREFIX . $merchantTransactionId);
                 return $this->renderCallback('error', 'Payment verify failed.');
             }
 
             $epsStatus = strtolower(trim($verifyResponse['Status'] ?? ''));
             if ($epsStatus !== 'success') {
-                session()->forget('api_course_payment_data');
+                Cache::forget(self::CACHE_PREFIX . $merchantTransactionId);
                 return $this->renderCallback('error', 'Payment was not successful. Status: ' . ($verifyResponse['Status'] ?? 'Unknown'));
             }
 
             $verifiedMerchantTransactionId = $verifyResponse['MerchantTransactionId'] ?? null;
             if ($verifiedMerchantTransactionId && $verifiedMerchantTransactionId !== $merchantTransactionId) {
-                session()->forget('api_course_payment_data');
+                Cache::forget(self::CACHE_PREFIX . $merchantTransactionId);
                 return $this->renderCallback('error', 'Transaction ID verification failed.');
             }
 
-            $originalAmount = (float) ($sessionData['amount'] ?? 0);
             $verifiedAmount = (float) ($verifyResponse['TotalAmount'] ?? 0);
 
+            /* ===== CACHE + FALLBACK DATA ===== */
+            $cachedData = Cache::get(self::CACHE_PREFIX . $merchantTransactionId, []);
+
+            $fallbackUserId   = null;
+            $fallbackCourseId = null;
+
+            if (empty($cachedData)) {
+                Log::warning('Cache miss — using EPS verify fallback', [
+                    'merchant_transaction_id' => $merchantTransactionId,
+                ]);
+
+                if (! empty($verifyResponse['ValueA'])) {
+                    $fallbackUserId = (int) $verifyResponse['ValueA'];
+                }
+
+                if (! empty($verifyResponse['ValueC']) && preg_match('/course_(\d+)/', $verifyResponse['ValueC'], $m)) {
+                    $fallbackCourseId = (int) $m[1];
+                }
+            }
+
+            $userId   = $cachedData['user_id']   ?? $fallbackUserId;
+            $courseId = $cachedData['course_id'] ?? $fallbackCourseId;
+
+            if (! $userId || ! $courseId) {
+                Cache::forget(self::CACHE_PREFIX . $merchantTransactionId);
+                Log::error('Cannot determine user/course for payment', [
+                    'merchant_transaction_id' => $merchantTransactionId,
+                    'cached_data'             => $cachedData,
+                    'verify_response'         => $verifyResponse,
+                ]);
+
+                return $this->renderCallback(
+                    'error',
+                    'Payment data unavailable. Txn ID: ' . $merchantTransactionId . ' — please contact support.'
+                );
+            }
+
+            /* ===== AMOUNT CHECK (only if cached amount exists) ===== */
+            $originalAmount = (float) ($cachedData['amount'] ?? 0);
             if ($originalAmount > 0 && abs($originalAmount - $verifiedAmount) > 0.01) {
-                session()->forget('api_course_payment_data');
+                Cache::forget(self::CACHE_PREFIX . $merchantTransactionId);
                 return $this->renderCallback('error', 'Payment amount verification failed.');
             }
 
-            $epsTransactionId =
-                $verifyResponse['EpsTransactionId'] ??
-                $verifyResponse['EPSTransactionId'] ??
-                null;
+            $epsTransactionId = $verifyResponse['EpsTransactionId'] ?? $verifyResponse['EPSTransactionId'] ?? null;
 
+            /* ===== DB TRANSACTION ===== */
             DB::beginTransaction();
 
             try {
-                $buyer  = User::findOrFail($sessionData['user_id'] ?? null);
-                $course = Course::findOrFail($sessionData['course_id']);
+                $buyer  = User::findOrFail($userId);
+                $course = Course::findOrFail($courseId);
 
                 $commissionBase = (float) ($course->discount_price ?? $course->price);
 
-                /* ===== ORDER CREATE — with buyer + student ===== */
+                $studentId    = $cachedData['student_id']    ?? $buyer->id;
+                $studentName  = $cachedData['student_name']  ?? $buyer->full_name;
+                $studentEmail = $cachedData['student_email'] ?? $buyer->email;
+                $studentPhone = $cachedData['student_phone'] ?? $buyer->phone;
+                $isGift       = (bool) ($cachedData['is_gift'] ?? false);
+
                 $order = CourseOrder::create([
                     'user_id'                 => $buyer->id,
-                    'student_id'              => $sessionData['student_id'] ?? null,
+                    'student_id'              => $studentId,
                     'course_id'               => $course->id,
-                    'order_no'                => $sessionData['order_no'] ?? ('ORD-' . strtoupper(Str::random(10))),
-
-                    'is_gift'                 => (bool) ($sessionData['is_gift'] ?? false),
+                    'order_no'                => $cachedData['order_no'] ?? ('ORD-' . strtoupper(Str::random(10))),
+                    'is_gift'                 => $isGift,
 
                     'buyer_name'              => $buyer->full_name,
                     'buyer_email'             => $buyer->email,
                     'buyer_phone'             => $buyer->phone,
 
-                    'student_name'            => $sessionData['student_name'] ?? $buyer->full_name,
-                    'student_email'           => $sessionData['student_email'] ?? $buyer->email,
-                    'student_phone'           => $sessionData['student_phone'] ?? $buyer->phone,
+                    'student_name'            => $studentName,
+                    'student_email'           => $studentEmail,
+                    'student_phone'           => $studentPhone,
 
                     'price'                   => $course->price,
                     'discount_price'          => $course->discount_price,
@@ -345,9 +395,10 @@ class CoursePurchaseController extends Controller
                     'payment_method'          => $verifyResponse['FinancialEntity'] ?? 'eps',
 
                     'gateway_response' => [
-                        'initialize_response' => $sessionData['gateway_response'] ?? [],
+                        'initialize_response' => $cachedData['gateway_response'] ?? [],
                         'success_callback'    => $request->all(),
                         'verify_response'     => $verifyResponse,
+                        'cache_hit'           => ! empty($cachedData),
                     ],
 
                     'payment_status' => 'paid',
@@ -368,12 +419,18 @@ class CoursePurchaseController extends Controller
                 $this->referCourseCommission($buyer, $commissionBase, $course, $order);
 
                 DB::commit();
+                Cache::forget(self::CACHE_PREFIX . $merchantTransactionId);
 
-                session()->forget('api_course_payment_data');
+                Log::info('API Course Order Created', [
+                    'order_id'  => $order->id,
+                    'order_no'  => $order->order_no,
+                    'user_id'   => $buyer->id,
+                    'amount'    => $order->paid_amount,
+                    'cache_hit' => ! empty($cachedData),
+                ]);
 
-                $isGift = (bool) ($sessionData['is_gift'] ?? false);
                 $msg = $isGift
-                    ? '🎉 ' . ($sessionData['student_name'] ?? 'Student') . '-এর জন্য কোর্স সফলভাবে কেনা হয়েছে।'
+                    ? '🎉 ' . $studentName . '-এর জন্য কোর্স সফলভাবে কেনা হয়েছে।'
                     : '🎉 আপনার কোর্স সফলভাবে কেনা হয়েছে।';
 
                 return $this->renderCallback('success', $msg, $order);
@@ -385,7 +442,11 @@ class CoursePurchaseController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            session()->forget('api_course_payment_data');
+
+            if ($merchantTransactionId) {
+                // DO NOT forget cache here — keep it for retry
+                // Cache::forget(self::CACHE_PREFIX . $merchantTransactionId);
+            }
 
             Log::error('API Course EPS Success Error', [
                 'message' => $e->getMessage(),
@@ -402,14 +463,32 @@ class CoursePurchaseController extends Controller
     public function paymentFail(Request $request)
     {
         Log::info('API Course EPS Fail Callback', $request->all());
-        session()->forget('api_course_payment_data');
+
+        $txnId = $request->MerchantTransactionId
+              ?? $request->merchant_transaction_id
+              ?? $request->merchantTransactionId
+              ?? null;
+
+        if ($txnId) {
+            Cache::forget(self::CACHE_PREFIX . $txnId);
+        }
+
         return $this->renderCallback('error', '❌ Payment ব্যর্থ হয়েছে। টাকা কাটা হয়নি।');
     }
 
     public function paymentCancel(Request $request)
     {
         Log::info('API Course EPS Cancel Callback', $request->all());
-        session()->forget('api_course_payment_data');
+
+        $txnId = $request->MerchantTransactionId
+              ?? $request->merchant_transaction_id
+              ?? $request->merchantTransactionId
+              ?? null;
+
+        if ($txnId) {
+            Cache::forget(self::CACHE_PREFIX . $txnId);
+        }
+
         return $this->renderCallback('error', 'Payment বাতিল করা হয়েছে।');
     }
 
@@ -421,7 +500,6 @@ class CoursePurchaseController extends Controller
         $user   = Auth::user();
         $userId = $user->id;
 
-        /* ===== MY COURSES — student হিসেবে যেখানে user ===== */
         $myOrders = CourseOrder::with([
             'course.courseType', 'course.courseClass', 'course.courseCategory', 'user'
         ])
@@ -436,7 +514,6 @@ class CoursePurchaseController extends Controller
         ->get()
         ->map(fn ($o) => $this->transformOrder($o));
 
-        /* ===== GIFTED COURSES — আমি যাদেরকে গিফট করেছি ===== */
         $giftOrders = CourseOrder::with([
             'course.courseType', 'course.courseClass', 'course.courseCategory', 'student'
         ])
@@ -448,10 +525,10 @@ class CoursePurchaseController extends Controller
         ->map(fn ($o) => $this->transformOrder($o, true));
 
         return response()->json([
-            'success' => true,
-            'message' => 'My courses retrieved successfully.',
-            'data'           => $myOrders,      // backward compat
-            'gift_courses'   => $giftOrders,    // new
+            'success'      => true,
+            'message'      => 'My courses retrieved successfully.',
+            'data'         => $myOrders,
+            'gift_courses' => $giftOrders,
             'meta' => [
                 'my_courses_count'   => $myOrders->count(),
                 'gift_courses_count' => $giftOrders->count(),
@@ -522,7 +599,6 @@ class CoursePurchaseController extends Controller
             ], 404);
         }
 
-        /* ===== Signed URL — apps webview-এ open করবে ===== */
         $voucherWebUrl = URL::temporarySignedRoute(
             'voucher.public',
             now()->addDays(30),
@@ -533,12 +609,8 @@ class CoursePurchaseController extends Controller
             'success' => true,
             'message' => 'Course voucher retrieved successfully.',
             'data' => [
-                /* ============================================================
-                   VOUCHER WEB URL — apps webview-এ open করবে
-                   Same design + Print button থাকবে
-                ============================================================ */
-                'voucher_url'       => $voucherWebUrl,
-                'voucher_expires'   => now()->addDays(30)->toDateTimeString(),
+                'voucher_url'     => $voucherWebUrl,
+                'voucher_expires' => now()->addDays(30)->toDateTimeString(),
 
                 'voucher' => [
                     'voucher_no' => $order->order_no,
@@ -580,7 +652,7 @@ class CoursePurchaseController extends Controller
     }
 
     /* ============================================================
-       ORDER TRANSFORMER (shared)
+       TRANSFORMERS
     ============================================================ */
     private function transformOrder(CourseOrder $order, bool $full = false): array
     {
@@ -611,21 +683,18 @@ class CoursePurchaseController extends Controller
         ];
 
         if ($full) {
-            $base['price']         = (float) $order->price;
-            $base['discount']      = $order->discount_price !== null ? (float) $order->discount_price : null;
-            $base['payment_status'] = $order->payment_status;
-            $base['payment_method'] = $order->payment_method;
+            $base['price']                   = (float) $order->price;
+            $base['discount']                = $order->discount_price !== null ? (float) $order->discount_price : null;
+            $base['payment_status']          = $order->payment_status;
+            $base['payment_method']          = $order->payment_method;
             $base['merchant_transaction_id'] = $order->merchant_transaction_id;
             $base['eps_transaction_id']      = $order->eps_transaction_id;
-            $base['created_at'] = $order->created_at?->toDateTimeString();
+            $base['created_at']              = $order->created_at?->toDateTimeString();
         }
 
         return $base;
     }
 
-    /* ============================================================
-       COURSE TRANSFORMER (shared)
-    ============================================================ */
     private function transformCourse($course): ?array
     {
         if (! $course) {
@@ -665,12 +734,12 @@ class CoursePurchaseController extends Controller
             'is_featured' => (bool) $course->is_featured,
             'view_count'  => (int) $course->view_count,
 
-            'course_type' => $course->courseType ? [
+            'course_type'     => $course->courseType ? [
                 'id'   => $course->courseType->id,
                 'name' => $course->courseType->name,
             ] : null,
 
-            'course_class' => $course->courseClass ? [
+            'course_class'    => $course->courseClass ? [
                 'id'   => $course->courseClass->id,
                 'name' => $course->courseClass->name,
             ] : null,
@@ -685,7 +754,7 @@ class CoursePurchaseController extends Controller
     }
 
     /* ============================================================
-       REFERRAL COURSE COMMISSION (unchanged)
+       REFERRAL COURSE COMMISSION
     ============================================================ */
     public function referCourseCommission(User $user, float $baseAmount, Course $course, CourseOrder $order): bool
     {
@@ -697,6 +766,7 @@ class CoursePurchaseController extends Controller
             return false;
         }
 
+        /* ===== Buyer Cashback (20%) ===== */
         $buyerCommission = ($baseAmount * $buyerPercent) / 100;
 
         if ($buyerCommission > 0) {
@@ -723,6 +793,7 @@ class CoursePurchaseController extends Controller
             ]);
         }
 
+        /* ===== Direct Referrer (10%) ===== */
         $directReferrerId = $user->refer_by;
         if (! $directReferrerId) {
             return true;
@@ -759,6 +830,7 @@ class CoursePurchaseController extends Controller
             ]);
         }
 
+        /* ===== 1st Generation (5%) ===== */
         $firstGenReferrerId = $directReferrer->refer_by;
         if (! $firstGenReferrerId) {
             return true;
@@ -802,7 +874,7 @@ class CoursePurchaseController extends Controller
     }
 
     /* ============================================================
-       HTML CALLBACK PAGE (unchanged)
+       HTML CALLBACK PAGE
     ============================================================ */
     private function renderCallback(string $type, string $message, $order = null)
     {

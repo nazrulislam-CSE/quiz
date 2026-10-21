@@ -142,9 +142,13 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
             ============================================================ */
             Route::prefix('study-center')->group(function () {
 
-                // Course list
-                Route::get('/', [StudyCenterController::class, 'index'])
+               // Course list
+               Route::get('/', [StudyCenterController::class, 'index'])
                      ->name('study.center');
+
+               // ✅ NEW: Students list — Gift purchase dropdown-এর জন্য
+                Route::get('/students', [StudyCenterController::class, 'students'])
+                     ->name('study.center.students');
 
                 // Course details
                 Route::get('/course/{slug}', [StudyCenterController::class, 'show'])
