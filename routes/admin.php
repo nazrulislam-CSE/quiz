@@ -39,6 +39,7 @@ use App\Http\Controllers\Admin\CourseClassController;
 use App\Http\Controllers\Admin\CourseCategoryController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\CoursePurchaseController;
+use App\Http\Controllers\Admin\EbookController;
 
 
 
@@ -498,6 +499,14 @@ Route::middleware('admin')->group(function () {
         Route::get('/show/{id}',    [CoursePurchaseController::class, 'show'])->name('show');
         Route::get('/delete/{id}',  [CoursePurchaseController::class, 'destroy'])->name('delete');
         Route::get('/voucher/{id}', [CoursePurchaseController::class, 'voucher'])->name('voucher');
+    });
+
+    /* ============> E-Book (Eshop) <============ */
+    Route::prefix('ebooks')->name('ebook.')->group(function () {
+        Route::get('/index',        [EbookController::class, 'index'])->name('index');
+        Route::post('/store',       [EbookController::class, 'store'])->name('store');
+        Route::post('/update/{id}', [EbookController::class, 'update'])->name('update');
+        Route::get('/delete/{id}',  [EbookController::class, 'destroy'])->name('delete');
     });
     
 });

@@ -61,6 +61,60 @@
                         href="{{ route('admin.admin.home') }}"><i class="side-menu__icon fas fa-th-large"></i><span
                             class="side-menu__label">Dashboard</span></a>
                 </li>
+                <li
+                    class="slide {{ Request::is('admin/ebooks*') || Request::is('admin/ebooks*') ? 'is-expanded' : '' }}">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
+                        <i class="side-menu__icon fas fa-shopping-cart"></i>
+                        <span class="side-menu__label">
+                            Eshop
+                            <span class="badge bg-success ms-2">NEW</span>
+                        </span>
+                        <i class="angle fe fe-chevron-down hor-angle"></i>
+                    </a>
+                    <ul class="slide-menu">
+                        <li class="side-menu__label1">
+                            <a href="javascript:void(0);">Eshop</a>
+                        </li>
+
+                        {{-- E-Book List --}}
+                        <li>
+                            <a class="slide-item {{ Request::is('admin/ebooks*') ? 'active' : '' }}"
+                                href="{{ route('admin.ebook.index') }}">
+                                E Book List
+                            </a>
+                        </li>
+
+                        {{-- E-Book Paid List (future) --}}
+                        <li>
+                            <a class="slide-item {{ Request::is('admin/ebook-orders*') ? 'active' : '' }}"
+                                href="{{ Route::has('admin.ebook.order.index') ? route('admin.ebook.order.index') : '#' }}"
+                                @if(!Route::has('admin.ebook.order.index')) onclick="comingSoon(); return false;"
+                                @endif>
+                                E Book Paid List
+                            </a>
+                        </li>
+
+                        {{-- E-Product (future) --}}
+                        <li>
+                            <a class="slide-item {{ Request::is('admin/eproducts*') ? 'active' : '' }}"
+                                href="{{ Route::has('admin.eproduct.index') ? route('admin.eproduct.index') : '#' }}"
+                                @if(!Route::has('admin.eproduct.index')) onclick="comingSoon(); return false;" @endif>
+                                E Product
+                            </a>
+                        </li>
+
+                        {{-- E-Product Paid List (future) --}}
+                        <li>
+                            <a class="slide-item {{ Request::is('admin/eproduct-orders*') ? 'active' : '' }}"
+                                href="{{ Route::has('admin.eproduct.order.index') ? route('admin.eproduct.order.index') : '#' }}"
+                                @if(!Route::has('admin.eproduct.order.index')) onclick="comingSoon(); return false;"
+                                @endif>
+                                E Product Paid List
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 <li class="slide {{ Request::is('admin/course-types*') 
                  || Request::is('admin/course-classes*') 
                  || Request::is('admin/course-categories*') 
@@ -71,7 +125,6 @@
                         <i class="side-menu__icon fas fa-cog"></i>
                         <span class="side-menu__label">
                             Study Center
-                            <span class="badge bg-success ms-2">NEW</span>
                         </span>
                         <i class="angle fe fe-chevron-down hor-angle"></i>
                     </a>
