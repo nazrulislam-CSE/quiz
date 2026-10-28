@@ -30,6 +30,7 @@ use App\Http\Controllers\User\RankController;
 use App\Http\Controllers\User\RewardController;
 use App\Http\Controllers\User\RechargeController;
 use App\Http\Controllers\User\StudyCenterController;
+use App\Http\Controllers\User\BookShopController;
 use Illuminate\Support\Facades\Route;
 
      
@@ -92,8 +93,13 @@ Route::group(['middleware' => 'auth'], function () {
     // My Courses (optional, future-এ কাজে লাগবে)
     Route::get('/my-courses', [StudyCenterController::class, 'myCourses'])
          ->name('study.center.my.courses');
+    Route::get('/voucher/{order_no}', [StudyCenterController::class, 'voucher'])->name('study.center.my.courses.voucher');
 
-     Route::get('/voucher/{order_no}', [StudyCenterController::class, 'voucher'])->name('study.center.my.courses.voucher');
+    // Eshop Book
+    Route::get('/book-shop', [BookShopController::class, 'index'])
+    ->name('book.shop');
+    Route::get('/book-shop/{slug}', [BookShopController::class, 'show'])->name('book.shop.show');
+    Route::get('/book-orders', [BookShopController::class, 'orders'])->name('book.orders');
 
 
 

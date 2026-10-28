@@ -1,451 +1,569 @@
 @extends('layouts.frontend.app')
 @section('content')
-    <style>
-        .about-description ul {
-            list-style: none;
-            padding-left: 0;
+<style>
+    .about-description ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .about-description ul li {
+        position: relative;
+        padding-left: 25px;
+        margin-bottom: 10px;
+    }
+
+    .about-description ul li::before {
+        content: '✔️';
+        position: absolute;
+        left: 0;
+        color: green;
+        /* or your preferred color */
+    }
+
+    .animated-title {
+        background: linear-gradient(-45deg,
+                rgba(13, 110, 253, 0.9),
+                rgba(111, 66, 193, 0.9),
+                rgba(214, 51, 132, 0.9),
+                rgba(13, 202, 240, 0.9));
+
+        background-size: 400% 400%;
+        animation: colorMove 8s ease infinite;
+    }
+
+    @keyframes colorMove {
+        0% {
+            background-position: 0% 50%;
         }
 
-        .about-description ul li {
-            position: relative;
-            padding-left: 25px;
-            margin-bottom: 10px;
+        50% {
+            background-position: 100% 50%;
         }
 
-        .about-description ul li::before {
-            content: '✔️';
-            position: absolute;
-            left: 0;
-            color: green;
-            /* or your preferred color */
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .student-card {
+        border-radius: 20px;
+        background: linear-gradient(-45deg,
+                rgba(227, 242, 253, .95),
+                rgba(187, 222, 251, .95),
+                rgba(224, 247, 250, .95),
+                rgba(232, 245, 233, .95));
+        background-size: 300% 300%;
+        animation: cardColor 8s ease infinite;
+        transition: .4s;
+    }
+
+    .student-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, .15) !important;
+    }
+
+    .profile-img {
+        border: 4px solid rgba(13, 110, 253, .7);
+        padding: 3px;
+        background: white;
+    }
+
+    @keyframes cardColor {
+        0% {
+            background-position: 0% 50%;
         }
 
-        .animated-title {
-            background: linear-gradient(-45deg,
-                    rgba(13, 110, 253, 0.9),
-                    rgba(111, 66, 193, 0.9),
-                    rgba(214, 51, 132, 0.9),
-                    rgba(13, 202, 240, 0.9));
-
-            background-size: 400% 400%;
-            animation: colorMove 8s ease infinite;
+        50% {
+            background-position: 100% 50%;
         }
 
-        @keyframes colorMove {
-            0% {
-                background-position: 0% 50%;
-            }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
 
-            50% {
-                background-position: 100% 50%;
-            }
+    .animated-card {
+        background: linear-gradient(-45deg,
+                rgba(227, 242, 253, 0.95),
+                rgba(187, 222, 251, 0.95),
+                rgba(206, 147, 216, 0.85),
+                rgba(255, 205, 210, 0.9));
 
-            100% {
-                background-position: 0% 50%;
-            }
+        background-size: 400% 400%;
+        animation: cardGradient 8s ease infinite;
+        border-radius: 20px;
+    }
+
+    @keyframes cardGradient {
+        0% {
+            background-position: 0% 50%;
         }
 
-        .student-card {
-            border-radius: 20px;
-            background: linear-gradient(-45deg,
-                    rgba(227, 242, 253, .95),
-                    rgba(187, 222, 251, .95),
-                    rgba(224, 247, 250, .95),
-                    rgba(232, 245, 233, .95));
-            background-size: 300% 300%;
-            animation: cardColor 8s ease infinite;
-            transition: .4s;
+        50% {
+            background-position: 100% 50%;
         }
 
-        .student-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, .15) !important;
+        100% {
+            background-position: 0% 50%;
         }
+    }
+</style>
+<!-- Hero Image Slider -->
+<section id="heroSlider" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
 
-        .profile-img {
-            border: 4px solid rgba(13, 110, 253, .7);
-            padding: 3px;
-            background: white;
-        }
+    <!-- Indicators -->
+    <div class="carousel-indicators">
+        @foreach ($sliders as $key => $slider)
+        <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="{{ $key }}"
+            class="{{ $key == 0 ? 'active' : '' }}" aria-current="{{ $key == 0 ? 'true' : 'false' }}"
+            aria-label="Slide {{ $key + 1 }}"></button>
+        @endforeach
+    </div>
 
-        @keyframes cardColor {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        .animated-card {
-            background: linear-gradient(-45deg,
-                    rgba(227, 242, 253, 0.95),
-                    rgba(187, 222, 251, 0.95),
-                    rgba(206, 147, 216, 0.85),
-                    rgba(255, 205, 210, 0.9));
-
-            background-size: 400% 400%;
-            animation: cardGradient 8s ease infinite;
-            border-radius: 20px;
-        }
-
-        @keyframes cardGradient {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-    </style>
-    <!-- Hero Image Slider -->
-    <section id="heroSlider" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
-
-        <!-- Indicators -->
-        <div class="carousel-indicators">
-            @foreach ($sliders as $key => $slider)
-                <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="{{ $key }}"
-                    class="{{ $key == 0 ? 'active' : '' }}" aria-current="{{ $key == 0 ? 'true' : 'false' }}"
-                    aria-label="Slide {{ $key + 1 }}"></button>
-            @endforeach
+    <!-- Slides -->
+    <div class="carousel-inner">
+        @foreach ($sliders as $key => $slider)
+        <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+            <img src="{{ !empty($slider->image) ? url('upload/slider/' . $slider->image) : url('upload/no_image.jpg') }}"
+                class="d-block w-100 img-fluid" alt="Slide {{ $key + 1 }}">
         </div>
+        @endforeach
+    </div>
 
-        <!-- Slides -->
-        <div class="carousel-inner">
-            @foreach ($sliders as $key => $slider)
-                <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                    <img src="{{ !empty($slider->image) ? url('upload/slider/' . $slider->image) : url('upload/no_image.jpg') }}"
-                        class="d-block w-100 img-fluid" alt="Slide {{ $key + 1 }}">
+    <!-- Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroSlider" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroSlider" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</section>
+
+
+
+<!-- Dynamic About Section -->
+<section class="py-2 bg-light" id="about">
+    <div class="container">
+        @foreach ($abouts as $about)
+        <div class="row align-items-center mb-5">
+            <!-- Left: Image -->
+            <div class="col-md-6">
+                <img src="{{ !empty($about->image) ? url('upload/about/' . $about->image) : url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') }}"
+                    alt="{{ $about->title }}" class="img-fluid rounded shadow">
+            </div>
+
+            <!-- Right: Content -->
+            <div class="col-md-6 mt-3">
+                <h2 class="fw-bold reveal">{{ $about->title }}</h2>
+                <div class="mt-3 about-description reveal  student-card animated-card">{!! $about->description !!}</div>
+
+                @if ($about->video_link && $about->video_link != '#')
+                <a href="{{ $about->video_link }}" class="btn btn-primary mt-3 reveal">ভিডিও দেখুন</a>
+                @endif
+            </div>
+        </div>
+        @endforeach
+    </div>
+</section>
+
+
+<!-- MCQ Admission Section -->
+<section class="py-3 bg-light">
+    <div class="container text-center">
+        {{-- <h4 class="mb-4 fw-bold reveal">MCQ এডমিশন এক প্লাটফর্মে</h4> --}}
+        <div class="row g-4">
+
+            @php
+            // Available colors for random assignment
+            $availableColors = [
+            'bg-primary text-white',
+            'bg-success text-white',
+            'bg-danger text-white',
+            'bg-warning text-dark',
+            'bg-info text-dark',
+            'bg-secondary text-white',
+            'bg-dark text-white',
+            'bg-light text-dark border',
+            ];
+            @endphp
+
+            @foreach ($admissions as $admission)
+            @php
+            // Random color for each card
+            $colorClass = $availableColors[array_rand($availableColors)];
+            @endphp
+
+            <div class="col-md-3 col-sm-6 ">
+                <div class="p-4 rounded shadow-sm h-100 {{ $colorClass }} reveal">
+                    <h5 class="mb-0">{{ $admission->name }}</h5>
                 </div>
+            </div>
             @endforeach
+
         </div>
+    </div>
+</section>
 
-        <!-- Controls -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#heroSlider" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#heroSlider" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </section>
+<!-- Program Section with Slick Carousel -->
+<section class="py-5">
+    <div class="container">
+        <div class="card shadow-sm border-0">
+            <h2 class="fw-bold card-title mb-3 text-center reveal">আমাদের কোর্স সমূহ</h2>
 
+            @if ($programs->count() > 0)
+            <!-- Slick Slider Container -->
+            <div class="program-slider">
+                @foreach ($programs as $program)
+                <div class="px-2">
+                    <!-- Optional spacing -->
+                    <div class="card h-100 border-0 shadow-sm  student-card animated-card">
+                        <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}"
+                            class="img-fluid mb-3" alt="{{ $program->name }}">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ $program->name }}</h4>
+                            <div class="about-description reveal mt-3" style="max-height: 400px; overflow-y: auto;">
+                                {!! $program->description !!}
+                            </div>
 
+                            <a href="{{ route('program.show', $program->slug) }}"
+                                class="btn btn-primary mt-3 w-100 text-center">
+                                বিস্তারিত দেখুন
+                            </a>
 
-    <!-- Dynamic About Section -->
-    <section class="py-2 bg-light" id="about">
-        <div class="container">
-            @foreach ($abouts as $about)
-                <div class="row align-items-center mb-5">
-                    <!-- Left: Image -->
-                    <div class="col-md-6">
-                        <img src="{{ !empty($about->image) ? url('upload/about/' . $about->image) : url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') }}"
-                            alt="{{ $about->title }}" class="img-fluid rounded shadow">
+                        </div>
                     </div>
+                </div>
+                @endforeach
+            </div>
+            @else
+            <p>No programs found.</p>
+            @endif
 
-                    <!-- Right: Content -->
-                    <div class="col-md-6 mt-3">
-                        <h2 class="fw-bold reveal">{{ $about->title }}</h2>
-                        <div class="mt-3 about-description reveal  student-card animated-card">{!! $about->description !!}</div>
+        </div>
+    </div>
+</section>
 
-                        @if ($about->video_link && $about->video_link != '#')
-                            <a href="{{ $about->video_link }}" class="btn btn-primary mt-3 reveal">ভিডিও দেখুন</a>
+
+
+<!-- Teacher Section with Slick Carousel -->
+<section class="py-5 bg-light position-relative">
+    <div class="container text-center">
+        <h4 class="mb-4 fw-bold reveal">দেশ সেরা মেন্টর</h4>
+
+        @if ($teachers->count() > 0)
+        <div class="teacher-slider">
+            @foreach ($teachers as $teacher)
+            <div class="px-2">
+                <div class="card shadow rounded border-0 h-100  student-card animated-card">
+                    <img src="{{ asset('upload/teacher/' . $teacher->image) }}" class="card-img-top"
+                        alt="{{ $teacher->name }}">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">{{ $teacher->name }}</h5>
+                        <p class="text-muted mb-1">{{ $teacher->designation }}</p>
+                        @if ($teacher->versity)
+                        <p class="text-success mb-1">{{ $teacher->versity }}</p>
                         @endif
                     </div>
                 </div>
+            </div>
             @endforeach
         </div>
-    </section>
+        @endif
+    </div>
+</section>
 
-
-    <!-- MCQ Admission Section -->
-    <section class="py-3 bg-light">
-        <div class="container text-center">
-            {{-- <h4 class="mb-4 fw-bold reveal">MCQ এডমিশন এক প্লাটফর্মে</h4> --}}
-            <div class="row g-4">
-
-                @php
-                    // Available colors for random assignment
-                    $availableColors = [
-                        'bg-primary text-white',
-                        'bg-success text-white',
-                        'bg-danger text-white',
-                        'bg-warning text-dark',
-                        'bg-info text-dark',
-                        'bg-secondary text-white',
-                        'bg-dark text-white',
-                        'bg-light text-dark border',
-                    ];
-                @endphp
-
-                @foreach ($admissions as $admission)
-                    @php
-                        // Random color for each card
-                        $colorClass = $availableColors[array_rand($availableColors)];
-                    @endphp
-
-                    <div class="col-md-3 col-sm-6 ">
-                        <div class="p-4 rounded shadow-sm h-100 {{ $colorClass }} reveal">
-                            <h5 class="mb-0">{{ $admission->name }}</h5>
-                        </div>
-                    </div>
-                @endforeach
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Program Section with Slick Carousel -->
-    <section class="py-5">
-        <div class="container">
-            <div class="card shadow-sm border-0">
-                <h2 class="fw-bold card-title mb-3 text-center reveal">আমাদের কোর্স সমূহ</h2>
-
-                @if ($programs->count() > 0)
-                    <!-- Slick Slider Container -->
-                    <div class="program-slider">
-                        @foreach ($programs as $program)
-                            <div class="px-2"> <!-- Optional spacing -->
-                                <div class="card h-100 border-0 shadow-sm  student-card animated-card">
-                                    <img src="{{ $program->image ? url('upload/program/' . $program->image) : url('upload/no_image.jpg') }}"
-                                        class="img-fluid mb-3" alt="{{ $program->name }}">
-                                    <div class="card-body">
-                                        <h4 class="card-title">{{ $program->name }}</h4>
-                                        <div class="about-description reveal mt-3"
-                                            style="max-height: 400px; overflow-y: auto;">
-                                            {!! $program->description !!}
-                                        </div>
-
-                                        <a href="{{ route('program.show', $program->slug) }}"
-                                            class="btn btn-primary mt-3 w-100 text-center">
-                                            বিস্তারিত দেখুন
-                                        </a>
-
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <p>No programs found.</p>
-                @endif
-
-            </div>
-        </div>
-    </section>
-
-
-
-    <!-- Teacher Section with Slick Carousel -->
-    <section class="py-5 bg-light position-relative">
-        <div class="container text-center">
-            <h4 class="mb-4 fw-bold reveal">দেশ সেরা মেন্টর</h4>
-
-            @if ($teachers->count() > 0)
-                <div class="teacher-slider">
-                    @foreach ($teachers as $teacher)
-                        <div class="px-2">
-                            <div class="card shadow rounded border-0 h-100  student-card animated-card">
-                                <img src="{{ asset('upload/teacher/' . $teacher->image) }}" class="card-img-top"
-                                    alt="{{ $teacher->name }}">
-                                <div class="card-body">
-                                    <h5 class="card-title mb-1">{{ $teacher->name }}</h5>
-                                    <p class="text-muted mb-1">{{ $teacher->designation }}</p>
-                                    @if ($teacher->versity)
-                                        <p class="text-success mb-1">{{ $teacher->versity }}</p>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
+<section class="py-5 position-relative" style="background:linear-gradient(-45deg, #0b2545, #1d3557, #457b9d, #0b2545);">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-md-4 mb-4">
+                <div class="single-counter">
+                    <h2 class="count display-4 text-light" data-count="{{ $studentCount }}"></h2>
+                    <h5 class="fw-bold text-light">মোট শিক্ষার্থী</h5>
                 </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="single-counter">
+                    <h2 class="count display-4 text-light" data-count="{{ $teacherCount }}"></h2>
+                    <h5 class="fw-bold text-light">মোট মেন্টর</h5>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="single-counter">
+                    <h2 class="count display-4 text-light" data-count="{{ $programCount }}"></h2>
+                    <h5 class="fw-bold text-light">মোট প্রোগ্রাম</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+@php
+$colors = ['text-primary', 'text-success', 'text-warning', 'text-danger'];
+@endphp
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <h2 class="mb-4 reveal">কেন চকবোর্ড এক্সাম সেন্টার সেরা?</h2>
+        @php
+        // Light colors for background
+        $bgColors = [
+        '#f2f2f2',
+        '#e6f7ff',
+        '#fff0f5',
+        '#fef9e7',
+        '#e8f5e9',
+        '#f3e5f5',
+        '#fff3e0',
+        '#f1f8e9',
+        '#e0f7fa',
+        '#ede7f6',
+        ];
+
+        // More vivid colors for icons
+        $iconColors = [
+        '#ff4d4f', // Red
+        '#1890ff', // Blue
+        '#52c41a', // Green
+        '#faad14', // Gold
+        '#722ed1', // Purple
+        '#eb2f96', // Pink
+        '#13c2c2', // Teal
+        '#a0d911', // Lime
+        '#fa541c', // Volcano
+        '#2f54eb', // Indigo
+        ];
+        @endphp
+
+        <div class="row">
+            @foreach ($features as $index => $feature)
+            <div class="col-12 col-sm-6 col-md-3 mb-4">
+                <div class="p-4 border rounded shadow-sm h-100 reveal  student-card animated-card"
+                    style="background-color: {{ $bgColors[$index % count($bgColors)] }};">
+                    <i class="{{ $feature->icon }} fa-2x mb-3"
+                        style="color: {{ $iconColors[$index % count($iconColors)] }};"></i>
+                    <h5>{{ $feature->title }}</h5>
+                    <p>{{ $feature->description }}</p>
+                </div>
+            </div>
+            @endforeach
+
+        </div>
+
+    </div>
+</section>
+
+
+
+<!-- Counter Section -->
+<section class="py-5 text-white" style="background:#1d3557;">
+    <div class="container text-center">
+        <div class="row g-4">
+            @foreach ($counters as $counter)
+            <div class="col-md-3 reveal">
+                <h2 class="counter" data-target="{{ $counter->counter_no ?? '0' }}">
+                    {{ $counter->counter_no ?? '0' }}</h2>
+                <p>{{ $counter->title ?? '' }}</p>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+<!-- Students Section with Bootstrap Card & Slick Carousel -->
+<section class="py-5 bg-light position-relative">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2
+                class="d-inline-block px-5 py-3 fw-bold text-white border border-3 border-info rounded-4 shadow reveal animated-title">
+                সফল যারা, কেমন তারা
+            </h2>
+        </div>
+
+        @if ($students->count() > 0)
+        <div class="student-slider">
+            @foreach ($students as $student)
+            <div class="px-2">
+                <div class="card border-0 shadow-lg h-100 text-center student-card animated-card">
+                    <div class="card-body p-4">
+
+                        <!-- Profile Image -->
+                        <img src="{{ !empty($student->image) ? url('upload/student/' . $student->image) : url('upload/no_image.jpg') }}"
+                            alt="{{ $student->name }}" class="rounded-circle mb-3 mx-auto profile-img"
+                            style="width: 110px; height: 110px; object-fit: cover;">
+
+                        <!-- Student Info -->
+                        <h5 class="card-title text-dark fw-bold mb-1">
+                            {{ $student->name }}
+                        </h5>
+
+                        <h5 class="card-title text-primary fw-bold mb-1">
+                            {{ $student->merit }}
+                        </h5>
+
+                        @if ($student->versity)
+                        <p class="text-success small mb-2">
+                            {{ $student->versity }}
+                        </p>
+                        @endif
+
+                        <p class="card-text fst-italic text-muted small">
+                            {!! $student->description !!}
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+        @endif
+    </div>
+</section>
+
+
+<!-- Call to Action -->
+<section class="py-5 text-center text-white" style="background: linear-gradient(135deg, #6f42c1, #007bff);">
+    <div class="container reveal">
+        <h2 class="reveal">তোমার ভর্তি পরীক্ষার যাত্রা শুরু করো আজই</h2>
+        <p class="mb-4 reveal">সেরা শিক্ষকদের গাইডলাইন ও স্মার্ট প্র্যাকটিস টুলস একসাথে।</p>
+        <a href="/register" class="btn btn-light btn-lg reveal">এখনই রেজিস্ট্রেশন করুন</a>
+    </div>
+</section>
+
+<!-- E-Book Section with Slick Carousel -->
+<section class="py-5" style="background: #f8fafc;">
+    <div class="container">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold mb-2 reveal">আমাদের বুক শপ</h2>
+                    <p class="text-muted mb-0 reveal">ডিজিটাল বই — ঘরে বসেই অর্ডার করুন</p>
+                </div>
+
+                @if ($ebooks->count() > 0)
+                <!-- Slick Slider Container -->
+                <div class="ebook-slider">
+                    @foreach ($ebooks as $ebook)
+                    <div class="px-2">
+                        <div class="card h-100 border-0 shadow-sm ebook-card animated-card">
+
+                            {{-- Book Photo --}}
+                            <div class="position-relative overflow-hidden" style="background: #eef2ff;">
+                                @if ($ebook->book_photo)
+                                <img src="{{ asset('storage/' . $ebook->book_photo) }}" class="w-100 ebook-img"
+                                    alt="{{ $ebook->book_name }}">
+                                @else
+                                <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&q=80"
+                                     alt="Default Book Image">
+                                @endif
+
+                                {{-- Featured Badge --}}
+                                @if ($ebook->is_featured)
+                                <span class="badge bg-warning text-dark position-absolute"
+                                    style="top: 10px; right: 10px; font-size: 11px;">
+                                    <i class="fas fa-star"></i> Featured
+                                </span>
+                                @endif
+
+                                {{-- Discount Badge --}}
+                                @if ($ebook->has_discount)
+                                <span class="badge bg-danger position-absolute"
+                                    style="top: 10px; left: 10px; font-size: 11px;">
+                                    {{ $ebook->discount_percent }}% OFF
+                                </span>
+                                @endif
+
+                                {{-- Out of Stock Overlay --}}
+                                @if ($ebook->quantity <= 0) <div
+                                    class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center"
+                                    style="top: 0; left: 0; background: rgba(0,0,0,.55);">
+                                    <span class="badge bg-danger" style="font-size: 13px; padding: 6px 14px;">
+                                        Stock Out
+                                    </span>
+                            </div>
+                            @endif
+                        </div>
+
+                        {{-- Body --}}
+                        <div class="card-body d-flex flex-column">
+                            {{-- Book Name --}}
+                            <h5 class="card-title mb-1" style="display: -webkit-box; -webkit-line-clamp: 2;
+                                                -webkit-box-orient: vertical; overflow: hidden;
+                                                min-height: 44px; font-size: 15px;">
+                                {{ $ebook->book_name }}
+                            </h5>
+
+                            {{-- Author --}}
+                            <p class="text-muted small mb-2">
+                                <i class="fas fa-user-edit"></i>
+                                {{ $ebook->author_name }}
+                            </p>
+
+                            {{-- Page count --}}
+                            @if ($ebook->total_page)
+                            <p class="text-muted small mb-2">
+                                <i class="fas fa-file-alt"></i>
+                                {{ $ebook->total_page }} pages
+                            </p>
+                            @endif
+
+                            {{-- Price --}}
+                            <div class="mb-3">
+                                @if ($ebook->has_discount)
+                                <span class="text-muted text-decoration-line-through small d-block">
+                                    ৳{{ number_format($ebook->price, 0) }}
+                                </span>
+                                <span class="fw-bold text-success" style="font-size: 18px;">
+                                    ৳{{ number_format($ebook->sell_price, 0) }}
+                                </span>
+                                @else
+                                <span class="fw-bold text-success" style="font-size: 18px;">
+                                    ৳{{ number_format($ebook->sell_price, 0) }}
+                                </span>
+                                @endif
+                            </div>
+
+                            {{-- Button --}}
+                            <a href="{{ auth()->check() 
+            ? route('user.book.shop.show', $ebook->slug) 
+            : route('login') }}" class="btn btn-primary w-100 mt-auto {{ $ebook->quantity <= 0 ? 'disabled' : '' }}"
+                                @if ($ebook->quantity <= 0) onclick="return false;" @endif>
+                                    <i class="fas fa-eye"></i>
+                                    {{ $ebook->quantity <= 0 ? 'স্টক নেই' : 'বিস্তারিত দেখুন' }} </a>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            @else
+            <div class="text-center py-5">
+                <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                <p class="text-muted">কোনো ই-বুক পাওয়া যায়নি।</p>
+            </div>
             @endif
-        </div>
-    </section>
-
-    <section class="py-5 position-relative" style="background:linear-gradient(-45deg, #0b2545, #1d3557, #457b9d, #0b2545);">
-        <div class="container text-center">
-            <div class="row justify-content-center">
-                <div class="col-md-4 mb-4">
-                    <div class="single-counter">
-                        <h2 class="count display-4 text-light" data-count="{{ $studentCount }}"></h2>
-                        <h5 class="fw-bold text-light">মোট শিক্ষার্থী</h5>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="single-counter">
-                        <h2 class="count display-4 text-light" data-count="{{ $teacherCount }}"></h2>
-                        <h5 class="fw-bold text-light">মোট মেন্টর</h5>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="single-counter">
-                        <h2 class="count display-4 text-light" data-count="{{ $programCount }}"></h2>
-                        <h5 class="fw-bold text-light">মোট প্রোগ্রাম</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-
-    @php
-        $colors = ['text-primary', 'text-success', 'text-warning', 'text-danger'];
-    @endphp
-
-    <!-- Features Section -->
-    <section class="py-5 bg-light">
-        <div class="container text-center">
-            <h2 class="mb-4 reveal">কেন চকবোর্ড এক্সাম সেন্টার সেরা?</h2>
-            @php
-                // Light colors for background
-                $bgColors = [
-                    '#f2f2f2',
-                    '#e6f7ff',
-                    '#fff0f5',
-                    '#fef9e7',
-                    '#e8f5e9',
-                    '#f3e5f5',
-                    '#fff3e0',
-                    '#f1f8e9',
-                    '#e0f7fa',
-                    '#ede7f6',
-                ];
-
-                // More vivid colors for icons
-                $iconColors = [
-                    '#ff4d4f', // Red
-                    '#1890ff', // Blue
-                    '#52c41a', // Green
-                    '#faad14', // Gold
-                    '#722ed1', // Purple
-                    '#eb2f96', // Pink
-                    '#13c2c2', // Teal
-                    '#a0d911', // Lime
-                    '#fa541c', // Volcano
-                    '#2f54eb', // Indigo
-                ];
-            @endphp
-
-            <div class="row">
-                @foreach ($features as $index => $feature)
-                    <div class="col-12 col-sm-6 col-md-3 mb-4">
-                        <div class="p-4 border rounded shadow-sm h-100 reveal  student-card animated-card"
-                            style="background-color: {{ $bgColors[$index % count($bgColors)] }};">
-                            <i class="{{ $feature->icon }} fa-2x mb-3"
-                                style="color: {{ $iconColors[$index % count($iconColors)] }};"></i>
-                            <h5>{{ $feature->title }}</h5>
-                            <p>{{ $feature->description }}</p>
-                        </div>
-                    </div>
-                @endforeach
-
-            </div>
 
         </div>
-    </section>
+    </div>
+    </div>
+</section>
 
-
-
-    <!-- Counter Section -->
-    <section class="py-5 text-white" style="background:#1d3557;">
-        <div class="container text-center">
-            <div class="row g-4">
-                @foreach ($counters as $counter)
-                    <div class="col-md-3 reveal">
-                        <h2 class="counter" data-target="{{ $counter->counter_no ?? '0' }}">
-                            {{ $counter->counter_no ?? '0' }}</h2>
-                        <p>{{ $counter->title ?? '' }}</p>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    <!-- Students Section with Bootstrap Card & Slick Carousel -->
-    <section class="py-5 bg-light position-relative">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2
-                    class="d-inline-block px-5 py-3 fw-bold text-white border border-3 border-info rounded-4 shadow reveal animated-title">
-                    সফল যারা, কেমন তারা
-                </h2>
-            </div>
-
-            @if ($students->count() > 0)
-                <div class="student-slider">
-                    @foreach ($students as $student)
-                        <div class="px-2">
-                            <div class="card border-0 shadow-lg h-100 text-center student-card animated-card">
-                                <div class="card-body p-4">
-
-                                    <!-- Profile Image -->
-                                    <img src="{{ !empty($student->image) ? url('upload/student/' . $student->image) : url('upload/no_image.jpg') }}"
-                                        alt="{{ $student->name }}" class="rounded-circle mb-3 mx-auto profile-img"
-                                        style="width: 110px; height: 110px; object-fit: cover;">
-
-                                    <!-- Student Info -->
-                                    <h5 class="card-title text-dark fw-bold mb-1">
-                                        {{ $student->name }}
-                                    </h5>
-
-                                    <h5 class="card-title text-primary fw-bold mb-1">
-                                        {{ $student->merit }}
-                                    </h5>
-
-                                    @if ($student->versity)
-                                        <p class="text-success small mb-2">
-                                            {{ $student->versity }}
-                                        </p>
-                                    @endif
-
-                                    <p class="card-text fst-italic text-muted small">
-                                        {!! $student->description !!}
-                                    </p>
-
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-        </div>
-    </section>
-
-
-    <!-- Call to Action -->
-    <section class="py-5 text-center text-white" style="background: linear-gradient(135deg, #6f42c1, #007bff);">
-        <div class="container reveal">
-            <h2 class="reveal">তোমার ভর্তি পরীক্ষার যাত্রা শুরু করো আজই</h2>
-            <p class="mb-4 reveal">সেরা শিক্ষকদের গাইডলাইন ও স্মার্ট প্র্যাকটিস টুলস একসাথে।</p>
-            <a href="/register" class="btn btn-light btn-lg reveal">এখনই রেজিস্ট্রেশন করুন</a>
-        </div>
-    </section>
-
-    <!-- Newsletter -->
-    <section class="newsletter container text-center reveal">
-        <h3>Subscribe Our Newsletter</h3>
-        <p>Subscribed to our newsletter to get regular update about our courses.</p>
-        <form class="d-flex justify-content-center mt-3">
-            <input type="email" class="form-control w-50" placeholder="Your email here...">
-            <button type="submit" class="btn btn-gradient">Subscribe</button>
-        </form>
-    </section>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
+<!-- Newsletter -->
+<section class="newsletter container text-center reveal">
+    <h3>Subscribe Our Newsletter</h3>
+    <p>Subscribed to our newsletter to get regular update about our courses.</p>
+    <form class="d-flex justify-content-center mt-3">
+        <input type="email" class="form-control w-50" placeholder="Your email here...">
+        <button type="submit" class="btn btn-gradient">Subscribe</button>
+    </form>
+</section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
             $('.count').each(function() {
                 let $this = $(this);
                 let countTo = $this.attr('data-count');
@@ -466,5 +584,5 @@
                 });
             });
         });
-    </script>
+</script>
 @endsection

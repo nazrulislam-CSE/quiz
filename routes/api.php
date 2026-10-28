@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\V1\User\Banner\BannerController;
 use App\Http\Controllers\Api\V1\User\Recharge\RechargeController;
 use App\Http\Controllers\Api\V1\User\Study\StudyCenterController;
 use App\Http\Controllers\Api\V1\User\Study\CoursePurchaseController;
+use App\Http\Controllers\Api\V1\User\Eshop\BookShopController;
 
 use App\Http\Controllers\Api\V1\User\AdmissionInfoController;
 
@@ -169,7 +170,15 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
                 // Voucher (JSON + web_url for print/download)
                 Route::get('/voucher/{order_no}', [CoursePurchaseController::class, 'voucher'])
                      ->name('study.center.order.voucher');
-            });
+          });
+
+          // Eshop Book
+          Route::prefix('book-shop')->group(function () {
+               Route::get('/', [BookShopController::class, 'index'])
+               ->name('book.shop');
+               Route::get('/{slug}', [BookShopController::class, 'show'])->name('book.shop.show');
+               Route::get('/orders', [BookShopController::class, 'orders'])->name('book.orders');
+          });
         });
     });
 

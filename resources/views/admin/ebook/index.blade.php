@@ -191,7 +191,7 @@
                                             @if ($ebook->book_photo)
                                                 <img src="{{ asset('storage/' . $ebook->book_photo) }}"
                                                      alt="{{ $ebook->book_name }}"
-                                                     style="width: 50px; height: 60px; object-fit: cover;
+                                                     style="width: 100%; height: 60px; object-fit: cover;
                                                             border-radius: 6px; border: 1px solid #e5e7eb;">
                                             @else
                                                 <span class="badge bg-light text-muted">No Image</span>
