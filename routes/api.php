@@ -55,6 +55,19 @@ Route::prefix('study-center/payment')->group(function () {
          ->name('study.center.payment.cancel');
 });
 
+/* ============================================================
+   ✅ EPS Callback — Book Shop (Public, no auth)
+   Same pattern as course — outside check.bk.token
+============================================================ */
+Route::prefix('book-shop/payment')->group(function () {
+    Route::match(['get', 'post'], '/success', [BookShopController::class, 'paymentSuccess'])
+         ->name('book.shop.payment.success');
+    Route::match(['get', 'post'], '/fail',    [BookShopController::class, 'paymentFail'])
+         ->name('book.shop.payment.fail');
+    Route::match(['get', 'post'], '/cancel',  [BookShopController::class, 'paymentCancel'])
+         ->name('book.shop.payment.cancel');
+});
+
 
 Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
 
@@ -172,12 +185,24 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
                      ->name('study.center.order.voucher');
           });
 
-          // Eshop Book
+          /* ============> Book Shop (Auth Required) <============ */
           Route::prefix('book-shop')->group(function () {
-               Route::get('/', [BookShopController::class, 'index'])
+
+          // ⚠️ Specific routes FIRST — {slug} সবশেষে!
+          Route::get('/orders', [BookShopController::class, 'orders'])
+               ->name('book.orders');
+
+          Route::get('/orders/{order_no}/voucher', [BookShopController::class, 'voucher'])
+               ->name('book.voucher');
+
+          Route::post('/checkout/{slug}', [BookShopController::class, 'buy'])
+               ->name('book.checkout');
+
+          Route::get('/', [BookShopController::class, 'index'])
                ->name('book.shop');
-               Route::get('/{slug}', [BookShopController::class, 'show'])->name('book.shop.show');
-               Route::get('/orders', [BookShopController::class, 'orders'])->name('book.orders');
+
+          Route::get('/{slug}', [BookShopController::class, 'show'])
+               ->name('book.shop.show');
           });
         });
     });

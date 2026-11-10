@@ -277,7 +277,26 @@ class BookShopController extends Controller
                 $buyer = User::findOrFail($sessionData['user_id'] ?? Auth::id());
                 $book  = Ebook::findOrFail($sessionData['ebook_id']);
 
-                $commissionBase = (float) ($book->sell_price > 0 ? $book->sell_price : $book->price);
+                /* ============================================================
+                   ✅ COMMISSION BASE — book table এর `commission` ফিল্ড থেকে
+                   (commission ফিল্ড = মোট কমিশন টাকা)
+                   উদাহরণ: price=20, commission=10 → মোট 10 টাকা ভাগ হবে
+                   50% + 25% + 15% + 10% = 100%
+                ============================================================ */
+                $commissionBase = (float) $book->commission;
+
+                Log::info('Book Commission Distribution', [
+                    'ebook_id'        => $book->id,
+                    'book_name'       => $book->book_name,
+                    'price'           => $book->price,
+                    'sell_price'      => $book->sell_price,
+                    'commission_fld'  => $book->commission,
+                    'commission_base' => $commissionBase,
+                    'direct_50'       => $commissionBase * 0.50,
+                    'gen1_25'         => $commissionBase * 0.25,
+                    'gen2_15'         => $commissionBase * 0.15,
+                    'gen3_10'         => $commissionBase * 0.10,
+                ]);
 
                 /* ----- Create Book Order ----- */
                 $order = BookOrder::create([
@@ -326,7 +345,7 @@ class BookShopController extends Controller
                     'amount'    => $verifiedAmount,
                 ]);
 
-                /* ----- Commission distribute ----- */
+                /* ----- Commission distribute (50/25/15/10) ----- */
                 $this->referBookCommission($buyer, $commissionBase, $book, $order);
 
                 DB::commit();
@@ -360,6 +379,7 @@ class BookShopController extends Controller
     /* ============================================================
        REFERRAL BOOK COMMISSION
        Direct 50% | 1st Gen 25% | 2nd Gen 15% | 3rd Gen 10%
+       Base = book->commission (মোট কমিশন টাকা)
     ============================================================ */
     public function referBookCommission(User $user, float $baseAmount, Ebook $book, BookOrder $order): bool
     {
@@ -369,12 +389,18 @@ class BookShopController extends Controller
         $thirdPercent  = 10;
 
         if ($baseAmount <= 0) {
+            Log::warning('Book Commission Skipped - base amount zero', [
+                'book_id' => $book->id,
+                'user_id' => $user->id,
+            ]);
+
             return false;
         }
 
         /* ===== STEP 1: Direct Referrer (50%) ===== */
         $directReferrerId = $user->refer_by;
         if (! $directReferrerId) {
+            Log::info('Book Commission - No direct referrer', ['buyer_id' => $user->id]);
             return true;
         }
 
@@ -405,6 +431,12 @@ class BookShopController extends Controller
                 'status'       => 1,
                 'commission'   => $directCommission,
                 'total_amount' => $baseAmount,
+            ]);
+
+            Log::info('Book Commission - Direct Paid', [
+                'to_user'  => $directReferrer->id,
+                'amount'   => $directCommission,
+                'percent'  => $directPercent,
             ]);
         }
 
@@ -445,6 +477,12 @@ class BookShopController extends Controller
                 'commission'   => $firstCommission,
                 'total_amount' => $baseAmount,
             ]);
+
+            Log::info('Book Commission - 1st Gen Paid', [
+                'to_user'  => $firstGen->id,
+                'amount'   => $firstCommission,
+                'percent'  => $firstPercent,
+            ]);
         }
 
         /* ===== STEP 3: 2nd Gen (15%) ===== */
@@ -482,6 +520,12 @@ class BookShopController extends Controller
                 'status'       => 1,
                 'commission'   => $secondCommission,
                 'total_amount' => $baseAmount,
+            ]);
+
+            Log::info('Book Commission - 2nd Gen Paid', [
+                'to_user'  => $secondGen->id,
+                'amount'   => $secondCommission,
+                'percent'  => $secondPercent,
             ]);
         }
 
@@ -521,6 +565,12 @@ class BookShopController extends Controller
                 'commission'   => $thirdCommission,
                 'total_amount' => $baseAmount,
             ]);
+
+            Log::info('Book Commission - 3rd Gen Paid', [
+                'to_user'  => $thirdGen->id,
+                'amount'   => $thirdCommission,
+                'percent'  => $thirdPercent,
+            ]);
         }
 
         return true;
@@ -537,7 +587,7 @@ class BookShopController extends Controller
         return redirect()->route('user.book.shop')
             ->with('error', '❌ Payment ব্যর্থ হয়েছে। টাকা কাটা হয়নি। আবার চেষ্টা করুন।');
     }
- 
+
     public function paymentCancel(Request $request)
     {
         Log::info('Book EPS Cancel Callback', $request->all());
@@ -563,12 +613,25 @@ class BookShopController extends Controller
     }
 
     /* ============================================================
-    BOOK ORDER VOUCHER
+       BOOK ORDER VOUCHER
     ============================================================ */
     public function voucher($orderNo)
     {
         $order = BookOrder::where('order_no', $orderNo)
             ->where('user_id', Auth::id())
+            ->with(['user', 'ebook'])
+            ->firstOrFail();
+
+        return view('user.eshop.book.voucher', compact('order'));
+    }
+
+    /* ============================================================
+    PUBLIC VOUCHER (Signed URL — no auth)
+    Route: book.voucher.public
+    ============================================================ */
+    public function publicVoucher($orderNo)
+    {
+        $order = BookOrder::where('order_no', $orderNo)
             ->with(['user', 'ebook'])
             ->firstOrFail();
 

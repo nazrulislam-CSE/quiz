@@ -84,13 +84,13 @@
                             </a>
                         </li>
 
-                        {{-- E-Book Paid List (future) --}}
+                        {{-- E-Book Order List --}}
                         <li>
                             <a class="slide-item {{ Request::is('admin/ebook-orders*') ? 'active' : '' }}"
                                 href="{{ Route::has('admin.ebook.order.index') ? route('admin.ebook.order.index') : '#' }}"
                                 @if(!Route::has('admin.ebook.order.index')) onclick="comingSoon(); return false;"
                                 @endif>
-                                E Book Paid List
+                                E Book Order List
                             </a>
                         </li>
 
@@ -103,13 +103,13 @@
                             </a>
                         </li>
 
-                        {{-- E-Product Paid List (future) --}}
+                        {{-- E-Product Order List --}}
                         <li>
                             <a class="slide-item {{ Request::is('admin/eproduct-orders*') ? 'active' : '' }}"
                                 href="{{ Route::has('admin.eproduct.order.index') ? route('admin.eproduct.order.index') : '#' }}"
                                 @if(!Route::has('admin.eproduct.order.index')) onclick="comingSoon(); return false;"
                                 @endif>
-                                E Product Paid List
+                                E Product Order List
                             </a>
                         </li>
                     </ul>
