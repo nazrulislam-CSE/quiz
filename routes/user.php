@@ -95,11 +95,22 @@ Route::group(['middleware' => 'auth'], function () {
          ->name('study.center.my.courses');
     Route::get('/voucher/{order_no}', [StudyCenterController::class, 'voucher'])->name('study.center.my.courses.voucher');
 
-    // Eshop Book
-    Route::get('/book-shop', [BookShopController::class, 'index'])
-    ->name('book.shop');
-    Route::get('/book-shop/{slug}', [BookShopController::class, 'show'])->name('book.shop.show');
-    Route::get('/book-orders', [BookShopController::class, 'orders'])->name('book.orders');
+     // Eshop Book
+     Route::get('/book-shop', [BookShopController::class, 'index'])->name('book.shop');
+     Route::get('/book-shop/{slug}', [BookShopController::class, 'show'])->name('book.shop.show');
+
+     // Checkout (POST)
+     Route::post('/book-shop/{slug}/checkout', [BookShopController::class, 'checkout'])->name('book.checkout');
+
+     // EPS Callbacks
+     Route::get('/book-payment/success', [BookShopController::class, 'paymentSuccess'])->name('book.payment.success');
+     Route::get('/book-payment/fail',    [BookShopController::class, 'paymentFail'])->name('book.payment.fail');
+     Route::get('/book-payment/cancel',  [BookShopController::class, 'paymentCancel'])->name('book.payment.cancel');
+
+     // My Orders
+     Route::get('/book-orders', [BookShopController::class, 'orders'])->name('book.orders');
+     Route::get('/book-orders/{orderNo}/voucher', [BookShopController::class, 'voucher'])
+    ->name('book.orders.voucher');
 
 
 

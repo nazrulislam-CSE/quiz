@@ -185,7 +185,7 @@
                 <p>ডিজিটাল বই — ঘরে বসেই অর্ডার করুন</p>
             </div>
             <div class="mt-3 mt-md-0">
-                <a href="#" onclick="showOrdersSoon()" class="btn btn-light fw-semibold">
+                <a href="{{ route('user.book.orders') }}" class="btn btn-light fw-semibold">
                     <i class="fas fa-shopping-bag"></i> আমার অর্ডার
                 </a>
             </div>
@@ -287,15 +287,4 @@
     @endif
 
 </div>
-@push('scripts')
-<script>
-    function showOrdersSoon() {
-        if (typeof toastr !== 'undefined') {
-            toastr.info('শীঘ্রই আসছে! অর্ডার লিস্ট ফিচারটি তৈরি হচ্ছে 🚀');
-        } else {
-            alert('শীঘ্রই আসছে!');
-        }
-    }
-</script>
-@endpush
 @endsection

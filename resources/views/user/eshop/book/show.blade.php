@@ -13,52 +13,70 @@
         overflow: hidden;
         margin-bottom: 24px;
     }
+
     .book-hero::before {
         content: '';
         position: absolute;
-        top: -60px; right: -60px;
-        width: 220px; height: 220px;
-        background: rgba(255,255,255,.12);
+        top: -60px;
+        right: -60px;
+        width: 220px;
+        height: 220px;
+        background: rgba(255, 255, 255, .12);
         border-radius: 50%;
-        pointer-events: none; /* ✅ বাটন ক্লিক ব্লক আটকাতে */
+        pointer-events: none;
+        /* ✅ বাটন ক্লিক ব্লক আটকাতে */
         z-index: 0;
     }
+
     .book-hero::after {
         content: '';
         position: absolute;
-        bottom: -80px; left: -40px;
-        width: 180px; height: 180px;
-        background: rgba(255,255,255,.08);
+        bottom: -80px;
+        left: -40px;
+        width: 180px;
+        height: 180px;
+        background: rgba(255, 255, 255, .08);
         border-radius: 50%;
-        pointer-events: none; /* ✅ */
+        pointer-events: none;
+        /* ✅ */
         z-index: 0;
     }
+
     .book-hero .hero-content {
         position: relative;
-        z-index: 2; /* ✅ পুরো কনটেন্ট বৃত্তের উপরে */
+        z-index: 2;
+        /* ✅ পুরো কনটেন্ট বৃত্তের উপরে */
     }
+
     .book-hero .hero-icon {
-        width: 70px; height: 70px;
-        background: rgba(255,255,255,.22);
+        width: 70px;
+        height: 70px;
+        background: rgba(255, 255, 255, .22);
         border-radius: 18px;
-        display: flex; align-items: center; justify-content: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         backdrop-filter: blur(10px);
         flex-shrink: 0;
     }
+
     .book-hero h3 {
         font-weight: 800;
         margin-bottom: 4px;
     }
+
     .book-hero p {
         opacity: .9;
         margin-bottom: 0;
     }
+
     .book-hero .btn-light {
         transition: all .2s ease;
     }
+
     .book-hero .btn-light:hover {
         transform: translateX(-4px);
-        box-shadow: 0 6px 18px rgba(0,0,0,.2);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, .2);
     }
 
     /* ============ BREADCRUMB ============ */
@@ -66,20 +84,26 @@
         background: #fff;
         border-radius: 12px;
         padding: 10px 16px;
-        box-shadow: 0 2px 10px rgba(0,0,0,.05);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, .05);
         margin-bottom: 20px;
     }
+
     .custom-breadcrumb .breadcrumb {
         margin-bottom: 0;
         font-size: 13px;
     }
+
     .custom-breadcrumb a {
         color: #4f46e5;
         font-weight: 600;
         text-decoration: none;
         transition: color .2s;
     }
-    .custom-breadcrumb a:hover { color: #7c3aed; }
+
+    .custom-breadcrumb a:hover {
+        color: #7c3aed;
+    }
+
     .custom-breadcrumb .breadcrumb-item.active {
         color: #64748b;
         font-weight: 600;
@@ -89,7 +113,7 @@
     .book-detail-card {
         border: none;
         border-radius: 20px;
-        box-shadow: 0 8px 30px rgba(0,0,0,.08);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, .08);
         overflow: hidden;
         background: #fff;
     }
@@ -103,35 +127,56 @@
         min-height: 480px;
         position: relative;
     }
+
     .book-cover-wrap img {
         max-width: 100%;
         max-height: 440px;
         border-radius: 14px;
-        box-shadow: 0 16px 40px rgba(0,0,0,.28);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, .28);
         transition: transform .4s ease;
     }
-    .book-cover-wrap img:hover { transform: scale(1.04) rotate(-1deg); }
+
+    .book-cover-wrap img:hover {
+        transform: scale(1.04) rotate(-1deg);
+    }
 
     .badge-featured {
-        position: absolute; top: 18px; right: 18px;
+        position: absolute;
+        top: 18px;
+        right: 18px;
         background: linear-gradient(135deg, #f59e0b, #f97316);
         color: #fff;
-        font-size: 12px; padding: 6px 14px;
-        border-radius: 20px; font-weight: 700;
-        box-shadow: 0 4px 12px rgba(245,158,11,.4);
+        font-size: 12px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, .4);
     }
+
     .badge-discount {
-        position: absolute; top: 18px; left: 18px;
+        position: absolute;
+        top: 18px;
+        left: 18px;
         background: linear-gradient(135deg, #ef4444, #dc2626);
         color: #fff;
-        font-size: 12px; padding: 6px 14px;
-        border-radius: 20px; font-weight: 700;
-        box-shadow: 0 4px 12px rgba(239,68,68,.4);
+        font-size: 12px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, .4);
         animation: pulse-badge 2s infinite;
     }
+
     @keyframes pulse-badge {
-        0%, 100% { transform: scale(1); }
-        50%      { transform: scale(1.05); }
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
     }
 
     .book-name {
@@ -141,6 +186,7 @@
         margin-bottom: 10px;
         line-height: 1.3;
     }
+
     .book-author-badge {
         display: inline-flex;
         align-items: center;
@@ -160,6 +206,7 @@
         gap: 12px;
         margin: 22px 0;
     }
+
     .info-box {
         background: linear-gradient(135deg, #f8fafc, #f1f5f9);
         border-radius: 14px;
@@ -168,17 +215,20 @@
         border: 1px solid #e2e8f0;
         transition: all .25s ease;
     }
+
     .info-box:hover {
         transform: translateY(-3px);
-        box-shadow: 0 6px 16px rgba(79,70,229,.12);
+        box-shadow: 0 6px 16px rgba(79, 70, 229, .12);
         border-color: #c7d2fe;
     }
+
     .info-box i {
         font-size: 20px;
         color: #7c3aed;
         margin-bottom: 8px;
         display: block;
     }
+
     .info-box .label {
         font-size: 11px;
         color: #94a3b8;
@@ -186,6 +236,7 @@
         font-weight: 700;
         letter-spacing: .5px;
     }
+
     .info-box .value {
         font-size: 16px;
         font-weight: 800;
@@ -205,18 +256,21 @@
         gap: 14px;
         border: 1px solid #e9d5ff;
     }
+
     .price-section .old-price {
         font-size: 15px;
         color: #94a3b8;
         text-decoration: line-through;
         display: block;
     }
+
     .price-section .new-price {
         font-size: 34px;
         font-weight: 800;
         color: #4f46e5;
         line-height: 1;
     }
+
     .price-section .free-tag {
         font-size: 34px;
         font-weight: 800;
@@ -232,8 +286,16 @@
         align-items: center;
         gap: 6px;
     }
-    .stock-badge.in  { background: #dcfce7; color: #15803d; }
-    .stock-badge.out { background: #fee2e2; color: #b91c1c; }
+
+    .stock-badge.in {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .stock-badge.out {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
 
     .btn-buy-now {
         background: linear-gradient(135deg, #4f46e5, #7c3aed);
@@ -250,31 +312,40 @@
         text-decoration: none;
         width: 100%;
         justify-content: center;
-        box-shadow: 0 8px 20px rgba(124,58,237,.3);
+        box-shadow: 0 8px 20px rgba(124, 58, 237, .3);
         position: relative;
         overflow: hidden;
         cursor: pointer;
     }
+
     .btn-buy-now::before {
         content: '';
         position: absolute;
-        top: 50%; left: 50%;
-        width: 0; height: 0;
-        background: rgba(255,255,255,.25);
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, .25);
         border-radius: 50%;
         transform: translate(-50%, -50%);
         transition: width .5s, height .5s;
     }
+
     .btn-buy-now:hover::before {
         width: 400px;
         height: 400px;
     }
+
     .btn-buy-now:hover {
         color: #fff;
         transform: translateY(-3px);
-        box-shadow: 0 12px 28px rgba(124,58,237,.45);
+        box-shadow: 0 12px 28px rgba(124, 58, 237, .45);
     }
-    .btn-buy-now > * { position: relative; z-index: 1; }
+
+    .btn-buy-now>* {
+        position: relative;
+        z-index: 1;
+    }
 
     .btn-buy-now.disabled {
         background: #cbd5e1;
@@ -288,10 +359,11 @@
         background: #fff;
         border-radius: 16px;
         padding: 24px 28px;
-        box-shadow: 0 6px 20px rgba(0,0,0,.06);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, .06);
         margin-top: 28px;
         border-left: 4px solid #7c3aed;
     }
+
     .description-box h5 {
         font-weight: 800;
         color: #1e293b;
@@ -300,30 +372,47 @@
         align-items: center;
         gap: 10px;
     }
-    .description-box h5 i { color: #7c3aed; }
-    .description-box p { color: #475569; line-height: 1.9; margin-bottom: 0; }
+
+    .description-box h5 i {
+        color: #7c3aed;
+    }
+
+    .description-box p {
+        color: #475569;
+        line-height: 1.9;
+        margin-bottom: 0;
+    }
 
     .related-card {
         border: none;
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 4px 16px rgba(0,0,0,.06);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, .06);
         transition: transform .3s ease, box-shadow .3s ease;
         background: #fff;
         height: 100%;
     }
+
     .related-card:hover {
         transform: translateY(-6px);
-        box-shadow: 0 12px 28px rgba(79,70,229,.18);
+        box-shadow: 0 12px 28px rgba(79, 70, 229, .18);
     }
+
     .related-card img {
         width: 100%;
         height: 190px;
         object-fit: cover;
         transition: transform .35s ease;
     }
-    .related-card:hover img { transform: scale(1.06); }
-    .related-card .card-body { padding: 14px 16px; }
+
+    .related-card:hover img {
+        transform: scale(1.06);
+    }
+
+    .related-card .card-body {
+        padding: 14px 16px;
+    }
+
     .related-card h6 {
         font-weight: 700;
         font-size: 14px;
@@ -335,13 +424,30 @@
         overflow: hidden;
         min-height: 40px;
     }
-    .related-card small { color: #7c3aed; font-weight: 700; font-size: 14px; }
+
+    .related-card small {
+        color: #7c3aed;
+        font-weight: 700;
+        font-size: 14px;
+    }
 
     @media (max-width: 768px) {
-        .book-cover-wrap { min-height: auto; padding: 20px; }
-        .info-grid { grid-template-columns: 1fr 1fr; }
-        .book-name { font-size: 22px; }
-        .price-section .new-price { font-size: 28px; }
+        .book-cover-wrap {
+            min-height: auto;
+            padding: 20px;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .book-name {
+            font-size: 22px;
+        }
+
+        .price-section .new-price {
+            font-size: 28px;
+        }
     }
 </style>
 
@@ -379,8 +485,7 @@
                         <i class="fas fa-book-open"></i> বুক শপ
                     </a>
                 </li>
-                <li class="breadcrumb-item active text-truncate" style="max-width: 320px;"
-                    aria-current="page">
+                <li class="breadcrumb-item active text-truncate" style="max-width: 320px;" aria-current="page">
                     {{ $book->book_name }}
                 </li>
             </ol>
@@ -395,23 +500,21 @@
             <div class="col-lg-5">
                 <div class="book-cover-wrap">
                     @if ($book->book_photo)
-                        <img src="{{ asset('storage/' . $book->book_photo) }}"
-                             alt="{{ $book->book_name }}">
+                    <img src="{{ asset('storage/' . $book->book_photo) }}" alt="{{ $book->book_name }}">
                     @else
-                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&q=80"
-                             alt="Default Book">
+                    <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&q=80" alt="Default Book">
                     @endif
 
                     @if ($book->is_featured)
-                        <span class="badge-featured">
-                            <i class="fas fa-star"></i> ফিচারড
-                        </span>
+                    <span class="badge-featured">
+                        <i class="fas fa-star"></i> ফিচারড
+                    </span>
                     @endif
 
                     @if ($book->discount > 0)
-                        <span class="badge-discount">
-                            {{ (int) $book->discount }}% ছাড়
-                        </span>
+                    <span class="badge-discount">
+                        {{ (int) $book->discount }}% ছাড়
+                    </span>
                     @endif
                 </div>
             </div>
@@ -449,43 +552,44 @@
                     <div class="price-section">
                         <div>
                             @if ($book->price == 0)
-                                <span class="free-tag">ফ্রি</span>
+                            <span class="free-tag">ফ্রি</span>
                             @elseif ($book->discount > 0)
-                                <span class="old-price">৳{{ number_format($book->price, 0) }}</span>
-                                <span class="new-price">৳{{ number_format($book->sell_price, 0) }}</span>
+                            <span class="old-price">৳{{ number_format($book->price, 0) }}</span>
+                            <span class="new-price">৳{{ number_format($book->sell_price, 0) }}</span>
                             @else
-                                <span class="new-price">৳{{ number_format($book->price, 0) }}</span>
+                            <span class="new-price">৳{{ number_format($book->price, 0) }}</span>
                             @endif
                         </div>
 
                         <div>
                             @if ($book->quantity > 0)
-                                <span class="stock-badge in">
-                                    <i class="fas fa-check-circle"></i>
-                                    স্টকে আছে ({{ $book->quantity }})
-                                </span>
+                            <span class="stock-badge in">
+                                <i class="fas fa-check-circle"></i>
+                                স্টকে আছে ({{ $book->quantity }})
+                            </span>
                             @else
-                                <span class="stock-badge out">
-                                    <i class="fas fa-times-circle"></i>
-                                    স্টক শেষ
-                                </span>
+                            <span class="stock-badge out">
+                                <i class="fas fa-times-circle"></i>
+                                স্টক শেষ
+                            </span>
                             @endif
                         </div>
                     </div>
 
                     {{-- Buy Button (Coming Soon - Toastr) --}}
                     @if ($book->quantity > 0)
-                        <button type="button"
-                                class="btn-buy-now"
-                                onclick="showComingSoon()">
+                    <form action="{{ route('user.book.checkout', $book->slug) }}" method="POST" class="w-100">
+                        @csrf
+                        <button type="submit" class="btn-buy-now">
                             <i class="fas fa-shopping-cart"></i>
                             <span>এখনই কিনুন</span>
                         </button>
+                    </form>
                     @else
-                        <button class="btn-buy-now disabled" disabled>
-                            <i class="fas fa-times-circle"></i>
-                            <span>স্টক শেষ — শীঘ্রই আসছে</span>
-                        </button>
+                    <button class="btn-buy-now disabled" disabled>
+                        <i class="fas fa-times-circle"></i>
+                        <span>স্টক শেষ — শীঘ্রই আসছে</span>
+                    </button>
                     @endif
 
                     <p class="text-muted small text-center mt-3 mb-0">
@@ -501,48 +605,45 @@
 
     {{-- ============ DESCRIPTION ============ --}}
     @if ($book->description)
-        <div class="description-box">
-            <h5><i class="fas fa-align-left"></i> বইয়ের বিবরণ</h5>
-            <p>{!! nl2br(e($book->description)) !!}</p>
-        </div>
+    <div class="description-box">
+        <h5><i class="fas fa-align-left"></i> বইয়ের বিবরণ</h5>
+        <p>{!! nl2br(e($book->description)) !!}</p>
+    </div>
     @endif
 
     {{-- ============ RELATED BOOKS ============ --}}
     @if ($relatedBooks->count() > 0)
-        <div class="mt-5">
-            <h5 class="fw-bold mb-3">
-                <i class="fas fa-layer-group text-primary"></i>
-                একই লেখকের অন্যান্য বই
-            </h5>
-            <div class="row g-3">
-                @foreach ($relatedBooks as $related)
-                    <div class="col-lg-3 col-md-6 col-sm-6">
-                        <a href="{{ route('user.book.shop.show', $related->slug) }}"
-                           class="text-decoration-none">
-                            <div class="related-card">
-                                @if ($related->book_photo)
-                                    <img src="{{ asset('storage/' . $related->book_photo) }}"
-                                         alt="{{ $related->book_name }}">
+    <div class="mt-5">
+        <h5 class="fw-bold mb-3">
+            <i class="fas fa-layer-group text-primary"></i>
+            একই লেখকের অন্যান্য বই
+        </h5>
+        <div class="row g-3">
+            @foreach ($relatedBooks as $related)
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <a href="{{ route('user.book.shop.show', $related->slug) }}" class="text-decoration-none">
+                    <div class="related-card">
+                        @if ($related->book_photo)
+                        <img src="{{ asset('storage/' . $related->book_photo) }}" alt="{{ $related->book_name }}">
+                        @else
+                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80" alt="Default">
+                        @endif
+                        <div class="card-body">
+                            <h6>{{ $related->book_name }}</h6>
+                            <small>
+                                @if ($related->discount > 0)
+                                ৳{{ number_format($related->sell_price, 0) }}
                                 @else
-                                    <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80"
-                                         alt="Default">
+                                ৳{{ number_format($related->price, 0) }}
                                 @endif
-                                <div class="card-body">
-                                    <h6>{{ $related->book_name }}</h6>
-                                    <small>
-                                        @if ($related->discount > 0)
-                                            ৳{{ number_format($related->sell_price, 0) }}
-                                        @else
-                                            ৳{{ number_format($related->price, 0) }}
-                                        @endif
-                                    </small>
-                                </div>
-                            </div>
-                        </a>
+                            </small>
+                        </div>
                     </div>
-                @endforeach
+                </a>
             </div>
+            @endforeach
         </div>
+    </div>
     @endif
 
 </div>
