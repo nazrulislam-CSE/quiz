@@ -17,6 +17,7 @@ use App\Models\Feature;
 use App\Models\McqQuizAnswer;
 use App\Models\Program;
 use App\Models\Ebook;
+use App\Models\Eproduct;
 use Auth;
 
 class FrontendController extends Controller
@@ -40,9 +41,12 @@ class FrontendController extends Controller
         $studentCount = $users->count();
 
         $ebooks = Ebook::where('status','active')->latest()->get();
+        $eproducts = Eproduct::where('status','active')->latest()->get();
+
+
 
         $pageTitle = 'Home';
-        return view('frontend.index',compact('pageTitle','sliders','abouts','counters','teachers','students','admissions','features','programs','teacherCount','programCount','studentCount','ebooks'));
+        return view('frontend.index',compact('pageTitle','sliders','abouts','counters','teachers','students','admissions','features','programs','teacherCount','programCount','studentCount','ebooks','eproducts'));
     }
 
     public function onlineQuiz(Request $request){

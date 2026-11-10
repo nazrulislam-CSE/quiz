@@ -552,6 +552,150 @@ $colors = ['text-primary', 'text-success', 'text-warning', 'text-danger'];
     </div>
 </section>
 
+<!-- E-Product Section with Slick Carousel -->
+<section class="py-5" style="background: #f8fafc;">
+    <div class="container">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold mb-2 reveal">আমাদের প্রোডাক্ট শপ</h2>
+                    <p class="text-muted mb-0 reveal">সেরা মানের পণ্য — সরাসরি ঘরে ডেলিভারি</p>
+                </div>
+
+                @if ($eproducts->count() > 0)
+                <!-- Slick Slider Container -->
+                <div class="eproduct-slider">
+                    @foreach ($eproducts as $eproduct)
+                    <div class="px-2">
+                        <div class="card h-100 border-0 shadow-sm ebook-card animated-card">
+
+                            {{-- Product Photo --}}
+                            <div class="position-relative overflow-hidden" style="background: #eef2ff; height: 220px;">
+                                @if ($eproduct->product_photo)
+                                <img src="{{ asset('storage/' . $eproduct->product_photo) }}"
+                                     class="w-100 ebook-img"
+                                     style="height: 220px; object-fit: cover;"
+                                     alt="{{ $eproduct->product_name }}">
+                                @else
+                                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80"
+                                     class="w-100 ebook-img"
+                                     style="height: 220px; object-fit: cover;"
+                                     alt="Default Product Image">
+                                @endif
+
+                                {{-- Featured Badge --}}
+                                @if ($eproduct->is_featured)
+                                <span class="badge bg-warning text-dark position-absolute"
+                                    style="top: 10px; right: 10px; font-size: 11px;">
+                                    <i class="fas fa-star"></i> Featured
+                                </span>
+                                @endif
+
+                                {{-- Discount Badge --}}
+                                @if ($eproduct->has_discount)
+                                <span class="badge bg-danger position-absolute"
+                                    style="top: 10px; left: 10px; font-size: 11px;">
+                                    {{ (int) $eproduct->discount }}% OFF
+                                </span>
+                                @endif
+
+                                {{-- Out of Stock Overlay --}}
+                                @if ($eproduct->quantity <= 0)
+                                <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center"
+                                    style="top: 0; left: 0; background: rgba(0,0,0,.55);">
+                                    <span class="badge bg-danger" style="font-size: 13px; padding: 6px 14px;">
+                                        Stock Out
+                                    </span>
+                                </div>
+                                @endif
+                            </div>
+
+                            {{-- Body --}}
+                            <div class="card-body d-flex flex-column">
+
+                                {{-- Product Name --}}
+                                <h5 class="card-title mb-1"
+                                    style="display: -webkit-box; -webkit-line-clamp: 2;
+                                           -webkit-box-orient: vertical; overflow: hidden;
+                                           min-height: 44px; font-size: 15px;">
+                                    {{ $eproduct->product_name }}
+                                </h5>
+
+                                {{-- Brand --}}
+                                @if ($eproduct->brand_name)
+                                <p class="text-muted small mb-2">
+                                    <i class="fas fa-copyright"></i>
+                                    {{ $eproduct->brand_name }}
+                                </p>
+                                @endif
+
+                                {{-- Size & Color --}}
+                                @if ($eproduct->size || $eproduct->color)
+                                <p class="text-muted small mb-2">
+                                    @if ($eproduct->size)
+                                        <span class="me-2">
+                                            <i class="fas fa-ruler-combined"></i> {{ $eproduct->size }}
+                                        </span>
+                                    @endif
+                                    @if ($eproduct->color)
+                                        <span>
+                                            <i class="fas fa-palette"></i> {{ $eproduct->color }}
+                                        </span>
+                                    @endif
+                                </p>
+                                @endif
+
+                                {{-- Warranty --}}
+                                @if ($eproduct->warranty)
+                                <p class="text-muted small mb-2">
+                                    <i class="fas fa-shield-alt"></i>
+                                    {{ $eproduct->warranty }} Warranty
+                                </p>
+                                @endif
+
+                                {{-- Price --}}
+                                <div class="mb-3">
+                                    @if ($eproduct->has_discount)
+                                    <span class="text-muted text-decoration-line-through small d-block">
+                                        ৳{{ number_format($eproduct->price, 0) }}
+                                    </span>
+                                    <span class="fw-bold text-success" style="font-size: 18px;">
+                                        ৳{{ number_format($eproduct->customer_price, 0) }}
+                                    </span>
+                                    @else
+                                    <span class="fw-bold text-success" style="font-size: 18px;">
+                                        ৳{{ number_format($eproduct->customer_price, 0) }}
+                                    </span>
+                                    @endif
+                                </div>
+
+                                {{-- Button --}}
+                                <a href="{{ auth()->check()
+                                    ? route('user.eproduct.shop.show', $eproduct->slug)
+                                    : route('login') }}"
+                                   class="btn btn-primary w-100 mt-auto {{ $eproduct->quantity <= 0 ? 'disabled' : '' }}"
+                                   @if ($eproduct->quantity <= 0) onclick="return false;" @endif>
+                                    <i class="fas fa-eye"></i>
+                                    {{ $eproduct->quantity <= 0 ? 'স্টক নেই' : 'বিস্তারিত দেখুন' }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <div class="text-center py-5">
+                    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">কোনো ই-প্রোডাক্ট পাওয়া যায়নি।</p>
+                </div>
+                @endif
+
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Newsletter -->
 <section class="newsletter container text-center reveal">
     <h3>Subscribe Our Newsletter</h3>

@@ -61,8 +61,12 @@
                         href="{{ route('admin.admin.home') }}"><i class="side-menu__icon fas fa-th-large"></i><span
                             class="side-menu__label">Dashboard</span></a>
                 </li>
-                <li
-                    class="slide {{ Request::is('admin/ebooks*') || Request::is('admin/ebooks*') ? 'is-expanded' : '' }}">
+                <li class="slide {{ 
+        Request::is('admin/ebooks*') 
+        || Request::is('admin/ebook-orders*') 
+        || Request::is('admin/eproducts*') 
+        || Request::is('admin/eproduct-orders*') 
+        ? 'is-expanded' : '' }}">
                     <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0);">
                         <i class="side-menu__icon fas fa-shopping-cart"></i>
                         <span class="side-menu__label">
@@ -94,7 +98,7 @@
                             </a>
                         </li>
 
-                        {{-- E-Product (future) --}}
+                        {{-- E-Product --}}
                         <li>
                             <a class="slide-item {{ Request::is('admin/eproducts*') ? 'active' : '' }}"
                                 href="{{ Route::has('admin.eproduct.index') ? route('admin.eproduct.index') : '#' }}"

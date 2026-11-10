@@ -17,8 +17,8 @@ return new class extends Migration
 
             $table->string('order_no')->unique();
 
-            $table->string('buyer_name');
-            $table->string('buyer_email');
+            $table->string('buyer_name')->nullable();
+            $table->string('buyer_email')->nullable();
             $table->string('buyer_phone')->nullable();
 
             $table->decimal('price', 10, 2)->default(0);
