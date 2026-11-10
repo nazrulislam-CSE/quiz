@@ -31,6 +31,7 @@ use App\Http\Controllers\User\RewardController;
 use App\Http\Controllers\User\RechargeController;
 use App\Http\Controllers\User\StudyCenterController;
 use App\Http\Controllers\User\BookShopController;
+use App\Http\Controllers\User\EproductShopController;
 use Illuminate\Support\Facades\Route;
 
      
@@ -111,6 +112,14 @@ Route::group(['middleware' => 'auth'], function () {
      Route::get('/book-orders', [BookShopController::class, 'orders'])->name('book.orders');
      Route::get('/book-orders/{orderNo}/voucher', [BookShopController::class, 'voucher'])
     ->name('book.orders.voucher');
+
+
+     /* ============> E-Product Shop <============ */
+    Route::get('/eproduct-shop',        [EproductShopController::class, 'index'])->name('eproduct.shop.index');
+    Route::get('/eproduct-shop/{slug}', [EproductShopController::class, 'show'])->name('eproduct.shop.show');
+    
+
+
 
 
 

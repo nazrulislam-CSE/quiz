@@ -372,6 +372,30 @@ $referLink = route('register', ['refer' => Auth::user()->username]);
             </a>
         </div>
 
+        <!-- ই-প্রোডাক্ট শপ -->
+        <div class="col-md-4 col-sm-6 mb-4">
+            <a href="{{ route('user.eproduct.shop.index') }}" class="text-decoration-none">
+                <div class="card shadow-sm border-0 rounded-3 h-100" style="background:#ffe6bfdd !important;">
+
+                    <div class="card-body d-flex align-items-center">
+
+                        <div class="me-3">
+                            <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center"
+                                style="width:60px; height:60px;">
+                                <i class="fas fa-shopping-bag fa-2x"></i>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h6 class="mb-0 fw-bold text-dark">আমাদের প্রোডাক্ট শপ</h6>
+                            <small class="text-muted">সেরা মানের পণ্য — ঘরে বসেই অর্ডার করুন</small>
+                        </div>
+
+                    </div>
+                </div>
+            </a>
+        </div>
+
 
 </div>
 
