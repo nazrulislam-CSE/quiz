@@ -199,7 +199,7 @@
                 <p>সেরা মানের পণ্য — ঘরে বসেই অর্ডার করুন</p>
             </div>
             <div class="mt-3 mt-md-0">
-                <a href="#" class="btn btn-light fw-semibold">
+                <a href="{{ route('user.eproduct.orders') }}" class="btn btn-light fw-semibold">
                     <i class="fas fa-shopping-bag"></i> আমার অর্ডার
                 </a>
             </div>

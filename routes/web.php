@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\StudyCenterController;
 use App\Http\Controllers\User\BookShopController as UserBookShopController;
+use App\Http\Controllers\User\EproductShopController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,10 @@ Route::get('/voucher/{order_no}', [StudyCenterController::class, 'publicVoucher'
 // ✅ Public signed voucher (no auth required — signed URL protects it)
 Route::get('/voucher/book/{order_no}', [UserBookShopController::class, 'publicVoucher'])
     ->name('book.voucher.public');
+
+/* ✅ Public signed voucher */
+Route::get('/voucher/eproduct/{orderNo}', [EproductShopController::class, 'publicVoucher'])
+    ->name('eproduct.voucher.public');
     
 
 Route::get('/api', function () {

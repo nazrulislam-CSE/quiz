@@ -374,7 +374,7 @@ $referLink = route('register', ['refer' => Auth::user()->username]);
 
         <!-- ই-প্রোডাক্ট শপ -->
         <div class="col-md-4 col-sm-6 mb-4">
-            <a href="{{ route('user.eproduct.shop.index') }}" class="text-decoration-none">
+            <a href="{{ route('user.eproduct.shop') }}" class="text-decoration-none">
                 <div class="card shadow-sm border-0 rounded-3 h-100" style="background:#ffe6bfdd !important;">
 
                     <div class="card-body d-flex align-items-center">

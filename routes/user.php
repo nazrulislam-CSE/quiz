@@ -115,8 +115,20 @@ Route::group(['middleware' => 'auth'], function () {
 
 
      /* ============> E-Product Shop <============ */
-    Route::get('/eproduct-shop',        [EproductShopController::class, 'index'])->name('eproduct.shop.index');
-    Route::get('/eproduct-shop/{slug}', [EproductShopController::class, 'show'])->name('eproduct.shop.show');
+     Route::get('/eproduct-shop',         [EproductShopController::class, 'index'])->name('eproduct.shop');
+     Route::get('/eproduct-shop/{slug}',  [EproductShopController::class, 'show'])->name('eproduct.shop.show');
+     Route::post('/eproduct-shop/{slug}/checkout', [EproductShopController::class, 'checkout'])->name('eproduct.checkout');
+
+     // EPS Callbacks
+     Route::get('/eproduct-payment/success', [EproductShopController::class, 'paymentSuccess'])->name('eproduct.payment.success');
+     Route::get('/eproduct-payment/fail',    [EproductShopController::class, 'paymentFail'])->name('eproduct.payment.fail');
+     Route::get('/eproduct-payment/cancel',  [EproductShopController::class, 'paymentCancel'])->name('eproduct.payment.cancel');
+
+
+     Route::get('/eproduct-orders',       [EproductShopController::class, 'orders'])->name('eproduct.orders');
+     Route::get('/eproduct-orders/{orderNo}/voucher', [EproductShopController::class, 'voucher'])->name('eproduct.voucher');
+
+     
     
 
 
