@@ -267,7 +267,7 @@
                                     </button>
                                     @endif
 
-                                    <form action="{{ route('admin.ebook.order.delete', $order->id) }}" method="POST"
+                                    {{-- <form action="{{ route('admin.ebook.order.delete', $order->id) }}" method="POST"
                                         class="d-inline"
                                         onsubmit="return confirm('Are you sure to delete this order?')">
                                         @csrf
@@ -275,7 +275,7 @@
                                         <button type="submit" class="btn btn-outline-danger" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </button>
-                                    </form>
+                                    </form> --}}
                                 </div>
 
                                 {{-- Status Modal --}}

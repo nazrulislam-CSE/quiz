@@ -42,6 +42,7 @@ use App\Http\Controllers\Admin\CoursePurchaseController;
 use App\Http\Controllers\Admin\EbookController;
 use App\Http\Controllers\Admin\EbookOrderController;
 use App\Http\Controllers\Admin\EproductController;
+use App\Http\Controllers\Admin\EproductOrderController;
 
 
 
@@ -525,6 +526,15 @@ Route::middleware('admin')->group(function () {
         Route::post('/store',       [EproductController::class, 'store'])->name('store');
         Route::post('/update/{id}', [EproductController::class, 'update'])->name('update');
         Route::get('/delete/{id}',  [EproductController::class, 'destroy'])->name('delete');
+    });
+
+    /* ============> E-Product Orders <============ */
+    Route::prefix('eproduct-orders')->name('eproduct.order.')->group(function () {
+        Route::get('/',              [EproductOrderController::class, 'index'])->name('index');
+        Route::get('/show/{id}',     [EproductOrderController::class, 'show'])->name('show');
+        Route::post('/status/{id}',  [EproductOrderController::class, 'updateStatus'])->name('updateStatus');
+        Route::delete('/delete/{id}',[EproductOrderController::class, 'destroy'])->name('delete');
+        Route::get('/export',        [EproductOrderController::class, 'export'])->name('export');
     });
 
 
