@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\V1\User\Recharge\RechargeController;
 use App\Http\Controllers\Api\V1\User\Study\StudyCenterController;
 use App\Http\Controllers\Api\V1\User\Study\CoursePurchaseController;
 use App\Http\Controllers\Api\V1\User\Eshop\BookShopController;
+use App\Http\Controllers\Api\V1\User\Eshop\EproductShopController;
 
 use App\Http\Controllers\Api\V1\User\AdmissionInfoController;
 
@@ -66,6 +67,19 @@ Route::prefix('book-shop/payment')->group(function () {
          ->name('book.shop.payment.fail');
     Route::match(['get', 'post'], '/cancel',  [BookShopController::class, 'paymentCancel'])
          ->name('book.shop.payment.cancel');
+});
+
+/* ============================================================
+   ✅ EPS Callback — Eproduct Shop (Public, no auth)
+   Same pattern as course — outside check.bk.token
+============================================================ */
+Route::prefix('eproduct-shop/payment')->group(function () {
+    Route::match(['get', 'post'], '/success', [EproductShopController::class, 'paymentSuccess'])
+         ->name('eproduct.shop.payment.success');
+    Route::match(['get', 'post'], '/fail',    [EproductShopController::class, 'paymentFail'])
+         ->name('eproduct.shop.payment.fail');
+    Route::match(['get', 'post'], '/cancel',  [EproductShopController::class, 'paymentCancel'])
+         ->name('eproduct.shop.payment.cancel');
 });
 
 
@@ -187,23 +201,26 @@ Route::middleware(['check.bk.token'])->prefix('v1')->group(function () {
 
           /* ============> Book Shop (Auth Required) <============ */
           Route::prefix('book-shop')->group(function () {
-
-          // ⚠️ Specific routes FIRST — {slug} সবশেষে!
-          Route::get('/orders', [BookShopController::class, 'orders'])
-               ->name('book.orders');
-
-          Route::get('/orders/{order_no}/voucher', [BookShopController::class, 'voucher'])
-               ->name('book.voucher');
-
-          Route::post('/checkout/{slug}', [BookShopController::class, 'buy'])
-               ->name('book.checkout');
-
-          Route::get('/', [BookShopController::class, 'index'])
-               ->name('book.shop');
-
-          Route::get('/{slug}', [BookShopController::class, 'show'])
-               ->name('book.shop.show');
+               // ⚠️ Specific routes FIRST — {slug} সবশেষে!
+               Route::get('/orders', [BookShopController::class, 'orders'])->name('book.orders');
+               Route::get('/orders/{order_no}/voucher', [BookShopController::class, 'voucher'])->name('book.voucher');
+               Route::post('/checkout/{slug}', [BookShopController::class, 'buy'])->name('book.checkout');
+               Route::get('/', [BookShopController::class, 'index'])->name('book.shop');
+               Route::get('/{slug}', [BookShopController::class, 'show'])->name('book.shop.show');
           });
+
+          /* ============> Eproduct Shop (Auth Required) <============ */
+          Route::prefix('eproduct-shop')->group(function () {
+               // ⚠️ Specific routes FIRST — {slug} সবশেষে!
+               Route::get('/orders', [EproductShopController::class, 'orders'])->name('eproduct.orders');
+               Route::get('/orders/{order_no}/voucher', [EproductShopController::class, 'voucher'])->name('eproduct.voucher');
+               Route::post('/checkout/{slug}', [EproductShopController::class, 'buy'])->name('eproduct.checkout');
+               Route::get('/', [EproductShopController::class, 'index'])->name('eproduct.shop');
+               Route::get('/{slug}', [EproductShopController::class, 'show'])->name('eproduct.shop.show');
+          });
+
+
+
         });
     });
 
